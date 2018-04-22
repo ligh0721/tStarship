@@ -12,11 +12,12 @@
 	"game": [
 		"bin-debug/base/GameObject.js",
 		"bin-debug/LoadingUI.js",
-		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/base/Bullet.js",
 		"bin-debug/base/Force.js",
+		"bin-debug/Main.js",
 		"bin-debug/base/Gun.js",
+		"bin-debug/base/Health.js",
 		"bin-debug/base/Ship.js",
 		"bin-debug/base/World.js",
 		"bin-debug/lib/Utils.js"

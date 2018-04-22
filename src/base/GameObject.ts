@@ -11,6 +11,10 @@ class GameObject {
 		return this;
 	}
 
+	public cleanup() {
+		this.onCleanup();
+	}
+
 	public set(prop: Object) {
 		if (prop.hasOwnProperty('x')) {
 			this.gameObject.x = prop['x'];
@@ -38,5 +42,9 @@ class GameObject {
 
 	protected onCreate(): egret.DisplayObject {
 		return this.gameObject;
+	}
+
+	protected onCleanup() {
+		egret.Tween.removeTweens(this.gameObject);
 	}
 }

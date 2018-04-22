@@ -101,15 +101,15 @@ class Main extends egret.DisplayObjectContainer {
         let layer = tutils.createLayer(this, 0x000000, 1.0);
         this.world = new World(layer, stageW, stageH);
 
-        
+
         let ship = new Ship(40, 80);
-        ship.create();
         this.world.addShip(ship);
         ship.force.force = 1;
         ship.x = stageW*0.5;
         ship.y = stageH-ship.height*0.5;
         ship.speed = 50;
-        let gun = new Gun();
+        let gun = new SoundWaveGun();
+        gun.interval = 300;
         ship.addGun(gun);
         ship.gun.autofire();
         
@@ -128,15 +128,16 @@ class Main extends egret.DisplayObjectContainer {
         timer.start();
 
 
-        let f1 = new Force();
-        let f2 = new Force();
-        let f8 = new Force();
-        f1.force = 1;
-        f2.force = 2;
-        f8.force = 8;
-        let allyMask = f1.forceFlag | f2.forceFlag;
-        f1.allyMaskFlag = allyMask;
-        f2.allyMaskFlag = allyMask;
+        // FIXME: test
+        ship = new Ship(80, 160);
+        this.world.addShip(ship);
+        ship.force.force = 2;
+        ship.hp.maxHp = 5;
+        ship.hp.hp = ship.hp.maxHp;
+        ship.x = stageW*0.2;
+        ship.y = stageH*0.5;
+        ship.speed = 50;
+
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

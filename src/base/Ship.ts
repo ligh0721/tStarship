@@ -3,6 +3,7 @@ class Ship extends GameObject {
 	readonly height: number;
 	
 	force: Force = new Force();
+	hp: Health = new Health();
 	gun: Gun;
 	speed: number = 100;
 
