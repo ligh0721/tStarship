@@ -12,7 +12,6 @@ class EnemyController {
 
 	public createEnemyShip(): EnemyShip {
 		let enemyShip = new EnemyShip(10, 10, "rect");
-		enemyShip.create();
 		enemyShip.force.force = 8;
 		this.arrEnemyShips.push(enemyShip);
 
