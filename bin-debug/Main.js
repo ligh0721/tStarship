@@ -96,24 +96,23 @@ var Main = (function (_super) {
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result, userInfo;
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.loadResource()];
+                    case 0:
+                        this.stage.frameRate = 60;
+                        return [4 /*yield*/, this.loadResource()];
                     case 1:
                         _a.sent();
                         this.createGameScene();
-                        return [4 /*yield*/, RES.getResAsync("description_json")];
+                        return [4 /*yield*/, RES.getResAsync("description_json")
+                            //this.startAnimation(result);
+                            //await platform.login();
+                            //const userInfo = await platform.getUserInfo();
+                            //console.log(userInfo);
+                        ];
                     case 2:
                         result = _a.sent();
-                        this.startAnimation(result);
-                        return [4 /*yield*/, platform.login()];
-                    case 3:
-                        _a.sent();
-                        return [4 /*yield*/, platform.getUserInfo()];
-                    case 4:
-                        userInfo = _a.sent();
-                        console.log(userInfo);
                         return [2 /*return*/];
                 }
             });
@@ -150,49 +149,49 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
-        var sky = this.createBitmapByName("bg_jpg");
-        this.addChild(sky);
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
-        sky.width = stageW;
-        sky.height = stageH;
-        var topMask = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
-        topMask.graphics.drawRect(0, 0, stageW, 172);
-        topMask.graphics.endFill();
-        topMask.y = 33;
-        this.addChild(topMask);
-        var icon = this.createBitmapByName("egret_icon_png");
-        this.addChild(icon);
-        icon.x = 26;
-        icon.y = 33;
-        var line = new egret.Shape();
-        line.graphics.lineStyle(2, 0xffffff);
-        line.graphics.moveTo(0, 0);
-        line.graphics.lineTo(0, 117);
-        line.graphics.endFill();
-        line.x = 172;
-        line.y = 61;
-        this.addChild(line);
-        var colorLabel = new egret.TextField();
-        colorLabel.textColor = 0xffffff;
-        colorLabel.width = stageW - 172;
-        colorLabel.textAlign = "center";
-        colorLabel.text = "Hello Egret";
-        colorLabel.size = 24;
-        colorLabel.x = 172;
-        colorLabel.y = 80;
-        this.addChild(colorLabel);
-        var textfield = new egret.TextField();
-        this.addChild(textfield);
-        textfield.alpha = 0;
-        textfield.width = stageW - 172;
-        textfield.textAlign = egret.HorizontalAlign.CENTER;
-        textfield.size = 24;
-        textfield.textColor = 0xffffff;
-        textfield.x = 172;
-        textfield.y = 135;
-        this.textfield = textfield;
+        var layer = tutils.createLayer(this, 0x000000, 1.0);
+        this.world = new World(layer, stageW, stageH);
+        var ship = new Ship(40, 80);
+        ship.create();
+        this.world.addShip(ship);
+        ship.force.force = 1;
+        ship.x = stageW * 0.5;
+        ship.y = stageH - ship.height * 0.5;
+        ship.speed = 50;
+        var gun = new Gun();
+        ship.addGun(gun);
+        ship.gun.autofire();
+        this.ship = ship;
+        layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+        layer.touchEnabled = true;
+        var timer = new egret.Timer(20, 0);
+        timer.addEventListener(egret.TimerEvent.TIMER, this.onTimer, this);
+        timer.start();
+        var f1 = new Force();
+        var f2 = new Force();
+        var f8 = new Force();
+        f1.force = 1;
+        f2.force = 2;
+        f8.force = 8;
+        var allyMask = f1.forceFlag | f2.forceFlag;
+        f1.allyMaskFlag = allyMask;
+        f2.allyMaskFlag = allyMask;
+        console.log(f1.isMyAlly(f2));
+        console.log(f1.isMyAlly(f8));
+        console.log(f2.isMyEnemy(f8));
+        console.log(f2.isMyAlly(f1));
+    };
+    Main.prototype.onTouchBegin = function (evt) {
+        this.ship.move(evt.localX, evt.localY);
+    };
+    Main.prototype.onTouchMove = function (evt) {
+        this.ship.move(evt.localX, evt.localY);
+    };
+    Main.prototype.onTimer = function (evt) {
+        this.world.step(20);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
