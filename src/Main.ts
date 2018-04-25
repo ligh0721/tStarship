@@ -102,42 +102,47 @@ class Main extends egret.DisplayObjectContainer {
         this.world = new World(layer, stageW, stageH);
 
 
-        let ship = new Ship(40, 80);
-        this.world.addShip(ship);
-        ship.force.force = 1;
-        ship.x = stageW*0.5;
-        ship.y = stageH-ship.height*0.5;
-        ship.speed = 50;
-        let gun = new SoundWaveGun();
-        gun.fireInterval = 300;
-        ship.addGun(gun);
-        ship.gun.autofire();
+        // let ship = new Ship(40, 80);
+        // this.world.addShip(ship);
+        // ship.force.force = 1;
+        // ship.x = stageW*0.5;
+        // ship.y = stageH-ship.height*0.5;
+        // ship.speed = 50;
+        // let gun = new SoundWaveGun();
+        // gun.fireInterval = 300;
+        // ship.addGun(gun);
+        // ship.gun.autofire();
         
-        this.ship = ship;
+        // this.ship = ship;
 
         
         
         
 
-        layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        layer.touchEnabled = true;
+        // layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        // layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+        // layer.touchEnabled = true;
         
-        let timer = new egret.Timer(20, 0);
-        timer.addEventListener(egret.TimerEvent.TIMER, this.onTimer, this);
-        timer.start();
+        // let timer = new egret.Timer(20, 0);
+        // timer.addEventListener(egret.TimerEvent.TIMER, this.onTimer, this);
+        // timer.start();
 
 
-        // FIXME: test
-        ship = new Ship(80, 160);
-        this.world.addShip(ship);
-        ship.force.force = 2;
-        ship.hp.maxHp = 5;
-        ship.hp.hp = ship.hp.maxHp;
-        ship.x = stageW*0.2;
-        ship.y = stageH*0.5;
-        ship.speed = 50;
+        // // FIXME: test
+        // ship = new Ship(80, 160);
+        // this.world.addShip(ship);
+        // ship.force.force = 2;
+        // ship.hp.maxHp = 5;
+        // ship.hp.hp = ship.hp.maxHp;
+        // ship.x = stageW*0.2;
+        // ship.y = stageH*0.5;
+        // ship.speed = 50;
 
+        //enemyShipTest
+        let enemyController = EnemyController.instance;
+        enemyController.world = this.world;
+        let enemyShip = enemyController.createEnemyShip();
+        enemyController.enemyShipMoveInStraightLine(enemyShip);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {
