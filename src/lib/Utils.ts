@@ -16,4 +16,7 @@ module tutils {
         return curId;
     }
     
+	export function createGun<GUN extends Gun>(t: new() => GUN): GUN {
+		return new t();
+	}
 }

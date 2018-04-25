@@ -47,8 +47,11 @@ class Ship extends GameObject {
         gameObject.graphics.lineTo(this.width * 0.5, 0);
         gameObject.anchorOffsetX = this.width * 0.5;
         gameObject.anchorOffsetY = this.height * 0.5;
-        gameObject.graphics.endFill();
 		return gameObject;
 	}
 
+	protected onCleanup(): void {
+		this.gun.cleanup();
+		super.onCleanup();
+	}
 }

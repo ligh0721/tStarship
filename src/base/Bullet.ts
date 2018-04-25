@@ -13,4 +13,12 @@ class Bullet extends GameObject {
         bullet.graphics.endFill();
 		return bullet;
 	}
+
+	public onHitEnemyShipTest(ship: Ship): boolean {
+		return this.hitTest(ship);
+	}
+
+	public onHitEnemyBulletTest(ship: Ship): boolean {
+		return false;
+	}
 }
