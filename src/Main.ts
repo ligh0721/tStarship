@@ -109,7 +109,7 @@ class Main extends egret.DisplayObjectContainer {
         ship.y = stageH-ship.height*0.5;
         ship.speed = 50;
         let gun = new SoundWaveGun();
-        gun.interval = 300;
+        gun.fireInterval = 300;
         ship.addGun(gun);
         ship.gun.autofire();
         

@@ -1196,7 +1196,7 @@ declare namespace egret {
          * 获取渲染节点
          */
         $getRenderNode(): sys.RenderNode;
-        private updateRenderMode();
+        $updateRenderMode(): void;
         $renderMode: RenderMode;
         /**
          * @private
@@ -10045,7 +10045,6 @@ interface CanvasRenderingContext2D {
     $offsetY: number;
 }
 declare namespace egret {
-    let BLACK_COLOR: string;
     class CanvasRenderer {
         private nestLevel;
         render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, forRenderTexture?: boolean): number;

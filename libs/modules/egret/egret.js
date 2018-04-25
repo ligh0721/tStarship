@@ -1542,7 +1542,7 @@ var egret;
                 self.$nativeDisplayObject.setVisible(value);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 var p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1656,7 +1656,7 @@ var egret;
                 self.$nativeDisplayObject.setAlpha(value);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 var p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1767,7 +1767,7 @@ var egret;
         DisplayObject.prototype.$setScrollRect = function (value) {
             var self = this;
             if (!value && !self.$scrollRect) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 return;
             }
             if (value) {
@@ -1786,7 +1786,7 @@ var egret;
                 }
             }
             if (!egret.nativeRender) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
             }
         };
         Object.defineProperty(DisplayObject.prototype, "blendMode", {
@@ -1820,7 +1820,7 @@ var egret;
                     self.$nativeDisplayObject.setBlendMode(mode);
                 }
                 else {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                     var p = self.$parent;
                     if (p && !p.$cacheDirty) {
                         p.$cacheDirty = true;
@@ -1886,7 +1886,7 @@ var egret;
                         value.$maskedObject = self;
                         self.$mask = value;
                         if (!egret.nativeRender) {
-                            value.updateRenderMode();
+                            value.$updateRenderMode();
                         }
                         if (self.$maskRect) {
                             if (egret.nativeRender) {
@@ -1909,7 +1909,7 @@ var egret;
                         if (self.$mask) {
                             self.$mask.$maskedObject = null;
                             if (!egret.nativeRender) {
-                                self.$mask.updateRenderMode();
+                                self.$mask.$updateRenderMode();
                             }
                         }
                         if (self.mask) {
@@ -1924,7 +1924,7 @@ var egret;
                     if (self.$mask) {
                         self.$mask.$maskedObject = null;
                         if (!egret.nativeRender) {
-                            self.$mask.updateRenderMode();
+                            self.$mask.$updateRenderMode();
                         }
                     }
                     if (self.mask) {
@@ -1941,7 +1941,7 @@ var egret;
                     }
                 }
                 if (!egret.nativeRender) {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                 }
             },
             enumerable: true,
@@ -1987,7 +1987,7 @@ var egret;
                         self.$nativeDisplayObject.setFilters(null);
                     }
                     else {
-                        self.updateRenderMode();
+                        self.$updateRenderMode();
                     }
                     return;
                 }
@@ -2005,7 +2005,7 @@ var egret;
                     }
                 }
                 if (!egret.nativeRender) {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                 }
             },
             enumerable: true,
@@ -2235,7 +2235,7 @@ var egret;
             }
             return node;
         };
-        DisplayObject.prototype.updateRenderMode = function () {
+        DisplayObject.prototype.$updateRenderMode = function () {
             var self = this;
             if (!self.$visible || self.$alpha <= 0 || self.$maskedObject) {
                 self.$renderMode = 1 /* NONE */;
@@ -2243,7 +2243,7 @@ var egret;
             else if (self.filters && self.filters.length > 0) {
                 self.$renderMode = 2 /* FILTER */;
             }
-            else if (self.$blendMode !== 0 || self.$mask) {
+            else if (self.$blendMode !== 0 || (self.$mask && self.$mask.$stage)) {
                 self.$renderMode = 3 /* CLIP */;
             }
             else if (self.$scrollRect || self.$maskRect) {
@@ -4413,6 +4413,9 @@ var egret;
                 self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
             }
             else {
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
                 if (!self.$cacheDirty) {
                     self.$cacheDirty = true;
                     var p = self.$parent;
@@ -4640,6 +4643,9 @@ var egret;
                 self.$nativeDisplayObject.removeChild(child.$nativeDisplayObject.id);
             }
             else {
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
                 if (!self.$cacheDirty) {
                     self.$cacheDirty = true;
                     var p = self.$parent;
@@ -8297,7 +8303,7 @@ var egret;
             var tempList = BitmapData._displayList[hashCode];
             var index = tempList.indexOf(displayObject);
             if (index >= 0) {
-                tempList.splice(index);
+                tempList.splice(index, 1);
             }
         };
         BitmapData.$invalidate = function (bitmapData) {
@@ -15460,7 +15466,7 @@ var egret;
 (function (egret) {
     var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
-    egret.BLACK_COLOR = "#000000";
+    var BLACK_COLOR = "#000000";
     var CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     var renderBufferPool = []; //渲染缓冲区对象池
     var renderBufferPool_Filters = []; //滤镜缓冲区对象池
@@ -16103,7 +16109,7 @@ var egret;
                 switch (path.type) {
                     case 1 /* Fill */:
                         var fillPath = path;
-                        context.fillStyle = forHitTest ? egret.BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
+                        context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
                         if (this.renderingMask) {
                             context.clip();
@@ -16114,7 +16120,7 @@ var egret;
                         break;
                     case 2 /* GradientFill */:
                         var g = path;
-                        context.fillStyle = forHitTest ? egret.BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
+                        context.fillStyle = forHitTest ? BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                         context.save();
                         var m = g.matrix;
                         this.renderPath(path, context);
@@ -16126,7 +16132,7 @@ var egret;
                         var strokeFill = path;
                         var lineWidth = strokeFill.lineWidth;
                         context.lineWidth = lineWidth;
-                        context.strokeStyle = forHitTest ? egret.BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
+                        context.strokeStyle = forHitTest ? BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
                         context.lineCap = CAPS_STYLES[strokeFill.caps];
                         context.lineJoin = strokeFill.joints;
                         context.miterLimit = strokeFill.miterLimit;
@@ -16887,7 +16893,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.1.9";
+        Capabilities.engineVersion = "5.1.10";
         /***
          * current render mode.
          * @type {string}
