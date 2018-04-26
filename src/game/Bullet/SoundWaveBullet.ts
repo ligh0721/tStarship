@@ -4,6 +4,8 @@ class SoundWaveBullet extends Bullet {
 
     public constructor(gun: Gun, width: number=100, height: number=40) {
         super(gun);
+		this.width = width;
+		this.height = height;
     }
     
 	protected onCreate(): egret.DisplayObject {

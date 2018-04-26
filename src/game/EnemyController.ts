@@ -57,5 +57,4 @@ class EnemyController {
 		}, null);
 		t.start();
 	}
-	
 }

@@ -2,19 +2,22 @@ class World {
 	readonly gameObject: egret.DisplayObjectContainer;
 	readonly width: number;
 	readonly height: number;
+	readonly rect: egret.Rectangle;
 	ships: Object;
 	bullets: Object;
+	debugDrawSprite: egret.Sprite = null;
 
 	public constructor(gameObject: egret.DisplayObjectContainer, width: number, height: number) {
 		this.gameObject = gameObject;
 		this.width = width;
 		this.height = height;
+		this.rect = new egret.Rectangle(0, 0, width, height);
 		this.ships = {};
 		this.bullets = {};
 	}
 
 	public addShip(ship: Ship): Ship {
-		ship.create();
+		ship.onAddToWorld();
 		this.gameObject.addChild(ship.gameObject);
 		ship.world = this;
 		ship.id = this.nextId();
@@ -35,7 +38,7 @@ class World {
 	}
 
 	public addBullet(bullet: Bullet): Bullet {
-		bullet.create();
+		bullet.onAddToWorld();
 		this.gameObject.addChild(bullet.gameObject);
 		bullet.world = this;
 		bullet.id = this.nextId();
@@ -56,22 +59,83 @@ class World {
 	}
 
 	public step(dt: number) {
-		let toDelBullet = [];
-		let toDelShip = [];
-		for (let bulletId in this.bullets) {
-			let bullet: Bullet = this.bullets[bulletId];
+		if (this.debugDrawSprite != null) {
+			this.debugDrawSprite.graphics.clear();
+			this.debugDrawSprite.graphics.lineStyle(2, 0xffffff, 1);
+			
 			for (let shipId in this.ships) {
 				let ship: Ship = this.ships[shipId];
-				if (ship.hp.isDead()) {
+				this.debugDrawSprite.graphics.moveTo(ship.gameObject.x, ship.gameObject.y);
+				this.debugDrawSprite.graphics.drawRect(ship.gameObject.x-ship.gameObject.width*0.5, ship.gameObject.y-ship.gameObject.height*0.5, ship.gameObject.width, ship.gameObject.height);
+			}
+
+			for (let bulletId in this.bullets) {
+				let bullet: Bullet = this.bullets[bulletId];
+				this.debugDrawSprite.graphics.moveTo(bullet.gameObject.x, bullet.gameObject.y);
+				this.debugDrawSprite.graphics.drawRect(bullet.gameObject.x-bullet.gameObject.width*0.5, bullet.gameObject.y-bullet.gameObject.height*0.5, bullet.gameObject.width, bullet.gameObject.height);
+			}
+		}
+
+		let toDelBullet = [];
+		let toDelShip = [];
+
+		for (let shipId in this.ships) {
+			let ship: Ship = this.ships[shipId];
+			if (ship.hp.isDead()) {
+				continue;
+			}
+
+			// 检测子弹撞击
+			for (let bulletId in this.bullets) {
+				let bullet: Bullet = this.bullets[bulletId];
+				if (bullet.hp.isDead()) {
 					continue;
 				}
-				if (bullet.gun.ship.force.isMyEnemy(ship.force) && ship.gameObject.hitTestPoint(bullet.x, bullet.y)) {
-					ship.hp.hp -= 1;
-					console.log("hit!");
-					toDelBullet.push(bullet.id);
+				if (!this.rect.intersects(bullet.getBounds())) {
+					// 移除跑出边界的子弹
+					bullet.hp.hp = 0;
+					toDelBullet.push(bulletId);
+					continue;
+				}
+
+				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
+					console.log("bullet hit!");
+					let dt = ship.hp.hp - bullet.hp.hp;
+					if (dt > 0) {
+						ship.hp.hp = dt;
+						bullet.hp.hp = 0;
+					} else {
+						bullet.hp.hp -dt;
+						ship.hp.hp = 0;
+					}
+					
 					if (ship.hp.isDead()) {
 						console.log("dead!");
-						toDelShip.push(ship.id);
+						toDelShip.push(shipId);
+					}
+					if (bullet.hp.isDead()) {
+						toDelBullet.push(bulletId);
+					}
+				}
+			}
+
+			// 检测飞船撞击
+			for (let shipId2 in this.ships) {
+				let ship2: Ship = this.ships[shipId2];
+				if (ship2.hp.isDead()) {
+					continue;
+				}
+				if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
+					console.log("ship hit!");
+					ship.hp.hp -= ship2.hp.maxHp;
+					ship2.hp.hp -= ship.hp.maxHp;
+					if (ship.hp.isDead()) {
+						console.log("dead!");
+						toDelShip.push(shipId);
+					}
+					if (ship2.hp.isDead()) {
+						console.log("dead!");
+						toDelShip.push(shipId2);
 					}
 				}
 			}
@@ -80,7 +144,6 @@ class World {
 		for (let i in toDelBullet) {
 			this.removeBullet(toDelBullet[i]);
 		}
-
 		for (let i in toDelShip) {
 			this.removeShip(toDelShip[i]);
 		}
