@@ -57,9 +57,9 @@ class Score {
 			this.score = value;
 			return;
 		}
-		//this.$score = Math.floor(value);
+		this.$score = Math.floor(value);
 		egret.Tween.removeTweens(this)
 		let tw = egret.Tween.get(this);
-		tw.to({_score: value}, dur);
+		tw.to({_score: this.$score}, dur);
 	}
 }
