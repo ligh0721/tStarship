@@ -3,20 +3,28 @@ class Gun {
 	fireInterval: number = 200;
 	bulletPower: number = 1;
 	bulletSpeed: number = 50;
+	bulletNum: number = 5;
+	bulletXDelta: number = 30;
+	bulletYDelta: number = 20;
 
 	public constructor() {
 	}
 
+	public static createGun<GUN extends Gun>(t: new() => GUN): GUN {
+		return new t();
+	}
+
 	public fire() {
-		let n = 1;
+		let firePos = this.getFirePosition();
+		let n = this.bulletNum;
 		for (let i=0; i<n; i++) {
-			let bullet = this.onCreateBullet();
+			let bullet = new Bullet(this);
 			this.ship.world.addBullet(bullet);
-			bullet.x = this.ship.x+(i-(n-1)/2)*50;
-			bullet.y = this.ship.y-this.ship.height*0.5;
+			bullet.x = firePos.x+(i-(n-1)/2)*this.bulletXDelta;
+			bullet.y = firePos.y+(Math.abs(i-(n-1)/2))*this.bulletYDelta;
 			let tw = egret.Tween.get(bullet.gameObject);
 			let toY = -this.ship.world.height * 0.2
-			tw.to({y: toY}, (bullet.y-toY)/this.bulletSpeed*100);
+			tw.to({y: toY}, (bullet.y-toY)/this.bulletSpeed*tutils.SpeedFactor);
 			tw.call(() => {
 				this.ship.world.removeBullet(bullet.id);
 			});
@@ -40,8 +48,7 @@ class Gun {
 		egret.Tween.removeTweens(this);
 	}
 
-	protected onCreateBullet(): Bullet {
-		let bullet = new Bullet(this);
-		return bullet;
+	public getFirePosition(): {x: number, y: number} {
+		return {x: this.ship.x, y: this.ship.y-this.ship.height*0.5};
 	}
 }

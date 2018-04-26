@@ -111,9 +111,10 @@ class Main extends egret.DisplayObjectContainer {
         ship.x = stageW*0.5;
         ship.y = stageH-ship.height*0.5;
         ship.speed = 50;
-        //let gun = tutils.createGun(Gun);
-        let gun = tutils.createGun(SoundWaveGun);
-        gun.fireInterval = 300;
+        let gun = Gun.createGun(Gun);
+        //let gun = Gun.createGun(SoundWaveGun);
+        //let gun = Gun.createGun(ShotGun);
+        gun.fireInterval = 50;
         gun.bulletSpeed = 100;
         ship.addGun(gun);
         ship.gun.autofire();
@@ -137,7 +138,7 @@ class Main extends egret.DisplayObjectContainer {
         ship = new Ship(80, 160);
         this.world.addShip(ship);
         ship.force.force = 2;
-        ship.hp.maxHp = 500;
+        ship.hp.reset(500);
         ship.hp.hp = ship.hp.maxHp;
         ship.x = stageW*0.2;
         ship.y = stageH*0.5;

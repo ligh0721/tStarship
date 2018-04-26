@@ -4,7 +4,7 @@ class Ship extends GameObject {
 	
 	force: Force = new Force();
 	hp: Health = new Health();
-	gun: Gun;
+	gun: Gun = null;
 	speed: number = 100;
 
 	public constructor(width: number, height: number) {
@@ -32,7 +32,7 @@ class Ship extends GameObject {
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
 		let dis = Math.sqrt(xx*xx+yy*yy);
-        let dur = dis * 100 / this.speed;
+        let dur = dis * tutils.SpeedFactor / this.speed;
         egret.Tween.removeTweens(this.gameObject);
         let tw = egret.Tween.get(this.gameObject);
         tw.to({x: x, y: y}, dur);
@@ -51,7 +51,9 @@ class Ship extends GameObject {
 	}
 
 	protected onCleanup(): void {
-		this.gun.cleanup();
+		if (this.gun != null) {
+			this.gun.cleanup();
+		}
 		super.onCleanup();
 	}
 }
