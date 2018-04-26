@@ -14,6 +14,10 @@ class Layer {
 		return layer;
 	}
 
+	public addChild(child: egret.DisplayObject): egret.DisplayObject {
+		return this.layer.addChild(child);
+	}
+
 	protected onCreate(): egret.DisplayObjectContainer {
 		let layer = tutils.createLayer(this.root, 0x000000, 1.0);
 		return layer;

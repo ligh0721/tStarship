@@ -1,6 +1,7 @@
 class BattleLayer extends Layer {
 	private world: World;
     private ship: Ship;
+	private score: Score;
 	
 	protected onInit() {
 		let stageW = this.stage.stageWidth;
@@ -35,15 +36,12 @@ class BattleLayer extends Layer {
         //timer.start();
 
 
-        // FIXME: test
-        ship = new Ship(80, 160);
-        this.world.addShip(ship);
-        ship.force.force = 2;
-        ship.hp.reset(500);
-        ship.hp.hp = ship.hp.maxHp;
-        ship.x = stageW*0.2;
-        ship.y = stageH*0.5;
-        ship.speed = 50;
+        this.createTestEnemyShip();
+        
+		let score = new Score(this.layer);
+		score.digits = 10;
+		score.score = 0;
+		score.setScore(10000, 5000);
 	}
 
 	private onTouchBegin(evt: egret.TouchEvent) {
@@ -57,4 +55,18 @@ class BattleLayer extends Layer {
     private onTimer(evt: egret.TimerEvent) {
         this.world.step(1000/this.stage.frameRate);
     }
+
+	// FIXME: test
+	createTestEnemyShip() {
+		let n = 10;
+		for (let i=0; i<n; i++) {
+			let ship = new Ship(30, 60);
+			this.world.addShip(ship);
+			ship.force.force = 2;
+			ship.hp.reset(Math.random()*10);
+			ship.hp.hp = ship.hp.maxHp;
+			ship.x = this.layer.width*Math.random();
+			ship.y = this.layer.height*Math.random();
+		}
+	}
 }
