@@ -10,17 +10,17 @@ class EnemyController {
 	}
 
 	public createEnemyShip(): EnemyShip {
-		let enemyShip = new EnemyShip(20, 20, "rect");
+		let enemyShip = new EnemyShip(40, 80, "tri");
 		this.world.addShip(enemyShip);
 
-		enemyShip.x =enemyShip.width * 0.5;
 		enemyShip.speed = 50;
 		enemyShip.force.force = 8;
 
 		return enemyShip;
 	}
 
-	public enemyShipMoveInStraightLine(ship: EnemyShip) {
+	public enemyShipMoveInStraightLine(ship: EnemyShip, startX: number) {
+		ship.x = startX;
 		let dis = this.world.height + ship.height;
         let dur = dis * 100 / ship.speed;
         let tw = egret.Tween.get(ship.gameObject);
@@ -29,4 +29,33 @@ class EnemyController {
 			this.world.removeShip(ship.id);
 		});
 	}
+
+	public enemyShipMoveInBezierCurve(ship: EnemyShip, point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}) {
+		let bezierCurve = new BezierCurve(ship, point0, point1, point2);
+		bezierCurve.startMove(() => {
+			this.world.removeShip(ship.id);
+		});
+	}
+
+	public arrEnemyShipsMoveInBezierCurve(arrShips: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}) {
+		console.log(arrShips);
+		let t = new egret.Timer(150, 0);
+		let i = 0;
+		t.addEventListener(egret.TimerEvent.TIMER, () => {
+			if(i >= arrShips.length) {
+				t.stop();
+				return;
+			}
+			
+			let ship = arrShips[i];
+			let bezierCurve = new BezierCurve(ship, point0, point1, point2);
+			bezierCurve.startMove(() => {
+				this.world.removeShip(ship.id);
+			});
+
+			i++;
+		}, null);
+		t.start();
+	}
+	
 }

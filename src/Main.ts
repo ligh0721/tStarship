@@ -141,8 +141,15 @@ class Main extends egret.DisplayObjectContainer {
         //enemyShipTest
         let enemyController = EnemyController.instance;
         enemyController.world = this.world;
-        let enemyShip = enemyController.createEnemyShip();
-        enemyController.enemyShipMoveInStraightLine(enemyShip);
+        let enemies = [];
+        let n = 10;
+        for (let i=0; i<n; i++) {
+            let enemy = enemyController.createEnemyShip();
+            enemies.push(enemy);
+        }
+        // enemyController.enemyShipMoveInStraightLine(enemyShip, enemyShip.width * 0.5);
+        enemyController.arrEnemyShipsMoveInBezierCurve(enemies, {x: this.world.width * 0.5, y: 0}, {x: this.world.width * 0.5, y: this.world.height* 0.5}, {x: this.world.width, y: this.world.height * 0.8});
+        // enemyController.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width * 0.5, y: 0}, {x: this.world.width * 0.5, y: this.world.height* 0.5}, {x: this.world.width, y: this.world.height * 0.8});
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {
