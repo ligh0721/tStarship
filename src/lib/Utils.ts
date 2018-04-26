@@ -1,5 +1,9 @@
 // TypeScript file
 module tutils {
+	export const SpeedFactor = 100;
+	export const AnglePerRadian = 180/Math.PI;
+	export const LongDistance = 5000;
+
     export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.DisplayObjectContainer {
 		let layer = new egret.Sprite();
 		layer.graphics.beginFill(color, alpha);
@@ -31,7 +35,10 @@ module tutils {
 		return Math.sqrt(dtx*dtx+dty*dty);
 	}
 
-	export const SpeedFactor = 100;
-	export const AnglePerRadian = 180/Math.PI;
-	export const LongDistance = 5000;
+	export function createBitmapByName(name: string) {
+        let result = new egret.Bitmap();
+        let texture: egret.Texture = RES.getRes(name);
+        result.texture = texture;
+        return result;
+    }
 }

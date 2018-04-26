@@ -89,73 +89,12 @@ class Main extends egret.DisplayObjectContainer {
 
     private textfield: egret.TextField;
 
-    private world: World;
-    private ship: Ship;
     /**
      * 创建游戏场景
      * Create a game scene
      */
     private createGameScene() {
-        let stageW = this.stage.stageWidth;
-        let stageH = this.stage.stageHeight;
-        let layer = <egret.Sprite>tutils.createLayer(this, 0x000000, 1.0);
-        this.world = new World(layer, stageW, stageH);
-
-        let debugLayer = <egret.Sprite>tutils.createLayer(layer, 0x000000, 0.0);
-        //this.world.debugDrawSprite = debugLayer;
-
-
-        let ship = new Ship(40, 80);
-        this.world.addShip(ship);
-        ship.force.force = 1;
-        ship.x = stageW*0.5;
-        ship.y = stageH-ship.height*0.5;
-        ship.speed = 50;
-        let gun = Gun.createGun(Gun);
-        //let gun = Gun.createGun(SoundWaveGun);
-        //let gun = Gun.createGun(ShotGun);
-        gun.fireInterval = 50;
-        gun.bulletSpeed = 100;
-        ship.addGun(gun);
-        ship.gun.autofire();
-        
-        this.ship = ship;
-
-        
-        
-        
-
-        layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        layer.touchEnabled = true;
-        
-        //let timer = new egret.Timer(20, 0);
-        layer.addEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
-        //timer.start();
-
-
-        // FIXME: test
-        ship = new Ship(80, 160);
-        this.world.addShip(ship);
-        ship.force.force = 2;
-        ship.hp.reset(500);
-        ship.hp.hp = ship.hp.maxHp;
-        ship.x = stageW*0.2;
-        ship.y = stageH*0.5;
-        ship.speed = 50;
-
-    }
-
-    private onTouchBegin(evt: egret.TouchEvent) {
-        this.ship.move(evt.localX, evt.localY);
-    }
-
-    private onTouchMove(evt: egret.TouchEvent) {
-        this.ship.move(evt.localX, evt.localY);
-    }
-
-    private onTimer(evt: egret.TimerEvent) {
-        this.world.step(1000/this.stage.frameRate);
+        Layer.createAt(BattleLayer, this);
     }
 
     /**
