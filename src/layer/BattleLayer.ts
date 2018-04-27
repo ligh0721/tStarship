@@ -29,9 +29,9 @@ class BattleLayer extends Layer {
         ship.x = stageW * 0.5;
         ship.y = stageH - ship.height * 0.5;
         ship.speed = 80;
-        //let gun = Gun.createGun(Gun);
+        let gun = Gun.createGun(Gun, ShakeWaveBullet);
         //let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
-        let gun = Gun.createGun(ShotGun, Bullet);
+        //let gun = Gun.createGun(ShotGun, Bullet);
 		//gun.bulletNum = 10;
 		//gun.bulletAngleDelta = 10;
         gun.fireInterval = 500;

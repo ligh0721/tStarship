@@ -51,7 +51,7 @@ class Bullet extends GameObject {
 	}
 
 	public static getDirectionPoint(x: number, y: number, angle: number, dis: number) {
-		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.AnglePerRadian, dis);
+		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
 	}
 
 	public fireStraight(angle: number, speed: number) {
