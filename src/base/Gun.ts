@@ -2,6 +2,7 @@ class Gun {
 	ship: Ship;
 	fireInterval: number = 200;
 	bulletPower: number = 1;
+	bulletPowerDelta: number = 1.0;  // 子弹能量下降系数
 	bulletSpeed: number = 50;
 
 	public constructor() {

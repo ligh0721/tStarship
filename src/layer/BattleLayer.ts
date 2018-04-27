@@ -87,7 +87,7 @@ class BattleLayer extends Layer {
 			let ship = new Ship(30, 60);
 			this.world.addShip(ship);
 			ship.force.force = 2;
-			ship.hp.reset(Math.random()*10);
+            ship.hp.reset(Math.floor(Math.random()*10)+1);
 			ship.hp.hp = ship.hp.maxHp;
 			ship.x = this.layer.width*Math.random();
 			ship.y = this.layer.height*Math.random();
