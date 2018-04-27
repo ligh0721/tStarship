@@ -24,5 +24,14 @@ class BezierCurve {
 	private set factor(value: number) {
 	    this.ship.x = (1 - value) * (1 - value) * this.point0.x + 2 * value * (1 - value) * this.point1.x + value * value * this.point2.x;
         this.ship.y = (1 - value) * (1 - value) * this.point0.y + 2 * value * (1 - value) * this.point1.y + value * value * this.point2.y;
+		
+		let x0 = (this.point1.x - this.point0.x) * value;
+		let y0 = (this.point1.y - this.point0.y) * value;
+
+		let x1 = (this.point2.x - this.point1.x) * value;
+		let y1 = (this.point2.y - this.point1.y) * value;
+
+		let angle = Math.atan2(y1 - y0, x1 - x0) * tutils.AnglePerRadian;
+		this.ship.gameObject.rotation = angle;
 	}
 }
