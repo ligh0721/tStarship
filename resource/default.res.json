@@ -1,60 +1,35 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,font_fnt,font_png,font2_fnt,font2_png,font3_fnt,font3_png,grid100_png",
+			"keys": "egret_icon_png,description_json,font_fnt,font_png,grid100_png",
 			"name": "preload"
 		}
 	],
 	"resources": [
 		{
-			"name": "bg_jpg",
+			"url": "assets/egret_icon.png",
 			"type": "image",
-			"url": "assets/bg.jpg"
+			"name": "egret_icon_png"
 		},
 		{
-			"name": "egret_icon_png",
-			"type": "image",
-			"url": "assets/egret_icon.png"
-		},
-		{
-			"name": "description_json",
+			"url": "config/description.json",
 			"type": "json",
-			"url": "config/description.json"
+			"name": "description_json"
 		},
 		{
-			"name": "font_fnt",
+			"url": "assets/font.fnt",
 			"type": "font",
-			"url": "assets/font.fnt"
+			"name": "font_fnt"
 		},
 		{
-			"name": "font_png",
+			"url": "assets/font.png",
 			"type": "image",
-			"url": "assets/font.png"
+			"name": "font_png"
 		},
 		{
-			"name": "font2_fnt",
-			"type": "font",
-			"url": "assets/font.fnt"
-		},
-		{
-			"name": "font2_png",
+			"url": "assets/grid100.png",
 			"type": "image",
-			"url": "assets/font.png"
-		},
-		{
-			"name": "font3_fnt",
-			"type": "font",
-			"url": "assets/font.fnt"
-		},
-		{
-			"name": "font3_png",
-			"type": "image",
-			"url": "assets/font.png"
-		},
-		{
-			"name": "grid100_png",
-			"type": "image",
-			"url": "assets/grid100.png"
+			"name": "grid100_png"
 		}
 	]
 }
