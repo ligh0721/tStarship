@@ -106,11 +106,11 @@ class World {
 
 				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
 					//console.log("bullet hit!");
-					let dt = Math.min(ship.hp.hp, Math.min(bullet.hp.hp, Math.floor(bullet.hp.maxHp*bullet.gun.bulletPowerDelta)));
+					let dt = Math.min(ship.hp.hp, Math.min(bullet.hp.hp, Math.floor(bullet.hp.maxHp*bullet.gun.bulletPowerLossPer)));
+					console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
 					ship.hp.hp -= dt;
 					bullet.hp.hp -= dt
 					
-					//console.log('ship('+shipId+') hp '+ship.hp.hp);
 					if (bullet.hp.isDead()) {
 						toDelBullet.push(bulletId);
 					}

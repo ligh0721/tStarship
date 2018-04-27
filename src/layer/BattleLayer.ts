@@ -26,20 +26,23 @@ class BattleLayer extends Layer {
         ship.force.force = 1;
         ship.x = stageW * 0.5;
         ship.y = stageH - ship.height * 0.5;
-        ship.speed = 50;
+        ship.speed = 80;
         //let gun = Gun.createGun(Gun);
-        //let gun = Gun.createGun(SoundWaveGun);
-        let gun = Gun.createGun(ShotGun);
-		gun.bulletNum = 10;
-		gun.bulletAngleDelta = 2;
-        gun.fireInterval = 300;
-        gun.bulletSpeed = 100;
+        //let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
+        let gun = Gun.createGun(ShotGun, SoundWaveBullet);
+		//gun.bulletNum = 10;
+		gun.bulletAngleDelta = 10;
+        gun.fireInterval = 500;
+        gun.bulletSpeed = 80;
+        gun.bulletPower = 2;
+        gun.bulletPowerLossPer = 1 / 2;
+        gun.bulletPowerLossInterval = 100;
         ship.addGun(gun);
         ship.gun.autofire();
         this.ship = ship;
 
         // 创建测试敌军
-        this.createTestEnemyShip();
+        this.createTestEnemyShip(20);
         
         // 创建分数板
 		let score = new Score(this.layer);
@@ -52,7 +55,7 @@ class BattleLayer extends Layer {
         let enemyController = EnemyController.instance;
         enemyController.world = this.world;
         let enemies: EnemyShip[] = [];
-        let n = 0;
+        let n = 10;
         for (let i=0; i<n; i++) {
             let enemy = enemyController.createEnemyShip();
             enemy.hp.reset(5);
@@ -60,7 +63,7 @@ class BattleLayer extends Layer {
         }
 
         // enemyController.enemyShipMoveInStraightLine(enemyShip, enemyShip.width * 0.5);
-        enemyController.arrEnemyShipsMoveInBezierCurve(enemies, {x: this.world.width * 0.5, y: 0}, {x: this.world.width * 0.5, y: this.world.height* 0.5}, {x: this.world.width, y: this.world.height * 0.8});
+        enemyController.arrEnemyShipsMoveInBezierCurve(enemies, {x: this.world.width * 0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5});
         // enemyController.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width * 0.5, y: 0}, {x: this.world.width * 0.5, y: this.world.height* 0.5}, {x: this.world.width, y: this.world.height * 0.8});
 	}
 
@@ -81,16 +84,15 @@ class BattleLayer extends Layer {
     }
 
 	// FIXME: test
-	createTestEnemyShip() {
-		let n = 1;
+	createTestEnemyShip(n: number) {
 		for (let i=0; i<n; i++) {
 			let ship = new Ship(30, 60);
 			this.world.addShip(ship);
 			ship.force.force = 2;
             ship.hp.reset(Math.floor(Math.random()*10)+1);
 			ship.hp.hp = ship.hp.maxHp;
-			ship.x = this.layer.width*Math.random();
-			ship.y = this.layer.height*Math.random();
+            ship.x = this.layer.width*(0.1+Math.random()*0.8);
+            ship.y = this.layer.height*(0.1+Math.random()*0.7);
 		}
 	}
 }

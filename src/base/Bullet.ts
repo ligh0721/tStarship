@@ -1,6 +1,7 @@
 class Bullet extends GameObject {
 	gun: Gun;
 	hp: Health;
+	private effectedShips: Object = {};
 	
 	public constructor(gun: Gun) {
 		super();
@@ -18,7 +19,31 @@ class Bullet extends GameObject {
 	}
 
 	public onHitEnemyShipTest(ship: Ship): boolean {
-		return this.hitTest(ship);
+		if (this.gun.bulletPowerLossPer == 1) {
+			return this.hitTest(ship);
+		}
+		
+		let now = egret.getTimer();
+		let idStr = ship.id.toString();
+		if (this.effectedShips.hasOwnProperty(idStr)) {
+			// 有击中记录
+			if (now-this.effectedShips[idStr]>this.gun.bulletPowerLossInterval) {
+				// 已过击中保护时间
+				if (this.hitTest(ship)) {
+					// 击中
+					this.effectedShips[idStr] = now;
+					return true;
+				}
+			}
+		} else {
+			// 无击中记录
+			if (this.hitTest(ship)) {
+				// 击中
+				this.effectedShips[idStr] = now;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public onHitEnemyBulletTest(ship: Ship): boolean {
@@ -30,6 +55,7 @@ class Bullet extends GameObject {
 	}
 
 	public fireStraight(angle: number, speed: number) {
+		this.angle = angle;
 		let tw = egret.Tween.get(this.gameObject);
 		let toPos = Bullet.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
 		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed);
