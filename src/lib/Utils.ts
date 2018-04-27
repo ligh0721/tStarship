@@ -2,7 +2,7 @@
 module tutils {
 	export const SpeedFactor = 100;
 	export const DegPerRad = 180/Math.PI;
-	export const LongDistance = 5000;
+	export const LongDistance = 1500;
 
     export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.Sprite {
 		let layer = new egret.Sprite();

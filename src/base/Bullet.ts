@@ -54,10 +54,10 @@ class Bullet extends GameObject {
 		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
 	}
 
-	public fireStraight(angle: number, speed: number) {
+	public fireStraight(angle: number, speed: number, ease?: Function) {
 		this.angle = angle;
 		let tw = egret.Tween.get(this.gameObject);
 		let toPos = Bullet.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
-		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed);
+		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
 	}
 }

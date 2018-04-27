@@ -1,9 +1,9 @@
 class Gun {
 	ship: Ship;
 	fireInterval: number = 200;
-	bulletPower: number = 100;
+	bulletPower: number = 1;
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
-	bulletPowerLossInterval: number = 1000;  // 子弹能量下降时间间隔
+	bulletPowerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	bulletSpeed: number = 50;
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 
@@ -42,9 +42,7 @@ class Gun {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		let tw = egret.Tween.get(bullet.gameObject);
-		let toY = -this.ship.world.height * 0.3;
-		tw.to({y: toY}, (bullet.y-toY)/this.bulletSpeed*tutils.SpeedFactor);
+		bullet.fireStraight(0, this.bulletSpeed);
 	}
 
 	public autofire() {

@@ -62,8 +62,6 @@ class GameObject {
 
 	public onAddToWorld(): void {
 		this.gameObject = this.onCreate();
-		this.boundsRect = this.gameObject.getBounds();
-		this.boundsDirty = false;
 	}
 
 	protected onCleanup(): void {

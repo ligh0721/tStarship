@@ -28,16 +28,18 @@ class BattleLayer extends Layer {
         ship.force.force = 1;
         ship.x = stageW * 0.5;
         ship.y = stageH - ship.height * 0.5;
-        ship.speed = 80;
+        ship.speed = 50;
         let gun = Gun.createGun(Gun, ShakeWaveBullet);
         //let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
-        //let gun = Gun.createGun(ShotGun, Bullet);
+        //let gun = Gun.createGun(ShotGun, ShakeWaveBullet);
+        //let gun = Gun.createGun(EaseGun, ShakeWaveBullet);
+        //gun.ease = egret.Ease.getPowIn(2);
 		//gun.bulletNum = 10;
 		//gun.bulletAngleDelta = 10;
-        gun.fireInterval = 500;
+        gun.fireInterval = 300;
         gun.bulletSpeed = 80;
-        gun.bulletPower = 2;
-        gun.bulletPowerLossPer = 1 / 2;
+        gun.bulletPower = 10;
+        gun.bulletPowerLossPer = 0.5;
         gun.bulletPowerLossInterval = 100;
         ship.addGun(gun);
         ship.gun.autofire();
@@ -57,7 +59,7 @@ class BattleLayer extends Layer {
         let enemyController = EnemyController.instance;
         enemyController.world = this.world;
         let enemies: EnemyShip[] = [];
-        let n = 10;
+        let n = 100;
         for (let i=0; i<n; i++) {
             let enemy = enemyController.createEnemyShip();
             enemy.hp.reset(5);
