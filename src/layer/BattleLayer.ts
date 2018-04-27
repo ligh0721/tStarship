@@ -84,11 +84,11 @@ class BattleLayer extends Layer {
     }
 
 	// FIXME: test
-	createTestEnemyShip(n: number) {
+	private createTestEnemyShip(n: number) {
 		for (let i=0; i<n; i++) {
 			let ship = new Ship(30, 60);
 			this.world.addShip(ship);
-			ship.force.force = 2;
+			ship.force.force = 8;
             ship.hp.reset(Math.floor(Math.random()*10)+1);
 			ship.hp.hp = ship.hp.maxHp;
             ship.x = this.layer.width*(0.1+Math.random()*0.8);
