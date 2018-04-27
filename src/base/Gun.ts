@@ -1,7 +1,7 @@
 class Gun {
 	ship: Ship;
 	fireInterval: number = 200;
-	bulletPower: number = 1;
+	bulletPower: number = 100;
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
 	bulletPowerLossInterval: number = 1000;  // 子弹能量下降时间间隔
 	bulletSpeed: number = 50;

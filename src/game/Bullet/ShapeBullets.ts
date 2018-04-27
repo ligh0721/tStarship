@@ -13,3 +13,17 @@ class SoundWaveBullet extends Bullet {
 		return bullet;
 	}
 }
+
+class ShakeWaveBullet extends Bullet {
+	protected onCreate(): egret.DisplayObject {
+		let bullet = new egret.Shape();
+        //bullet.graphics.beginFill(0x000000, 1.0);
+		bullet.graphics.lineStyle(3, 0xffffff);
+		//bullet.graphics.drawEllipse(0, 0, this.width, this.height);
+		bullet.graphics.drawArc(0, 0, 50, -45, -135);
+		//bullet.anchorOffsetX = this.width * 0.5;
+		//bullet.anchorOffsetY = this.height * 0.5;
+        //bullet.graphics.endFill();
+		return bullet;
+	}
+}

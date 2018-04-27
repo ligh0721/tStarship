@@ -4,6 +4,8 @@ class BattleLayer extends Layer {
 	private score: Score;
 	
 	protected onInit() {
+        let bg = tutils.createBitmapByName("grid100_png");
+        this.layer.addChild(bg);
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
         this.layer.touchEnabled = true;
@@ -29,9 +31,9 @@ class BattleLayer extends Layer {
         ship.speed = 80;
         //let gun = Gun.createGun(Gun);
         //let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
-        let gun = Gun.createGun(ShotGun, SoundWaveBullet);
+        let gun = Gun.createGun(ShotGun, Bullet);
 		//gun.bulletNum = 10;
-		gun.bulletAngleDelta = 10;
+		//gun.bulletAngleDelta = 10;
         gun.fireInterval = 500;
         gun.bulletSpeed = 80;
         gun.bulletPower = 2;

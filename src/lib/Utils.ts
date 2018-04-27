@@ -4,7 +4,7 @@ module tutils {
 	export const AnglePerRadian = 180/Math.PI;
 	export const LongDistance = 5000;
 
-    export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.DisplayObjectContainer {
+    export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.Sprite {
 		let layer = new egret.Sprite();
 		layer.graphics.beginFill(color, alpha);
 		layer.graphics.drawRect(0, 0, parent.stage.stageWidth, parent.stage.stageHeight);

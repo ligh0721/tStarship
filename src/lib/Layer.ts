@@ -1,7 +1,7 @@
 class Layer {
 	readonly root: Main;
 	readonly stage: egret.Stage;
-	readonly layer: egret.DisplayObjectContainer;
+	readonly layer: egret.Sprite;
 	public constructor(root: Main) {
 		this.root = root;
 		this.stage = root.stage;
@@ -18,7 +18,7 @@ class Layer {
 		return this.layer.addChild(child);
 	}
 
-	protected onCreate(): egret.DisplayObjectContainer {
+	protected onCreate(): egret.Sprite {
 		let layer = tutils.createLayer(this.root, 0x000000, 1.0);
 		return layer;
 	}
