@@ -23,9 +23,10 @@ class Ship extends GameObject {
 		}
 	}
 
-	public addGun(gun: Gun) {
+	public addGun(gun: Gun): Gun {
 		this.gun = gun;
 		gun.ship = this;
+		return gun
 	}
 
 	public move(x: number, y: number) {

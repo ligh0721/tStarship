@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,font_fnt,font_png,font2_fnt,font2_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,font_fnt,font_png,font2_fnt,font2_png,font3_fnt,font3_png,grid100_png",
 			"name": "preload"
 		}
 	],
@@ -40,6 +40,21 @@
 			"name": "font2_png",
 			"type": "image",
 			"url": "assets/font.png"
+		},
+		{
+			"name": "font3_fnt",
+			"type": "font",
+			"url": "assets/font.fnt"
+		},
+		{
+			"name": "font3_png",
+			"type": "image",
+			"url": "assets/font.png"
+		},
+		{
+			"name": "grid100_png",
+			"type": "image",
+			"url": "assets/grid100.png"
 		}
 	]
 }

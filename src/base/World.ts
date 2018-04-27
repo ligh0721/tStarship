@@ -7,6 +7,9 @@ class World {
 	bullets: Object;
 	debugDrawSprite: egret.Sprite = null;
 
+	onShipDeadListener: (ship: Ship, killer: Ship) => void;
+	onShipDeadThisObject: any;
+
 	public constructor(gameObject: egret.DisplayObjectContainer, width: number, height: number) {
 		this.gameObject = gameObject;
 		this.width = width;
@@ -27,7 +30,7 @@ class World {
 
 	public removeShip(id: number) {
 		if (!this.ships.hasOwnProperty(id.toString())) {
-			console.log('ship not found');
+			console.log('ship('+id+') not found');
 			return;
 		}
 		let ship: Ship = this.ships[id];
@@ -35,6 +38,7 @@ class World {
 		ship.world = null;
 		ship.cleanup();
 		delete this.ships[id];
+		//console.log('ship('+id+') removed');
 	}
 
 	public addBullet(bullet: Bullet): Bullet {
@@ -82,8 +86,10 @@ class World {
 		for (let shipId in this.ships) {
 			let ship: Ship = this.ships[shipId];
 			if (ship.hp.isDead()) {
+				console.log('ship('+shipId+') isDead');
 				continue;
 			}
+			//console.log('ship('+shipId+') not Dead');
 
 			// 检测子弹撞击
 			for (let bulletId in this.bullets) {
@@ -99,22 +105,21 @@ class World {
 				}
 
 				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
-					console.log("bullet hit!");
-					let dt = ship.hp.hp - bullet.hp.hp;
-					if (dt > 0) {
-						ship.hp.hp = dt;
-						bullet.hp.hp = 0;
-					} else {
-						bullet.hp.hp -dt;
-						ship.hp.hp = 0;
-					}
+					//console.log("bullet hit!");
+					let dt = Math.min(ship.hp.hp, Math.min(bullet.hp.hp, Math.floor(bullet.hp.maxHp*bullet.gun.bulletPowerLossPer)));
+					console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
+					ship.hp.hp -= dt;
+					bullet.hp.hp -= dt
 					
-					if (ship.hp.isDead()) {
-						console.log("dead!");
-						toDelShip.push(shipId);
-					}
 					if (bullet.hp.isDead()) {
 						toDelBullet.push(bulletId);
+					}
+					if (ship.hp.isDead()) {
+						//console.log("dead!");
+						//console.log('ship('+shipId+') push toDel '+ship.hp.hp);
+						this.onShipDead(ship, bullet.gun.ship);
+						toDelShip.push(shipId);
+						break;
 					}
 				}
 			}
@@ -126,16 +131,18 @@ class World {
 					continue;
 				}
 				if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
-					console.log("ship hit!");
+					//console.log("ship hit!");
 					ship.hp.hp -= ship2.hp.maxHp;
 					ship2.hp.hp -= ship.hp.maxHp;
-					if (ship.hp.isDead()) {
-						console.log("dead!");
-						toDelShip.push(shipId);
-					}
 					if (ship2.hp.isDead()) {
-						console.log("dead!");
+						//console.log("dead!");
 						toDelShip.push(shipId2);
+					}
+					if (ship.hp.isDead()) {
+						//console.log("dead!");
+						this.onShipDead(ship, ship2);
+						toDelShip.push(shipId);
+						break;
 					}
 				}
 			}
@@ -151,5 +158,14 @@ class World {
 
 	protected nextId(): number {
 		return tutils.nextId();
+	}
+
+	protected onShipDead(ship: Ship, killer: Ship) {
+		this.onShipDeadListener.call(this.onShipDeadThisObject, ship, killer);
+	}
+
+	public setOnShipDeadListener(listener: (ship: Ship, killer: Ship)=>void, thisObject: any) {
+		this.onShipDeadListener = listener;
+		this.onShipDeadThisObject = thisObject;
 	}
 }

@@ -7,8 +7,8 @@ class RowGun extends Gun {
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		for (let i=0; i<n; i++) {
-			let bullet = new Bullet(this);
-			this.ship.world.addBullet(bullet);
+			let bullet = this.createBullet();
+			this.addBulletToWorld(bullet);
 			bullet.x = firePos.x+(i-(n-1)/2)*this.bulletXDelta;
 			bullet.y = firePos.y+(Math.abs(i-(n-1)/2))*this.bulletYDelta;
 			let tw = egret.Tween.get(bullet.gameObject);

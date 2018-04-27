@@ -38,7 +38,6 @@ class EnemyController {
 	}
 
 	public arrEnemyShipsMoveInBezierCurve(arrShips: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}) {
-		console.log(arrShips);
 		let t = new egret.Timer(150, 0);
 		let i = 0;
 		t.addEventListener(egret.TimerEvent.TIMER, () => {

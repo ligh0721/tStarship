@@ -4,6 +4,7 @@ class GameObject {
 	world: World;
 	staticBounds: boolean = true;
 	private boundsRect: egret.Rectangle = null;
+	private boundsDirty: boolean = true;
 
 	public constructor() {
 	}
@@ -37,8 +38,17 @@ class GameObject {
 		this.gameObject.y = value;
 	}
 
+	public get angle(): number {
+		return this.gameObject.rotation;
+	}
+
+	public set angle(value: number) {
+		this.gameObject.rotation = value;
+		this.boundsDirty = true;
+	}
+
 	public getBounds(): egret.Rectangle {
-		if (!this.staticBounds) {
+		if (!this.staticBounds || this.boundsDirty) {
 			this.boundsRect = this.gameObject.getBounds();
 		}
 		this.boundsRect.x = this.gameObject.x - this.gameObject.width * 0.5;
@@ -53,6 +63,7 @@ class GameObject {
 	public onAddToWorld(): void {
 		this.gameObject = this.onCreate();
 		this.boundsRect = this.gameObject.getBounds();
+		this.boundsDirty = false;
 	}
 
 	protected onCleanup(): void {
