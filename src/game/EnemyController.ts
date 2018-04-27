@@ -30,14 +30,14 @@ class EnemyController {
 		});
 	}
 
-	public enemyShipMoveInBezierCurve(ship: EnemyShip, point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}) {
-		let bezierCurve = new BezierCurve(ship, point0, point1, point2);
+	public enemyShipMoveInBezierCurve(ship: EnemyShip, point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}, fixedRotation: boolean=false) {
+		let bezierCurve = new BezierCurve(ship, point0, point1, point2, fixedRotation);
 		bezierCurve.startMove(() => {
 			this.world.removeShip(ship.id);
 		});
 	}
 
-	public arrEnemyShipsMoveInBezierCurve(arrShips: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}) {
+	public arrEnemyShipsMoveInBezierCurve(arrShips: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}, fixedRotation: boolean=false) {
 		let t = new egret.Timer(150, 0);
 		let i = 0;
 		t.addEventListener(egret.TimerEvent.TIMER, () => {
@@ -47,7 +47,7 @@ class EnemyController {
 			}
 			
 			let ship = arrShips[i];
-			let bezierCurve = new BezierCurve(ship, point0, point1, point2);
+			let bezierCurve = new BezierCurve(ship, point0, point1, point2, fixedRotation);
 			bezierCurve.startMove(() => {
 				this.world.removeShip(ship.id);
 			});
