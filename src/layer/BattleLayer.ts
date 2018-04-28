@@ -64,15 +64,16 @@ class BattleLayer extends Layer {
         let enemyController = EnemyController.instance;
         enemyController.world = this.world;
         let enemies: EnemyShip[] = [];
-        let n = 100;
+        let n = 1;
         for (let i=0; i<n; i++) {
             let enemy = enemyController.createEnemyShip();
             enemy.hp.reset(5);
             enemies.push(enemy);
         }
 
-        // enemyController.enemyShipMoveInStraightLine(enemyShip, enemyShip.width * 0.5);
-        enemyController.arrEnemyShipsMoveInBezierCurve(enemies, {x: this.world.width * 0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
+        Tracing.tracingMethord(enemies[0], ship);
+        // enemyController.enemyShipMoveInStraightLine(enemies[0], enemies[0].width * 0.5);
+        // enemyController.arrEnemyShipsMoveInBezierCurve(enemies, {x: this.world.width * 0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
         // enemyController.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width * 0.5, y: 0}, {x: this.world.width * 0.5, y: this.world.height* 0.5}, {x: this.world.width, y: this.world.height * 0.8});
 	}
 
