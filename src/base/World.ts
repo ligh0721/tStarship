@@ -80,8 +80,8 @@ class World {
 			}
 		}
 
-		let toDelBullet = [];
-		let toDelShip = [];
+		let dyingBullets: Bullet[] = [];
+		let dyingShips: Ship[] = [];
 
 		for (let shipId in this.ships) {
 			let ship: Ship = this.ships[shipId];
@@ -100,7 +100,7 @@ class World {
 				if (!this.rect.intersects(bullet.getBounds())) {
 					// 移除跑出边界的子弹
 					bullet.hp.hp = 0;
-					toDelBullet.push(bulletId);
+					dyingBullets.push(bullet);
 					continue;
 				}
 
@@ -112,13 +112,13 @@ class World {
 					bullet.hp.hp -= dt
 					
 					if (bullet.hp.isDead()) {
-						toDelBullet.push(bulletId);
+						dyingBullets.push(bullet);
 					}
 					if (ship.hp.isDead()) {
 						//console.log("dead!");
 						//console.log('ship('+shipId+') push toDel '+ship.hp.hp);
 						this.onShipDead(ship, bullet.gun.ship);
-						toDelShip.push(shipId);
+						dyingShips.push(ship);
 						break;
 					}
 				}
@@ -136,23 +136,27 @@ class World {
 					ship2.hp.hp -= ship.hp.maxHp;
 					if (ship2.hp.isDead()) {
 						//console.log("dead!");
-						toDelShip.push(shipId2);
+						dyingShips.push(ship2);
 					}
 					if (ship.hp.isDead()) {
 						//console.log("dead!");
 						this.onShipDead(ship, ship2);
-						toDelShip.push(shipId);
+						dyingShips.push(ship);
 						break;
 					}
 				}
 			}
 		}
 
-		for (let i in toDelBullet) {
-			this.removeBullet(toDelBullet[i]);
+		for (let i in dyingBullets) {
+			let bullet = dyingBullets[i];
+			bullet.onDying();
+			this.removeBullet(bullet.id);
 		}
-		for (let i in toDelShip) {
-			this.removeShip(toDelShip[i]);
+		for (let i in dyingShips) {
+			let ship = dyingShips[i];
+			ship.onDying();
+			this.removeShip(ship.id);
 		}
 	}
 

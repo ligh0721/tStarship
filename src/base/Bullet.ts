@@ -50,6 +50,9 @@ class Bullet extends GameObject {
 		return false;
 	}
 
+	public onDying() {
+	}
+
 	public static getDirectionPoint(x: number, y: number, angle: number, dis: number) {
 		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
 	}

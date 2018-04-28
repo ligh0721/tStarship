@@ -57,4 +57,7 @@ class Ship extends GameObject {
 		}
 		super.onCleanup();
 	}
+
+	public onDying() {
+	}
 }
