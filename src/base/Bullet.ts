@@ -3,6 +3,7 @@ class Bullet extends GameObject {
 	power: Health;
 	powerLossPer: number = 1.0;  // 子弹能量下降系数
 	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
+	removeOutOfWorld: boolean = true;
 	private effectedShips: Object = {};
 	
 	public constructor(gun: Gun) {
@@ -58,14 +59,10 @@ class Bullet extends GameObject {
 	public onDying() {
 	}
 
-	public static getDirectionPoint(x: number, y: number, angle: number, dis: number) {
-		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
-	}
-
 	public fireStraight(angle: number, speed: number, ease?: Function) {
 		this.angle = angle;
 		let tw = egret.Tween.get(this.gameObject);
-		let toPos = Bullet.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
+		let toPos = GameObject.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
 		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
 	}
 }

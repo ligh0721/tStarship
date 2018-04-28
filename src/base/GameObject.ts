@@ -71,4 +71,8 @@ class GameObject {
 	public hitTest(other: GameObject): boolean {
 		return this.getBounds().intersects(other.getBounds());
 	}
+
+	public static getDirectionPoint(x: number, y: number, angle: number, dis: number) {
+		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
+	}
 }

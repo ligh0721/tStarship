@@ -2,6 +2,8 @@ class BattleLayer extends Layer {
 	private world: World;
     private ship: Ship;
 	private score: Score;
+    private enemyCtrl: EnemyController;
+    private worldStep: number = 0;
 	
 	protected onInit() {
         let bg = tutils.createBitmapByName("grid100_png");
@@ -17,14 +19,13 @@ class BattleLayer extends Layer {
         //timer.start();
 		
         // 创建世界
-        let world = new World(this.layer, stageW, stageH);
-        this.world = world
-        world.setOnShipDeadListener(this.onShipDead, this);
+        this.world = new World(this.layer, stageW, stageH);
+        this.enemyCtrl = new EnemyController(this.world);
+        this.world.setOnShipDeadListener(this.onShipDead, this);
 
-        // world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
-        // let dbgTxt = new egret.TextField()
-        // world.debugDrawSprite.addChild(dbgTxt);
-        // world.debugTextField = dbgTxt;
+        // this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
+        // this.world.debugTextField = new egret.TextField()
+        // this.world.debugDrawSprite.addChild(this.world.debugTextField);
 
         // 创建玩家飞船
         let ship = new Ship(40, 80);
@@ -33,24 +34,32 @@ class BattleLayer extends Layer {
         ship.x = stageW * 0.5;
         ship.y = stageH - ship.height * 0.5;
         ship.speed = 50;
-        let gun = Gun.createGun(Gun, ExplosionBullet);
-        //let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
+        //let gun = Gun.createGun(Gun, ExplosionBullet);
+        let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
         //let gun = Gun.createGun(ShotGun, ShakeWaveBullet);
         //let gun = Gun.createGun(EaseGun, ShakeWaveBullet);
+        //let gun = Gun.createGun(ShotGun, ShakeWaveBullet);
         //gun.ease = egret.Ease.getPowIn(2);
-		//gun.bulletNum = 10;
+		gun.bulletNum = 4;
 		//gun.bulletAngleDelta = 10;
         gun.fireInterval = 500;
-        gun.bulletSpeed = 50;
-        gun.bulletPower = 5;
-        gun.bulletPowerLossPer = 1.0;
+        gun.bulletSpeed = 60;
+        gun.bulletPower = 2;
+        gun.bulletPowerLossPer = 1;
         gun.bulletPowerLossInterval = 1000;
-        ship.addGun(gun);
-        ship.gun.autofire();
+        ship.addGun(gun).autofire();
+
+
+        let gun2 = Gun.createGun(SatelliteGun, ExplosionBullet);
+        gun2.fireInterval = 1000;
+        gun2.bulletPower = 5;
+        gun2.bulletPowerLossPer = 1.0;
+        gun2.bulletPowerLossInterval = 1000;
+        ship.addGun(gun2).autofire();
         this.ship = ship;
 
         // 创建测试敌军
-        this.createTestEnemyShip(20);
+        this.createTestEnemyShip(10);
         
         // 创建分数板
 		let score = new Score(this.layer);
@@ -61,19 +70,17 @@ class BattleLayer extends Layer {
         this.score.bmpText.x = this.stage.stageWidth - this.score.bmpText.textWidth;
 
         // 创建敌军小队
-        let enemyController = EnemyController.instance;
-        enemyController.world = this.world;
         let enemies: EnemyShip[] = [];
         let n = 100;
         for (let i=0; i<n; i++) {
-            let enemy = enemyController.createEnemyShip();
+            let enemy = this.enemyCtrl.createEnemyShip(40, 80, "tri");
             enemy.hp.reset(5);
             enemies.push(enemy);
         }
 
-        // enemyController.enemyShipMoveInStraightLine(enemyShip, enemyShip.width * 0.5);
-        enemyController.arrEnemyShipsMoveInBezierCurve(enemies, {x: this.world.width * 0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
-        // enemyController.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width * 0.5, y: 0}, {x: this.world.width * 0.5, y: this.world.height* 0.5}, {x: this.world.width, y: this.world.height * 0.8});
+        // this.enemyCtrl.enemyShipMoveInStraightLine(enemyShip, enemyShip.width*0.5);
+        this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
+        // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 	}
 
     private onShipDead(ship: Ship, killer: Ship) {
@@ -89,7 +96,13 @@ class BattleLayer extends Layer {
     }
 
     private onTimer(evt: egret.TimerEvent) {
-        this.world.step(1000/this.stage.frameRate);
+        if (this.worldStep < 1) {
+            this.world.step(1000/this.stage.frameRate*2);
+            this.worldStep++;
+        } else {
+            this.worldStep = 0;
+        }
+        
     }
 
 	// FIXME: test
@@ -100,8 +113,8 @@ class BattleLayer extends Layer {
 			ship.force.force = 8;
             ship.hp.reset(Math.floor(Math.random()*10)+1);
 			ship.hp.hp = ship.hp.maxHp;
-            ship.x = this.layer.width*(0.1+Math.random()*0.8);
-            ship.y = this.layer.height*(0.1+Math.random()*0.7);
+            ship.x = this.stage.stageWidth*(0.1+Math.random()*0.8);
+            ship.y = this.stage.stageHeight*(0.1+Math.random()*0.7);
 		}
 	}
 }

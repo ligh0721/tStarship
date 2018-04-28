@@ -4,7 +4,7 @@ class Ship extends GameObject {
 	
 	force: Force = new Force();
 	hp: Health = new Health();
-	gun: Gun = null;
+	guns: Gun[] = [];
 	speed: number = 100;
 
 	public constructor(width: number, height: number) {
@@ -24,7 +24,7 @@ class Ship extends GameObject {
 	}
 
 	public addGun(gun: Gun): Gun {
-		this.gun = gun;
+		this.guns.push(gun);
 		gun.ship = this;
 		return gun
 	}
@@ -52,8 +52,9 @@ class Ship extends GameObject {
 	}
 
 	protected onCleanup(): void {
-		if (this.gun != null) {
-			this.gun.cleanup();
+		for (let i in this.guns) {
+			let gun = this.guns[i];
+			gun.cleanup();
 		}
 		super.onCleanup();
 	}

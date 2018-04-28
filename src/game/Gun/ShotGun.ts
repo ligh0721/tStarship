@@ -5,7 +5,7 @@ class ShotGun extends Gun {
 	public fire() {
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
-		let r = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height);
+		let r = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2;
 		for (let i=0; i<n; i++) {
 			let bullet = this.createBullet();
 			this.addBulletToWorld(bullet)

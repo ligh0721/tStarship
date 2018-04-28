@@ -13,6 +13,8 @@ class World {
 	onShipDeadListener: (ship: Ship, killer: Ship) => void;
 	onShipDeadThisObject: any;
 
+	
+
 	public constructor(gameObject: egret.DisplayObjectContainer, width: number, height: number) {
 		this.gameObject = gameObject;
 		this.width = width;
@@ -20,6 +22,20 @@ class World {
 		this.rect = new egret.Rectangle(0, 0, width, height);
 		this.ships = {};
 		this.bullets = {};
+	}
+
+	public getShip(id: number): Ship {
+		if (!this.ships.hasOwnProperty(id.toString())) {
+			return null;
+		}
+		return this.ships[id];
+	}
+
+	public getBullet(id: number): Bullet {
+		if (!this.bullets.hasOwnProperty(id.toString())) {
+			return null;
+		}
+		return this.bullets[id];
 	}
 
 	public addShip(ship: Ship): Ship {
@@ -38,9 +54,9 @@ class World {
 			return;
 		}
 		let ship: Ship = this.ships[id];
+		ship.cleanup();
 		this.gameObject.removeChild(ship.gameObject);
 		ship.world = null;
-		ship.cleanup();
 		delete this.ships[id];
 		this.shipsNum--;
 		//console.log('ship('+id+') removed');
@@ -62,9 +78,9 @@ class World {
 			return;
 		}
 		let bullet: Bullet = this.bullets[id];
+		bullet.cleanup();
 		this.gameObject.removeChild(bullet.gameObject);
 		bullet.world = null;
-		bullet.cleanup();
 		delete this.bullets[id];
 		this.bulletsNum--;
 	}
@@ -89,8 +105,8 @@ class World {
 			}
 		}
 
-		let dyingBullets: Bullet[] = [];
 		let dyingShips: Ship[] = [];
+		let dyingBullets: Bullet[] = [];
 
 		for (let shipId in this.ships) {
 			let ship: Ship = this.ships[shipId];
@@ -106,7 +122,7 @@ class World {
 				if (bullet.power.isDead()) {
 					continue;
 				}
-				if (!this.rect.intersects(bullet.getBounds())) {
+				if (bullet.removeOutOfWorld && !this.rect.intersects(bullet.getBounds())) {
 					// 移除跑出边界的子弹
 					bullet.power.hp = 0;
 					dyingBullets.push(bullet);

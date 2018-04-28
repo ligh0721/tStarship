@@ -37,7 +37,6 @@ class ExplosionBullet extends Bullet {
 		if (this.isExplosion) {
 			return;
 		}
-		console.log('@@@@@@@');
 
 		let explosion = new ExplosionBullet(this.gun);
 		explosion.isExplosion = true;
@@ -59,5 +58,7 @@ class ExplosionBullet extends Bullet {
 				explosion.world.removeBullet(explosion.id);
 			}
 		});
+		tw = egret.Tween.get(explosion.gameObject);
+		tw.to({alpha: 0}, 500, egret.Ease.getPowOut(5));
 	}
 }
