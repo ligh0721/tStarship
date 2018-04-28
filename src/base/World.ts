@@ -4,9 +4,12 @@ class World {
 	readonly height: number;
 	readonly rect: egret.Rectangle;
 	ships: Object;
+	shipsNum: number = 0;
 	bullets: Object;
+	bulletsNum: number = 0;
 	debugDrawSprite: egret.Sprite = null;
 
+	debugTextField: egret.TextField = null;
 	onShipDeadListener: (ship: Ship, killer: Ship) => void;
 	onShipDeadThisObject: any;
 
@@ -25,6 +28,7 @@ class World {
 		ship.world = this;
 		ship.id = this.nextId();
 		this.ships[ship.id] = ship;
+		this.shipsNum++;
 		return ship;
 	}
 
@@ -38,6 +42,7 @@ class World {
 		ship.world = null;
 		ship.cleanup();
 		delete this.ships[id];
+		this.shipsNum--;
 		//console.log('ship('+id+') removed');
 	}
 
@@ -47,6 +52,7 @@ class World {
 		bullet.world = this;
 		bullet.id = this.nextId();
 		this.bullets[bullet.id] = bullet;
+		this.bulletsNum++;
 		return bullet;
 	}
 
@@ -60,12 +66,15 @@ class World {
 		bullet.world = null;
 		bullet.cleanup();
 		delete this.bullets[id];
+		this.bulletsNum--;
 	}
 
 	public step(dt: number) {
 		if (this.debugDrawSprite != null) {
 			this.debugDrawSprite.graphics.clear();
 			this.debugDrawSprite.graphics.lineStyle(2, 0xffffff, 1);
+
+			this.debugTextField.text = "ship: "+this.shipsNum+", bullet: "+this.bulletsNum;
 			
 			for (let shipId in this.ships) {
 				let ship: Ship = this.ships[shipId];
@@ -94,24 +103,24 @@ class World {
 			// 检测子弹撞击
 			for (let bulletId in this.bullets) {
 				let bullet: Bullet = this.bullets[bulletId];
-				if (bullet.hp.isDead()) {
+				if (bullet.power.isDead()) {
 					continue;
 				}
 				if (!this.rect.intersects(bullet.getBounds())) {
 					// 移除跑出边界的子弹
-					bullet.hp.hp = 0;
+					bullet.power.hp = 0;
 					dyingBullets.push(bullet);
 					continue;
 				}
 
 				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
 					//console.log("bullet hit!");
-					let dt = Math.min(ship.hp.hp, Math.min(bullet.hp.hp, Math.floor(bullet.hp.maxHp*bullet.gun.bulletPowerLossPer)));
-					console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
+					let dt = Math.min(bullet.power.hp, Math.floor(bullet.power.maxHp*bullet.powerLossPer));
+					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
 					ship.hp.hp -= dt;
-					bullet.hp.hp -= dt
+					bullet.power.hp -= dt
 					
-					if (bullet.hp.isDead()) {
+					if (bullet.power.isDead()) {
 						dyingBullets.push(bullet);
 					}
 					if (ship.hp.isDead()) {

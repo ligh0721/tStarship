@@ -18,9 +18,13 @@ class BattleLayer extends Layer {
 		
         // 创建世界
         let world = new World(this.layer, stageW, stageH);
-        //world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
-        world.setOnShipDeadListener(this.onShipDead, this);
         this.world = world
+        world.setOnShipDeadListener(this.onShipDead, this);
+
+        // world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
+        // let dbgTxt = new egret.TextField()
+        // world.debugDrawSprite.addChild(dbgTxt);
+        // world.debugTextField = dbgTxt;
 
         // 创建玩家飞船
         let ship = new Ship(40, 80);
@@ -29,18 +33,18 @@ class BattleLayer extends Layer {
         ship.x = stageW * 0.5;
         ship.y = stageH - ship.height * 0.5;
         ship.speed = 50;
-        let gun = Gun.createGun(Gun, ShakeWaveBullet);
+        let gun = Gun.createGun(Gun, ExplosionBullet);
         //let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
         //let gun = Gun.createGun(ShotGun, ShakeWaveBullet);
         //let gun = Gun.createGun(EaseGun, ShakeWaveBullet);
         //gun.ease = egret.Ease.getPowIn(2);
 		//gun.bulletNum = 10;
 		//gun.bulletAngleDelta = 10;
-        gun.fireInterval = 300;
-        gun.bulletSpeed = 80;
-        gun.bulletPower = 10;
-        gun.bulletPowerLossPer = 0.5;
-        gun.bulletPowerLossInterval = 100;
+        gun.fireInterval = 500;
+        gun.bulletSpeed = 50;
+        gun.bulletPower = 5;
+        gun.bulletPowerLossPer = 1.0;
+        gun.bulletPowerLossInterval = 1000;
         ship.addGun(gun);
         ship.gun.autofire();
         this.ship = ship;
@@ -52,8 +56,9 @@ class BattleLayer extends Layer {
 		let score = new Score(this.layer);
 		score.digits = 10;
 		score.score = 0;
-		score.setScore(10000, 5000);
+		//score.setScore(10000, 5000);
         this.score = score;
+        this.score.bmpText.x = this.stage.stageWidth - this.score.bmpText.textWidth;
 
         // 创建敌军小队
         let enemyController = EnemyController.instance;

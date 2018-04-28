@@ -1,13 +1,17 @@
 class Bullet extends GameObject {
 	gun: Gun;
-	hp: Health;
+	power: Health;
+	powerLossPer: number = 1.0;  // 子弹能量下降系数
+	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	private effectedShips: Object = {};
 	
 	public constructor(gun: Gun) {
 		super();
 		this.gun = gun;
-		this.hp = new Health();
-		this.hp.reset(gun.bulletPower);
+		this.power = new Health();
+		this.power.reset(gun.bulletPower);
+		this.powerLossPer = gun.bulletPowerLossPer;
+		this.powerLossInterval = gun.bulletPowerLossInterval;
 	}
 
 	protected onCreate(): egret.DisplayObject {
@@ -19,7 +23,8 @@ class Bullet extends GameObject {
 	}
 
 	public onHitEnemyShipTest(ship: Ship): boolean {
-		if (this.gun.bulletPowerLossPer == 1) {
+		if (this.powerLossPer == 1) {
+			
 			return this.hitTest(ship);
 		}
 		
@@ -27,7 +32,7 @@ class Bullet extends GameObject {
 		let idStr = ship.id.toString();
 		if (this.effectedShips.hasOwnProperty(idStr)) {
 			// 有击中记录
-			if (now-this.effectedShips[idStr]>this.gun.bulletPowerLossInterval) {
+			if (now - this.effectedShips[idStr] > this.powerLossInterval) {
 				// 已过击中保护时间
 				if (this.hitTest(ship)) {
 					// 击中

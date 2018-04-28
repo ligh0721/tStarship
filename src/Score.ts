@@ -20,7 +20,7 @@ class Score {
 	protected update(value: number) {
 		let txt = value.toString();
 		let len = txt.length;
-		for (let i=0; i<this.digits; i++) {
+		for (let i=0; i<this.digits-len; i++) {
 			txt = "0" + txt;
 		}
 		this.bmpText.text = txt;
