@@ -29,6 +29,9 @@ class Ship extends HpUnit {
 	}
 
 	public move(x: number, y: number) {
+		if (!this.isAlive()) {
+			return;
+		}
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
 		let dis = Math.sqrt(xx*xx+yy*yy);

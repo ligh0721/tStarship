@@ -23,9 +23,9 @@ class BattleLayer extends Layer {
         this.enemyCtrl = new EnemyController(this.world);
         this.world.setOnShipDeadListener(this.onShipDead, this);
 
-        this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
-        this.world.debugTextField = new egret.TextField()
-        this.world.debugDrawSprite.addChild(this.world.debugTextField);
+        // this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
+        // this.world.debugTextField = new egret.TextField()
+        // this.world.debugDrawSprite.addChild(this.world.debugTextField);
 
         // 创建玩家飞船
         let ship = new HeroShip(40, 80);
@@ -80,7 +80,7 @@ class BattleLayer extends Layer {
         let enemies: EnemyShip[] = [];
         let n = 100;
         for (let i=0; i<n; i++) {
-            let enemy = this.enemyCtrl.createEnemyShip(30, 60, "tri");
+            let enemy = this.enemyCtrl.createEnemyShip(40, 60, "tri");
             enemy.resetHp(5);
             enemies.push(enemy);
         }
@@ -95,10 +95,16 @@ class BattleLayer extends Layer {
     }
 
 	private onTouchBegin(evt: egret.TouchEvent) {
+        if (!this.ship.isAlive()) {
+            return;
+        }
         this.ship.move(evt.localX, evt.localY);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
+        if (!this.ship.isAlive()) {
+            return;
+        }
         this.ship.move(evt.localX, evt.localY);
     }
 
