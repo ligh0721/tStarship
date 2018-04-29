@@ -21,9 +21,9 @@ class EnemyController {
         let dur = dis * 100 / ship.speed;
         let tw = egret.Tween.get(ship.gameObject);
         tw.to({y: this.world.height  + ship.height}, dur);
-		tw.call(() => {
-			this.world.removeShip(ship.id);
-		});
+		tw.call(()=>{
+			ship.status = UnitStatus.Dead;
+		}, this);
 	}
 
 	public rushBezier(ships: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}, fixedRotation: boolean=false) {
@@ -35,7 +35,7 @@ class EnemyController {
 			this.world.addShip(ship);
 			let bezier = new BezierCurve(ship, point0, point1, point2, fixedRotation);
 			bezier.startMove(2000, ()=>{
-				this.world.removeShip(ship.id);
+				ship.status = UnitStatus.Dead;
 			});
 		}
 
@@ -46,7 +46,7 @@ class EnemyController {
 			return;
 		}
 
-		let t = new egret.Timer(150, ships.length);
+		let t = new egret.Timer(200, ships.length);
 		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
 			let ship = ships.pop();
 			moveLikeBezier(ship);

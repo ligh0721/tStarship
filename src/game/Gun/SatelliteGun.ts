@@ -24,7 +24,7 @@ class SatelliteGun extends Gun {
 		for (let i in this.bullets) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
-			if (bullet != null && !bullet.power.isDead()) {
+			if (bullet != null && bullet.isAlive()) {
 				continue;
 			}
 
@@ -42,12 +42,12 @@ class SatelliteGun extends Gun {
 		for (let i=0; i<this.bullets.length; i++) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
-			if (bullet == null || bullet.power.isDead()) {
+			if (bullet == null || !bullet.isAlive()) {
 				continue;
 			}
 
 			let angle = (i / this.bullets.length + periodPer) * (this.antiClockWise ? -360 : 360);
-			let pos = GameObject.getDirectionPoint(this.ship.x, this.ship.y, angle, this.radius);
+			let pos = Unit.getDirectionPoint(this.ship.x, this.ship.y, angle, this.radius);
 			bullet.x = pos.x;
 			bullet.y = pos.y;
 			bullet.angle = angle;
@@ -60,15 +60,14 @@ class SatelliteGun extends Gun {
 			this.timer.stop();
 		}
 
+		// 所有剩余子弹死亡
 		for (let i=0; i<this.bullets.length; i++) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
-			if (bullet == null || bullet.power.isDead()) {
+			if (bullet == null || !bullet.isAlive()) {
 				continue;
 			}
-			bullet.power.hp = 0;
-			bullet.onDying();
-			this.ship.world.removeBullet(bulletId);
+			bullet.damaged(bullet.hp, null);
 		}
 	}
 }

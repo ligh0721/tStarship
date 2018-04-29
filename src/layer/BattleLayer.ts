@@ -1,6 +1,6 @@
 class BattleLayer extends Layer {
 	private world: World;
-    private ship: Ship;
+    private ship: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
     private worldStep: number = 0;
@@ -23,12 +23,12 @@ class BattleLayer extends Layer {
         this.enemyCtrl = new EnemyController(this.world);
         this.world.setOnShipDeadListener(this.onShipDead, this);
 
-        // this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
-        // this.world.debugTextField = new egret.TextField()
-        // this.world.debugDrawSprite.addChild(this.world.debugTextField);
+        this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
+        this.world.debugTextField = new egret.TextField()
+        this.world.debugDrawSprite.addChild(this.world.debugTextField);
 
         // 创建玩家飞船
-        let ship = new Ship(40, 80);
+        let ship = new HeroShip(40, 80);
         this.world.addShip(ship);
         ship.force.force = 1;
         ship.x = stageW * 0.5;
@@ -58,8 +58,15 @@ class BattleLayer extends Layer {
         ship.addGun(gun2).autofire();
         this.ship = ship;
 
+        let supply = new Supply();
+        supply.text = "ShotGun";
+        this.world.addSupply(supply);
+        supply.x = 300;
+        supply.y = 10;
+        supply.moveStraight(180, 10, true);
+
         // 创建测试敌军
-        this.createTestEnemyShip(10);
+        //this.createTestEnemyShip(10);
         
         // 创建分数板
 		let score = new Score(this.layer);
@@ -73,8 +80,8 @@ class BattleLayer extends Layer {
         let enemies: EnemyShip[] = [];
         let n = 100;
         for (let i=0; i<n; i++) {
-            let enemy = this.enemyCtrl.createEnemyShip(40, 80, "tri");
-            enemy.hp.reset(5);
+            let enemy = this.enemyCtrl.createEnemyShip(30, 60, "tri");
+            enemy.resetHp(5);
             enemies.push(enemy);
         }
 
@@ -111,8 +118,7 @@ class BattleLayer extends Layer {
 			let ship = new Ship(30, 60);
 			this.world.addShip(ship);
 			ship.force.force = 8;
-            ship.hp.reset(Math.floor(Math.random()*10)+1);
-			ship.hp.hp = ship.hp.maxHp;
+            ship.resetHp(Math.floor(Math.random()*10)+1);
             ship.x = this.stage.stageWidth*(0.1+Math.random()*0.8);
             ship.y = this.stage.stageHeight*(0.1+Math.random()*0.7);
 		}

@@ -42,7 +42,7 @@ class Gun {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		bullet.fireStraight(0, this.bulletSpeed);
+		bullet.moveStraight(0, this.bulletSpeed);
 	}
 
 	public autofire() {

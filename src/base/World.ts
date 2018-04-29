@@ -3,10 +3,13 @@ class World {
 	readonly width: number;
 	readonly height: number;
 	readonly rect: egret.Rectangle;
-	ships: Object;
+	ships: Object = {};
 	shipsNum: number = 0;
-	bullets: Object;
+	bullets: Object = {};
 	bulletsNum: number = 0;
+	supplies: Object = {};
+	suppliesNum: number = 0;
+
 	debugDrawSprite: egret.Sprite = null;
 
 	debugTextField: egret.TextField = null;
@@ -20,8 +23,6 @@ class World {
 		this.width = width;
 		this.height = height;
 		this.rect = new egret.Rectangle(0, 0, width, height);
-		this.ships = {};
-		this.bullets = {};
 	}
 
 	public getShip(id: number): Ship {
@@ -74,7 +75,7 @@ class World {
 
 	public removeBullet(id: number) {
 		if (!this.bullets.hasOwnProperty(id.toString())) {
-			console.log('bullets not found');
+			console.log('bullet('+id+') not found');
 			return;
 		}
 		let bullet: Bullet = this.bullets[id];
@@ -85,103 +86,145 @@ class World {
 		this.bulletsNum--;
 	}
 
+	public addSupply(supply: Supply): Supply {
+		supply.onAddToWorld();
+		this.gameObject.addChild(supply.gameObject);
+		supply.world = this;
+		supply.id = this.nextId();
+		this.supplies[supply.id] = supply;
+		this.suppliesNum++;
+		return supply;
+	}
+
+	public removeSupply(id: number) {
+		if (!this.supplies.hasOwnProperty(id.toString())) {
+			console.log('supply('+id+') not found');
+			return;
+		}
+		let supply: Ship = this.supplies[id];
+		supply.cleanup();
+		this.gameObject.removeChild(supply.gameObject);
+		supply.world = null;
+		delete this.supplies[id];
+		this.suppliesNum--;
+		//console.log('ship('+id+') removed');
+	}
+
 	public step(dt: number) {
+		let toDelShips: Ship[] = [];
+		let toDelBullets: Bullet[] = [];
+		let toDelSupplies: Supply[] = [];
+
+		// 最外层，遍历所有飞船
+		for (let shipId in this.ships) {
+			let ship: Ship = this.ships[shipId];
+			if (ship.status == UnitStatus.Dead) {
+				ship.status = UnitStatus.Removed;
+				toDelShips.push(ship);
+			}
+			if (!ship.isAlive()) {
+				continue;
+			}
+			if (ship instanceof HeroShip) {
+				for (let supplyId in this.supplies) {
+					let supply: Supply = this.supplies[supplyId];
+					if (supply.status == UnitStatus.Dead) {
+						supply.status = UnitStatus.Removed;
+						toDelSupplies.push(supply);
+					}
+					if (!supply.isAlive()) {
+						continue;
+					}
+					if (ship.hitTest(supply)) {
+						// TODO: !!!!!!!!!!!
+					}
+				}
+			}
+
+			// 检测子弹撞击
+			for (let bulletId in this.bullets) {
+				let bullet: Bullet = this.bullets[bulletId];
+				if (bullet.status == UnitStatus.Dead) {
+					bullet.status = UnitStatus.Removed;
+					toDelBullets.push(bullet);
+				}
+				if (!bullet.isAlive()) {
+					continue;
+				}
+				if (bullet.removeOutOfWorld && !this.rect.intersects(bullet.getBounds())) {
+					// 移除跑出边界的子弹
+					bullet.status = UnitStatus.Dead;
+					continue;
+				}
+				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
+					//console.log("bullet hit!");
+					let dt = Math.min(bullet.hp, Math.floor(bullet.maxHp*bullet.powerLossPer));
+					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
+					ship.damaged(dt, bullet.gun.ship);
+					bullet.damaged(dt, ship);
+					if (!ship.isAlive()) {
+						//console.log("dead!");
+						//console.log('ship('+shipId+') push toDel '+ship.hp.hp);
+						break;
+					}
+				}
+			}
+
+			// 子弹碰撞检测后，再次验活
+			if (!ship.isAlive()) {
+				continue;
+			}
+
+			// 检测飞船撞击
+			for (let shipId2 in this.ships) {
+				let ship2: Ship = this.ships[shipId2];
+				if (!ship2.isAlive()) {
+					continue;
+				}
+				if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
+					//console.log("ship hit!");
+					ship.damaged(ship2.maxHp, ship2);
+					ship2.damaged(ship.maxHp, ship);
+					if (!ship.isAlive()) {
+						//console.log("dead!");
+						break;
+					}
+				}
+			}
+		}
+
+		for (let i in toDelShips) {
+			let ship = toDelShips[i];
+			console.assert(ship.status==UnitStatus.Removed);
+			this.removeShip(ship.id);
+		}
+		for (let i in toDelBullets) {
+			let bullet = toDelBullets[i];
+			console.assert(bullet.status==UnitStatus.Removed);
+			this.removeBullet(bullet.id);
+		}
+		for (let i in toDelSupplies) {
+			let supply = toDelSupplies[i];
+			console.assert(supply.status==UnitStatus.Removed);
+			this.removeSupply(supply.id);
+		}
+
+		// Debug Draw
 		if (this.debugDrawSprite != null) {
 			this.debugDrawSprite.graphics.clear();
 			this.debugDrawSprite.graphics.lineStyle(2, 0xffffff, 1);
 
 			this.debugTextField.text = "ship: "+this.shipsNum+", bullet: "+this.bulletsNum;
 			
-			for (let shipId in this.ships) {
-				let ship: Ship = this.ships[shipId];
-				this.debugDrawSprite.graphics.moveTo(ship.gameObject.x, ship.gameObject.y);
-				this.debugDrawSprite.graphics.drawRect(ship.gameObject.x-ship.gameObject.width*0.5, ship.gameObject.y-ship.gameObject.height*0.5, ship.gameObject.width, ship.gameObject.height);
-			}
-
-			for (let bulletId in this.bullets) {
-				let bullet: Bullet = this.bullets[bulletId];
-				this.debugDrawSprite.graphics.moveTo(bullet.gameObject.x, bullet.gameObject.y);
-				this.debugDrawSprite.graphics.drawRect(bullet.gameObject.x-bullet.gameObject.width*0.5, bullet.gameObject.y-bullet.gameObject.height*0.5, bullet.gameObject.width, bullet.gameObject.height);
-			}
-		}
-
-		let dyingShips: Ship[] = [];
-		let dyingBullets: Bullet[] = [];
-
-		for (let shipId in this.ships) {
-			let ship: Ship = this.ships[shipId];
-			if (ship.hp.isDead()) {
-				console.log('ship('+shipId+') isDead');
-				continue;
-			}
-			//console.log('ship('+shipId+') not Dead');
-
-			// 检测子弹撞击
-			for (let bulletId in this.bullets) {
-				let bullet: Bullet = this.bullets[bulletId];
-				if (bullet.power.isDead()) {
-					continue;
-				}
-				if (bullet.removeOutOfWorld && !this.rect.intersects(bullet.getBounds())) {
-					// 移除跑出边界的子弹
-					bullet.power.hp = 0;
-					dyingBullets.push(bullet);
-					continue;
-				}
-
-				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
-					//console.log("bullet hit!");
-					let dt = Math.min(bullet.power.hp, Math.floor(bullet.power.maxHp*bullet.powerLossPer));
-					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
-					ship.hp.hp -= dt;
-					bullet.power.hp -= dt
-					
-					if (bullet.power.isDead()) {
-						dyingBullets.push(bullet);
-					}
-					if (ship.hp.isDead()) {
-						//console.log("dead!");
-						//console.log('ship('+shipId+') push toDel '+ship.hp.hp);
-						this.onShipDead(ship, bullet.gun.ship);
-						dyingShips.push(ship);
-						break;
-					}
+			let objsList = [this.ships, this.bullets, this.supplies];
+			for (let i in objsList) {
+				let objs = objsList[i];
+				for (let objId in objs) {
+					let obj = objs[objId];
+					this.debugDrawSprite.graphics.moveTo(obj.gameObject.x, obj.gameObject.y);
+					this.debugDrawSprite.graphics.drawRect(obj.gameObject.x-obj.gameObject.width*0.5, obj.gameObject.y-obj.gameObject.height*0.5, obj.gameObject.width, obj.gameObject.height);
 				}
 			}
-
-			// 检测飞船撞击
-			for (let shipId2 in this.ships) {
-				let ship2: Ship = this.ships[shipId2];
-				if (ship2.hp.isDead()) {
-					continue;
-				}
-				if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
-					//console.log("ship hit!");
-					ship.hp.hp -= ship2.hp.maxHp;
-					ship2.hp.hp -= ship.hp.maxHp;
-					if (ship2.hp.isDead()) {
-						//console.log("dead!");
-						dyingShips.push(ship2);
-					}
-					if (ship.hp.isDead()) {
-						//console.log("dead!");
-						this.onShipDead(ship, ship2);
-						dyingShips.push(ship);
-						break;
-					}
-				}
-			}
-		}
-
-		for (let i in dyingBullets) {
-			let bullet = dyingBullets[i];
-			bullet.onDying();
-			this.removeBullet(bullet.id);
-		}
-		for (let i in dyingShips) {
-			let ship = dyingShips[i];
-			ship.onDying();
-			this.removeShip(ship.id);
 		}
 	}
 
@@ -189,7 +232,7 @@ class World {
 		return tutils.nextId();
 	}
 
-	protected onShipDead(ship: Ship, killer: Ship) {
+	public onShipDying(ship: Ship, killer: Ship) {
 		this.onShipDeadListener.call(this.onShipDeadThisObject, ship, killer);
 	}
 

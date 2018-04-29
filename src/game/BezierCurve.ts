@@ -2,10 +2,10 @@ class BezierCurve {
 	private point0: {x: number, y: number} = {x: 0, y: 0};
 	private point1: {x: number, y: number} = {x: 0, y: 0};
 	private point2: {x: number, y: number} = {x: 0, y: 0};
-	private obj: GameObject;
+	private obj: Unit;
 	private fixedRotation: boolean = false;
 
-	public constructor(obj: GameObject, point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}, fixedRotation: boolean) {
+	public constructor(obj: Unit, point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}, fixedRotation: boolean) {
 		this.obj = obj;
 		this.point0 = point0;
 		this.point1 = point1;

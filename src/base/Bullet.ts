@@ -1,6 +1,5 @@
-class Bullet extends GameObject {
+class Bullet extends HpUnit {
 	gun: Gun;
-	power: Health;
 	powerLossPer: number = 1.0;  // 子弹能量下降系数
 	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	removeOutOfWorld: boolean = true;
@@ -9,8 +8,7 @@ class Bullet extends GameObject {
 	public constructor(gun: Gun) {
 		super();
 		this.gun = gun;
-		this.power = new Health();
-		this.power.reset(gun.bulletPower);
+		this.resetHp(gun.bulletPower);
 		this.powerLossPer = gun.bulletPowerLossPer;
 		this.powerLossInterval = gun.bulletPowerLossInterval;
 	}
@@ -56,13 +54,9 @@ class Bullet extends GameObject {
 		return false;
 	}
 
-	public onDying() {
-	}
-
-	public fireStraight(angle: number, speed: number, ease?: Function) {
-		this.angle = angle;
-		let tw = egret.Tween.get(this.gameObject);
-		let toPos = GameObject.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
-		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+	protected onDying(src: HpUnit) {
+		egret.Tween.removeTweens(this);
+		egret.Tween.removeTweens(this.gameObject);
+		this.status = UnitStatus.Dead;
 	}
 }

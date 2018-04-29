@@ -1,9 +1,8 @@
-class Ship extends GameObject {
+class Ship extends HpUnit {
 	readonly width: number;
 	readonly height: number;
 	
 	force: Force = new Force();
-	hp: Health = new Health();
 	guns: Gun[] = [];
 	speed: number = 100;
 
@@ -59,6 +58,15 @@ class Ship extends GameObject {
 		super.onCleanup();
 	}
 
-	public onDying() {
+	protected onDying(src: HpUnit) {
+		console.assert(src instanceof Ship);
+		egret.Tween.removeTweens(this);
+		egret.Tween.removeTweens(this.gameObject);
+		this.world.onShipDying(this, <Ship>src);
+		let tw = egret.Tween.get(this.gameObject);
+		//tw.to({alpha: 0}, 500);
+		tw.call(()=>{
+			this.status = UnitStatus.Dead;
+		}, this);
 	}
 }
