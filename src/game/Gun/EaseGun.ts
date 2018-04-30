@@ -7,6 +7,6 @@ class EaseGun extends Gun {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		bullet.moveStraight(0, this.bulletSpeed, false, this.ease);
+		bullet.moveStraight(0, this.bulletSpeed.value, false, this.ease);
 	}
 }

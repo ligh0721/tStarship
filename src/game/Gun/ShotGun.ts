@@ -13,7 +13,7 @@ class ShotGun extends Gun {
 			let firePos = Bullet.getDirectionPoint(this.ship.x, this.ship.y, angle, r);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y;
-			bullet.moveStraight(angle, this.bulletSpeed);
+			bullet.moveStraight(angle, this.bulletSpeed.value);
 		}
 	}
 }

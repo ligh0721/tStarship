@@ -9,7 +9,7 @@ class EnemyController {
 		let enemyShip = new EnemyShip(width, height, type);
 		//this.world.addShip(enemyShip);
 
-		enemyShip.speed = 50;
+		enemyShip.speed.baseValue = 50;
 		enemyShip.force.force = tutils.EnemyForce;
 
 		return enemyShip;
@@ -18,7 +18,7 @@ class EnemyController {
 	public rushStraight(ship: EnemyShip, startX: number) {
 		ship.x = startX;
 		let dis = this.world.height + ship.height;
-        let dur = dis * 100 / ship.speed;
+        let dur = dis * tutils.SpeedFactor / ship.speed.value;
         let tw = egret.Tween.get(ship.gameObject);
         tw.to({y: this.world.height  + ship.height}, dur);
 		tw.call(()=>{

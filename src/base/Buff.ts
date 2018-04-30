@@ -1,12 +1,12 @@
 class Buff {
 	public id: string;
-	public owner: Ship = null;
+	public ship: Ship = null;
 	public readonly duration: number;
-	public left: number;
+	private $left: number;
 
 	public constructor(duration: number) {
 		this.duration = duration;
-		this.left = duration;
+		this.$left = duration;
 	}
 
 	// override
@@ -15,5 +15,10 @@ class Buff {
 
 	// override
 	public onRemoveBuff() {
+	}
+
+	public step(dt: number): boolean {
+		this.$left -= dt;
+		return this.$left > 0;
 	}
 }

@@ -3,25 +3,24 @@ class SatelliteGun extends Gun {
 	maxBullets: number = 5;
 	period: number = 1000;
 	antiClockWise: boolean = false;
-	private bullets: string[] = [];
-	private tick: number = 0;
-	private timer: egret.Timer = null;
+	private bullets: string[] = null;
+	private readonly timer: tutils.Timer = new tutils.Timer();
 	private radius: number;
 
 	public fire() {
-		if (this.bullets.length == 0) {
+		if (this.bullets == null) {
+			this.bullets = [];
 			this.bullets.length = this.maxBullets;
 			for (let i=0; i<this.bullets.length; i++) {
 				this.bullets[i] = "";
 			}
 			this.radius = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2 + this.radiusDelta;
-			this.tick = egret.getTimer();
-			this.timer = new egret.Timer(1000/60, 0);
-			this.timer.addEventListener(egret.TimerEvent.TIMER, this.onTimer, this);
-			this.timer.start();
+			this.timer.setOnTimerListener(this.onTimer, this);
+			this.timer.start(0, true, 0, true);
 		}
 
-		for (let i in this.bullets) {
+		let periodPer = (egret.getTimer() % this.period) / this.period;
+		for (let i=0; i<this.bullets.length; i++) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
 			if (bullet != null && bullet.isAlive()) {
@@ -32,42 +31,47 @@ class SatelliteGun extends Gun {
 			bullet.removeOutOfWorld = false;
 			this.addBulletToWorld(bullet);
 			this.bullets[i] = bullet.id;
+			this.updatePosition(bullet, i, periodPer);
+			break;
 		}
 	}
 
-	public onTimer(evt: egret.TimerEvent) {
-		let now = egret.getTimer();
-		let periodPer = (now % this.period) / this.period;
-
+	public onTimer(dt: number): void {
+		let periodPer = (egret.getTimer() % this.period) / this.period;
 		for (let i=0; i<this.bullets.length; i++) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
 			if (bullet == null || !bullet.isAlive()) {
 				continue;
 			}
-
-			let angle = (i / this.bullets.length + periodPer) * (this.antiClockWise ? -360 : 360);
-			let pos = Unit.getDirectionPoint(this.ship.x, this.ship.y, angle, this.radius);
-			bullet.x = pos.x;
-			bullet.y = pos.y;
-			bullet.angle = angle;
+			this.updatePosition(bullet, i, periodPer);
 		}
 	}
 
-	public cleanup() {
-		super.cleanup();
+	private updatePosition(bullet: Bullet, index: number, periodPer: number) {
+		let angle = (index / this.bullets.length + periodPer) * (this.antiClockWise ? -360 : 360);
+		let pos = Unit.getDirectionPoint(this.ship.x, this.ship.y, angle, this.radius);
+		bullet.x = pos.x;
+		bullet.y = pos.y;
+		bullet.angle = angle;
+	}
+
+	protected onCleanup() {
+		super.onCleanup();
 		if (this.timer != null) {
 			this.timer.stop();
 		}
 
-		// 所有剩余子弹死亡
-		for (let i=0; i<this.bullets.length; i++) {
-			let bulletId = this.bullets[i];
-			let bullet = this.ship.world.getBullet(bulletId);
-			if (bullet == null || !bullet.isAlive()) {
-				continue;
+		if (this.bullets != null) {
+			// 所有剩余子弹死亡
+			for (let i=0; i<this.bullets.length; i++) {
+				let bulletId = this.bullets[i];
+				let bullet = this.ship.world.getBullet(bulletId);
+				if (bullet == null || !bullet.isAlive()) {
+					continue;
+				}
+				bullet.damaged(bullet.hp, null);
 			}
-			bullet.damaged(bullet.hp, null);
 		}
 	}
 }

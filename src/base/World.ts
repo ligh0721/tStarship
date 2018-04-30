@@ -3,11 +3,12 @@ class World {
 	readonly width: number;
 	readonly height: number;
 	readonly rect: egret.Rectangle;
-	ships: { [key: string]: Ship } = {};
+
+	readonly ships: { [id: string]: Ship } = {};
 	shipsNum: number = 0;
-	bullets: { [key: string]: Bullet } = {};
+	readonly bullets: { [id: string]: Bullet } = {};
 	bulletsNum: number = 0;
-	supplies: { [key: string]: Supply } = {};
+	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
 
 	private onShipDyingListener: (ship: Ship, killer: Ship)=>void = null;
@@ -253,7 +254,7 @@ class World {
 		}
 	}
 
-	public setOnShipDyingListener(listener: (ship: Ship, killer: Ship)=>void, thisObject: any) {
+	public setOnShipDyingListener(listener: (ship: Ship, killer: Ship)=>void, thisObject?: any) {
 		this.onShipDyingListener = listener;
 		this.onShipDyingThisObject = thisObject;
 	}
@@ -264,7 +265,7 @@ class World {
 		}
 	}
 
-	public setOnShipHitSupplyListener(listener: (ship: Ship, supply: Supply)=>void, thisObject: any) {
+	public setOnShipHitSupplyListener(listener: (ship: Ship, supply: Supply)=>void, thisObject?: any) {
 		this.onShipHitSupplyListener = listener;
 		this.onShipHitSupplyThisObject = thisObject;
 	}

@@ -1,16 +1,14 @@
-const ShipTimerInterval = 100;
-
 class Ship extends HpUnit {
 	readonly width: number;
 	readonly height: number;
 	
 	force: Force = new Force();
-	guns: { [key: string]: Gun } = {};
-	speed: number = 100;
+	readonly guns: { [key: string]: Gun } = {};
+	readonly speed: Value = new Value(100);
 	hero: boolean = false;  // can use supply
 
-	timer: egret.Timer = new egret.Timer(ShipTimerInterval, 0);;
-	buffs: { [key: string]: Buff } = {};
+	private readonly timer: tutils.Timer = new tutils.Timer();
+	readonly buffs: { [key: string]: Buff } = {};
 	buffsNum: number = 0;
 
 	public constructor(width: number, height: number) {
@@ -19,24 +17,24 @@ class Ship extends HpUnit {
 		this.height = height;
 	}
 
-	public set(prop: any) {
+	public set(prop: any): void {
 		super.set(prop);
 		if (prop.hasOwnProperty('force')) {
 			this.force.force = prop['force'];
 		}
 		if (prop.hasOwnProperty('speed')) {
-			this.speed = prop.speed;
+			this.speed.baseValue = prop.speed;
 		}
 	}
 
-	public move(x: number, y: number) {
+	public move(x: number, y: number): void {
 		if (!this.isAlive()) {
 			return;
 		}
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
 		let dis = Math.sqrt(xx*xx+yy*yy);
-        let dur = dis * tutils.SpeedFactor / this.speed;
+        let dur = dis * tutils.SpeedFactor / this.speed.value;
         egret.Tween.removeTweens(this.gameObject);
         let tw = egret.Tween.get(this.gameObject);
         tw.to({x: x, y: y}, dur);
@@ -65,7 +63,7 @@ class Ship extends HpUnit {
 		super.onCleanup();
 	}
 
-	protected onDying(src: HpUnit) {
+	protected onDying(src: HpUnit): void {
 		console.assert(src instanceof Ship);
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
@@ -77,12 +75,12 @@ class Ship extends HpUnit {
 		}, this);
 	}
 
-	public onTimer(evt: egret.TimerEvent) {
+	public onTimer(dt: number): void {
+		//console.log('onTimer: '+egret.getTimer());
 		let toDelBuffs: Buff[] = [];
 		for (let i in this.buffs) {
 			let buff = this.buffs[i];
-			buff.left -= ShipTimerInterval;
-			if (buff.left <= 0) {
+			if (buff.step(dt) == false) {
 				toDelBuffs.push(buff);
 			}
 		}
@@ -99,37 +97,42 @@ class Ship extends HpUnit {
 		return gun;
 	}
 
-	public removeGun(id: string) {
+	public removeGun(id: string): void {
 		if (!this.guns.hasOwnProperty(id)) {
 			console.log('gun('+id+') not found');
 			return;
 		}
 		let gun = this.guns[id];
 		gun.cleanup();
-		gun.ship = null;
+		//gun.ship = null;
 		delete this.guns[id];
 	}
 
 	public addBuff(buff: Buff): Buff {
 		buff.id = this.world.nextId();
-		buff.owner = this;
+		buff.ship = this;
 		buff.onAddBuff();
 		this.buffs[buff.id] = buff;
 		this.buffsNum++;
-		if (this.buffsNum > 0 && !this.timer.running) {
-			this.timer.start();
+		if (this.buffsNum > 0) {
+			if (!this.timer.hasOnTimerListener()) {
+				this.timer.setOnTimerListener(this.onTimer, this);
+			}
+			if (!this.timer.running) {
+				this.timer.start(tutils.ShipTimerInterval, false, 0);
+			}
 		}
 		return buff;
 	}
 
-	public removeBuff(id: string) {
+	public removeBuff(id: string): void {
 		if (!this.buffs.hasOwnProperty(id)) {
 			console.log('buff('+id+') not found');
 			return;
 		}
 		let buff = this.buffs[id];
 		buff.onRemoveBuff();
-		buff.owner = null;
+		buff.ship = null;
 		delete this.buffs[id];
 		this.buffsNum--;
 		if (this.buffsNum <= 0 && this.timer.running) {

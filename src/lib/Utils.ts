@@ -6,6 +6,8 @@ module tutils {
 	export const Player1Force = 1;
 	export const Player2Force = 2;
 	export const EnemyForce = 11;
+	export const LargeNumber = 1000000;
+	export const ShipTimerInterval = 100;
 
     export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.Sprite {
 		let layer = new egret.Sprite();

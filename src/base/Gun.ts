@@ -1,11 +1,11 @@
 class Gun {
 	id: string;
 	ship: Ship;
-	fireCooldown: number = 200;
-	bulletPower: number = 1;
+	readonly fireCooldown: Value = new Value(200, 0, 10000);
+	readonly bulletPower: Value = new Value(1, 1, tutils.LargeNumber);
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
-	bulletPowerLossInterval: number = 500;  // 子弹能量下降时间间隔
-	bulletSpeed: number = 50;
+	readonly bulletPowerLossInterval: Value = new Value(500, 100);  // 子弹能量下降时间间隔
+	readonly bulletSpeed: Value = new Value(50, 0, 200);
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 
 	public constructor() {
@@ -43,17 +43,22 @@ class Gun {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		bullet.moveStraight(0, this.bulletSpeed);
+		bullet.moveStraight(0, this.bulletSpeed.value);
 	}
 
 	public autofire() {
 		let tw = egret.Tween.get(this);
 		tw.call(this.fire, this);
-		tw.wait(this.fireCooldown);
+		tw.wait(this.fireCooldown.value);
 		tw.call(this.autofire, this);
 	}
 
 	public cleanup() {
+		this.onCleanup();
+	}
+
+	// override
+	protected onCleanup() {
 		egret.Tween.removeTweens(this);
 	}
 

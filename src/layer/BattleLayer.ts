@@ -1,6 +1,6 @@
-class BattleLayer extends Layer {
+class BattleLayer extends tutils.Layer {
 	private world: World;
-    private ship: HeroShip;
+    private hero: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
     private worldStep: number = 0;
@@ -21,7 +21,8 @@ class BattleLayer extends Layer {
         // 创建世界
         this.world = new World(this.layer, stageW, stageH);
         this.enemyCtrl = new EnemyController(this.world);
-        this.world.setOnShipDyingListener(this.onShipDead, this);
+        this.world.setOnShipDyingListener(this.onShipDying, this);
+        this.world.setOnShipHitSupplyListener(this.onShipHitSupply, this);
 
         // this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
         // this.world.debugTextField = new egret.TextField()
@@ -29,12 +30,13 @@ class BattleLayer extends Layer {
 
 
         // 创建玩家飞船
-        let ship = new HeroShip(40, 80);
-        this.world.addShip(ship);
-        ship.force.force = tutils.Player1Force;
-        ship.x = stageW * 0.5;
-        ship.y = stageH - ship.height * 0.5;
-        ship.speed = 50;
+        let hero = new HeroShip(40, 80);
+        this.hero = hero;
+        this.world.addShip(hero);
+        hero.force.force = tutils.Player1Force;
+        hero.x = stageW * 0.5;
+        hero.y = stageH - hero.height * 0.5;
+        hero.speed.baseValue = 50;
         //let gun = Gun.createGun(Gun, ExplosionBullet);
         let gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
         //let gun = Gun.createGun(ShotGun, ShakeWaveBullet);
@@ -43,24 +45,16 @@ class BattleLayer extends Layer {
         //gun.ease = egret.Ease.getPowIn(2);
 		gun.bulletNum = 4;
 		//gun.bulletAngleDelta = 10;
-        gun.fireCooldown = 500;
-        gun.bulletSpeed = 60;
-        gun.bulletPower = 2;
+        gun.fireCooldown.baseValue = 500;
+        gun.bulletSpeed.baseValue = 60;
+        gun.bulletPower.baseValue = 2;
         gun.bulletPowerLossPer = 1;
-        gun.bulletPowerLossInterval = 1000;
-        ship.addGun(gun).autofire();
-
-
-        let gun2 = Gun.createGun(SatelliteGun, ExplosionBullet);
-        gun2.fireCooldown = 1000;
-        gun2.bulletPower = 5;
-        gun2.bulletPowerLossPer = 1.0;
-        gun2.bulletPowerLossInterval = 1000;
-        ship.addGun(gun2).autofire();
-        this.ship = ship;
+        gun.bulletPowerLossInterval.baseValue = 1000;
+        hero.addGun(gun).autofire();
+        
 
         let supply = new Supply();
-        supply.text = "ShotGun";
+        supply.text = "Satellite";
         this.world.addSupply(supply);
         supply.x = 300;
         supply.y = 10;
@@ -91,32 +85,48 @@ class BattleLayer extends Layer {
         // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 	}
 
-    private onShipDead(ship: Ship, killer: Ship) {
-        this.score.setScore(this.score.score+100, 1);
+    private onShipDying(ship: Ship, killer: Ship) {
+        if (this.hero == ship) {
+            // TODO: GAME OVER
+        } else if (this.hero.force.isMyEnemy(ship.force)) {
+            this.score.setScore(this.score.score+100, 1);
+        }
+    }
+
+    private onShipHitSupply(ship: Ship, supply: Supply) {
+        let gun = Gun.createGun(SatelliteGun, ExplosionBullet);
+        gun.fireCooldown.baseValue = 1000;
+        gun.bulletPower.baseValue = 5;
+        gun.bulletPowerLossPer = 1.0;
+        gun.bulletPowerLossInterval.baseValue = 1000;
+        
+        let buff = new AddGunBuff(6000);
+        buff.guns.push(gun);
+
+        ship.addBuff(buff);
     }
 
 	private onTouchBegin(evt: egret.TouchEvent) {
-        if (!this.ship.isAlive()) {
+        if (!this.hero.isAlive()) {
             return;
         }
-        this.ship.move(evt.localX, evt.localY);
+        this.hero.move(evt.localX, evt.localY);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
-        if (!this.ship.isAlive()) {
+        if (!this.hero.isAlive()) {
             return;
         }
-        this.ship.move(evt.localX, evt.localY);
+        this.hero.move(evt.localX, evt.localY);
     }
 
     private onTimer(evt: egret.TimerEvent) {
         if (this.worldStep < 1) {
-            this.world.step(1000/this.stage.frameRate*2);
+            this.world.step(1000/30);
             this.worldStep++;
         } else {
             this.worldStep = 0;
         }
-        
     }
 
 	// FIXME: test
