@@ -1,6 +1,6 @@
 class Unit {
 	gameObject: egret.DisplayObject;
-	id: number;
+	id: string;
 	world: World;
 	staticBounds: boolean = true;
 	private boundsRect: egret.Rectangle = null;

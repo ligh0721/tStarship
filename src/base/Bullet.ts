@@ -3,7 +3,7 @@ class Bullet extends HpUnit {
 	powerLossPer: number = 1.0;  // 子弹能量下降系数
 	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	removeOutOfWorld: boolean = true;
-	private effectedShips: Object = {};
+	private effectedShips: { [id: string]: number } = {};
 	
 	public constructor(gun: Gun) {
 		super();
@@ -28,14 +28,13 @@ class Bullet extends HpUnit {
 		}
 		
 		let now = egret.getTimer();
-		let idStr = ship.id.toString();
-		if (this.effectedShips.hasOwnProperty(idStr)) {
+		if (this.effectedShips.hasOwnProperty(ship.id)) {
 			// 有击中记录
-			if (now - this.effectedShips[idStr] > this.powerLossInterval) {
+			if (now - this.effectedShips[ship.id] > this.powerLossInterval) {
 				// 已过击中保护时间
 				if (this.hitTest(ship)) {
 					// 击中
-					this.effectedShips[idStr] = now;
+					this.effectedShips[ship.id] = now;
 					return true;
 				}
 			}
@@ -43,7 +42,7 @@ class Bullet extends HpUnit {
 			// 无击中记录
 			if (this.hitTest(ship)) {
 				// 击中
-				this.effectedShips[idStr] = now;
+				this.effectedShips[ship.id] = now;
 				return true;
 			}
 		}

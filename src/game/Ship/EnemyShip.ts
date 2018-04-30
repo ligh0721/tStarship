@@ -15,7 +15,7 @@ class EnemyShip extends Ship {
 	}
 
 	private createByType(type: string): egret.DisplayObject {
-		let gameObject: egret.Shape;
+		let gameObject: egret.Shape = null;
 		switch (type) {
 			case "rect":
 				gameObject = new egret.Shape();
@@ -23,7 +23,7 @@ class EnemyShip extends Ship {
 				gameObject.graphics.drawRect(0, 0, this.width, this.height);
 				gameObject.anchorOffsetX = this.width * 0.5;
 				gameObject.anchorOffsetY = this.height * 0.5;
-				return gameObject;
+				break;
 			case "tri":
 				gameObject = new egret.Shape();
 				gameObject.graphics.lineStyle(5, 0xf48771);
@@ -33,16 +33,16 @@ class EnemyShip extends Ship {
 				gameObject.graphics.lineTo(0, 0);
 				gameObject.anchorOffsetX = this.width * 0.5;
 				gameObject.anchorOffsetY = this.height * 0.5;
-				return gameObject;
+				break;
 			case "ell":
 				gameObject = new egret.Shape();
 				gameObject.graphics.lineStyle(5, 0xf48771);
 				gameObject.graphics.drawEllipse(0, 0, this.width, this.height);
 				gameObject.anchorOffsetX = this.width * 0.5;
 				gameObject.anchorOffsetY = this.height * 0.5;
-				return gameObject;
+				break;
 			default:  
-				return null;
 		}
+		return gameObject;
 	}
 }

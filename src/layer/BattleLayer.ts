@@ -21,16 +21,17 @@ class BattleLayer extends Layer {
         // 创建世界
         this.world = new World(this.layer, stageW, stageH);
         this.enemyCtrl = new EnemyController(this.world);
-        this.world.setOnShipDeadListener(this.onShipDead, this);
+        this.world.setOnShipDyingListener(this.onShipDead, this);
 
         // this.world.debugDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
         // this.world.debugTextField = new egret.TextField()
         // this.world.debugDrawSprite.addChild(this.world.debugTextField);
 
+
         // 创建玩家飞船
         let ship = new HeroShip(40, 80);
         this.world.addShip(ship);
-        ship.force.force = 1;
+        ship.force.force = tutils.Player1Force;
         ship.x = stageW * 0.5;
         ship.y = stageH - ship.height * 0.5;
         ship.speed = 50;
@@ -42,7 +43,7 @@ class BattleLayer extends Layer {
         //gun.ease = egret.Ease.getPowIn(2);
 		gun.bulletNum = 4;
 		//gun.bulletAngleDelta = 10;
-        gun.fireInterval = 500;
+        gun.fireCooldown = 500;
         gun.bulletSpeed = 60;
         gun.bulletPower = 2;
         gun.bulletPowerLossPer = 1;
@@ -51,7 +52,7 @@ class BattleLayer extends Layer {
 
 
         let gun2 = Gun.createGun(SatelliteGun, ExplosionBullet);
-        gun2.fireInterval = 1000;
+        gun2.fireCooldown = 1000;
         gun2.bulletPower = 5;
         gun2.bulletPowerLossPer = 1.0;
         gun2.bulletPowerLossInterval = 1000;
@@ -123,7 +124,7 @@ class BattleLayer extends Layer {
 		for (let i=0; i<n; i++) {
 			let ship = new Ship(30, 60);
 			this.world.addShip(ship);
-			ship.force.force = 8;
+			ship.force.force = tutils.EnemyForce;
             ship.resetHp(Math.floor(Math.random()*10)+1);
             ship.x = this.stage.stageWidth*(0.1+Math.random()*0.8);
             ship.y = this.stage.stageHeight*(0.1+Math.random()*0.7);

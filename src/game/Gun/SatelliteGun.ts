@@ -3,7 +3,7 @@ class SatelliteGun extends Gun {
 	maxBullets: number = 5;
 	period: number = 1000;
 	antiClockWise: boolean = false;
-	private bullets: number[] = [];
+	private bullets: string[] = [];
 	private tick: number = 0;
 	private timer: egret.Timer = null;
 	private radius: number;
@@ -12,7 +12,7 @@ class SatelliteGun extends Gun {
 		if (this.bullets.length == 0) {
 			this.bullets.length = this.maxBullets;
 			for (let i=0; i<this.bullets.length; i++) {
-				this.bullets[i] = 0;
+				this.bullets[i] = "";
 			}
 			this.radius = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2 + this.radiusDelta;
 			this.tick = egret.getTimer();

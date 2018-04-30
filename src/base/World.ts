@@ -3,37 +3,46 @@ class World {
 	readonly width: number;
 	readonly height: number;
 	readonly rect: egret.Rectangle;
-	ships: Object = {};
+	ships: { [key: string]: Ship } = {};
 	shipsNum: number = 0;
-	bullets: Object = {};
+	bullets: { [key: string]: Bullet } = {};
 	bulletsNum: number = 0;
-	supplies: Object = {};
+	supplies: { [key: string]: Supply } = {};
 	suppliesNum: number = 0;
 
+	private onShipDyingListener: (ship: Ship, killer: Ship)=>void = null;
+	private onShipDyingThisObject: any;
+
+	private onShipHitSupplyListener: (ship: Ship, supply: Supply)=>void = null;
+	private onShipHitSupplyThisObject: any;
+
 	debugDrawSprite: egret.Sprite = null;
-
 	debugTextField: egret.TextField = null;
-	onShipDeadListener: (ship: Ship, killer: Ship) => void;
-	onShipDeadThisObject: any;
-
-	
 
 	public constructor(gameObject: egret.DisplayObjectContainer, width: number, height: number) {
 		this.gameObject = gameObject;
 		this.width = width;
 		this.height = height;
 		this.rect = new egret.Rectangle(0, 0, width, height);
+
+		// 创建世界飞船，用于保持持续碰撞检测
+        let worldShip = new Ship(1, 1);
+		worldShip.hero = true;
+        worldShip.force.force = tutils.EnemyForce;
+        this.addShip(worldShip);
+        worldShip.x = -200;
+        worldShip.y = -200;
 	}
 
-	public getShip(id: number): Ship {
-		if (!this.ships.hasOwnProperty(id.toString())) {
+	public getShip(id: string): Ship {
+		if (!this.ships.hasOwnProperty(id)) {
 			return null;
 		}
 		return this.ships[id];
 	}
 
-	public getBullet(id: number): Bullet {
-		if (!this.bullets.hasOwnProperty(id.toString())) {
+	public getBullet(id: string): Bullet {
+		if (!this.bullets.hasOwnProperty(id)) {
 			return null;
 		}
 		return this.bullets[id];
@@ -49,8 +58,8 @@ class World {
 		return ship;
 	}
 
-	public removeShip(id: number) {
-		if (!this.ships.hasOwnProperty(id.toString())) {
+	public removeShip(id: string) {
+		if (!this.ships.hasOwnProperty(id)) {
 			console.log('ship('+id+') not found');
 			return;
 		}
@@ -73,8 +82,8 @@ class World {
 		return bullet;
 	}
 
-	public removeBullet(id: number) {
-		if (!this.bullets.hasOwnProperty(id.toString())) {
+	public removeBullet(id: string) {
+		if (!this.bullets.hasOwnProperty(id)) {
 			console.log('bullet('+id+') not found');
 			return;
 		}
@@ -96,12 +105,12 @@ class World {
 		return supply;
 	}
 
-	public removeSupply(id: number) {
-		if (!this.supplies.hasOwnProperty(id.toString())) {
+	public removeSupply(id: string) {
+		if (!this.supplies.hasOwnProperty(id)) {
 			console.log('supply('+id+') not found');
 			return;
 		}
-		let supply: Ship = this.supplies[id];
+		let supply: Supply = this.supplies[id];
 		supply.cleanup();
 		this.gameObject.removeChild(supply.gameObject);
 		supply.world = null;
@@ -125,22 +134,7 @@ class World {
 			if (!ship.isAlive()) {
 				continue;
 			}
-			if (ship instanceof HeroShip) {
-				for (let supplyId in this.supplies) {
-					let supply: Supply = this.supplies[supplyId];
-					if (supply.status == UnitStatus.Dead) {
-						supply.status = UnitStatus.Removed;
-						toDelSupplies.push(supply);
-					}
-					if (!supply.isAlive()) {
-						continue;
-					}
-					if (ship.hitTest(supply)) {
-						// TODO: !!!!!!!!!!!
-					}
-				}
-			}
-
+			
 			// 检测子弹撞击
 			for (let bulletId in this.bullets) {
 				let bullet: Bullet = this.bullets[bulletId];
@@ -170,24 +164,45 @@ class World {
 				}
 			}
 
-			// 子弹碰撞检测后，再次验活
-			if (!ship.isAlive()) {
-				continue;
-			}
-
-			// 检测飞船撞击
-			for (let shipId2 in this.ships) {
-				let ship2: Ship = this.ships[shipId2];
-				if (!ship2.isAlive()) {
+			if (ship.hero) {
+				// 子弹碰撞检测后，再次验活
+				if (!ship.isAlive()) {
 					continue;
 				}
-				if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
-					//console.log("ship hit!");
-					ship.damaged(ship2.maxHp, ship2);
-					ship2.damaged(ship.maxHp, ship);
-					if (!ship.isAlive()) {
-						//console.log("dead!");
-						break;
+
+				// 检测飞船撞击
+				for (let shipId2 in this.ships) {
+					let ship2: Ship = this.ships[shipId2];
+					if (!ship2.isAlive()) {
+						continue;
+					}
+					if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
+						//console.log("ship hit!");
+						ship.damaged(ship2.maxHp, ship2);
+						ship2.damaged(ship.maxHp, ship);
+						if (!ship.isAlive()) {
+							//console.log("dead!");
+							break;
+						}
+					}
+				}
+				
+				// 撞机检测后，再次验活
+				if (!ship.isAlive()) {
+					continue;
+				}
+				for (let supplyId in this.supplies) {
+					let supply: Supply = this.supplies[supplyId];
+					if (supply.status == UnitStatus.Dead) {
+						supply.status = UnitStatus.Removed;
+						toDelSupplies.push(supply);
+					}
+					if (!supply.isAlive()) {
+						continue;
+					}
+					if (ship.hitTest(supply)) {
+						this.onShipHitSupply(ship, supply);
+						supply.status = UnitStatus.Dead;
 					}
 				}
 			}
@@ -228,16 +243,29 @@ class World {
 		}
 	}
 
-	protected nextId(): number {
+	public nextId(): string {
 		return tutils.nextId();
 	}
 
 	public onShipDying(ship: Ship, killer: Ship) {
-		this.onShipDeadListener.call(this.onShipDeadThisObject, ship, killer);
+		if (this.onShipDyingListener != null) {
+			this.onShipDyingListener.call(this.onShipDyingThisObject, ship, killer);
+		}
 	}
 
-	public setOnShipDeadListener(listener: (ship: Ship, killer: Ship)=>void, thisObject: any) {
-		this.onShipDeadListener = listener;
-		this.onShipDeadThisObject = thisObject;
+	public setOnShipDyingListener(listener: (ship: Ship, killer: Ship)=>void, thisObject: any) {
+		this.onShipDyingListener = listener;
+		this.onShipDyingThisObject = thisObject;
+	}
+
+	public onShipHitSupply(ship: Ship, supply: Supply) {
+		if (this.onShipHitSupplyListener != null) {
+			this.onShipHitSupplyListener.call(this.onShipHitSupplyThisObject, ship, supply);
+		}
+	}
+
+	public setOnShipHitSupplyListener(listener: (ship: Ship, supply: Supply)=>void, thisObject: any) {
+		this.onShipHitSupplyListener = listener;
+		this.onShipHitSupplyThisObject = thisObject;
 	}
 }

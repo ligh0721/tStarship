@@ -1,4 +1,9 @@
 class HeroShip extends Ship {
+    public constructor(width: number, height: number) {
+		super(width, height);
+        this.hero = true;
+	}
+
     protected onCreate(): egret.DisplayObject {
 		let gameObject = new egret.Shape();
 		gameObject.graphics.lineStyle(10, 0x9cdcfe);

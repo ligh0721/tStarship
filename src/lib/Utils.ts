@@ -3,6 +3,9 @@ module tutils {
 	export const SpeedFactor = 100;
 	export const DegPerRad = 180/Math.PI;
 	export const LongDistance = 1500;
+	export const Player1Force = 1;
+	export const Player2Force = 2;
+	export const EnemyForce = 11;
 
     export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.Sprite {
 		let layer = new egret.Sprite();
@@ -15,9 +18,9 @@ module tutils {
 	}
 
     var curId: number = 1000;
-    export function nextId(): number {
+    export function nextId(): string {
         curId++;
-        return curId;
+		return curId.toString();
     }
 
 	export function getDirectionPoint(x0: number, y0: number, a: number, dis: number): {x: number, y: number} {

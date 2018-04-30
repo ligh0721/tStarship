@@ -1,6 +1,7 @@
 class Gun {
+	id: string;
 	ship: Ship;
-	fireInterval: number = 200;
+	fireCooldown: number = 200;
 	bulletPower: number = 1;
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
 	bulletPowerLossInterval: number = 500;  // 子弹能量下降时间间隔
@@ -48,7 +49,7 @@ class Gun {
 	public autofire() {
 		let tw = egret.Tween.get(this);
 		tw.call(this.fire, this);
-		tw.wait(this.fireInterval);
+		tw.wait(this.fireCooldown);
 		tw.call(this.autofire, this);
 	}
 

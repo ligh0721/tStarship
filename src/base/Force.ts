@@ -10,7 +10,7 @@ class Force {
 	allyMaskFlag: number = 0;
 
 	public get force(): number {
-		return this.forceFlag != 0 ? Math.log(this.forceFlag)/Math.LN2 : -1;
+		return this.forceFlag!=0 ? Math.log(this.forceFlag)/Math.LN2 : -1;
 	}
 
     public set force(value: number) {

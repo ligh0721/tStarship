@@ -10,7 +10,7 @@ class EnemyController {
 		//this.world.addShip(enemyShip);
 
 		enemyShip.speed = 50;
-		enemyShip.force.force = 8;
+		enemyShip.force.force = tutils.EnemyForce;
 
 		return enemyShip;
 	}
