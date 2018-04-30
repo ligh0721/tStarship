@@ -8,6 +8,8 @@ class Gun {
 	readonly bulletSpeed: Value = new Value(50, 0, 200);
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 
+	private readonly autoFireTimer: tutils.Timer = new tutils.Timer();
+
 	public constructor() {
 	}
 
@@ -46,14 +48,29 @@ class Gun {
 		bullet.moveStraight(0, this.bulletSpeed.value);
 	}
 
-	public autofire() {
-		let tw = egret.Tween.get(this);
-		tw.call(this.fire, this);
-		tw.wait(this.fireCooldown.value);
-		tw.call(this.autofire, this);
+	public get autoFire(): boolean {
+		return this.autoFireTimer.running;
+	}
+
+	public set autoFire(value: boolean) {
+		if (this.autoFireTimer.running) {
+			this.autoFireTimer.stop();
+		}
+		if (value) {
+			if (!this.autoFireTimer.hasOnTimerListener()) {
+				this.autoFireTimer.setOnTimerListener((dt: number): void=>{
+					this.fire();
+					if (this.autoFireTimer.interval != this.fireCooldown.value) {
+						this.autoFireTimer.interval = this.fireCooldown.value
+					}
+				}, this);
+			}
+			this.autoFireTimer.start(this.fireCooldown.value, true, 0);
+		}
 	}
 
 	public cleanup() {
+		this.autoFireTimer.stop();
 		this.onCleanup();
 	}
 

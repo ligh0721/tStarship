@@ -50,7 +50,7 @@ class BattleLayer extends tutils.Layer {
         gun.bulletPower.baseValue = 2;
         gun.bulletPowerLossPer = 1;
         gun.bulletPowerLossInterval.baseValue = 1000;
-        hero.addGun(gun).autofire();
+        hero.addGun(gun).autoFire = true;
         
 
         let supply = new Supply();
@@ -73,7 +73,7 @@ class BattleLayer extends tutils.Layer {
 
         // 创建敌军小队
         let enemies: EnemyShip[] = [];
-        let n = 100;
+        let n = 1000;
         for (let i=0; i<n; i++) {
             let enemy = this.enemyCtrl.createEnemyShip(40, 60, "tri");
             enemy.resetHp(5);

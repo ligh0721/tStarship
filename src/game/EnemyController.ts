@@ -39,18 +39,12 @@ class EnemyController {
 			});
 		}
 
-		let ship = ships.pop();
-		moveLikeBezier(ship);
-
-		if (ships.length == 0) {
-			return;
-		}
-
-		let t = new egret.Timer(200, ships.length);
-		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
+		let t = new tutils.Timer();
+		t.setOnTimerListener((dt: number)=>{
+			//console.log(egret.getTimer()+' enemy');
 			let ship = ships.pop();
 			moveLikeBezier(ship);
-		}, null);
-		t.start();
+		}, this);
+		t.start(200, true, ships.length);
 	}
 }

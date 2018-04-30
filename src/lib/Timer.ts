@@ -4,37 +4,32 @@ module tutils {
 		public times: number = 1;
 		private onTimerListener: (dt: number)=>void = null;
 		private onTimerThisObject: any;
-		private accurate: boolean = false;
 		private $running: boolean = false;
-		private $tick: number;
+		private $tick: number;  // last tick
 		private $left: number;
-		private $timer: egret.EventDispatcher = null;
+		private $wantTick: number;
 
 		public onTimer(evt: egret.TimerEvent) {
-			let now = egret.getTimer();
-			if (this.accurate && now - this.$tick < this.interval) {
-				return;
-			}
-			let tick = this.$tick;
-			this.$tick = now;
+			let start = egret.getTimer();
+			let last = this.$tick;
+			this.$tick = start;
 			if (this.times > 0) {
 				this.$left--;
 			}
 			if (this.onTimerListener != null) {
-				this.onTimerListener.call(this.onTimerThisObject, egret.getTimer()-tick);
+				this.onTimerListener.call(this.onTimerThisObject, start-last);
 			}
 			if (this.times > 0 && this.$left == 0) {
 				this.stop();
 				return;
 			}
 
-			if (!this.accurate) {
-				let interval = Math.max(this.interval*2-egret.getTimer()+tick, 0);
-				let tw = egret.Tween.get(this);
-				tw.wait(interval);
-				//console.log('@@'+egret.getTimer()+', '+this.interval+', '+interval);
-				tw.call(this.onTimer, this, null);
-			}
+			let tw = egret.Tween.get(this);
+			let interval = Math.max(this.interval-egret.getTimer()+this.$wantTick, 0);
+			//console.log('@@'+start+', '+interval+', '+this.$wantTick+', '+this.interval);
+			this.$wantTick += this.interval;
+			tw.wait(interval);
+			tw.call(this.onTimer, this, null);
 		}
 
 		public setOnTimerListener(listener: (dt: number)=>void, thisObject?: any) {
@@ -46,37 +41,31 @@ module tutils {
 			return this.onTimerListener != null;
 		}
 
-		public start(interval: number, instantly?: boolean, times?: number, accurate?: boolean): number {
-			this.$tick = egret.getTimer();
+		public start(interval: number, instantly?: boolean, times?: number): number {
+			let start = egret.getTimer();
+			if (this.$running) {
+				this.stop();
+			}
+			this.$tick = start;
+			this.$wantTick = start;
 			this.$running = true;
 			egret.Tween.removeTweens(this);
 			this.interval = interval;
 			this.times = times==undefined ? 1 : times;
 			this.$left = this.times;
-			this.accurate = accurate==true ? true : false;
 
-			if (!this.accurate) {
-				let tw = egret.Tween.get(this);
-				if (instantly != true) {
-					let interval = Math.max(this.interval - egret.getTimer() + this.$tick, 0);
-					tw.wait(interval);
-				}
-				tw.call(this.onTimer, this, null);
-			} else {
-				if (this.$timer == null) {
-					this.$timer = new egret.DisplayObject();
-				}
-				this.$timer.addEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
+			let tw = egret.Tween.get(this);
+			if (instantly != true) {
+				let interval = Math.max(this.interval-egret.getTimer()+start, 0);
+				tw.wait(interval);
+				this.$wantTick += this.interval;
 			}
-			
+			tw.call(this.onTimer, this, null);
 			return this.$tick;
 		}
 
 		public stop(): void {
 			let tw = egret.Tween.removeTweens(this);
-			if (this.accurate) {
-				this.$timer.removeEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
-			}
 			this.$running = false;
 		}
 
