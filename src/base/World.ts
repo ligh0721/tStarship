@@ -17,8 +17,11 @@ class World {
 	private onShipHitSupplyListener: (ship: Ship, supply: Supply)=>void = null;
 	private onShipHitSupplyThisObject: any;
 
-	debugDrawSprite: egret.Sprite = null;
-	debugTextField: egret.TextField = null;
+	dbgDrawSprite: egret.Sprite = null;
+	dbgTextField: egret.TextField = null;
+	dbgFpsTicks: number = 0;
+	dbgFpsFrames: number = 0;
+	dbgFps: number = 0;
 
 	public constructor(gameObject: egret.DisplayObjectContainer, width: number, height: number) {
 		this.gameObject = gameObject;
@@ -33,6 +36,14 @@ class World {
         this.addShip(worldShip);
         worldShip.x = -200;
         worldShip.y = -200;
+	}
+
+	public start(frameRate: number): void {
+		let t = new tutils.Timer();
+		t.setOnTimerListener((dt: number): void=> {
+			this.step(dt);
+		}, this);
+		t.start(1000/frameRate, true, 0);
 	}
 
 	public getShip(id: string): Ship {
@@ -50,12 +61,12 @@ class World {
 	}
 
 	public addShip(ship: Ship): Ship {
-		ship.onAddToWorld();
-		this.gameObject.addChild(ship.gameObject);
 		ship.world = this;
 		ship.id = this.nextId();
 		this.ships[ship.id] = ship;
 		this.shipsNum++;
+		ship.onAddToWorld();
+		this.gameObject.addChild(ship.gameObject);
 		return ship;
 	}
 
@@ -74,12 +85,12 @@ class World {
 	}
 
 	public addBullet(bullet: Bullet): Bullet {
-		bullet.onAddToWorld();
-		this.gameObject.addChild(bullet.gameObject);
 		bullet.world = this;
 		bullet.id = this.nextId();
 		this.bullets[bullet.id] = bullet;
 		this.bulletsNum++;
+		bullet.onAddToWorld();
+		this.gameObject.addChild(bullet.gameObject);
 		return bullet;
 	}
 
@@ -97,12 +108,12 @@ class World {
 	}
 
 	public addSupply(supply: Supply): Supply {
-		supply.onAddToWorld();
-		this.gameObject.addChild(supply.gameObject);
 		supply.world = this;
 		supply.id = this.nextId();
 		this.supplies[supply.id] = supply;
 		this.suppliesNum++;
+		supply.onAddToWorld();
+		this.gameObject.addChild(supply.gameObject);
 		return supply;
 	}
 
@@ -120,7 +131,7 @@ class World {
 		//console.log('ship('+id+') removed');
 	}
 
-	public step(dt: number) {
+	protected step(dt: number) {
 		let toDelShips: Ship[] = [];
 		let toDelBullets: Bullet[] = [];
 		let toDelSupplies: Supply[] = [];
@@ -192,6 +203,8 @@ class World {
 				if (!ship.isAlive()) {
 					continue;
 				}
+
+				// 检测补给箱碰撞
 				for (let supplyId in this.supplies) {
 					let supply: Supply = this.supplies[supplyId];
 					if (supply.status == UnitStatus.Dead) {
@@ -201,7 +214,13 @@ class World {
 					if (!supply.isAlive()) {
 						continue;
 					}
+					if (supply.y > this.height+supply.gameObject.height*0.5) {
+						// 移除跑出边界的子弹
+						supply.status = UnitStatus.Dead;
+						continue;
+					}
 					if (ship.hitTest(supply)) {
+						supply.onHitShip(ship);
 						this.onShipHitSupply(ship, supply);
 						supply.status = UnitStatus.Dead;
 					}
@@ -226,19 +245,30 @@ class World {
 		}
 
 		// Debug Draw
-		if (this.debugDrawSprite != null) {
-			this.debugDrawSprite.graphics.clear();
-			this.debugDrawSprite.graphics.lineStyle(2, 0xffffff, 1);
-
-			this.debugTextField.text = "ship: "+this.shipsNum+", bullet: "+this.bulletsNum;
-			
-			let objsList = [this.ships, this.bullets, this.supplies];
-			for (let i in objsList) {
-				let objs = objsList[i];
-				for (let objId in objs) {
-					let obj = objs[objId];
-					this.debugDrawSprite.graphics.moveTo(obj.gameObject.x, obj.gameObject.y);
-					this.debugDrawSprite.graphics.drawRect(obj.gameObject.x-obj.gameObject.width*0.5, obj.gameObject.y-obj.gameObject.height*0.5, obj.gameObject.width, obj.gameObject.height);
+		if (this.dbgDrawSprite != null) {
+			this.dbgDrawSprite.graphics.clear();
+			this.dbgDrawSprite.graphics.lineStyle(2, 0xffffff, 1);
+			let now = egret.getTimer();
+			if (this.dbgFpsTicks == 0) {
+				this.dbgFpsTicks = now;
+			} else {
+				this.dbgFpsFrames++;
+				let dt = now-this.dbgFpsTicks;
+				if (dt >= 1000) {
+					this.dbgFps = Math.floor(this.dbgFpsFrames*1000/dt);
+					this.dbgFpsFrames = 0;
+					this.dbgFpsTicks = now;
+				}
+			}
+			let fps = this.dbgFps==0 ? this.gameObject.stage.frameRate : this.dbgFps;
+			this.dbgTextField.text = "FPS: "+fps+"\nships: "+this.shipsNum+", bullets: "+this.bulletsNum+", supplies: "+this.suppliesNum;
+			let unitsList = [this.ships, this.bullets, this.supplies];
+			for (let i in unitsList) {
+				let units = unitsList[i];
+				for (let untiId in units) {
+					let unit = units[untiId];
+					this.dbgDrawSprite.graphics.moveTo(unit.gameObject.x, unit.gameObject.y);
+					this.dbgDrawSprite.graphics.drawRect(unit.gameObject.x-unit.gameObject.width*0.5, unit.gameObject.y-unit.gameObject.height*0.5, unit.gameObject.width, unit.gameObject.height);
 				}
 			}
 		}

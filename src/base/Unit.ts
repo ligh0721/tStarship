@@ -57,19 +57,23 @@ class Unit {
 		return this.boundsRect;
 	}
 
+	// override
 	protected onCreate(): egret.DisplayObject {
 		return this.gameObject;
 	}
 
+	// override
 	public onAddToWorld(): void {
 		this.gameObject = this.onCreate();
 	}
 
+	// override
 	protected onCleanup(): void {
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 	}
 
+	// override
 	public hitTest(other: Unit): boolean {
 		return this.getBounds().intersects(other.getBounds());
 	}

@@ -1,6 +1,6 @@
 class RowGun extends Gun {
 	bulletNum: number = 5;
-	bulletXDelta: number = 30;
+	bulletXDelta: number = 50;
 	bulletYDelta: number = 20;
 
 	public fire() {

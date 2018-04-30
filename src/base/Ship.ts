@@ -3,6 +3,7 @@ class Ship extends HpUnit {
 	readonly height: number;
 	
 	force: Force = new Force();
+	mainGun: Gun = null;
 	readonly guns: { [key: string]: Gun } = {};
 	readonly speed: Value = new Value(100);
 	hero: boolean = false;  // can use supply
@@ -90,10 +91,13 @@ class Ship extends HpUnit {
 		}
 	}
 
-	public addGun(gun: Gun): Gun {
+	public addGun(gun: Gun, main?: boolean): Gun {
 		gun.id = this.world.nextId();
 		gun.ship = this;
 		this.guns[gun.id] = gun;
+		if (main == true) {
+			this.mainGun = gun;
+		}
 		return gun;
 	}
 
@@ -106,6 +110,9 @@ class Ship extends HpUnit {
 		gun.cleanup();
 		//gun.ship = null;
 		delete this.guns[id];
+		if (this.mainGun == gun) {
+			this.mainGun = null;
+		}
 	}
 
 	public addBuff(buff: Buff): Buff {

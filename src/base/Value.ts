@@ -39,7 +39,7 @@ class Value {
 		}
 	}
 
-	public add(prop: {a?: number, b?: number}) {
+	public addFactor(prop: {a?: number, b?: number}) {
 		if (prop.a != undefined) {
 			this.$a += prop.a;
 		}
@@ -48,7 +48,7 @@ class Value {
 		}
 	}
 
-	public sub(prop: {a?: number, b?: number}) {
+	public subFactor(prop: {a?: number, b?: number}) {
 		if (prop.a != undefined) {
 			this.$a -= prop.a;
 		}

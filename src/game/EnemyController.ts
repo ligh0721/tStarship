@@ -31,19 +31,14 @@ class EnemyController {
 			return;
 		}
 
-		let moveLikeBezier = (ship: EnemyShip)=>{
+		let t = new tutils.Timer();
+		t.setOnTimerListener((dt: number)=>{
+			let ship = ships.pop();
 			this.world.addShip(ship);
 			let bezier = new BezierCurve(ship, point0, point1, point2, fixedRotation);
 			bezier.startMove(2000, ()=>{
 				ship.status = UnitStatus.Dead;
 			});
-		}
-
-		let t = new tutils.Timer();
-		t.setOnTimerListener((dt: number)=>{
-			//console.log(egret.getTimer()+' enemy');
-			let ship = ships.pop();
-			moveLikeBezier(ship);
 		}, this);
 		t.start(200, true, ships.length);
 	}
