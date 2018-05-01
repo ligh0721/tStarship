@@ -78,16 +78,7 @@ class BattleLayer extends tutils.Layer {
         this.score.bmpText.x = this.stage.stageWidth - this.score.bmpText.textWidth;
 
         // 创建敌军小队
-        let enemies: EnemyShip[] = [];
-        let n = 1000;
-        for (let i=0; i<n; i++) {
-            let enemy = this.enemyCtrl.createEnemyShip(40, 60, "tri");
-            enemy.resetHp(5);
-            enemies.push(enemy);
-        }
-        // this.enemyCtrl.enemyShipMoveInStraightLine(enemyShip, enemyShip.width*0.5);
-        //this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
-        // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
+        this.createTestEnemyRushes();
 	}
 
     public get pathPercent(): number {
@@ -233,6 +224,80 @@ class BattleLayer extends tutils.Layer {
             ship.y = this.stage.stageHeight*(0.1+Math.random()*0.7);
 		}
 	}
+
+    private createTestEnemyRushes() {
+        let en0: EnemyShip[] = [];
+        let en1: EnemyShip[] = [];
+        let en2: EnemyShip[] = [];
+        let en3: EnemyShip[] = []; 
+        let n = 10;
+        for (let i=0; i<n; i++) {
+            let enemy0 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            enemy0.resetHp(5);
+            en0.push(enemy0);
+
+            let enemy1 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            enemy1.resetHp(5);
+            en1.push(enemy1);
+
+            let enemy2 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            enemy2.resetHp(5);
+            en2.push(enemy2);
+
+            let enemy3 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            enemy3.resetHp(5);
+            en3.push(enemy3);
+        }
+
+        let enemy0 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+        enemy0.resetHp(5);
+
+        let enemy1 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+        enemy0.resetHp(5);
+
+        // this.enemyCtrl.enemyShipMoveInStraightLine(enemyShip, enemyShip.width*0.5);
+        // this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, 200, 2000, false);
+        // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
+
+        let rushItem0 = new RushItem(en0, 'Bezier', 2000, 2000, 200, [{x: this.world.width*0.3, y: 0}, {x: this.world.width*0.3, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}], null);
+
+        let rushItem1 = new RushItem(en1, 'Bezier', 0, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.5}], null);
+
+        let rushItem2 = new RushItem(en2, 'streight', 4000, 2000, 200, [{x: this.world.width*0.7, y: this.world.height}], null);
+
+        let rushItem3 = new RushItem(en3, 'sin', 5000, 4000, 200, [{x: 200, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
+
+        let rushItem4 = new RushItem([enemy0], 'Bezier', 5000, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
+
+        let rushItem5 = new RushItem([enemy1], 'sin', 5000, 4000, 200, [{x: 800, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
+
+        this.enemyCtrl.addRush(rushItem0);
+        this.enemyCtrl.addRush(rushItem1);
+        this.enemyCtrl.addRush(rushItem2);
+        this.enemyCtrl.addRush(rushItem3);
+        this.enemyCtrl.addRush(rushItem4);
+        this.enemyCtrl.addRush(rushItem5);
+
+        for (let i=0; i<100; i++) {
+            let es = [];
+            let n = Math.floor(Math.random()*3+1);
+            for (let j=0; j<n; j++) {
+                let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+                e.resetHp(5);
+                es.push(e);
+            }
+            
+            let delay = Math.random() * 5000;
+            let dur = Math.random() * 2000 + 2000;
+            let interval = Math.random() * 200 + 100;
+            let a = Math.random() * 200 + 80
+            let x = Math.random() * (this.stage.stageWidth - a * 2) + a;
+            let t = Math.random() * 1000 + 1000;
+            let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
+            this.enemyCtrl.addRush(rushItem);
+        }
+        this.enemyCtrl.start(30);
+    }
 
     private createTestMotherShip() {
         let ship = new MotherShip(400, 200);
