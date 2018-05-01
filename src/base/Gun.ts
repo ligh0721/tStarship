@@ -7,6 +7,7 @@ class Gun {
 	readonly bulletPowerLossInterval: Value = new Value(500, 100);  // 子弹能量下降时间间隔
 	readonly bulletSpeed: Value = new Value(50, 0, 200);
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
+	angle: number = 0;
 
 	private readonly autoFireTimer: tutils.Timer = new tutils.Timer();
 
@@ -39,13 +40,17 @@ class Gun {
 		return this.ship.world.addBullet(bullet);
 	}
 
+	protected fireBulletStraight(bullet: Bullet, fixedRotation?: boolean, ease?: Function) {
+		bullet.moveStraight(this.angle, this.bulletSpeed.value, fixedRotation, ease)
+	}
+
 	public fire() {
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		bullet.moveStraight(0, this.bulletSpeed.value);
+		this.fireBulletStraight(bullet);
 	}
 
 	public get autoFire(): boolean {

@@ -3,6 +3,7 @@ class BattleLayer extends tutils.Layer {
     private hero: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
+    private buffuis: BuffProgress[] = [];
 	
 	protected onInit() {
         let bg = tutils.createBitmapByName("grid100_png");
@@ -18,6 +19,8 @@ class BattleLayer extends tutils.Layer {
         this.world.start(30);
         this.world.setOnShipDyingListener(this.onShipDying, this);
         this.world.setOnShipHitSupplyListener(this.onShipHitSupply, this);
+        this.world.setOnShipAddBuffListener(this.onShipAddBuff, this);
+        this.world.setOnShipRemoveBuffListener(this.onShipRemoveBuff, this);
 
         // 开启调试辅助线
         // this.world.dbgDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
@@ -60,6 +63,7 @@ class BattleLayer extends tutils.Layer {
 		//score.setScore(10000, 5000);
         this.score = score;
         this.score.bmpText.x = this.stage.stageWidth - this.score.bmpText.textWidth;
+        
 
         // 创建敌军小队
         let enemies: EnemyShip[] = [];
@@ -69,9 +73,8 @@ class BattleLayer extends tutils.Layer {
             enemy.resetHp(5);
             enemies.push(enemy);
         }
-
         // this.enemyCtrl.enemyShipMoveInStraightLine(enemyShip, enemyShip.width*0.5);
-        this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
+        //this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
         // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 	}
 
@@ -86,18 +89,87 @@ class BattleLayer extends tutils.Layer {
     private onShipHitSupply(ship: Ship, supply: Supply) {
     }
 
+    private onShipAddBuff(ship: Ship, buff: Buff) {
+        const baseX = 10;
+        const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
+        const dt = 10;
+        let color: number = 0xffffff;
+        switch (buff.name) {
+            case "GunCDR":
+            color = 0x4f86ff;
+            break;
+            
+            case "GunPower":
+            color = 0xf48771;
+            break;
+
+            case "GunSpeed":
+            color = 0x49bba4;
+            break;
+
+            case "SatelliteGun":
+            color = 0xdcdcaa;
+            break;
+        }
+
+        let buffui = new BuffProgress(this.layer, buff, color);
+        buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * this.buffuis.length;
+        buffui.gameObject.y = baseY;
+        buffui.percent = 1;
+        this.buffuis.push(buffui);
+        let tw = egret.Tween.get(buffui);
+        tw.to({percent: 0}, buff.duration);
+        tw.call(()=>{
+            let i = this.buffuis.indexOf(buffui);
+            if (i >= 0) {
+                this.buffuis.splice(i, 1);
+                buffui.cleanup();
+                this.layer.removeChild(buffui.gameObject);
+                this.updateBuffUIPosition();
+            }
+        }, this);
+    }
+
+    private onShipRemoveBuff(ship: Ship, buff: Buff) {
+        let index: number = -1;
+        for (let i in this.buffuis) {
+            let buffui = this.buffuis[i];
+            if (buffui.buff == buff) {
+                index = parseInt(i);
+                break;
+            }
+        }
+        if (index >= 0) {
+            let buffui = this.buffuis.splice(index, 1)[0];
+            buffui.cleanup();
+            this.layer.removeChild(buffui.gameObject);
+            this.updateBuffUIPosition();
+        }
+    }
+
+    private updateBuffUIPosition() {
+        const baseX = 10;
+        const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
+        const dt = 10;
+        for (let i=0; i<this.buffuis.length; i++) {
+            let buffui = this.buffuis[i];
+            buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * i;
+            buffui.gameObject.y = baseY;
+        }
+    }
+
 	private onTouchBegin(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY);
+        this.hero.move(evt.localX, evt.localY-100);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY);
+        this.hero.move(evt.localX, evt.localY-100);
     }
 
 	// FIXME: test
@@ -116,17 +188,21 @@ class BattleLayer extends tutils.Layer {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*9);
+        let i = Math.floor(Math.random()*4);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);
+            buff.name = "GunCDR";
+            buff.uniq = "GunCDR";
             supply = new BuffSupply([buff]);
             supply.text = "GunCDR";
-            supply.color = 0x365e84;
+            supply.color = 0x4f86ff;
             break;
 
             case 1:
             buff = new GunBuff(8000, 0, +0.50, 0);
+            buff.name = "GunPower";
+            buff.uniq = "GunPower";
             supply = new BuffSupply([buff]);
             supply.text = "GunPower";
             supply.color = 0xf48771;
@@ -134,6 +210,8 @@ class BattleLayer extends tutils.Layer {
 
             case 2:
             buff = new GunBuff(8000, 0, 0, +1.00);
+            buff.name = "GunSpeed";
+            buff.uniq = "GunSpeed";
             supply = new BuffSupply([buff]);
             supply.text = "GunSpeed";
             supply.color = 0x49bba4;
@@ -146,6 +224,8 @@ class BattleLayer extends tutils.Layer {
             gun.bulletPowerLossPer = 1.0;
             gun.bulletPowerLossInterval.baseValue = 1000;
             buff = new AddGunBuff(8000, [gun]);
+            buff.name = "SatelliteGun";
+            buff.uniq = "SatelliteGun";
             supply = new BuffSupply([buff]);
             supply.text = "SatelliteGun";
             supply.color = 0xdcdcaa;

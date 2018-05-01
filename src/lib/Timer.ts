@@ -18,6 +18,9 @@ module tutils {
 			}
 			if (this.onTimerListener != null) {
 				this.onTimerListener.call(this.onTimerThisObject, start-last);
+				if (!this.$running) {
+					return;
+				}
 			}
 			if (this.times > 0 && this.$left == 0) {
 				this.stop();

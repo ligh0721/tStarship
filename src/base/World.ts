@@ -17,6 +17,12 @@ class World {
 	private onShipHitSupplyListener: (ship: Ship, supply: Supply)=>void = null;
 	private onShipHitSupplyThisObject: any;
 
+	private onShipAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
+	private onShipAddBuffThisObject: any;
+
+	private onShipRemoveBuffListener: (ship: Ship, buff: Buff)=>void = null;
+	private onShipRemoveBuffThisObject: any;
+
 	dbgDrawSprite: egret.Sprite = null;
 	dbgTextField: egret.TextField = null;
 	dbgFpsTicks: number = 0;
@@ -298,5 +304,27 @@ class World {
 	public setOnShipHitSupplyListener(listener: (ship: Ship, supply: Supply)=>void, thisObject?: any) {
 		this.onShipHitSupplyListener = listener;
 		this.onShipHitSupplyThisObject = thisObject;
+	}
+
+	public onShipAddBuff(ship: Ship, buff: Buff) {
+		if (this.onShipAddBuffListener != null) {
+			this.onShipAddBuffListener.call(this.onShipAddBuffThisObject, ship, buff);
+		}
+	}
+
+	public setOnShipAddBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
+		this.onShipAddBuffListener = listener;
+		this.onShipAddBuffThisObject = thisObject;
+	}
+
+	public onShipRemoveBuff(ship: Ship, buff: Buff) {
+		if (this.onShipRemoveBuffListener != null) {
+			this.onShipRemoveBuffListener.call(this.onShipRemoveBuffThisObject, ship, buff);
+		}
+	}
+
+	public setOnShipRemoveBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
+		this.onShipRemoveBuffListener = listener;
+		this.onShipRemoveBuffThisObject = thisObject;
 	}
 }

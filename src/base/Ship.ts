@@ -129,6 +129,7 @@ class Ship extends HpUnit {
 				this.timer.start(tutils.ShipTimerInterval, false, 0);
 			}
 		}
+		this.world.onShipAddBuff(this, buff);
 		return buff;
 	}
 
@@ -145,5 +146,6 @@ class Ship extends HpUnit {
 		if (this.buffsNum <= 0 && this.timer.running) {
 			this.timer.stop();
 		}
+		this.world.onShipRemoveBuff(this, buff);
 	}
 }
