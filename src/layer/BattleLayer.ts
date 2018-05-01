@@ -3,12 +3,15 @@ class BattleLayer extends tutils.Layer {
     private hero: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
-    private buffuis: BuffProgress[] = [];
+    private buffuis: BuffProgress[];
     private bossui: BossHpProgress;  // = null FUCK???
 
     $pathPercent: number = 0;
 	
 	protected onInit() {
+        this.buffuis = [];
+        this.bossui = null;
+
         let bg = tutils.createBitmapByName("grid100_png");
         this.layer.addChild(bg);
         let stageW = this.stage.stageWidth;
@@ -198,6 +201,11 @@ class BattleLayer extends tutils.Layer {
             return;
         }
         this.bossui.percent = ship.hp / ship.maxHp;
+        if (ship.hp <= 0) {
+            this.bossui.cleanup();
+            this.layer.removeChild(this.bossui.gameObject);
+            this.score.bmpText.visible = true;
+        }
     }
 
 	private onTouchBegin(evt: egret.TouchEvent) {
@@ -231,35 +239,24 @@ class BattleLayer extends tutils.Layer {
         this.world.addShip(ship);
         ship.angle = 180;
         ship.x = this.stage.stageWidth * 0.5;
-        ship.y = ship.height * 0.5 + 100;
+        ship.y = -ship.height;
+        ship.force.force = tutils.EnemyForce;
+        ship.resetHp(1000);
 
         let gunShip = new MotherGunShip(40, 80);
         ship.addGunShip(gunShip, -100, 100);
-        gunShip.resetHp(20);
+        gunShip.resetHp(100);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, Bullet);
-        gunShip.addGun(gun).autoFire = true;
-
-        let rotate = (gunShip: MotherGunShip)=>{
-            let tw = egret.Tween.get(gunShip);
-            tw.set({angle: 180});
-            tw.to({angle: 180+45}, 1000);
-            tw.to({angle: 180-45}, 2000);
-            tw.to({angle: 180}, 2000);
-            tw.call(rotate, this, [gunShip]);
-        }
-        rotate(gunShip);
+        gunShip.addGun(gun);
         
-        gunShip = new MotherGunShip(40, 80);
-        ship.addGunShip(gunShip, 100, 100);
-        gunShip.resetHp(20);
-        gunShip.angle = 180;
-        gun = Gun.createGun(ShotGun, Bullet);
-        gunShip.addGun(gun).autoFire = true;
-        rotate(gunShip);
-
-        ship.force.force = tutils.EnemyForce;
-        ship.resetHp(1000);
+        let gunShip2 = new MotherGunShip(40, 80);
+        ship.addGunShip(gunShip2, 100, 100);
+        gunShip2.resetHp(200);
+        gunShip2.angle = 180;
+        let gun2 = Gun.createGun(ShotGun, Bullet);
+        gun2.fireCooldown.baseValue = 1000;
+        gunShip2.addGun(gun2);
 
         let moveMotherShip = (ship: MotherShip)=>{
             let tw = egret.Tween.get(ship);
@@ -267,20 +264,40 @@ class BattleLayer extends tutils.Layer {
             tw.to({x: this.stage.stageWidth * 0.6}, 4000);
             tw.to({x: this.stage.stageWidth * 0.5}, 2000);
             tw.call(moveMotherShip, this, [ship]);
-        }
-        moveMotherShip(ship);
+        };
+
+        let rotateGunShip = (gunShip: MotherGunShip)=>{
+            let tw = egret.Tween.get(gunShip);
+            tw.set({angle: 180});
+            tw.to({angle: 180+45}, 1000);
+            tw.to({angle: 180-45}, 2000);
+            tw.to({angle: 180}, 2000);
+            tw.call(rotateGunShip, this, [gunShip]);
+        };
+
+        let tw = egret.Tween.get(ship);
+        tw.to({y: ship.height*0.5+100}, 5000)
+        tw.wait(1000);
+        tw.call(()=>{
+            moveMotherShip(ship);
+            rotateGunShip(gunShip);
+            rotateGunShip(gunShip2);
+            gun.autoFire = true;
+            gun2.autoFire = true;
+        }, this);
 
         this.bossui = new BossHpProgress(this.layer, ship, 0xffffff);
         this.bossui.show();
         ship.setOnHpChangedListener(this.onShipHpChanged, this);
-        ship.damaged(1, null);
+        //ship.damaged(1, null);
+        this.score.bmpText.visible = false;
     }
 
     private createTestSupply() {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*9);
+        let i = Math.floor(Math.random()*4);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);
