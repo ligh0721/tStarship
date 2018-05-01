@@ -4,7 +4,7 @@ class Unit {
 	world: World;
 	staticBounds: boolean = true;
 	private boundsRect: egret.Rectangle = null;
-	private boundsDirty: boolean = true;
+	protected boundsDirty: boolean = true;
 	private waitToRemove: boolean = false;
 
 	public constructor() {

@@ -5,7 +5,7 @@ class ShapeProgress {
 	height: number;
 	colorBorder: number;
 	colorFilled: number;
-	private $percent: number = 0;
+	protected $percent: number = 0;
 
 	public constructor(layer: egret.DisplayObjectContainer, type: ProgressType, width: number, height: number, colorBorder: number, colorFilled: number) {
 		this.type = type;

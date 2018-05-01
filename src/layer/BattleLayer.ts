@@ -4,6 +4,9 @@ class BattleLayer extends tutils.Layer {
 	private score: Score;
     private enemyCtrl: EnemyController;
     private buffuis: BuffProgress[] = [];
+    private bossui: BossHpProgress;  // = null FUCK???
+
+    $pathPercent: number = 0;
 	
 	protected onInit() {
         let bg = tutils.createBitmapByName("grid100_png");
@@ -19,8 +22,6 @@ class BattleLayer extends tutils.Layer {
         this.world.start(30);
         this.world.setOnShipDyingListener(this.onShipDying, this);
         this.world.setOnShipHitSupplyListener(this.onShipHitSupply, this);
-        this.world.setOnShipAddBuffListener(this.onShipAddBuff, this);
-        this.world.setOnShipRemoveBuffListener(this.onShipRemoveBuff, this);
 
         // 开启调试辅助线
         // this.world.dbgDrawSprite = <egret.Sprite>tutils.createLayer(this.layer, 0x000000, 0.0);
@@ -45,6 +46,9 @@ class BattleLayer extends tutils.Layer {
         gun.bulletPowerLossPer = 1;
         gun.bulletPowerLossInterval.baseValue = 1000;
         hero.addGun(gun, true).autoFire = true;
+
+        hero.setOnAddBuffListener(this.onShipAddBuff, this);
+        hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -55,6 +59,12 @@ class BattleLayer extends tutils.Layer {
 
         // 创建测试敌军
         //this.createTestEnemyShip(10);
+
+        // 创建BOSS飞船
+        this.createTestMotherShip();
+        
+        // 绘制测试路径
+        //this.drawTestPath();
         
         // 创建分数板
 		let score = new Score(this.layer);
@@ -63,7 +73,6 @@ class BattleLayer extends tutils.Layer {
 		//score.setScore(10000, 5000);
         this.score = score;
         this.score.bmpText.x = this.stage.stageWidth - this.score.bmpText.textWidth;
-        
 
         // 创建敌军小队
         let enemies: EnemyShip[] = [];
@@ -77,6 +86,31 @@ class BattleLayer extends tutils.Layer {
         //this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, false);
         // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 	}
+
+    public get pathPercent(): number {
+        return this.$pathPercent;
+    }
+
+    public set pathPercent(value: number) {
+        const dur = 10000;
+        const dis = 1000;
+        const T = 1000;
+        const pX = 500;
+        const pY = 0;
+        const A = 100;
+        this.$pathPercent = value;
+        let y = pY + dis * value;
+        let x = pX + A * Math.sin(value*dur/2*Math.PI/T);
+        let g = this.layer.graphics;
+        g.drawCircle(x, y, 1);
+    }
+
+    public drawTestPath(): void {
+        let tw = egret.Tween.get(this);
+        this.pathPercent = 0;
+        tw.to({pathPercent: 1}, 10000)
+        this.layer.graphics.lineStyle(1, 0xffffff);
+    }
 
     private onShipDying(ship: Ship, killer: Ship) {
         if (this.hero == ship) {
@@ -158,6 +192,14 @@ class BattleLayer extends tutils.Layer {
         }
     }
 
+    private onShipHpChanged(ship: HpUnit, changed: number) {
+        console.assert(this.bossui != null);
+        if (this.bossui == null || this.bossui.showing) {
+            return;
+        }
+        this.bossui.percent = ship.hp / ship.maxHp;
+    }
+
 	private onTouchBegin(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
@@ -184,11 +226,61 @@ class BattleLayer extends tutils.Layer {
 		}
 	}
 
+    private createTestMotherShip() {
+        let ship = new MotherShip(400, 200);
+        this.world.addShip(ship);
+        ship.angle = 180;
+        ship.x = this.stage.stageWidth * 0.5;
+        ship.y = ship.height * 0.5 + 100;
+
+        let gunShip = new MotherGunShip(40, 80);
+        ship.addGunShip(gunShip, -100, 100);
+        gunShip.resetHp(20);
+        gunShip.angle = 180;
+        let gun = Gun.createGun(Gun, Bullet);
+        gunShip.addGun(gun).autoFire = true;
+
+        let rotate = (gunShip: MotherGunShip)=>{
+            let tw = egret.Tween.get(gunShip);
+            tw.set({angle: 180});
+            tw.to({angle: 180+45}, 1000);
+            tw.to({angle: 180-45}, 2000);
+            tw.to({angle: 180}, 2000);
+            tw.call(rotate, this, [gunShip]);
+        }
+        rotate(gunShip);
+        
+        gunShip = new MotherGunShip(40, 80);
+        ship.addGunShip(gunShip, 100, 100);
+        gunShip.resetHp(20);
+        gunShip.angle = 180;
+        gun = Gun.createGun(ShotGun, Bullet);
+        gunShip.addGun(gun).autoFire = true;
+        rotate(gunShip);
+
+        ship.force.force = tutils.EnemyForce;
+        ship.resetHp(1000);
+
+        let moveMotherShip = (ship: MotherShip)=>{
+            let tw = egret.Tween.get(ship);
+            tw.to({x: this.stage.stageWidth * 0.4}, 2000);
+            tw.to({x: this.stage.stageWidth * 0.6}, 4000);
+            tw.to({x: this.stage.stageWidth * 0.5}, 2000);
+            tw.call(moveMotherShip, this, [ship]);
+        }
+        moveMotherShip(ship);
+
+        this.bossui = new BossHpProgress(this.layer, ship, 0xffffff);
+        this.bossui.show();
+        ship.setOnHpChangedListener(this.onShipHpChanged, this);
+        ship.damaged(1, null);
+    }
+
     private createTestSupply() {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*4);
+        let i = Math.floor(Math.random()*9);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);

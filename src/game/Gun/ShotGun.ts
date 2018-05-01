@@ -1,6 +1,6 @@
 class ShotGun extends Gun {
 	bulletNum: number = 5;
-	bulletAngleDelta: number = 10;
+	bulletAngleDelta: number = 15;
 	
 	public fire() {
 		let firePos = this.getFirePosition();
@@ -9,11 +9,11 @@ class ShotGun extends Gun {
 		for (let i=0; i<n; i++) {
 			let bullet = this.createBullet();
 			this.addBulletToWorld(bullet)
-			let angle = (i - (n - 1) / 2) * this.bulletAngleDelta;
+			let angle = (i - (n - 1) / 2) * this.bulletAngleDelta + this.ship.angle;
 			let firePos = Bullet.getDirectionPoint(this.ship.x, this.ship.y, angle, r);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y;
-			this.fireBulletStraight(bullet);
+			this.fireBulletStraight(bullet, angle);
 		}
 	}
 }

@@ -4,13 +4,21 @@ class Ship extends HpUnit {
 	
 	force: Force = new Force();
 	mainGun: Gun = null;
-	readonly guns: { [key: string]: Gun } = {};
+	readonly guns: { [id: string]: Gun } = {};
 	readonly speed: Value = new Value(100);
 	hero: boolean = false;  // can use supply
 
 	private readonly timer: tutils.Timer = new tutils.Timer();
-	readonly buffs: { [key: string]: Buff } = {};
+	readonly buffs: { [id: string]: Buff } = {};
 	buffsNum: number = 0;
+
+	// from unit
+	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
+	private onAddBuffThisObject: any;
+
+	// from unit
+	private onRemoveBuffListener: (ship: Ship, buff: Buff)=>void = null;
+	private onRemoveBuffThisObject: any;
 
 	public constructor(width: number, height: number) {
 		super();
@@ -36,8 +44,8 @@ class Ship extends HpUnit {
 		let yy = y-this.gameObject.y;
 		let dis = Math.sqrt(xx*xx+yy*yy);
         let dur = dis * tutils.SpeedFactor / this.speed.value;
-        egret.Tween.removeTweens(this.gameObject);
-        let tw = egret.Tween.get(this.gameObject);
+        egret.Tween.removeTweens(this);
+        let tw = egret.Tween.get(this);
         tw.to({x: x, y: y}, dur);
 	}
 
@@ -129,7 +137,7 @@ class Ship extends HpUnit {
 				this.timer.start(tutils.ShipTimerInterval, false, 0);
 			}
 		}
-		this.world.onShipAddBuff(this, buff);
+		this.onAddBuff(buff);
 		return buff;
 	}
 
@@ -146,6 +154,28 @@ class Ship extends HpUnit {
 		if (this.buffsNum <= 0 && this.timer.running) {
 			this.timer.stop();
 		}
-		this.world.onShipRemoveBuff(this, buff);
+		this.onRemoveBuff(buff);
+	}
+
+	public onAddBuff(buff: Buff) {
+		if (this.onAddBuffListener != null) {
+			this.onAddBuffListener.call(this.onAddBuffThisObject, this, buff);
+		}
+	}
+
+	public setOnAddBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
+		this.onAddBuffListener = listener;
+		this.onAddBuffThisObject = thisObject;
+	}
+
+	public onRemoveBuff(buff: Buff) {
+		if (this.onRemoveBuffListener != null) {
+			this.onRemoveBuffListener.call(this.onRemoveBuffThisObject, this, buff);
+		}
+	}
+
+	public setOnRemoveBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
+		this.onRemoveBuffListener = listener;
+		this.onRemoveBuffThisObject = thisObject;
 	}
 }

@@ -1,13 +1,12 @@
 class Gun {
 	id: string;
 	ship: Ship;
-	readonly fireCooldown: Value = new Value(200, 0, 10000);
+	readonly fireCooldown: Value = new Value(500, 0, 10000);
 	readonly bulletPower: Value = new Value(1, 1, tutils.LargeNumber);
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
 	readonly bulletPowerLossInterval: Value = new Value(500, 100);  // 子弹能量下降时间间隔
 	readonly bulletSpeed: Value = new Value(50, 0, 200);
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
-	angle: number = 0;
 
 	private readonly autoFireTimer: tutils.Timer = new tutils.Timer();
 
@@ -40,8 +39,8 @@ class Gun {
 		return this.ship.world.addBullet(bullet);
 	}
 
-	protected fireBulletStraight(bullet: Bullet, fixedRotation?: boolean, ease?: Function) {
-		bullet.moveStraight(this.angle, this.bulletSpeed.value, fixedRotation, ease)
+	protected fireBulletStraight(bullet: Bullet, angle?: number, fixedRotation?: boolean, ease?: Function) {
+		bullet.moveStraight(angle==undefined?this.ship.angle:angle, this.bulletSpeed.value, fixedRotation, ease)
 	}
 
 	public fire() {
@@ -85,6 +84,6 @@ class Gun {
 	}
 
 	public getFirePosition(): {x: number, y: number} {
-		return {x: this.ship.x, y: this.ship.y-this.ship.height*0.5};
+		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.angle, this.ship.height*0.5);
 	}
 }
