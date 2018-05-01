@@ -3,6 +3,10 @@ class BattleLayer extends tutils.Layer {
     private hero: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
+    private buffuis: BuffProgress[] = [];
+    private bossui: BossHpProgress;  // = null FUCK???
+
+    $pathPercent: number = 0;
 	
 	protected onInit() {
         let bg = tutils.createBitmapByName("grid100_png");
@@ -42,6 +46,9 @@ class BattleLayer extends tutils.Layer {
         gun.bulletPowerLossPer = 1;
         gun.bulletPowerLossInterval.baseValue = 1000;
         hero.addGun(gun, true).autoFire = true;
+
+        hero.setOnAddBuffListener(this.onShipAddBuff, this);
+        hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -52,6 +59,12 @@ class BattleLayer extends tutils.Layer {
 
         // 创建测试敌军
         //this.createTestEnemyShip(10);
+
+        // 创建BOSS飞船
+        this.createTestMotherShip();
+        
+        // 绘制测试路径
+        //this.drawTestPath();
         
         // 创建分数板
 		let score = new Score(this.layer);
@@ -65,6 +78,31 @@ class BattleLayer extends tutils.Layer {
         this.createTestEnemyRushes();
 	}
 
+    public get pathPercent(): number {
+        return this.$pathPercent;
+    }
+
+    public set pathPercent(value: number) {
+        const dur = 10000;
+        const dis = 1000;
+        const T = 1000;
+        const pX = 500;
+        const pY = 0;
+        const A = 100;
+        this.$pathPercent = value;
+        let y = pY + dis * value;
+        let x = pX + A * Math.sin(value*dur/2*Math.PI/T);
+        let g = this.layer.graphics;
+        g.drawCircle(x, y, 1);
+    }
+
+    public drawTestPath(): void {
+        let tw = egret.Tween.get(this);
+        this.pathPercent = 0;
+        tw.to({pathPercent: 1}, 10000)
+        this.layer.graphics.lineStyle(1, 0xffffff);
+    }
+
     private onShipDying(ship: Ship, killer: Ship) {
         if (this.hero == ship) {
             // TODO: GAME OVER
@@ -76,18 +114,95 @@ class BattleLayer extends tutils.Layer {
     private onShipHitSupply(ship: Ship, supply: Supply) {
     }
 
+    private onShipAddBuff(ship: Ship, buff: Buff) {
+        const baseX = 10;
+        const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
+        const dt = 10;
+        let color: number = 0xffffff;
+        switch (buff.name) {
+            case "GunCDR":
+            color = 0x4f86ff;
+            break;
+            
+            case "GunPower":
+            color = 0xf48771;
+            break;
+
+            case "GunSpeed":
+            color = 0x49bba4;
+            break;
+
+            case "SatelliteGun":
+            color = 0xdcdcaa;
+            break;
+        }
+
+        let buffui = new BuffProgress(this.layer, buff, color);
+        buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * this.buffuis.length;
+        buffui.gameObject.y = baseY;
+        buffui.percent = 1;
+        this.buffuis.push(buffui);
+        let tw = egret.Tween.get(buffui);
+        tw.to({percent: 0}, buff.duration);
+        tw.call(()=>{
+            let i = this.buffuis.indexOf(buffui);
+            if (i >= 0) {
+                this.buffuis.splice(i, 1);
+                buffui.cleanup();
+                this.layer.removeChild(buffui.gameObject);
+                this.updateBuffUIPosition();
+            }
+        }, this);
+    }
+
+    private onShipRemoveBuff(ship: Ship, buff: Buff) {
+        let index: number = -1;
+        for (let i in this.buffuis) {
+            let buffui = this.buffuis[i];
+            if (buffui.buff == buff) {
+                index = parseInt(i);
+                break;
+            }
+        }
+        if (index >= 0) {
+            let buffui = this.buffuis.splice(index, 1)[0];
+            buffui.cleanup();
+            this.layer.removeChild(buffui.gameObject);
+            this.updateBuffUIPosition();
+        }
+    }
+
+    private updateBuffUIPosition() {
+        const baseX = 10;
+        const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
+        const dt = 10;
+        for (let i=0; i<this.buffuis.length; i++) {
+            let buffui = this.buffuis[i];
+            buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * i;
+            buffui.gameObject.y = baseY;
+        }
+    }
+
+    private onShipHpChanged(ship: HpUnit, changed: number) {
+        console.assert(this.bossui != null);
+        if (this.bossui == null || this.bossui.showing) {
+            return;
+        }
+        this.bossui.percent = ship.hp / ship.maxHp;
+    }
+
 	private onTouchBegin(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY);
+        this.hero.move(evt.localX, evt.localY-100);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY);
+        this.hero.move(evt.localX, evt.localY-100);
     }
 
 	// FIXME: test
@@ -176,6 +291,56 @@ class BattleLayer extends tutils.Layer {
         this.enemyCtrl.start(30);
     }
 
+    private createTestMotherShip() {
+        let ship = new MotherShip(400, 200);
+        this.world.addShip(ship);
+        ship.angle = 180;
+        ship.x = this.stage.stageWidth * 0.5;
+        ship.y = ship.height * 0.5 + 100;
+
+        let gunShip = new MotherGunShip(40, 80);
+        ship.addGunShip(gunShip, -100, 100);
+        gunShip.resetHp(20);
+        gunShip.angle = 180;
+        let gun = Gun.createGun(Gun, Bullet);
+        gunShip.addGun(gun).autoFire = true;
+
+        let rotate = (gunShip: MotherGunShip)=>{
+            let tw = egret.Tween.get(gunShip);
+            tw.set({angle: 180});
+            tw.to({angle: 180+45}, 1000);
+            tw.to({angle: 180-45}, 2000);
+            tw.to({angle: 180}, 2000);
+            tw.call(rotate, this, [gunShip]);
+        }
+        rotate(gunShip);
+        
+        gunShip = new MotherGunShip(40, 80);
+        ship.addGunShip(gunShip, 100, 100);
+        gunShip.resetHp(20);
+        gunShip.angle = 180;
+        gun = Gun.createGun(ShotGun, Bullet);
+        gunShip.addGun(gun).autoFire = true;
+        rotate(gunShip);
+
+        ship.force.force = tutils.EnemyForce;
+        ship.resetHp(1000);
+
+        let moveMotherShip = (ship: MotherShip)=>{
+            let tw = egret.Tween.get(ship);
+            tw.to({x: this.stage.stageWidth * 0.4}, 2000);
+            tw.to({x: this.stage.stageWidth * 0.6}, 4000);
+            tw.to({x: this.stage.stageWidth * 0.5}, 2000);
+            tw.call(moveMotherShip, this, [ship]);
+        }
+        moveMotherShip(ship);
+
+        this.bossui = new BossHpProgress(this.layer, ship, 0xffffff);
+        this.bossui.show();
+        ship.setOnHpChangedListener(this.onShipHpChanged, this);
+        ship.damaged(1, null);
+    }
+
     private createTestSupply() {
         let buff: Buff;
         let supply: Supply;
@@ -184,13 +349,17 @@ class BattleLayer extends tutils.Layer {
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);
+            buff.name = "GunCDR";
+            buff.uniq = "GunCDR";
             supply = new BuffSupply([buff]);
             supply.text = "GunCDR";
-            supply.color = 0x365e84;
+            supply.color = 0x4f86ff;
             break;
 
             case 1:
             buff = new GunBuff(8000, 0, +0.50, 0);
+            buff.name = "GunPower";
+            buff.uniq = "GunPower";
             supply = new BuffSupply([buff]);
             supply.text = "GunPower";
             supply.color = 0xf48771;
@@ -198,6 +367,8 @@ class BattleLayer extends tutils.Layer {
 
             case 2:
             buff = new GunBuff(8000, 0, 0, +1.00);
+            buff.name = "GunSpeed";
+            buff.uniq = "GunSpeed";
             supply = new BuffSupply([buff]);
             supply.text = "GunSpeed";
             supply.color = 0x49bba4;
@@ -210,6 +381,8 @@ class BattleLayer extends tutils.Layer {
             gun.bulletPowerLossPer = 1.0;
             gun.bulletPowerLossInterval.baseValue = 1000;
             buff = new AddGunBuff(8000, [gun]);
+            buff.name = "SatelliteGun";
+            buff.uniq = "SatelliteGun";
             supply = new BuffSupply([buff]);
             supply.text = "SatelliteGun";
             supply.color = 0xdcdcaa;

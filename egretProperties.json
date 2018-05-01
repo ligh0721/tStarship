@@ -1,34 +1,40 @@
 {
-	"engineVersion": "5.1.10",
-	"compilerVersion": "5.1.10",
-	"template": {},
-	"target": {
-		"current": "web"
-	},
-	"modules": [
-		{
-			"name": "egret"
-		},
-		{
-			"name": "game"
-		},
-		{
-			"name": "tween"
-		},
-		{
-			"name": "assetsmanager"
-		},
-		{
-			"name": "eui"
-		},
-		{
-			"name": "egret-facebook"
-		},
-		{
-			"name": "dragonBones"
-		},
-		{
-			"name": "promise"
-		}
-	]
+  "engineVersion": "5.1.10",
+  "compilerVersion": "5.1.10",
+  "template": {},
+  "target": {
+    "current": "web"
+  },
+  "modules": [
+    {
+      "name": "egret"
+    },
+    {
+      "name": "game"
+    },
+    {
+      "name": "tween"
+    },
+    {
+      "name": "assetsmanager"
+    },
+    {
+      "name": "eui"
+    },
+    {
+      "name": "egret-facebook"
+    },
+    {
+      "name": "dragonBones"
+    },
+    {
+      "name": "promise"
+    }
+  ],
+  "targets": {
+    "android": {
+      "appname": "tStarShip",
+      "packagename": "com.tutils.tstarship"
+    }
+  }
 }

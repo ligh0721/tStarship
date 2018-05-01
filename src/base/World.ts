@@ -11,9 +11,12 @@ class World {
 	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
 
+	// 部分监听器可以从world广播优化成ship单播 
+	// from unit
 	private onShipDyingListener: (ship: Ship, killer: Ship)=>void = null;
 	private onShipDyingThisObject: any;
 
+	// from world
 	private onShipHitSupplyListener: (ship: Ship, supply: Supply)=>void = null;
 	private onShipHitSupplyThisObject: any;
 

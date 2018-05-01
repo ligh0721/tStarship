@@ -2,7 +2,9 @@ class Buff {
 	public id: string;
 	public ship: Ship = null;
 	public readonly duration: number;
+	public name: string = "";
 	private $left: number;
+	public uniq: string = "";
 
 	public constructor(duration: number) {
 		this.duration = duration;

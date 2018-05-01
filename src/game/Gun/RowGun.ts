@@ -11,7 +11,7 @@ class RowGun extends Gun {
 			this.addBulletToWorld(bullet);
 			bullet.x = firePos.x+(i-(n-1)/2)*this.bulletXDelta;
 			bullet.y = firePos.y+(Math.abs(i-(n-1)/2))*this.bulletYDelta;
-			bullet.moveStraight(0, this.bulletSpeed.value);
+			this.fireBulletStraight(bullet);
 			
 			// let tw2 = egret.Tween.get(bullet.gameObject, {loop: true});
 			// let a = 50;

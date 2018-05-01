@@ -17,7 +17,7 @@ class SoundWaveGun extends Gun {
 			this.addBulletToWorld(bullet);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y - i * 15;
-			bullet.moveStraight(0, this.bulletSpeed.value);
+			this.fireBulletStraight(bullet);
 		}
 	}
 }
