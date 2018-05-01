@@ -31,6 +31,14 @@ class BattleLayer extends tutils.Layer {
         // this.world.dbgTextField = new egret.TextField()
         // this.world.dbgDrawSprite.addChild(this.world.dbgTextField);
 
+        // 创建分数板
+		let score = new Score(this.layer);
+		score.digits = 10;
+		score.score = 0;
+		//score.setScore(10000, 5000);
+        this.score = score;
+        this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.textWidth;
+
         // 创建敌军控制器
         this.enemyCtrl = new EnemyController(this.world);
 
@@ -64,18 +72,10 @@ class BattleLayer extends tutils.Layer {
         //this.createTestEnemyShip(10);
 
         // 创建BOSS飞船
-        this.createTestMotherShip();
+        //this.createTestMotherShip();
         
         // 绘制测试路径
         //this.drawTestPath();
-        
-        // 创建分数板
-		let score = new Score(this.layer);
-		score.digits = 10;
-		score.score = 0;
-		//score.setScore(10000, 5000);
-        this.score = score;
-        this.score.bmpText.x = this.stage.stageWidth - this.score.bmpText.textWidth;
 
         // 创建敌军小队
         this.createTestEnemyRushes();
@@ -109,6 +109,23 @@ class BattleLayer extends tutils.Layer {
     private onShipDying(ship: Ship, killer: Ship) {
         if (this.hero == ship) {
             // TODO: GAME OVER
+            let txt = new egret.TextField();
+            txt.text = "GAME OVER";
+            txt.bold = true;
+            txt.size = 100;
+            this.layer.addChild(txt);
+            txt.x = (this.stage.stageWidth - txt.textWidth) * 0.5;
+            txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 - 50;
+
+            txt = new egret.TextField();
+            txt.text = "SCORE: " + this.score.score;
+            txt.bold = true;
+            txt.size = 50;
+            this.layer.addChild(txt);
+            txt.x = (this.stage.stageWidth - txt.textWidth) * 0.5;
+            txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 + 50;
+
+            this.score._score
         } else if (this.hero.force.isMyEnemy(ship.force)) {
             this.score.setScore(this.score.score+100, 1);
         }
@@ -195,7 +212,7 @@ class BattleLayer extends tutils.Layer {
         if (ship.hp <= 0) {
             this.bossui.cleanup();
             this.layer.removeChild(this.bossui.gameObject);
-            this.score.bmpText.visible = true;
+            this.score.gameObject.visible = true;
         }
     }
 
@@ -259,24 +276,26 @@ class BattleLayer extends tutils.Layer {
         // this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, 200, 2000, false);
         // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 
-        let rushItem0 = new RushItem(en0, 'Bezier', 2000, 2000, 200, [{x: this.world.width*0.3, y: 0}, {x: this.world.width*0.3, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}], null);
+        let rushItem = new RushItem(en0, 'Bezier', 2000, 2000, 200, [{x: this.world.width*0.3, y: 0}, {x: this.world.width*0.3, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}], null);
+        this.enemyCtrl.addRush(rushItem);
+        
+        rushItem = new RushItem(en1, 'Bezier', 0, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.5}], null);
+        this.enemyCtrl.addRush(rushItem);
+        
+        rushItem = new RushItem(en2, 'straight', 4000, 2000, 200, [{x: this.world.width*0.7, y: this.world.height}], null);
+        this.enemyCtrl.addRush(rushItem);
+        
+        rushItem = new RushItem(en3, 'sin', 5000, 4000, 200, [{x: 200, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
+        this.enemyCtrl.addRush(rushItem);
+        
+        rushItem = new RushItem([enemy0], 'Bezier', 5000, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
+        this.enemyCtrl.addRush(rushItem);
+        
+        rushItem = new RushItem([enemy1], 'sin', 5000, 4000, 200, [{x: 800, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
+        this.enemyCtrl.addRush(rushItem);
 
-        let rushItem1 = new RushItem(en1, 'Bezier', 0, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.5}], null);
-
-        let rushItem2 = new RushItem(en2, 'streight', 4000, 2000, 200, [{x: this.world.width*0.7, y: this.world.height}], null);
-
-        let rushItem3 = new RushItem(en3, 'sin', 5000, 4000, 200, [{x: 200, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
-
-        let rushItem4 = new RushItem([enemy0], 'Bezier', 5000, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
-
-        let rushItem5 = new RushItem([enemy1], 'sin', 5000, 4000, 200, [{x: 800, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
-
-        this.enemyCtrl.addRush(rushItem0);
-        this.enemyCtrl.addRush(rushItem1);
-        this.enemyCtrl.addRush(rushItem2);
-        this.enemyCtrl.addRush(rushItem3);
-        this.enemyCtrl.addRush(rushItem4);
-        this.enemyCtrl.addRush(rushItem5);
+        rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
+        this.enemyCtrl.addRush(rushItem);
 
         for (let i=0; i<100; i++) {
             let es = [];
@@ -355,14 +374,14 @@ class BattleLayer extends tutils.Layer {
         this.bossui.show();
         ship.setOnHpChangedListener(this.onShipHpChanged, this);
         //ship.damaged(1, null);
-        this.score.bmpText.visible = false;
+        this.score.gameObject.visible = false;
     }
 
     private createTestSupply() {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*4);
+        let i = Math.floor(Math.random()*9);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);

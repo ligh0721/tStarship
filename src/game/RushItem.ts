@@ -8,8 +8,10 @@ class RushItem {
 	readonly type: string;
 	readonly period: number;
 	readonly amplitude: number = 100;
+	readonly callback: Function;
+	readonly callbackThisObject: any;
 
-	public constructor(ships: EnemyShip[], type: string, delay: number, duration: number, interval: number, path:any[], drop:any, period: number=1000, amplitude: number= 100) {
+	public constructor(ships: EnemyShip[], type: string, delay: number, duration: number, interval: number, path:any[], drop:any, period?: number, amplitude?: number, callback?: Function, thisObject?: any) {
 		this.ships = ships;
 		this.type = type;
 		this.duration = duration;
@@ -17,7 +19,9 @@ class RushItem {
 		this.delay = delay;
 		this.path = path;
 		this.drop = drop;
-		this.period = period;
-		this.amplitude = amplitude;
+		this.period = period==undefined ? 1000 : period;
+		this.amplitude = amplitude==undefined ? 100 : amplitude;
+		this.callback = callback==undefined ? null : callback;
+		this.callbackThisObject = thisObject==undefined ? null : thisObject;
 	}
 }

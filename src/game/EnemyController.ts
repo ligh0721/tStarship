@@ -10,7 +10,6 @@ class EnemyController {
 
 	public createEnemyShip(width: number, height: number, type: string): EnemyShip {
 		let enemyShip = new EnemyShip(width, height, type);
-		//this.world.addShip(enemyShip);
 
 		enemyShip.speed.baseValue = 50;
 		enemyShip.force.force = tutils.EnemyForce;
@@ -113,29 +112,30 @@ class EnemyController {
 
 	private rush(rushItem: RushItem) {
 		switch(rushItem.type) {
-			case "Bezier":
-				if(rushItem.path.length < 3) {
-					return;
-				}
-				
-				this.rushBezier(rushItem.ships, rushItem.path[0], rushItem.path[1], rushItem.path[2], rushItem.interval, rushItem.duration, false);
-				return;
-			case "streight":
-				if(rushItem.path.length < 1) {
-					return ;
-				}
+		case "Bezier":
+			if(rushItem.path.length < 3) {
+				break;
+			}
+			this.rushBezier(rushItem.ships, rushItem.path[0], rushItem.path[1], rushItem.path[2], rushItem.interval, rushItem.duration, false);
+			break;
 
-				this.rushStraight(rushItem.ships, (rushItem.path[0]).x, rushItem.interval);
-				return ;
-			case "sin":
-				if(rushItem.path.length < 2) {
-					return ;
-				}
+		case "straight":
+			if(rushItem.path.length < 1) {
+				break;
+			}
+			this.rushStraight(rushItem.ships, (rushItem.path[0]).x, rushItem.interval);
+			break;
 
-				this.rushSin(rushItem.ships, rushItem.path[0], rushItem.path[1], rushItem.interval, rushItem.duration, rushItem.period, rushItem.amplitude);
-				return ;
-			default: return;
+		case "sin":
+			if(rushItem.path.length < 2) {
+				break;
+			}
+			this.rushSin(rushItem.ships, rushItem.path[0], rushItem.path[1], rushItem.interval, rushItem.duration, rushItem.period, rushItem.amplitude);
+			break;
 		}
 
+		if (rushItem.callback != null) {
+			rushItem.callback.call(rushItem.callbackThisObject);
+		}
 	}
 }

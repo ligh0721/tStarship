@@ -1,14 +1,14 @@
 class Score {
-	bmpText: egret.BitmapText;
+	gameObject: egret.BitmapText;
 	digits: number = 1;
 	private $score: number = null;
 	private $_score: number = null;
 
 	public constructor(layer: egret.DisplayObjectContainer, x: number=0, y: number=0) {
-		this.bmpText = this.onCreate();
-		layer.addChild(this.bmpText);
-		this.bmpText.x = x;
-		this.bmpText.y = y;
+		this.gameObject = this.onCreate();
+		layer.addChild(this.gameObject);
+		this.gameObject.x = x;
+		this.gameObject.y = y;
 	}
 
 	protected onCreate(): egret.BitmapText {
@@ -23,7 +23,7 @@ class Score {
 		for (let i=0; i<this.digits-len; i++) {
 			txt = "0" + txt;
 		}
-		this.bmpText.text = txt;
+		this.gameObject.text = txt;
 	}
 
 	public get score(): number {
