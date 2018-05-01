@@ -1,6 +1,6 @@
 class RowGun extends Gun {
 	bulletNum: number = 5;
-	bulletXDelta: number = 30;
+	bulletXDelta: number = 50;
 	bulletYDelta: number = 20;
 
 	public fire() {
@@ -11,12 +11,8 @@ class RowGun extends Gun {
 			this.addBulletToWorld(bullet);
 			bullet.x = firePos.x+(i-(n-1)/2)*this.bulletXDelta;
 			bullet.y = firePos.y+(Math.abs(i-(n-1)/2))*this.bulletYDelta;
-			let tw = egret.Tween.get(bullet.gameObject);
-			let toY = -this.ship.world.height * 0.2
-			tw.to({y: toY}, (bullet.y-toY)/this.bulletSpeed*tutils.SpeedFactor);
-			tw.call(() => {
-				this.ship.world.removeBullet(bullet.id);
-			});
+			bullet.moveStraight(0, this.bulletSpeed.value);
+			
 			// let tw2 = egret.Tween.get(bullet.gameObject, {loop: true});
 			// let a = 50;
 			// tw2.to({x: x-a}, 100, egret.Ease.sineOut);

@@ -1,6 +1,6 @@
 class ExplosionBullet extends Bullet {
-	radius: number = 10;
-	explosionRadius: number = 100;
+	radius: number = 20;
+	explosionRadius: number = 200;
 	explosionPowerEvery = 2;
 	explosionPowerLossInterval = 200;
 	isExplosion: boolean = false;
@@ -33,18 +33,18 @@ class ExplosionBullet extends Bullet {
 		this.gameObject.alpha = (1-value);
 	}
 
-	public onDying() {
+	protected onDying(src: HpUnit) {
+		super.onDying(src);
 		if (this.isExplosion) {
 			return;
 		}
-		console.log('@@@@@@@');
 
 		let explosion = new ExplosionBullet(this.gun);
 		explosion.isExplosion = true;
 		explosion.radius = this.radius;
 		explosion.explosionRadius = this.explosionRadius;
 		explosion.powerLossPer = 0.0001;
-		explosion.power.reset(this.explosionPowerEvery/explosion.powerLossPer);
+		explosion.resetHp(this.explosionPowerEvery/explosion.powerLossPer);
 		explosion.powerLossInterval = this.explosionPowerLossInterval;
 		explosion.staticBounds = false;
 		this.world.addBullet(explosion);
@@ -55,9 +55,9 @@ class ExplosionBullet extends Bullet {
 		tw.to({$explosion: 1}, 500, egret.Ease.getPowOut(3));
 		//tw.wait(2000);
 		tw.call(()=>{
-			if (explosion.world != null) {
-				explosion.world.removeBullet(explosion.id);
-			}
-		});
+			explosion.damaged(explosion.hp, null);
+		}, this);
+		tw = egret.Tween.get(explosion.gameObject);
+		tw.to({alpha: 0}, 500, egret.Ease.getPowOut(5));
 	}
 }

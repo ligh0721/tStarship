@@ -94,7 +94,7 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
-        Layer.createAt(BattleLayer, this);
+        tutils.Layer.createAt(BattleLayer, this);
     }
 
     /**

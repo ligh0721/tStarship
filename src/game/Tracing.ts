@@ -21,7 +21,7 @@ class Tracing {
 		let bulletY = - bullet.y + ship.world.height;
 		let k = (shipY - bulletY) / (ship.x - bullet.x);
 
-		let distance = bullet.speed / tutils.SpeedFactor * Tracing.interval;
+		let distance = bullet.speed.value / tutils.SpeedFactor * Tracing.interval;
         let x = Math.sqrt(distance * distance / (k * k + 1));
         let y = ship.world.height - x * k;
 

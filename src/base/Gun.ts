@@ -1,11 +1,14 @@
 class Gun {
+	id: string;
 	ship: Ship;
-	fireInterval: number = 200;
-	bulletPower: number = 1;
+	readonly fireCooldown: Value = new Value(200, 0, 10000);
+	readonly bulletPower: Value = new Value(1, 1, tutils.LargeNumber);
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
-	bulletPowerLossInterval: number = 500;  // 子弹能量下降时间间隔
-	bulletSpeed: number = 50;
+	readonly bulletPowerLossInterval: Value = new Value(500, 100);  // 子弹能量下降时间间隔
+	readonly bulletSpeed: Value = new Value(50, 0, 200);
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
+
+	private readonly autoFireTimer: tutils.Timer = new tutils.Timer();
 
 	public constructor() {
 	}
@@ -42,17 +45,37 @@ class Gun {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		bullet.fireStraight(0, this.bulletSpeed);
+		bullet.moveStraight(0, this.bulletSpeed.value);
 	}
 
-	public autofire() {
-		let tw = egret.Tween.get(this);
-		tw.call(this.fire, this);
-		tw.wait(this.fireInterval);
-		tw.call(this.autofire, this);
+	public get autoFire(): boolean {
+		return this.autoFireTimer.running;
+	}
+
+	public set autoFire(value: boolean) {
+		if (this.autoFireTimer.running) {
+			this.autoFireTimer.stop();
+		}
+		if (value) {
+			if (!this.autoFireTimer.hasOnTimerListener()) {
+				this.autoFireTimer.setOnTimerListener((dt: number): void=>{
+					this.fire();
+					if (this.autoFireTimer.interval != this.fireCooldown.value) {
+						this.autoFireTimer.interval = this.fireCooldown.value
+					}
+				}, this);
+			}
+			this.autoFireTimer.start(this.fireCooldown.value, true, 0);
+		}
 	}
 
 	public cleanup() {
+		this.autoFireTimer.stop();
+		this.onCleanup();
+	}
+
+	// override
+	protected onCleanup() {
 		egret.Tween.removeTweens(this);
 	}
 
