@@ -5,21 +5,30 @@
   "target": {
     "current": "web"
   },
+  "eui": {
+    "exmlRoot": [
+      "resource/eui_skins"
+    ],
+    "themes": [
+      "resource/default.thm.json"
+    ],
+    "exmlPublishPolicy": "commonjs"
+  },
   "modules": [
     {
       "name": "egret"
     },
     {
-      "name": "game"
-    },
-    {
-      "name": "tween"
+      "name": "eui"
     },
     {
       "name": "assetsmanager"
     },
     {
-      "name": "eui"
+      "name": "tween"
+    },
+    {
+      "name": "game"
     },
     {
       "name": "egret-facebook"
@@ -30,11 +39,5 @@
     {
       "name": "promise"
     }
-  ],
-  "targets": {
-    "android": {
-      "appname": "tStarShip",
-      "packagename": "com.tutils.tstarship"
-    }
-  }
+  ]
 }

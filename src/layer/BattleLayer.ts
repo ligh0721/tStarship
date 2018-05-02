@@ -4,7 +4,8 @@ class BattleLayer extends tutils.Layer {
 	private score: Score;
     private enemyCtrl: EnemyController;
     private buffuis: BuffProgress[];
-    private bossui: BossHpProgress;  // = null FUCK???
+    //private bossui: BossHpProgress;  // = null FUCK???
+    private bossui: eui.ProgressBar;  // = null FUCK???
 
     $pathPercent: number = 0;
 	
@@ -205,13 +206,15 @@ class BattleLayer extends tutils.Layer {
 
     private onShipHpChanged(ship: HpUnit, changed: number) {
         console.assert(this.bossui != null);
-        if (this.bossui == null || this.bossui.showing) {
-            return;
-        }
-        this.bossui.percent = ship.hp / ship.maxHp;
+        // if (this.bossui == null || this.bossui.showing) {
+        //     return;
+        // }
+        //this.bossui.percent = ship.hp / ship.maxHp;
+        this.bossui.value = ship.hp;
         if (ship.hp <= 0) {
-            this.bossui.cleanup();
-            this.layer.removeChild(this.bossui.gameObject);
+            //this.bossui.cleanup();
+            //this.layer.removeChild(this.bossui.gameObject);
+            this.layer.removeChild(this.bossui);
             this.score.gameObject.visible = true;
         }
     }
@@ -370,8 +373,17 @@ class BattleLayer extends tutils.Layer {
             gun2.autoFire = true;
         }, this);
 
-        this.bossui = new BossHpProgress(this.layer, ship, 0xffffff);
-        this.bossui.show();
+        // this.bossui = new BossHpProgress(this.layer, ship, 0xffffff);
+        // this.bossui.show();
+        this.bossui = new eui.ProgressBar();
+        this.bossui.x = 0;
+        this.bossui.y = 0;
+        this.bossui.width = this.stage.stageWidth;
+        this.bossui.height = 30;
+        this.bossui.minimum = 0;
+        this.bossui.maximum = ship.maxHp;
+        this.bossui.value = ship.hp;
+        this.layer.addChild(this.bossui);
         ship.setOnHpChangedListener(this.onShipHpChanged, this);
         //ship.damaged(1, null);
         this.score.gameObject.visible = false;
