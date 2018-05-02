@@ -1,15 +1,15 @@
 class ShapeProgress {
 	//gameObject: egret.Shape;
-	gameObject: eui.ProgressBar;
-	readonly type: ProgressType = ProgressType.BottomToTop;
+	gameObject: egret.Sprite;
+	readonly direction: tutils.ProgressFillDirection = tutils.ProgressFillDirection.LeftToRight;
 	width: number;
 	height: number;
 	colorBorder: number;
 	colorFilled: number;
-	protected $percent: number = 0;
+	private fill: tutils.ProgressFill;
 
-	public constructor(layer: egret.DisplayObjectContainer, type: ProgressType, width: number, height: number, colorBorder: number, colorFilled: number) {
-		this.type = type;
+	public constructor(layer: egret.DisplayObjectContainer, type: tutils.ProgressFillDirection, width: number, height: number, colorBorder: number, colorFilled: number) {
+		this.direction = type;
 		this.width = width;
 		this.height = height;
 		this.colorBorder = colorBorder;
@@ -18,58 +18,39 @@ class ShapeProgress {
 		layer.addChild(this.gameObject);
 	}
 
-	protected onCreate(): eui.ProgressBar {
-		// let gameObject = new egret.Shape();
-		// let g = gameObject.graphics;
-		// g.lineStyle(4, this.colorBorder);
-		// g.drawRoundRect(0, 0, this.width, this.height, 8, 8);
+	protected onCreate(): egret.Sprite {
+		let gameObject = new egret.Sprite();
+		let g = gameObject.graphics;
+		g.lineStyle(4, this.colorBorder);
+		g.drawRoundRect(0, 0, this.width, this.height, 8, 8);
 		// g.lineStyle(0, this.colorFilled);
-		// this.update(g);
-		let gameObject = new eui.ProgressBar();
-        gameObject.width = this.width;
-        gameObject.height = this.height;
-        gameObject.minimum = 0;
-        gameObject.maximum = 1000;
-		if (this.type == ProgressType.BottomToTop) {
-			gameObject.direction = eui.Direction.BTT;
-		}
+		// g.beginFill(0x000000);
+		// g.drawRoundRect(2, 2, this.width-4, this.height-4, 8, 8);
+		// g.endFill();
+		//gameObject.cacheAsBitmap = true;
+		let fill = new egret.Shape();
+		g = fill.graphics;
+		g.lineStyle(0, this.colorFilled);
+		g.beginFill(this.colorFilled);
+		g.drawRoundRect(0, 0, this.width-10, this.height-10, 8, 8);
+		g.endFill();
+		gameObject.addChild(fill);
+		fill.x = 5;
+		fill.y = 5;
+		//fill.cacheAsBitmap = true;
+		fill.width+=1;
+		fill.height+=1;
+		this.fill = new tutils.ProgressFill(fill, this.direction);
 		return gameObject;
 	}
 
 	public get percent(): number {
-		return this.$percent;
+		return this.fill.percent;
 	}
 
 	public set percent(value: number) {
-		if (this.$percent == value) {
-			return;
-		}
-		
-		this.$percent = value;
-		// let g = this.gameObject.graphics;
-		// this.update(g);
-		this.gameObject.value = value * 1000;
+		this.fill.percent = value;
 	}
-
-	// protected update(g: egret.Graphics) {
-	// 	g.beginFill(0x000000);
-	// 	g.drawRoundRect(2, 2, this.width-4, this.height-4, 8, 8);
-	// 	g.endFill();
-
-	// 	if (this.$percent > 0) {
-	// 		g.beginFill(this.colorFilled);
-	// 		switch (this.type) {
-	// 			case ProgressType.BottomToTop:
-	// 			g.drawRoundRect(5, (this.height-15)*(1-this.$percent)+5, this.width-10, (this.height-10)*this.$percent, 8, 8);
-	// 			break;
-
-	// 			case ProgressType.LeftToRigh:
-	// 			g.drawRoundRect(5, 5, (this.width-15)*this.$percent+5, this.height-10, 8, 8);
-	// 			break;
-	// 		}
-	// 		g.endFill();
-	// 	}
-	// }
 
 	public cleanup() {
 		this.onCleanup();
@@ -78,9 +59,4 @@ class ShapeProgress {
 	protected onCleanup() {
 		egret.Tween.removeTweens(this);
 	}
-}
-
-enum ProgressType {
-	BottomToTop,
-	LeftToRigh
 }

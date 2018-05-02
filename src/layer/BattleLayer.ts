@@ -56,7 +56,7 @@ class BattleLayer extends tutils.Layer {
         let gun = Gun.createGun(Gun, Bullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
-        gun.bulletPower.baseValue = 2;
+        gun.bulletPower.baseValue = 3;
         gun.bulletPowerLossPer = 1;
         gun.bulletPowerLossInterval.baseValue = 1000;
         hero.addGun(gun, true).autoFire = true;
@@ -444,8 +444,8 @@ class BattleLayer extends tutils.Layer {
             gun = Gun.createGun(EaseGun, ShakeWaveBullet);
             (<EaseGun>gun).ease = egret.Ease.getPowIn(2);
             gun.fireCooldown.baseValue = 1000;
-            gun.bulletSpeed.baseValue = 200;
-            gun.bulletPower.baseValue = 20;
+            gun.bulletSpeed.baseValue = 100;
+            gun.bulletPower.baseValue = 30;
             gun.bulletPowerLossPer = 0.2;
             gun.bulletPowerLossInterval.baseValue = 100;
             supply = new GunSupply(gun);

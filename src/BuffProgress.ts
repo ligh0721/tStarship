@@ -4,7 +4,7 @@ class BuffProgress extends ShapeProgress {
 	static readonly Height: number = 50;
 
 	public constructor(layer: egret.DisplayObjectContainer, buff: Buff, color: number) {
-		super(layer, ProgressType.BottomToTop, BuffProgress.Width, BuffProgress.Height, color, color);
+		super(layer, tutils.ProgressFillDirection.BottomToTop, BuffProgress.Width, BuffProgress.Height, color, color);
 		this.buff = buff;
 	}
 }

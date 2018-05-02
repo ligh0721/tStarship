@@ -3,7 +3,7 @@ class BossHpProgress extends ShapeProgress {
 	public showing: boolean = true;
 
 	public constructor(layer: egret.DisplayObjectContainer, ship: Ship, color: number) {
-		super(layer, ProgressType.LeftToRigh, layer.stage.stageWidth-20, 30, color, color);
+		super(layer, tutils.ProgressFillDirection.LeftToRight, layer.stage.stageWidth-20, 30, color, color);
 		this.ship = ship;
 		this.gameObject.x = 10;
 		this.gameObject.y = 10;

@@ -52,7 +52,7 @@ class ExplosionBullet extends Bullet {
 		explosion.y = this.gameObject.y;
 
 		let tw = egret.Tween.get(explosion);
-		tw.to({$explosion: 1}, 500, egret.Ease.getPowOut(3));
+		tw.to({$explosion: 1}, 400, egret.Ease.getPowOut(3));
 		//tw.wait(2000);
 		tw.call(()=>{
 			explosion.damaged(explosion.hp, null);

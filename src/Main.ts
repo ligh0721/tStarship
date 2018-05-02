@@ -90,7 +90,6 @@ class Main extends eui.UILayer {
             theme.addEventListener(eui.UIEvent.COMPLETE, () => {
                 resolve();
             }, this);
-
         })
     }
 
@@ -101,6 +100,7 @@ class Main extends eui.UILayer {
      */
     protected createGameScene(): void {
         tutils.Layer.createAt(BattleLayer, this);
+        //tutils.Layer.createAt(TestLayer, this);
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
