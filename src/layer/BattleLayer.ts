@@ -10,6 +10,7 @@ class BattleLayer extends tutils.Layer {
     $pathPercent: number = 0;
 	
 	protected onInit() {
+        this.stage.frameRate = 60;
         this.buffuis = [];
         this.bossui = null;
         this.bossuiShowing = true;

@@ -29,7 +29,7 @@ class ShapeProgress {
         gameObject.width = this.width;
         gameObject.height = this.height;
         gameObject.minimum = 0;
-        gameObject.maximum = 1;
+        gameObject.maximum = 1000;
 		if (this.type == ProgressType.BottomToTop) {
 			gameObject.direction = eui.Direction.BTT;
 		}
@@ -48,7 +48,7 @@ class ShapeProgress {
 		this.$percent = value;
 		// let g = this.gameObject.graphics;
 		// this.update(g);
-		this.gameObject.value = value;
+		this.gameObject.value = value * 1000;
 	}
 
 	// protected update(g: egret.Graphics) {
