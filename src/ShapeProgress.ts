@@ -1,5 +1,6 @@
 class ShapeProgress {
-	gameObject: egret.Shape;
+	//gameObject: egret.Shape;
+	gameObject: eui.ProgressBar;
 	readonly type: ProgressType = ProgressType.BottomToTop;
 	width: number;
 	height: number;
@@ -17,13 +18,21 @@ class ShapeProgress {
 		layer.addChild(this.gameObject);
 	}
 
-	protected onCreate(): egret.Shape {
-		let gameObject = new egret.Shape();
-		let g = gameObject.graphics;
-		g.lineStyle(4, this.colorBorder);
-		g.drawRoundRect(0, 0, this.width, this.height, 8, 8);
-		g.lineStyle(0, this.colorFilled);
-		this.update(g);
+	protected onCreate(): eui.ProgressBar {
+		// let gameObject = new egret.Shape();
+		// let g = gameObject.graphics;
+		// g.lineStyle(4, this.colorBorder);
+		// g.drawRoundRect(0, 0, this.width, this.height, 8, 8);
+		// g.lineStyle(0, this.colorFilled);
+		// this.update(g);
+		let gameObject = new eui.ProgressBar();
+        gameObject.width = this.width;
+        gameObject.height = this.height;
+        gameObject.minimum = 0;
+        gameObject.maximum = 1;
+		if (this.type == ProgressType.BottomToTop) {
+			gameObject.direction = eui.Direction.BTT;
+		}
 		return gameObject;
 	}
 
@@ -37,29 +46,30 @@ class ShapeProgress {
 		}
 		
 		this.$percent = value;
-		let g = this.gameObject.graphics;
-		this.update(g);
+		// let g = this.gameObject.graphics;
+		// this.update(g);
+		this.gameObject.value = value;
 	}
 
-	protected update(g: egret.Graphics) {
-		g.beginFill(0x000000);
-		g.drawRoundRect(2, 2, this.width-4, this.height-4, 8, 8);
-		g.endFill();
+	// protected update(g: egret.Graphics) {
+	// 	g.beginFill(0x000000);
+	// 	g.drawRoundRect(2, 2, this.width-4, this.height-4, 8, 8);
+	// 	g.endFill();
 
-		if (this.$percent > 0) {
-			g.beginFill(this.colorFilled);
-			switch (this.type) {
-				case ProgressType.BottomToTop:
-				g.drawRoundRect(5, (this.height-15)*(1-this.$percent)+5, this.width-10, (this.height-10)*this.$percent, 8, 8);
-				break;
+	// 	if (this.$percent > 0) {
+	// 		g.beginFill(this.colorFilled);
+	// 		switch (this.type) {
+	// 			case ProgressType.BottomToTop:
+	// 			g.drawRoundRect(5, (this.height-15)*(1-this.$percent)+5, this.width-10, (this.height-10)*this.$percent, 8, 8);
+	// 			break;
 
-				case ProgressType.LeftToRigh:
-				g.drawRoundRect(5, 5, (this.width-15)*this.$percent+5, this.height-10, 8, 8);
-				break;
-			}
-			g.endFill();
-		}
-	}
+	// 			case ProgressType.LeftToRigh:
+	// 			g.drawRoundRect(5, 5, (this.width-15)*this.$percent+5, this.height-10, 8, 8);
+	// 			break;
+	// 		}
+	// 		g.endFill();
+	// 	}
+	// }
 
 	public cleanup() {
 		this.onCleanup();
