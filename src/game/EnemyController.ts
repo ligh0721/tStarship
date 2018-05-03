@@ -17,7 +17,7 @@ class EnemyController {
 		return enemyShip;
 	}
 
-	public rushStraight(ships: EnemyShip[], startX: number, interval: number) {
+	public rushStraight(ships: EnemyShip[], startX: number, interval: number, duration: number) {
 		if (ships.length == 0) {
 			return;
 		}
@@ -27,10 +27,55 @@ class EnemyController {
 			let ship = ships.pop();
 			this.world.addShip(ship);
 			ship.x = startX;
-			let dis = this.world.height + ship.height;
-			let dur = dis * tutils.SpeedFactor / ship.speed.value;
 			let tw = egret.Tween.get(ship.gameObject);
-			tw.to({y: this.world.height  + ship.height}, dur);
+			tw.to({y: this.world.height  + ship.height}, duration);
+			tw.call(()=>{
+				ship.status = UnitStatus.Dead;
+			}, this);
+		}, this);
+
+		t.start(interval, true, ships.length);
+	}
+
+	rushPath(ships: EnemyShip[], path: {x: number, y: number}[], interval: number, duration: number) {
+		if (ships.length == 0 || path.length < 2) {
+			return;
+		}
+
+		let paths = [];
+		let totalDis = 0;
+		for(let i = 0; i < path.length - 1; i ++) {
+			let dis = Math.sqrt((path[i + 1].y - path[i].y) * (path[i + 1].y - path[i].y) + (path[i + 1].x - path[i].x) * (path[i + 1].x - path[i].x));
+			paths.push(dis);
+			totalDis += dis;
+		}
+
+		
+
+		let durations = [];
+		for(let i = 0; i < paths.length; i ++) {
+			let dur = paths[i] / totalDis * duration;
+			durations.push(dur);
+			
+		}
+
+		
+
+		let t = new tutils.Timer();
+		t.setOnTimerListener((dt: number)=>{
+			let ship = ships.pop();
+			this.world.addShip(ship);
+
+			ship.x = path[0].x;
+			ship.y = path[0].y;
+			let tw = egret.Tween.get(ship.gameObject);
+
+			for(let i = 1; i < path.length; i ++) {
+				console.log("ddddddd" + i);
+				tw.to({x: path[i].x, y: path[i].y}, durations[i - 1]);
+			}
+			// tw.to({x: path[1].x, y: path[1].y}, durations[0]);
+			// tw.to({x: path[2].x, y: path[2].y}, durations[1]);
 			tw.call(()=>{
 				ship.status = UnitStatus.Dead;
 			}, this);
@@ -123,7 +168,14 @@ class EnemyController {
 			if(rushItem.path.length < 1) {
 				break;
 			}
-			this.rushStraight(rushItem.ships, (rushItem.path[0]).x, rushItem.interval);
+			this.rushStraight(rushItem.ships, (rushItem.path[0]).x, rushItem.interval, rushItem.duration);
+			break;
+	    
+		case "path":
+			if(rushItem.path.length < 2) {
+				break;
+			}
+			this.rushPath(rushItem.ships, rushItem.path, rushItem.interval, rushItem.duration);
 			break;
 
 		case "sin":
