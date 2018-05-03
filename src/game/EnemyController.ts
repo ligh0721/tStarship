@@ -84,7 +84,7 @@ class EnemyController {
 		this.rushes.push(rushItem);
 	}
 
-	public start(frameRate: number) {
+	public startRush(frameRate: number) {
 		if (this.timer == null) {
 			this.timer = new tutils.Timer();
 			this.timer.setOnTimerListener(this.rushStep, this);
@@ -112,7 +112,7 @@ class EnemyController {
 
 	private rush(rushItem: RushItem) {
 		switch(rushItem.type) {
-		case "Bezier":
+		case "bezier":
 			if(rushItem.path.length < 3) {
 				break;
 			}

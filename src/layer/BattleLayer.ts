@@ -279,10 +279,10 @@ class BattleLayer extends tutils.Layer {
         // this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, 200, 2000, false);
         // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 
-        let rushItem = new RushItem(en0, 'Bezier', 2000, 2000, 200, [{x: this.world.width*0.3, y: 0}, {x: this.world.width*0.3, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}], null);
+        let rushItem = new RushItem(en0, 'bezier', 2000, 2000, 200, [{x: this.world.width*0.3, y: 0}, {x: this.world.width*0.3, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}], null);
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new RushItem(en1, 'Bezier', 0, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.5}], null);
+        rushItem = new RushItem(en1, 'bezier', 0, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.5}], null);
         this.enemyCtrl.addRush(rushItem);
         
         rushItem = new RushItem(en2, 'straight', 4000, 2000, 200, [{x: this.world.width*0.7, y: this.world.height}], null);
@@ -291,7 +291,7 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(en3, 'sin', 5000, 4000, 200, [{x: 200, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new RushItem([enemy0], 'Bezier', 5000, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
+        rushItem = new RushItem([enemy0], 'bezier', 5000, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
         this.enemyCtrl.addRush(rushItem);
         
         rushItem = new RushItem([enemy1], 'sin', 5000, 4000, 200, [{x: 800, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
@@ -318,7 +318,7 @@ class BattleLayer extends tutils.Layer {
             let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
             this.enemyCtrl.addRush(rushItem);
         }
-        this.enemyCtrl.start(30);
+        this.enemyCtrl.startRush(30);
     }
 
     private createTestMotherShip() {
