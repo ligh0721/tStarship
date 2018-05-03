@@ -5,7 +5,7 @@ module tutils {
 		
 		public constructor(fill: egret.DisplayObject, direction?: ProgressFillDirection) {
 			this.fill = fill;
-			this.fill.mask = new egret.Rectangle(1, -2, fill.width, fill.height);
+			this.fill.mask = new egret.Rectangle(0, -2, fill.width, fill.height);
 			//this.fill.mask = new egret.Rectangle(-10, -10, fill.width*2, fill.height*2);
 			this.direction = direction==ProgressFillDirection.BottomToTop ? ProgressFillDirection.BottomToTop : ProgressFillDirection.LeftToRight;
 		}
