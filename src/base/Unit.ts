@@ -82,6 +82,17 @@ class Unit {
 		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
 	}
 
+	public static getForwardPoint(x0: number, y0: number, x1: number, y1: number, dis: number): {x: number, y: number} {
+		let a = Math.atan2(y1-y0, x1-x0)
+		return tutils.getDirectionPoint(x0, y0, a, dis);
+	}
+
+	public static getDistance(unit0: Unit, unit1: Unit) {
+		let dtx = unit0.gameObject.x - unit1.gameObject.x;
+		let dty = unit0.gameObject.y - unit1.gameObject.y;
+		return Math.sqrt(dtx*dtx+dty*dty);
+	}
+
 	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
 		if (fixedRotation != true) {
 			this.angle = angle;

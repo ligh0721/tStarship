@@ -318,6 +318,8 @@ class BattleLayer extends tutils.Layer {
             let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
             this.enemyCtrl.addRush(rushItem);
         }
+        rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
+        this.enemyCtrl.addRush(rushItem);
         this.enemyCtrl.startRush(30);
     }
 
@@ -384,7 +386,7 @@ class BattleLayer extends tutils.Layer {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*9);
+        let i = Math.floor(Math.random()*10);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);
@@ -489,6 +491,18 @@ class BattleLayer extends tutils.Layer {
             gun.bulletPowerLossInterval.baseValue = 100;
             supply = new GunSupply(gun);
             supply.text = "ExplosionGun";
+            supply.color = 0xc586c0;
+            break;
+
+            case 9:
+            gun = Gun.createGun(GuideGun, ShakeWaveBullet);
+            gun.fireCooldown.baseValue = 300;
+            gun.bulletSpeed.baseValue = 80;
+            gun.bulletPower.baseValue = 1;
+            gun.bulletPowerLossPer = 1;
+            gun.bulletPowerLossInterval.baseValue = 1000;
+            supply = new GunSupply(gun);
+            supply.text = "GuideGun";
             supply.color = 0xc586c0;
             break;
         }

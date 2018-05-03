@@ -32,6 +32,7 @@ class MotherShip extends Ship {
         gameObject.graphics.drawRoundRect(0, 0, this.width, this.height, 20, 20);
         gameObject.anchorOffsetX = this.width * 0.5;
         gameObject.anchorOffsetY = this.height * 0.5;
+		gameObject.cacheAsBitmap = true;
 		return gameObject;
 	}
 

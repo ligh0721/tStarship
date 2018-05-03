@@ -15,7 +15,8 @@ class Bullet extends HpUnit {
 
 	protected onCreate(): egret.DisplayObject {
 		let bullet = new egret.Shape();
-        bullet.graphics.beginFill(0xffffff, 1.0);
+
+        bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
         bullet.graphics.drawCircle(0, 0, 6);
         bullet.graphics.endFill();
 		return bullet;

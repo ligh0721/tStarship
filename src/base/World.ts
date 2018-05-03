@@ -11,6 +11,8 @@ class World {
 	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
 
+	private readonly obShip: Ship;
+
 	// 部分监听器可以从world广播优化成ship单播 
 	// from unit
 	private onShipDyingListener: (ship: Ship, killer: Ship)=>void = null;
@@ -32,13 +34,13 @@ class World {
 		this.height = height;
 		this.rect = new egret.Rectangle(0, 0, width, height);
 
-		// 创建世界飞船，用于保持持续碰撞检测
-        let worldShip = new Ship(1, 1);
-		worldShip.hero = true;
-        worldShip.force.force = tutils.EnemyForce;
-        this.addShip(worldShip);
-        worldShip.x = -200;
-        worldShip.y = -200;
+		// 创建观察者飞船，用于保持持续碰撞检测
+        this.obShip = new Ship(1, 1);
+		this.obShip.hero = true;
+        this.obShip.force.force = tutils.EnemyForce;
+        this.addShip(this.obShip);
+        this.obShip.x = -200;
+        this.obShip.y = -200;
 	}
 
 	public start(frameRate: number): void {
@@ -61,6 +63,23 @@ class World {
 			return null;
 		}
 		return this.bullets[id];
+	}
+
+	public findNearestFrontAliveEnemyShip(x: number, y: number, force: Force): Ship {
+		let min = -1;
+		let target: Ship = null;
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			if (!ship.isAlive() || !ship.force.isMyEnemy(force) || ship.gameObject.y>y || ship==this.obShip) {
+				continue;
+			}
+			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
+			if (target==null || min>dis) {
+				min = dis;
+				target = ship;
+			}
+		}
+		return target;
 	}
 
 	public addShip(ship: Ship): Ship {

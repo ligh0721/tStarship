@@ -10,8 +10,8 @@ class ExplosionBullet extends Bullet {
 	protected onCreate(): egret.DisplayObject {
 		let bullet = new egret.Shape();
 		if (!this.isExplosion) {
-			bullet.graphics.beginFill(0xffffff, 1.0);
-			bullet.graphics.lineStyle(1, 0xffffff);
+			bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
+			bullet.graphics.lineStyle(1, this.gun.bulletColor);
 			bullet.graphics.drawCircle(0, 0, this.radius);
 			bullet.graphics.endFill();
 		}
@@ -28,7 +28,7 @@ class ExplosionBullet extends Bullet {
 		let r = this.radius + (this.explosionRadius - this.radius) * value
 		let g = (<egret.Shape>this.gameObject).graphics;
 		g.clear();
-		g.lineStyle(10, 0xffffff);
+		g.lineStyle(10, this.gun.bulletColor);
 		g.drawCircle(0, 0, r);
 		this.gameObject.alpha = (1-value);
 	}

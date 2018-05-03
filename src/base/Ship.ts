@@ -106,6 +106,9 @@ class Ship extends HpUnit {
 		if (main == true) {
 			this.mainGun = gun;
 		}
+		if (this.force.force == 1) {
+			gun.bulletColor = 0x569cd6;
+		}
 		return gun;
 	}
 

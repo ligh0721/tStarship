@@ -7,6 +7,7 @@ class Gun {
 	readonly bulletPowerLossInterval: Value = new Value(500, 100);  // 子弹能量下降时间间隔
 	readonly bulletSpeed: Value = new Value(50, 0, 200);
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
+	bulletColor: number = 0xffffff;
 
 	private readonly autoFireTimer: tutils.Timer = new tutils.Timer();
 
