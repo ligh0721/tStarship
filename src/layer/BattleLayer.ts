@@ -3,18 +3,15 @@ class BattleLayer extends tutils.Layer {
     private hero: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
-    private buffuis: BuffProgress[];
-    private bossui: BossHpProgress;  // = null FUCK???
-    private bossuiShowing: boolean;
+    private readonly buffuis: BuffProgress[] = [];
+    private bossui: BossHpProgress = null;
+    private bossuiShowing: boolean = true;
+    private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
 
     $pathPercent: number = 0;
 	
 	protected onInit() {
         this.stage.frameRate = 60;
-        this.buffuis = [];
-        this.bossui = null;
-        this.bossuiShowing = true;
-
         let bg = tutils.createBitmapByName("grid100_png");
         this.layer.addChild(bg);
         let stageW = this.stage.stageWidth;
@@ -51,8 +48,8 @@ class BattleLayer extends tutils.Layer {
         this.world.addShip(hero);
         hero.force.force = tutils.Player1Force;
         hero.x = stageW * 0.5;
-        hero.y = stageH - hero.height * 0.5;
-        hero.speed.baseValue = 50;
+        hero.y = stageH - hero.height * 2;
+        hero.speed.baseValue = 500;
         let gun = Gun.createGun(Gun, Bullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
@@ -223,14 +220,28 @@ class BattleLayer extends tutils.Layer {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY-100);
+        this.beginDelta.x = evt.localX - this.hero.gameObject.x;
+        this.beginDelta.y = evt.localY - this.hero.gameObject.y;
+        //this.hero.move(evt.localX, evt.localY-100);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY-100);
+        let toX = evt.localX-this.beginDelta.x;
+        if (toX < 0) {
+            toX = 0;
+        } else if (toX > this.stage.stageWidth) {
+            toX = this.stage.stageWidth;
+        }
+        let toY = evt.localY-this.beginDelta.y;
+        if (toY < 0) {
+            toY = 0;
+        } else if (toY > this.stage.stageHeight) {
+            toY = this.stage.stageHeight;
+        }
+        this.hero.move(toX, toY);
     }
 
 	// FIXME: test

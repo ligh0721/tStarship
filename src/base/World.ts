@@ -210,7 +210,7 @@ class World {
 					if (!ship2.isAlive()) {
 						continue;
 					}
-					if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
+					if (ship.force.isMyEnemy(ship2.force) && ship.hitTest(ship2)) {
 						//console.log("ship hit!");
 						ship.damaged(ship2.maxHp, ship2);
 						ship2.damaged(ship.maxHp, ship);
@@ -241,7 +241,7 @@ class World {
 						supply.status = UnitStatus.Dead;
 						continue;
 					}
-					if (ship.hitTest(supply)) {
+					if (supply.hitTest(ship)) {
 						supply.onHitShip(ship);
 						this.onShipHitSupply(ship, supply);
 						supply.status = UnitStatus.Dead;

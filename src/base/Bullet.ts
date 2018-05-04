@@ -25,7 +25,7 @@ class Bullet extends HpUnit {
 	public onHitEnemyShipTest(ship: Ship): boolean {
 		if (this.powerLossPer == 1) {
 			
-			return this.hitTest(ship);
+			return ship.hitTest(this);
 		}
 		
 		let now = egret.getTimer();
@@ -33,7 +33,7 @@ class Bullet extends HpUnit {
 			// 有击中记录
 			if (now - this.effectedShips[ship.id] > this.powerLossInterval) {
 				// 已过击中保护时间
-				if (this.hitTest(ship)) {
+				if (ship.hitTest(this)) {
 					// 击中
 					this.effectedShips[ship.id] = now;
 					return true;
@@ -41,7 +41,7 @@ class Bullet extends HpUnit {
 			}
 		} else {
 			// 无击中记录
-			if (this.hitTest(ship)) {
+			if (ship.hitTest(this)) {
 				// 击中
 				this.effectedShips[ship.id] = now;
 				return true;
