@@ -25,9 +25,9 @@ class HeroShip extends Ship {
 		return gameObject;
 	}
 
-    public getBounds(): egret.Rectangle {
+    public hitTest(other: Unit): boolean {
         this.hitRect.x = this.gameObject.x - this.hitRadius;
         this.hitRect.y = this.gameObject.y - this.hitRadius;
-        return this.hitRect;
-    }
+		return this.hitRect.intersects(other.getBounds());
+	}
 }
