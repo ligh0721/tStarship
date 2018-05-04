@@ -3,11 +3,15 @@ class Unit {
 	id: string;
 	world: World;
 	staticBounds: boolean = true;
-	private boundsRect: egret.Rectangle = null;
+	private boundsRect: egret.Rectangle = new egret.Rectangle();
 	protected boundsDirty: boolean = true;
 	private waitToRemove: boolean = false;
 
-	public constructor() {
+	// override
+	public reset() {
+		this.staticBounds = true;
+		this.boundsDirty = true;
+		this.waitToRemove = false
 	}
 
 	public cleanup() {

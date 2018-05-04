@@ -49,8 +49,8 @@ class BattleLayer extends tutils.Layer {
         hero.force.force = tutils.Player1Force;
         hero.x = stageW * 0.5;
         hero.y = stageH - hero.height * 2;
-        hero.speed.baseValue = 500;
-        let gun = Gun.createGun(Gun, Bullet);
+        hero.speed.baseValue = 300;
+        let gun = Gun.createGun(Gun, EllipseWaveBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
         gun.bulletPower.baseValue = 3;

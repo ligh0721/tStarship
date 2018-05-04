@@ -6,6 +6,15 @@ class HpUnit extends Unit {
 	private onHpChangedListener: (unit: HpUnit, changed: number)=>void = null;
 	private onHpChangedThisObject: any;
 
+	// override
+	public reset() {
+		super.reset();
+		this.status = UnitStatus.Alive;
+		this.$hp.reset(1);
+		this.onHpChangedListener = null;
+		this.onHpChangedThisObject = null;
+	}
+
 	public get hp(): number {
 		return this.$hp.hp;
 	}

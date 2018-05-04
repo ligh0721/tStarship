@@ -1,13 +1,27 @@
 class ExplosionBullet extends Bullet {
 	radius: number = 20;
 	explosionRadius: number = 200;
-	explosionPowerEvery = 2;
-	explosionPowerLossInterval = 200;
+	explosionPowerEvery:number = 2;
+	explosionPowerLossInterval: number = 200;
 	isExplosion: boolean = false;
 	$_explosion: number = 0;
 	
+	// override
+	public reset(): void {
+		super.reset();
+		this.radius = 20;
+		this.explosionRadius = 200;
+		this.explosionPowerEvery = 2;
+		this.explosionPowerLossInterval = 200;
+		this.isExplosion = false;
+		this.$_explosion = 0;
+	}
 
+	// override
 	protected onCreate(): egret.DisplayObject {
+		if (!this.isExplosion && this.gameObject != null) {
+			return this.gameObject;
+		}
 		let bullet = new egret.Shape();
 		if (!this.isExplosion) {
 			bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
@@ -15,7 +29,6 @@ class ExplosionBullet extends Bullet {
 			bullet.graphics.drawCircle(0, 0, this.radius);
 			bullet.graphics.endFill();
 		}
-        
 		return bullet;
 	}
 
@@ -39,25 +52,25 @@ class ExplosionBullet extends Bullet {
 			return;
 		}
 
-		let explosion = new ExplosionBullet(this.gun);
-		explosion.isExplosion = true;
-		explosion.radius = this.radius;
-		explosion.explosionRadius = this.explosionRadius;
-		explosion.powerLossPer = 0.0001;
-		explosion.resetHp(this.explosionPowerEvery/explosion.powerLossPer);
-		explosion.powerLossInterval = this.explosionPowerLossInterval;
-		explosion.staticBounds = false;
-		this.world.addBullet(explosion);
-		explosion.x = this.gameObject.x;
-		explosion.y = this.gameObject.y;
+		let bullet = <ExplosionBullet>this.gun.createBullet();
+		bullet.isExplosion = true;
+		bullet.radius = this.radius;
+		bullet.explosionRadius = this.explosionRadius;
+		bullet.powerLossPer = 0.0001;
+		bullet.resetHp(this.explosionPowerEvery/bullet.powerLossPer);
+		bullet.powerLossInterval = this.explosionPowerLossInterval;
+		bullet.staticBounds = false;
+		this.world.addBullet(bullet);
+		bullet.x = this.gameObject.x;
+		bullet.y = this.gameObject.y;
 
-		let tw = egret.Tween.get(explosion);
+		let tw = egret.Tween.get(bullet);
 		tw.to({$explosion: 1}, 400, egret.Ease.getPowOut(3));
 		//tw.wait(2000);
 		tw.call(()=>{
-			explosion.damaged(explosion.hp, null);
+			bullet.damaged(bullet.hp, null);
 		}, this);
-		tw = egret.Tween.get(explosion.gameObject);
+		tw = egret.Tween.get(bullet.gameObject);
 		tw.to({alpha: 0}, 500, egret.Ease.getPowOut(5));
 	}
 }

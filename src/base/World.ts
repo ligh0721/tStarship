@@ -3,6 +3,7 @@ class World {
 	readonly width: number;
 	readonly height: number;
 	readonly rect: egret.Rectangle;
+	readonly pools: tutils.ObjectPools = new tutils.ObjectPools();
 
 	readonly ships: { [id: string]: Ship } = {};
 	shipsNum: number = 0;
@@ -52,14 +53,14 @@ class World {
 	}
 
 	public getShip(id: string): Ship {
-		if (!this.ships.hasOwnProperty(id)) {
+		if (!(id in this.ships)) {
 			return null;
 		}
 		return this.ships[id];
 	}
 
 	public getBullet(id: string): Bullet {
-		if (!this.bullets.hasOwnProperty(id)) {
+		if (!(id in this.bullets)) {
 			return null;
 		}
 		return this.bullets[id];
@@ -93,7 +94,7 @@ class World {
 	}
 
 	public removeShip(id: string) {
-		if (!this.ships.hasOwnProperty(id)) {
+		if (!(id in this.ships)) {
 			console.log('ship('+id+') not found');
 			return;
 		}
@@ -117,7 +118,7 @@ class World {
 	}
 
 	public removeBullet(id: string) {
-		if (!this.bullets.hasOwnProperty(id)) {
+		if (!(id in this.bullets)) {
 			console.log('bullet('+id+') not found');
 			return;
 		}
@@ -127,6 +128,7 @@ class World {
 		bullet.world = null;
 		delete this.bullets[id];
 		this.bulletsNum--;
+		this.pools.delObject(bullet);
 	}
 
 	public addSupply(supply: Supply): Supply {
@@ -140,7 +142,7 @@ class World {
 	}
 
 	public removeSupply(id: string) {
-		if (!this.supplies.hasOwnProperty(id)) {
+		if (!(id in this.supplies)) {
 			console.log('supply('+id+') not found');
 			return;
 		}
