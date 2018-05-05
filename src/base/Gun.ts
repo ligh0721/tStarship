@@ -28,7 +28,7 @@ class Gun {
 
 	public createBulletWithType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType): BulletType {
 		//let bullet = new bulletType(this);
-		let bullet = this.ship.world.pools.newObject(bulletType, this);
+		let bullet = this.ship.pools.newObject(bulletType, this);
 		bullet.reset();
 		bullet.setGun(this);
 		return bullet;
@@ -36,7 +36,7 @@ class Gun {
 
 	public createBullet(): Bullet {
 		//let bullet = new this.bulletType(this);
-		let bullet = this.ship.world.pools.newObject(this.bulletType, this);
+		let bullet = this.ship.pools.newObject(this.bulletType, this);
 		bullet.reset();
 		bullet.setGun(this);
 		return bullet;

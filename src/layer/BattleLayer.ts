@@ -467,7 +467,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 6:
-            gun = Gun.createGun(ShotGun, Bullet);
+            gun = Gun.createGun(ShotGun, EllipseWaveBullet);
             (<ShotGun>gun).bulletAngleDelta = 10;
             (<ShotGun>gun).bulletNum = 5;
             gun.fireCooldown.baseValue = 600;
@@ -481,7 +481,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 7:
-            gun = Gun.createGun(RowGun, Bullet);
+            gun = Gun.createGun(RowGun, EllipseWaveBullet);
             (<RowGun>gun).bulletNum = 3;
             gun.fireCooldown.baseValue = 400;
             gun.bulletSpeed.baseValue = 60;

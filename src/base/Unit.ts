@@ -2,6 +2,7 @@ class Unit {
 	gameObject: egret.DisplayObject;
 	id: string;
 	world: World;
+	pools: tutils.ObjectPools;
 	staticBounds: boolean = true;
 	private boundsRect: egret.Rectangle = new egret.Rectangle();
 	protected boundsDirty: boolean = true;
@@ -69,6 +70,7 @@ class Unit {
 	// override
 	public onAddToWorld(): void {
 		this.gameObject = this.onCreate();
+		this.pools = this.world.pools;
 	}
 
 	// override
