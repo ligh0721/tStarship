@@ -29,8 +29,8 @@ class EnemyController {
 			ship.x = startX;
 			let dis = this.world.height + ship.height;
 			let dur = dis * tutils.SpeedFactor / ship.speed.value;
-			let tw = egret.Tween.get(ship.gameObject);
-			tw.to({y: this.world.height  + ship.height}, dur);
+			let tw = egret.Tween.get(ship);
+			tw.to({y: this.world.height+ship.height}, dur);
 			tw.call(()=>{
 				ship.status = UnitStatus.Dead;
 			}, this);

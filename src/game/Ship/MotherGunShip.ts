@@ -1,4 +1,4 @@
-class MotherGunShip extends Ship {
+class MotherGunShip extends EnemyShip {
 	ship: MotherShip;
 
 	protected onCreate(): egret.DisplayObject {

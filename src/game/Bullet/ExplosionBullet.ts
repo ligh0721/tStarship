@@ -6,7 +6,7 @@ class ExplosionBullet extends Bullet {
 
 	// override
 	protected onCreate(): egret.DisplayObject {
-		if (this.gameObject != null) {
+		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
 		let bullet = new egret.Shape();
@@ -49,8 +49,7 @@ class ExplosionEffectBullet extends Bullet {
 
 	// override
 	protected onCreate(): egret.DisplayObject {
-		if (this.gameObject != null) {
-			this.factor = 0;
+		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
 		let bullet = new egret.Shape();

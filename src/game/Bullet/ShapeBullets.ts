@@ -4,7 +4,7 @@ class SoundWaveBullet extends Bullet {
     
 	// override
 	protected onCreate(): egret.DisplayObject {
-		let bullet = this.gameObject==null ? new egret.Shape() : <egret.Shape>this.gameObject;
+		let bullet = this.gameObject===undefined ? new egret.Shape() : <egret.Shape>this.gameObject;
 		bullet.graphics.clear();
 		bullet.graphics.lineStyle(3, this.gun.bulletColor);
 		bullet.graphics.drawEllipse(0, 0, this.width, this.height);
@@ -17,7 +17,7 @@ class SoundWaveBullet extends Bullet {
 class ShakeWaveBullet extends Bullet {
 	// override
 	protected onCreate(): egret.DisplayObject {
-		if (this.gameObject != null) {
+		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
 		let bullet = new egret.Shape();
@@ -35,7 +35,7 @@ class EllipseWaveBullet extends Bullet {
 
 	// override
 	protected onCreate(): egret.DisplayObject {
-		if (this.gameObject != null) {
+		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
 		let bullet = new egret.Shape();

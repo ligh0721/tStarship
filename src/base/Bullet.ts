@@ -15,7 +15,7 @@ class Bullet extends HpUnit {
 	}
 
 	protected onCreate(): egret.DisplayObject {
-		if (this.gameObject != null) {
+		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
 		let bullet = new egret.Shape();

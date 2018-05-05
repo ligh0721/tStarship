@@ -346,14 +346,14 @@ class BattleLayer extends tutils.Layer {
         ship.force.force = tutils.EnemyForce;
         ship.resetHp(1000);
 
-        let gunShip = new MotherGunShip(40, 80);
+        let gunShip = new MotherGunShip(40, 80, "tri");
         ship.addGunShip(gunShip, -100, 100);
         gunShip.resetHp(100);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, Bullet);
         gunShip.addGun(gun);
         
-        let gunShip2 = new MotherGunShip(40, 80);
+        let gunShip2 = new MotherGunShip(40, 80, "rect");
         ship.addGunShip(gunShip2, 100, 100);
         gunShip2.resetHp(200);
         gunShip2.angle = 180;

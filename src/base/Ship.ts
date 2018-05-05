@@ -68,6 +68,7 @@ class Ship extends HpUnit {
 	}
 
 	protected onDying(src: HpUnit): void {
+		this.status = UnitStatus.Dying;
 		console.assert(src instanceof Ship);
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
