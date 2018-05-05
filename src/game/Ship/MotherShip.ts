@@ -27,6 +27,11 @@ class MotherShip extends Ship {
 		delete this.gunShips[id];
 	}
 
+	protected onDying(src: HpUnit): void {
+		this.gameObject.cacheAsBitmap = false;
+		super.onDying(src);
+	}
+
 	protected onCreate(): egret.DisplayObject {
 		let gameObject = new egret.Shape();
 		gameObject.graphics.lineStyle(0);

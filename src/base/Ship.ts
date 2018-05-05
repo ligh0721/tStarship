@@ -72,8 +72,37 @@ class Ship extends HpUnit {
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 		this.world.onShipDying(this, <Ship>src);
-		let tw = egret.Tween.get(this.gameObject);
-		//tw.to({alpha: 0}, 500);
+		let tw: egret.Tween;
+		let g: egret.Graphics = null;
+		if (this.gameObject instanceof egret.Shape) {
+			g = this.gameObject.graphics;
+		} else if (this.gameObject instanceof egret.Sprite) {
+			g = this.gameObject.graphics;
+		}
+		if (g != null) {
+			let from = 20;
+			let to = (this.width + this.height) / 2;
+			g.clear();
+			g.lineStyle(5, 0xffffff);
+			g.beginFill(0xfefe69, 1);
+			g.drawCircle(this.gameObject.anchorOffsetX, this.gameObject.anchorOffsetY, to);
+			g.endFill();
+			this.gameObject.scaleX = from / to;
+			this.gameObject.scaleY = this.gameObject.scaleX;
+			let effect = this.pools.newObject(Effect, 20, to);
+			effect.setOnChanged((effect: Effect):void=>{
+				this.gameObject.scaleX = effect.value / effect.maximum;
+				this.gameObject.scaleY = this.gameObject.scaleX;
+				this.gameObject.alpha = 1 - (effect.value - effect.minimum) / (effect.maximum - effect.minimum);
+			}, this);
+			tw = egret.Tween.get(effect);
+			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
+			tw.call(()=>{
+				this.pools.delObject(effect);
+			}, this);
+		} else {
+			tw = egret.Tween.get(this.gameObject);
+		}
 		tw.call(()=>{
 			this.status = UnitStatus.Dead;
 		}, this);

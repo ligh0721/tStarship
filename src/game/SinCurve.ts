@@ -4,10 +4,12 @@ class SinCurve {
 	private period: number;
 	private amplitude: number;
 	private duration: number;
-	private obj: Unit;
+	private readonly obj: Unit;
+	private readonly objId: string;
 
 	public constructor(obj: Unit, point0: {x: number, y: number},  point1: {x: number, y: number}, period: number, amplitude: number) {
 		this.obj = obj;
+		this.objId = obj.id;
 		this.point0 = point0;
 		this.point1 = point1;
 		this.period = period;
@@ -16,7 +18,6 @@ class SinCurve {
 
 	startMove(dur: number, onMoveEnd?: Function) {
 		this.duration = dur;
-
 		this.factor = 0;
 		let tw = egret.Tween.get(this);
 		tw.to({factor: 1}, dur);
@@ -30,6 +31,14 @@ class SinCurve {
 	}
 
 	private set factor(value: number) {
+		if (this.obj.id != this.objId) {
+			egret.Tween.removeTweens(this);
+			return;
+		}
+		if ((this.obj instanceof HpUnit && !this.obj.isAlive()) || (this.obj instanceof Supply && !this.obj.isAlive())) {
+			egret.Tween.removeTweens(this);
+			return;
+		}
 	    let dis = this.point1.y - this.point0.y;
 		let temp = Math.sin(this.duration * value / this.period  * 2 * Math.PI) * this.amplitude;
 
