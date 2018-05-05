@@ -3,24 +3,15 @@ class Bullet extends HpUnit {
 	powerLossPer: number = 1.0;  // 子弹能量下降系数
 	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	removeOutOfWorld: boolean = true;
-	private readonly effectedShips: { [id: string]: number } = {};
+	private readonly effectedShips: { [id: string]: number };
 
-	// override, for ObjectPool
-	public reset(): void {
-		super.reset();
-		this.powerLossPer = 1.0;
-		this.powerLossInterval = 500;
-		this.removeOutOfWorld = true;
-		for (let id in this.effectedShips) {
-			delete this.effectedShips[id];
-		}
-	}
-
-	public setGun(gun: Gun): void {
+	public constructor(gun: Gun) {
+		super();
 		this.gun = gun;
 		this.resetHp(gun.bulletPower.value);
 		this.powerLossPer = gun.bulletPowerLossPer;
 		this.powerLossInterval = gun.bulletPowerLossInterval.value;
+		this.effectedShips===undefined ? this.effectedShips={} : this.effectedShips.constructor();
 	}
 
 	protected onCreate(): egret.DisplayObject {

@@ -66,16 +66,39 @@ class World {
 		return this.bullets[id];
 	}
 
-	public findNearestFrontAliveEnemyShip(x: number, y: number, force: Force): Ship {
+	public findNearestFrontAliveEnemyShip(x: number, y: number, force: Force, maxDist?: number): Ship {
 		let min = -1;
 		let target: Ship = null;
+		if (maxDist == undefined) {
+			maxDist = tutils.LongDistance;
+		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
 			if (!ship.isAlive() || !ship.force.isMyEnemy(force) || ship.gameObject.y>y || ship==this.obShip) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
-			if (target==null || min>dis) {
+			if (dis <= maxDist && (target==null || min>dis)) {
+				min = dis;
+				target = ship;
+			}
+		}
+		return target;
+	}
+
+	public findNearestHeroShip(x: number, y: number, maxDist?: number): Ship {
+		let min = -1;
+		let target: Ship = null;
+		if (maxDist == undefined) {
+			maxDist = tutils.LongDistance;
+		}
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			if (ship==this.obShip || !ship.hero || !ship.isAlive()) {
+				continue;
+			}
+			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
+			if (dis <= maxDist && (target==null || min>dis)) {
 				min = dis;
 				target = ship;
 			}
@@ -152,7 +175,12 @@ class World {
 		supply.world = null;
 		delete this.supplies[id];
 		this.suppliesNum--;
-		//console.log('ship('+id+') removed');
+		this.pools.delObject(supply);
+	}
+
+	public createSupply<SupplyType extends Supply>(ctor: new(...args: any[])=>SupplyType, ...args: any[]): SupplyType {
+		let supply = this.pools.newObject(ctor, ...args);
+		return supply;
 	}
 
 	protected step(dt: number) {

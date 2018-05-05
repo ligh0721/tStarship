@@ -1,5 +1,10 @@
 class MotherShip extends Ship {
-	readonly gunShips: { [id: string]: {gunShip: MotherGunShip, offsetX: number, offsetY: number} } = {};
+	readonly gunShips: { [id: string]: {gunShip: MotherGunShip, offsetX: number, offsetY: number} };
+
+	public constructor(width: number, height: number) {
+		super(width, height);
+		this.gunShips===undefined ? this.gunShips={} : this.gunShips.constructor();
+	}
 
 	public addGunShip(gunShip: MotherGunShip, offsetX: number, offsetY: number): MotherGunShip {
 		this.world.addShip(gunShip);

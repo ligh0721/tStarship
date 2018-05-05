@@ -3,13 +3,6 @@ class SoundWaveBullet extends Bullet {
     height: number = 40;
     
 	// override
-	public reset(): void {
-		super.reset();
-		this.width = 100;
-		this.height = 40;
-	}
-
-	// override
 	protected onCreate(): egret.DisplayObject {
 		let bullet = this.gameObject==null ? new egret.Shape() : <egret.Shape>this.gameObject;
 		bullet.graphics.clear();
@@ -22,11 +15,6 @@ class SoundWaveBullet extends Bullet {
 }
 
 class ShakeWaveBullet extends Bullet {
-	// override
-	public reset(): void {
-		super.reset();
-	}
-
 	// override
 	protected onCreate(): egret.DisplayObject {
 		if (this.gameObject != null) {
@@ -44,13 +32,6 @@ class ShakeWaveBullet extends Bullet {
 class EllipseWaveBullet extends Bullet {
 	width: number = 10;
     height: number = 50;
-
-	// override
-	public reset(): void {
-		super.reset();
-		this.width = 10;
-		this.height = 50;
-	}
 
 	// override
 	protected onCreate(): egret.DisplayObject {

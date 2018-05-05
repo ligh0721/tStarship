@@ -1,17 +1,8 @@
 class ExplosionBullet extends Bullet {
 	radius: number = 20;
 	explosionRadius: number = 100;
-	explosionPowerEvery:number = 2;
+	explosionPowerEvery: number = 2;
 	explosionPowerLossInterval: number = 200;
-	
-	// override
-	public reset(): void {
-		super.reset();
-		this.radius = 20;
-		this.explosionRadius = 100;
-		this.explosionPowerEvery = 2;
-		this.explosionPowerLossInterval = 200;
-	}
 
 	// override
 	protected onCreate(): egret.DisplayObject {
@@ -28,9 +19,7 @@ class ExplosionBullet extends Bullet {
 
 	protected onDying(src: HpUnit) {
 		super.onDying(src);
-		let bullet = this.pools.newObject(ExplosionEffectBullet, this);
-		bullet.reset();
-		bullet.setGun(this.gun);
+		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
 		bullet.radius = this.radius;
 		bullet.explosionRadius = this.explosionRadius;
 		bullet.powerLossPer = 0.0001;
@@ -57,16 +46,6 @@ class ExplosionEffectBullet extends Bullet {
 	private $factor: number = 0;
 	private orgWidth: number;
 	private orgHeight: number;
-	
-	// override
-	public reset(): void {
-		super.reset();
-		this.radius = 20;
-		this.explosionRadius = 100;
-		this.explosionPowerEvery = 2;
-		this.explosionPowerLossInterval = 200;
-		this.$factor = 0;
-	}
 
 	// override
 	protected onCreate(): egret.DisplayObject {

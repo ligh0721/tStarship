@@ -1,10 +1,11 @@
 class HeroShip extends Ship {
     hitRadius: number = 5;
-    private hitRect: egret.Rectangle = new egret.Rectangle();
+    private hitRect: egret.Rectangle;;
 
     public constructor(width: number, height: number) {
 		super(width, height);
         this.hero = true;
+        this.hitRect===undefined ? this.hitRect=new egret.Rectangle() : this.hitRect.constructor();
 	}
 
     protected onCreate(): egret.DisplayObject {

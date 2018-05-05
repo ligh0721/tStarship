@@ -1,5 +1,4 @@
 class GuideGun extends Gun {
-	
 	public fire() {
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
@@ -10,14 +9,17 @@ class GuideGun extends Gun {
 	}
 
 	protected fireBulletGuild(bullet: Bullet, target: Ship) {
+		let bulletId = bullet.id;
+		let targetId = target.id;
 		let timer = new tutils.Timer();
 		let bulletAngleRaw = -Math.PI/2;
 		timer.setOnTimerListener((dt: number)=> {
-			if (!bullet.isAlive()) {
+			if (!bullet.isAlive() || bullet.id != bulletId) {
 				timer.stop();
+				return;
 			}
-			if ((target==null || !target.isAlive()) && this.ship.isAlive()) {
-				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.x, bullet.y, this.ship.force);
+			if ((target==null || !target.isAlive() || target.id != targetId) && this.ship.isAlive()) {
+				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force);
 			}
 			if (target != null) {
 				bulletAngleRaw = Math.atan2(target.gameObject.y-bullet.gameObject.y, target.gameObject.x-bullet.gameObject.x);
@@ -27,6 +29,6 @@ class GuideGun extends Gun {
 			bullet.gameObject.x = to.x;
 			bullet.gameObject.y = to.y;
 		}, this);
-		timer.start(1000/60, false, 0);
+		timer.start(1000/60, true, 0);
 	}
 }

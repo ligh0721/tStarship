@@ -4,28 +4,16 @@ class Unit {
 	world: World;
 	pools: tutils.ObjectPools;
 	staticBounds: boolean = true;
-	private boundsRect: egret.Rectangle = new egret.Rectangle();
+	private boundsRect: egret.Rectangle;
 	protected boundsDirty: boolean = true;
 	private waitToRemove: boolean = false;
 
-	// override
-	public reset() {
-		this.staticBounds = true;
-		this.boundsDirty = true;
-		this.waitToRemove = false
+	public constructor() {
+		this.boundsRect===undefined ? this.boundsRect=new egret.Rectangle() : this.boundsRect.constructor();
 	}
 
 	public cleanup() {
 		this.onCleanup();
-	}
-
-	public set(prop: Object) {
-		if (prop.hasOwnProperty('x')) {
-			this.gameObject.x = prop['x'];
-		}
-		if (prop.hasOwnProperty('y')) {
-			this.gameObject.y = prop['y'];
-		}
 	}
 
 	public get x(): number {

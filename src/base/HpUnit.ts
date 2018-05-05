@@ -1,18 +1,15 @@
 class HpUnit extends Unit {
 	status: UnitStatus = UnitStatus.Alive;
-	private readonly $hp: Health = new Health();
+	private readonly $hp: Health;
 
 	// from unit
 	private onHpChangedListener: (unit: HpUnit, changed: number)=>void = null;
-	private onHpChangedThisObject: any;
+	private onHpChangedThisObject: any = null;
 
 	// override
-	public reset() {
-		super.reset();
-		this.status = UnitStatus.Alive;
-		this.$hp.reset(1);
-		this.onHpChangedListener = null;
-		this.onHpChangedThisObject = null;
+	public constructor() {
+		super();
+		this.$hp===undefined ? this.$hp=new Health() : this.$hp.constructor();
 	}
 
 	public get hp(): number {

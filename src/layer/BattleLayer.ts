@@ -127,7 +127,10 @@ class BattleLayer extends tutils.Layer {
 
             this.score._score
         } else if (this.hero.force.isMyEnemy(ship.force)) {
-            this.score.setScore(this.score.score+100, 1);
+            //this.score.setScore(this.score.score+100, 1);
+            let supply = this.world.pools.newObject(CoinSupply, Math.floor(ship.maxHp*20/100)*100, this.score);
+            this.world.addSupply(supply);
+            supply.drop(ship.gameObject.x, ship.gameObject.y);
         }
     }
 
@@ -313,19 +316,19 @@ class BattleLayer extends tutils.Layer {
 
         for (let i=0; i<100; i++) {
             let es = [];
-            let n = Math.floor(Math.random()*3+1);
+            let n = Math.floor(Math.random()*5+3);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
                 e.resetHp(5);
                 es.push(e);
             }
             
-            let delay = Math.random() * 5000;
-            let dur = Math.random() * 2000 + 2000;
+            let delay = Math.random() * 5000 + 2000;
+            let dur = Math.random() * 3000 + 3000;
             let interval = Math.random() * 200 + 100;
             let a = Math.random() * 200 + 80
             let x = Math.random() * (this.stage.stageWidth - a * 2) + a;
-            let t = Math.random() * 1000 + 1000;
+            let t = Math.random() * 1000 + 2000;
             let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
             this.enemyCtrl.addRush(rushItem);
         }
@@ -519,6 +522,7 @@ class BattleLayer extends tutils.Layer {
         }
 
         this.world.addSupply(supply);
+        supply.pickDist = 0;
         supply.drop(Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
     }
 }

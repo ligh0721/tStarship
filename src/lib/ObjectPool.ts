@@ -19,8 +19,8 @@ module tutils {
 		public newObject(...args: any[]): TYPE {
 			let obj: TYPE;
 			if (this.pool.length > 0) {
-				obj = this.pool.pop();;
-				//this.ctor.call(obj, ...args);
+				obj = this.pool.pop();
+				this.ctor.call(obj, ...args);
 			} else {
 				obj = new this.ctor(...args);
 			}

@@ -2,38 +2,33 @@ class Ship extends HpUnit {
 	readonly width: number;
 	readonly height: number;
 	
-	force: Force = new Force();
+	force: Force;
 	mainGun: Gun = null;
-	readonly guns: { [id: string]: Gun } = {};
-	readonly speed: Value = new Value(100);
+	readonly guns: { [id: string]: Gun };
+	readonly speed: Value;
 	hero: boolean = false;  // can use supply
 
-	private readonly timer: tutils.Timer = new tutils.Timer();
-	readonly buffs: { [id: string]: Buff } = {};
+	private readonly timer: tutils.Timer;
+	readonly buffs: { [id: string]: Buff };
 	buffsNum: number = 0;
 
 	// from unit
 	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
-	private onAddBuffThisObject: any;
+	private onAddBuffThisObject: any = null;
 
 	// from unit
 	private onRemoveBuffListener: (ship: Ship, buff: Buff)=>void = null;
-	private onRemoveBuffThisObject: any;
+	private onRemoveBuffThisObject: any = null;
 
 	public constructor(width: number, height: number) {
 		super();
 		this.width = width;
 		this.height = height;
-	}
-
-	public set(prop: any): void {
-		super.set(prop);
-		if (prop.hasOwnProperty('force')) {
-			this.force.force = prop['force'];
-		}
-		if (prop.hasOwnProperty('speed')) {
-			this.speed.baseValue = prop.speed;
-		}
+		this.force===undefined ? this.force=new Force() : this.force.constructor();
+		this.guns===undefined ? this.guns={} : this.guns.constructor();
+		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
+		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+		this.buffs===undefined ? this.buffs={} : this.buffs.constructor();
 	}
 
 	public move(x: number, y: number): void {
