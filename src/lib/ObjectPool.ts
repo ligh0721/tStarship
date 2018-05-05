@@ -47,7 +47,7 @@ module tutils {
 		public constructor() {
 		}
 		public newObject<TYPE>(ctor: Constructor<TYPE>, ...args: any[]): TYPE {
-			let name = (<any>ctor).name;
+			let name = egret.getQualifiedClassName(ctor);
 			let pool:ObjectPool<TYPE> = this.pools[name];
 			if (pool == undefined) {
 				pool = new ObjectPool<TYPE>(ctor);
@@ -58,7 +58,7 @@ module tutils {
 
 		public delObject<TYPE>(obj: TYPE) {
 			let ctor = obj.constructor;
-			let name = (<any>ctor).name;
+			let name = egret.getQualifiedClassName(ctor);
 			let pool:ObjectPool<TYPE> = this.pools[name];
 			if (pool == undefined) {
 				pool = new ObjectPool<TYPE>(<any>ctor);
