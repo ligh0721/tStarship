@@ -454,6 +454,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "SoundWaveGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 5:
@@ -467,6 +468,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "ShakeWaveGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 6:
@@ -481,6 +483,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "ShotGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 7:
@@ -494,6 +497,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "RowGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 8:
@@ -506,6 +510,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "ExplosionGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 9:
@@ -518,11 +523,11 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "GuideGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
         }
 
         this.world.addSupply(supply);
-        supply.pickDist = 0;
         supply.drop(Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
     }
 }
