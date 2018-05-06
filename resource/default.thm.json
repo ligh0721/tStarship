@@ -16,6 +16,9 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
+		"resource/custom_skins/shipListIRSkin.exml",
+		"resource/custom_skins/shipListUISkin.exml",
+		"resource/custom_skins/test.exml",
 		"resource/eui_skins/ButtonSkin.exml",
 		"resource/eui_skins/CheckBoxSkin.exml",
 		"resource/eui_skins/HScrollBarSkin.exml",
