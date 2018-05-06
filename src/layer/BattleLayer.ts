@@ -53,7 +53,7 @@ class BattleLayer extends tutils.Layer {
         hero.force.force = tutils.Player1Force;
         hero.x = stageW * 0.5;
         hero.y = stageH - hero.height * 2;
-        hero.speed.baseValue = 300;
+        hero.speed.baseValue = 200;
         hero.resetHp(100);
         let gun = Gun.createGun(Gun, EllipseWaveBullet);
         gun.fireCooldown.baseValue = 200;
@@ -67,7 +67,8 @@ class BattleLayer extends tutils.Layer {
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
 
         let buff = new GunBuff(5000, -0.80, 0, +1.00);
-        let skill = new AddBuffSkill([buff]);
+        let buff2 = new ShipBuff(5000, -0.80);
+        let skill = new AddBuffSkill([buff, buff2]);
         hero.setSkill(skill);
 
         // 创建玩家飞船血条、能量条
@@ -111,12 +112,18 @@ class BattleLayer extends tutils.Layer {
             return;
         }
         if (this.hero.castSkill()) {
-            let orgSpeed = this.bgCtrl.speed;
-            let tw = egret.Tween.get(this.bgCtrl);
-            tw.to({speed: 200}, 1000, egret.Ease.getPowOut(2));
-            tw.wait(5000-1000);
-            tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
+            this.turbo(200, 20, 5000);
         }
+    }
+
+    public turbo(speed: number, orgSpeed: number, dur: number): void {
+        if (dur < 1500) {
+            dur = 2000;
+        }
+        let tw = egret.Tween.get(this.bgCtrl);
+        tw.to({speed: speed}, 1000, egret.Ease.getPowOut(2));
+        tw.wait(dur-1500);
+        tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
     }
 
     public get pathPercent(): number {
@@ -357,7 +364,7 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=0; i<10; i++) {
+        for (let i=0; i<50; i++) {
             let es = [];
             let n = Math.floor(Math.random()*5+3);
             for (let j=0; j<n; j++) {
@@ -387,18 +394,18 @@ class BattleLayer extends tutils.Layer {
         ship.x = this.stage.stageWidth * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(200);
+        ship.resetHp(2000);
 
         let gunShip = new MotherGunShip(40, 80, "tri");
         ship.addGunShip(gunShip, -100, 100);
-        gunShip.resetHp(50);
+        gunShip.resetHp(200);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, Bullet);
         gunShip.addGun(gun);
         
         let gunShip2 = new MotherGunShip(40, 80, "rect");
         ship.addGunShip(gunShip2, 100, 100);
-        gunShip2.resetHp(50);
+        gunShip2.resetHp(100);
         gunShip2.angle = 180;
         let gun2 = Gun.createGun(ShotGun, Bullet);
         gun2.fireCooldown.baseValue = 1000;
