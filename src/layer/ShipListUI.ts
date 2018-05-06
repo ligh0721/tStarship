@@ -1,4 +1,3 @@
-
 class ShipListUI extends eui.Component {
 
     constructor() {
@@ -34,18 +33,24 @@ class ShipListUI extends eui.Component {
         // }, this );
 
         /// 填充数据
-        var dsListHeros:Array<Object> = [
-            { icon: "heros01_png", heroName: "伊文捷琳", comment: "评价：樱桃小丸子", checked: false }
-            , { icon: "heros02_png", heroName: "亚特伍德", comment: "评价：离了我你不行的", checked: true }
-            , { icon: "heros03_png", heroName: "伊妮德", comment: "评价：猴子请来的逗比", checked: false }
-            , { icon: "heros04_png", heroName: "鲁宾", comment: "评价：我勒个去", checked: false }
-            , { icon: "heros05_png", heroName: "威弗列德", comment: "评价：这货碉堡了", checked: false }
-            , { icon: "heros06_png", heroName: "史帝文", comment: "评价：咖啡不加糖", checked: false }
-            , { icon: "heros07_png", heroName: "哈瑞斯", comment: "评价：猪一样的队友", checked: false }
-        ];
-        this.listHeros.dataProvider = new eui.ArrayCollection( dsListHeros );
+        // var dsListHeros:Array<Object> = [
+        //     { icon: "heros01_png", heroName: "伊文捷琳", comment: "评价：樱桃小丸子", checked: false }
+        //     , { icon: "heros02_png", heroName: "亚特伍德", comment: "评价：离了我你不行的", checked: true }
+        //     , { icon: "heros03_png", heroName: "伊妮德", comment: "评价：猴子请来的逗比", checked: false }
+        //     , { icon: "heros04_png", heroName: "鲁宾", comment: "评价：我勒个去", checked: false }
+        //     , { icon: "heros05_png", heroName: "威弗列德", comment: "评价：这货碉堡了", checked: false }
+        //     , { icon: "heros06_png", heroName: "史帝文", comment: "评价：咖啡不加糖", checked: false }
+        //     , { icon: "heros07_png", heroName: "哈瑞斯", comment: "评价：猪一样的队友", checked: false }
+        //     , { icon: "heros01_png", heroName: "伊文捷琳1", comment: "评价：樱桃小丸子", checked: false }
+        //     , { icon: "heros01_png", heroName: "伊文捷琳2", comment: "评价：樱桃小丸子", checked: false }
+        //     , { icon: "heros01_png", heroName: "伊文捷琳3", comment: "评价：樱桃小丸子", checked: false }
+        //     , { icon: "heros01_png", heroName: "伊文捷琳4", comment: "评价：樱桃小丸子", checked: false }
+        //     , { icon: "heros01_png", heroName: "伊文捷琳5", comment: "评价：樱桃小丸子", checked: false }
+        //     , { icon: "heros01_png", heroName: "伊文捷琳6", comment: "评价：樱桃小丸子", checked: false }
+        // ];
+        // this.listHeros.dataProvider = new eui.ArrayCollection( dsListHeros );
         // this.scrListHeros.horizontalCenter = 0;
-        this.listHeros.itemRenderer = HerosListIRSkin;
+        //this.listHeros.itemRenderer = HerosListIRSkin;
     }
 
     protected createChildren():void {
@@ -61,26 +66,26 @@ class ShipListUI extends eui.Component {
     private scrListHeros:eui.Scroller;
 }
 
-class HerosListIRSkin extends eui.ItemRenderer {
+// class HerosListIRSkin extends eui.ItemRenderer {
 
-    private cb:eui.CheckBox;
+//     private cb:eui.CheckBox;
 
-    constructor() {
-        super();
-        this.skinName = "resource/custom_skins/shipListIRSkin.exml";
-    }
+//     constructor() {
+//         super();
+//         this.skinName = "resource/custom_skins/shipListIRSkin.exml";
+//     }
 
-    protected createChildren():void {
-        super.createChildren();
-        // this.cb.addEventListener( egret.Event.CHANGE, ()=> {
-        //     console.log( "\tCheckbox 变化:", this.data.checked );
-        //     this.data.checked = this.cb.selected;
-        // }, this );
-    }
+//     protected createChildren():void {
+//         super.createChildren();
+//         // this.cb.addEventListener( egret.Event.CHANGE, ()=> {
+//         //     console.log( "\tCheckbox 变化:", this.data.checked );
+//         //     this.data.checked = this.cb.selected;
+//         // }, this );
+//     }
 
-    /*protected dataChanged():void{
-     console.log( "\tCheckbox:", this.data.checked );
-     //this.cb.selected = this.data.checked;
-     }*/
+//     /*protected dataChanged():void{
+//      console.log( "\tCheckbox:", this.data.checked );
+//      //this.cb.selected = this.data.checked;
+//      }*/
 
-}
+// }

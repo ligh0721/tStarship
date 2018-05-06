@@ -1,34 +1,42 @@
 <?xml version='1.0' encoding='utf-8'?>
-<e:Skin class="shipListUISkin" xmlns:e="http://ns.egret.com/eui">
-	<e:Scroller id="scrListHeros" height="60%" width="100%" x="14" y="184">
-		<e:viewport>
-			<e:List id="listHeros" height="104" width="443">
-				<e:layout> 
-					<e:VerticalLayout/>
-				</e:layout>
-			</e:List>
-		</e:viewport>
-		<e:Skin>
-			<e:VScrollBar id="verticalScrollBar" width="8" minHeight="100%" height="100%" right="0">
-			<e:Skin>
-				<e:Image id="thumb" width="8" source="hScrollBar01_png"  scale9Grid="1,1,4,4"/>
-			</e:Skin>
-			</e:VScrollBar>
-		</e:Skin>
-	</e:Scroller>
-	<e:Button id="btnReturn" x="13" y="132">
-		<e:skinName>
-			<e:Skin states="up,down,disabled" xmlns:w="http://ns.egret.com/wing">
-				<e:Image width="90%" height="90%" width.down="100%" height.down="100%" horizontalCenter="0" verticalCenter="0" source="btnReturn_png" source.down="btnReturn_png"/>
-			</e:Skin>
-		</e:skinName>
-	</e:Button>
-	<e:Button id="btnOK" verticalCenter="-250.5" y="20" horizontalCenter="186.5" x="20">
-		<e:skinName>
+<e:Skin class="shipListUISkin" xmlns:e="http://ns.egret.com/eui" width="443" height="1280">
+	<e:Group id="grp" width="100%" height="100%">	<e:Button id="btnReturn" top="0" left="0">
+			<e:skinName>
+				<e:Skin states="up,down,disabled" xmlns:w="http://ns.egret.com/wing">
+					<e:Image width="90%" height="90%" width.down="100%" height.down="100%" horizontalCenter="0" verticalCenter="0" source="btnReturn_png" source.down="btnReturn_png"/>
+				</e:Skin>
+			</e:skinName>
+		</e:Button>
+		<e:Image source="herosTitle_png" width="132" height="37" horizontalCenter="0" top="0"/>
+		<e:Button id="btnOK" top="0" right="0" x="635" y="0" scaleX="1" scaleY="1">
+			<e:skinName>
 			<e:Skin states="up,down,disabled" xmlns:w="http://ns.egret.com/wing">
 				<e:Image width="90%" height="90%" width.down="100%" height.down="100%" horizontalCenter="0" verticalCenter="0" source="btnOK_png" source.down="btnOK_png"/>
 			</e:Skin>
-		</e:skinName>
-	</e:Button>
-	<e:Image source="herosTitle_png" x="166" y="135" width="132" height="37"/>
+			</e:skinName>
+		</e:Button>
+		<e:Scroller height="45%" horizontalCenter="0" top="50" scaleX="1" scaleY="1">
+			<e:Skin>
+			<e:VScrollBar id="verticalScrollBar" width="8" minHeight="100%" height="100%" right="0">
+				<e:Skin>
+				<e:Image id="thumb" width="8" source="hScrollBar01_png" scale9Grid="1,1,4,4"/>
+				</e:Skin>
+			</e:VScrollBar>
+			</e:Skin>
+			<e:Group>
+			<e:List horizontalCenter="0" top="0" itemRendererSkinName="shipListIRSkin">
+				<e:ArrayCollection>
+				<e:Array>
+					<e:Object icon="heros02_png" heroName="亚特伍德" checked="false" comment="AAAAAA"/>
+					<e:Object icon="heros03_png" heroName="南瓜头" checked="true" comment="BBBBB"/>
+					<e:Object icon="heros04_png" heroName="矮人" checked="false" comment="CCCCCC"/>
+					<e:Object icon="heros05_png" heroName="怪人" checked="false" comment="DDDDDDD"/>
+					<e:Object icon="heros06_png" heroName="尼娅" checked="false" comment="EEEEE"/>
+					<e:Object icon="heros07_png" heroName="僵尸" checked="false" comment="FFFFFF"/>
+				</e:Array>
+				</e:ArrayCollection>
+			</e:List>
+			</e:Group>
+		</e:Scroller>
+	</e:Group>
 </e:Skin>

@@ -1,4 +1,4 @@
-declare class herosListIRSkin extends eui.Skin{
+declare class shipListIRSkin extends eui.Skin{
 }
 declare class shipListUISkin extends eui.Skin{
 }
