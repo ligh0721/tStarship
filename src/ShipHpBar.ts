@@ -18,13 +18,13 @@ class ShipHpBar {
 		g.clear();
 		g.lineStyle(0);
 		g.beginFill(0x252532);
-		g.drawRect(0, 0, this.target.width, 5);
+		g.drawRect(0, 0, this.target.gameObject.width, 5);
 		g.beginFill(0xff2929);
-		let width = this.target.width*this.target.hp/this.target.maxHp;
+		let width = this.target.gameObject.width*this.target.hp/this.target.maxHp;
 		let height = 5
 		g.drawRect(0, 0, width, height);
 		g.endFill();
-		gameObject.anchorOffsetX = this.target.width * 0.5;
+		gameObject.anchorOffsetX = this.target.gameObject.width * 0.5;
 		gameObject.anchorOffsetY = height * 0.5;
 
 		return gameObject;
@@ -33,9 +33,9 @@ class ShipHpBar {
 	public update(): void {
 		let g = this.gameObject.graphics;
 		g.beginFill(0x252532);
-		g.drawRect(0, 0, this.target.width, 5);
+		g.drawRect(0, 0, this.target.gameObject.width, 5);
 		g.beginFill(0xff2929);
-		let width = this.target.width*this.target.hp/this.target.maxHp;
+		let width = this.target.gameObject.width*this.target.hp/this.target.maxHp;
 		let height = 5
 		g.drawRect(0, 0, width, height);
 		g.endFill();

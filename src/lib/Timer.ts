@@ -4,7 +4,7 @@ module tutils {
 		public times: number = 1;
 		public autoSkip: boolean = true;
 		private onTimerListener: (dt: number)=>void = null;
-		private onTimerThisObject: any;
+		private onTimerThisObject: any = null;
 		private $running: boolean = false;
 		private $tick: number;  // last tick
 		private $left: number;

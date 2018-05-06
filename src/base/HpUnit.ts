@@ -20,6 +20,7 @@ class HpUnit extends Unit {
 		this.$hp.hp -= value;
 		this.onHpChanged(-value);
 		if (this.$hp.hp <= 0) {
+			this.$hp.hp = 0;
 			if (this.status == UnitStatus.Alive) {
 				this.status = UnitStatus.Dying;
 			}

@@ -2,9 +2,9 @@ class Supply extends Unit {
 	text: string = "";
 	color: number = 0xffffff;
 	status: UnitStatus = UnitStatus.Alive;
-	speed: number = 10;
-	pickDist: number = 200;
-	pickSpeed: number = 200;
+	speed: number = 20;
+	pickDist: number = 250;
+	pickSpeed: number = 100;
 
 	// override
 	protected onCreate(): egret.DisplayObject {

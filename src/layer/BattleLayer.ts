@@ -7,6 +7,7 @@ class BattleLayer extends tutils.Layer {
     private bossui: BossHpProgress = null;
     private bossuiShowing: boolean = true;
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
+    private heroHpBar: ShapeProgress;
 
     $pathPercent: number = 0;
 	
@@ -60,6 +61,12 @@ class BattleLayer extends tutils.Layer {
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
+
+        // 创建玩家飞船血条
+        this.heroHpBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.LeftToRight, 200, 30, 0xcc3333, 0xcc3333);
+        hero.heroHpBar = this.heroHpBar;
+        this.heroHpBar.gameObject.x = 5;
+        this.heroHpBar.gameObject.y = 100;
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -69,7 +76,7 @@ class BattleLayer extends tutils.Layer {
         testSupplyTimer.start(5000, true, 0);
 
         // 创建测试敌军
-        //this.createTestEnemyShip(10);
+        //this.createTestEnemyShip(1);
 
         // 创建BOSS飞船
         //this.createTestMotherShip();
@@ -250,7 +257,7 @@ class BattleLayer extends tutils.Layer {
 	// FIXME: test
 	private createTestEnemyShip(n: number) {
 		for (let i=0; i<n; i++) {
-			let ship = new Ship(30, 60);
+			let ship = new EnemyShip(30, 60, "tri");
 			this.world.addShip(ship);
 			ship.force.force = tutils.EnemyForce;
             ship.resetHp(Math.floor(Math.random()*10)+1);
@@ -314,7 +321,7 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=0; i<100; i++) {
+        for (let i=0; i<10; i++) {
             let es = [];
             let n = Math.floor(Math.random()*5+3);
             for (let j=0; j<n; j++) {
@@ -344,18 +351,18 @@ class BattleLayer extends tutils.Layer {
         ship.x = this.stage.stageWidth * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(1000);
+        ship.resetHp(200);
 
         let gunShip = new MotherGunShip(40, 80, "tri");
         ship.addGunShip(gunShip, -100, 100);
-        gunShip.resetHp(100);
+        gunShip.resetHp(50);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, Bullet);
         gunShip.addGun(gun);
         
         let gunShip2 = new MotherGunShip(40, 80, "rect");
         ship.addGunShip(gunShip2, 100, 100);
-        gunShip2.resetHp(200);
+        gunShip2.resetHp(50);
         gunShip2.angle = 180;
         let gun2 = Gun.createGun(ShotGun, Bullet);
         gun2.fireCooldown.baseValue = 1000;

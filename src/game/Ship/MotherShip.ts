@@ -28,6 +28,12 @@ class MotherShip extends Ship {
 	}
 
 	protected onDying(src: HpUnit): void {
+		for (let i in this.gunShips) {
+			let gunShip = this.gunShips[i].gunShip;
+			if (gunShip.isAlive()) {
+				gunShip.damaged(gunShip.hp, null);
+			}
+		}
 		this.gameObject.cacheAsBitmap = false;
 		super.onDying(src);
 	}
