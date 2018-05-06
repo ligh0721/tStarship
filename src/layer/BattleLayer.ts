@@ -104,7 +104,13 @@ class BattleLayer extends tutils.Layer {
         //this.drawTestPath();
 
         // 创建敌军小队
-        this.createTestEnemyRushes();
+        // this.createTestEnemyRushes();
+        let enemy1 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+        enemy1.resetHp(5);
+        let rushItem = new RushItem([enemy1], 'path', 1000, 4000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
+        this.enemyCtrl.addRush(rushItem);
+
+        this.enemyCtrl.startRush(30);
 	}
 
     protected onTouchTapHeroPower(evt: egret.TouchEvent): void {
