@@ -118,7 +118,7 @@ class BattleLayer extends tutils.Layer {
 
     public turbo(speed: number, orgSpeed: number, dur: number): void {
         if (dur < 1500) {
-            dur = 2000;
+            dur = 1500;
         }
         let tw = egret.Tween.get(this.bgCtrl);
         tw.to({speed: speed}, 1000, egret.Ease.getPowOut(2));
