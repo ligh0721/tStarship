@@ -9,13 +9,15 @@ class BattleLayer extends tutils.Layer {
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private heroHpBar: ShapeProgress;
     private heroPowerBar: ShapeProgress;
+    private bgCtrl: BackgroundController;
 
     $pathPercent: number = 0;
 	
 	protected onInit() {
         this.stage.frameRate = 60;
-        let bg = tutils.createBitmapByName("grid100_png");
-        this.layer.addChild(bg);
+        this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "grid100_png").create();
+        this.bgCtrl.start(20);
+        this.layer.addChild(this.bgCtrl.gameObject);
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
         this.layer.touchEnabled = true;
@@ -108,7 +110,13 @@ class BattleLayer extends tutils.Layer {
         if (evt.target != this.heroPowerBar.gameObject || !this.hero.isPowerFull()) {
             return;
         }
-        this.hero.castSkill();
+        if (this.hero.castSkill()) {
+            let orgSpeed = this.bgCtrl.speed;
+            let tw = egret.Tween.get(this.bgCtrl);
+            tw.to({speed: 200}, 1000, egret.Ease.getPowOut(2));
+            tw.wait(5000-1000);
+            tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
+        }
     }
 
     public get pathPercent(): number {

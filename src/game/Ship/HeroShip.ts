@@ -47,12 +47,13 @@ class HeroShip extends Ship {
         return skill;
     }
 
-    public castSkill(): void {
+    public castSkill(): boolean {
         if (this.skill == null) {
-            return;
+            return false;
         }
         this.clearPower();
         this.skill.cast();
+        return true;
     }
 
     protected onCreate(): egret.DisplayObject {
