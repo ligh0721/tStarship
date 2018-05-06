@@ -1,16 +1,22 @@
 class Gun {
 	id: string;
 	ship: Ship;
-	readonly fireCooldown: Value = new Value(500, 0, 10000);
-	readonly bulletPower: Value = new Value(1, 1, tutils.LargeNumber);
+	readonly fireCooldown: Value;
+	readonly bulletPower: Value;
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
-	readonly bulletPowerLossInterval: Value = new Value(500, 100);  // 子弹能量下降时间间隔
-	readonly bulletSpeed: Value = new Value(50, 0, 200);
+	readonly bulletPowerLossInterval: Value;  // 子弹能量下降时间间隔
+	readonly bulletSpeed: Value;
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
+	bulletColor: number = 0xffffff;
 
-	private readonly autoFireTimer: tutils.Timer = new tutils.Timer();
+	private autoFireTimer: tutils.Timer;
 
 	public constructor() {
+		this.fireCooldown===undefined ? this.fireCooldown=new Value(500, 0, 10000) : this.fireCooldown.constructor(500, 0, 1000);
+		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
+		this.bulletPowerLossInterval===undefined ? this.bulletPowerLossInterval=new Value(500, 100) : this.bulletPowerLossInterval.constructor(500, 100);
+		this.bulletSpeed===undefined ? this.bulletSpeed=new Value(50, 0, 200) : this.bulletSpeed.constructor(50, 0, 200);
+		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.Timer() : this.autoFireTimer.constructor();
 	}
 
 	public setBulletType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType) {
@@ -25,13 +31,19 @@ class Gun {
 		return gun;
 	}
 
-	protected createBulletWithType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType): BulletType {
-		let bullet = new bulletType(this);
+	public createBulletWithType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType): BulletType {
+		//let bullet = new bulletType(this);
+		let bullet = this.ship.pools.newObject(bulletType, this);
+		//bullet.reset();
+		//bullet.setGun(this);
 		return bullet;
 	}
 
-	protected createBullet(): Bullet {
-		let bullet = new this.bulletType(this);
+	public createBullet(): Bullet {
+		//let bullet = new this.bulletType(this);
+		let bullet = this.ship.pools.newObject(this.bulletType, this);
+		//bullet.reset();
+		//bullet.setGun(this);
 		return bullet;
 	}
 
@@ -44,6 +56,9 @@ class Gun {
 	}
 
 	public fire() {
+		if (this.ship == null || !this.ship.isAlive()) {
+			return;
+		}
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
@@ -57,8 +72,15 @@ class Gun {
 	}
 
 	public set autoFire(value: boolean) {
+		if (this.ship == null || !this.ship.isAlive()) {
+			this.autoFireTimer.stop();
+			return;
+		}
 		if (this.autoFireTimer.running) {
 			this.autoFireTimer.stop();
+		}
+		if (this.autoFireTimer.running == value) {
+			return;
 		}
 		if (value) {
 			if (!this.autoFireTimer.hasOnTimerListener()) {

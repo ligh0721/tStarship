@@ -2,38 +2,33 @@ class Ship extends HpUnit {
 	readonly width: number;
 	readonly height: number;
 	
-	force: Force = new Force();
+	force: Force;
 	mainGun: Gun = null;
-	readonly guns: { [id: string]: Gun } = {};
-	readonly speed: Value = new Value(100);
+	readonly guns: { [id: string]: Gun };
+	readonly speed: Value;
 	hero: boolean = false;  // can use supply
 
-	private readonly timer: tutils.Timer = new tutils.Timer();
-	readonly buffs: { [id: string]: Buff } = {};
+	private readonly timer: tutils.Timer;
+	readonly buffs: { [id: string]: Buff };
 	buffsNum: number = 0;
 
 	// from unit
 	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
-	private onAddBuffThisObject: any;
+	private onAddBuffThisObject: any = null;
 
 	// from unit
 	private onRemoveBuffListener: (ship: Ship, buff: Buff)=>void = null;
-	private onRemoveBuffThisObject: any;
+	private onRemoveBuffThisObject: any = null;
 
 	public constructor(width: number, height: number) {
 		super();
 		this.width = width;
 		this.height = height;
-	}
-
-	public set(prop: any): void {
-		super.set(prop);
-		if (prop.hasOwnProperty('force')) {
-			this.force.force = prop['force'];
-		}
-		if (prop.hasOwnProperty('speed')) {
-			this.speed.baseValue = prop.speed;
-		}
+		this.force===undefined ? this.force=new Force() : this.force.constructor();
+		this.guns===undefined ? this.guns={} : this.guns.constructor();
+		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
+		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+		this.buffs===undefined ? this.buffs={} : this.buffs.constructor();
 	}
 
 	public move(x: number, y: number): void {
@@ -73,12 +68,42 @@ class Ship extends HpUnit {
 	}
 
 	protected onDying(src: HpUnit): void {
-		console.assert(src instanceof Ship);
+		this.status = UnitStatus.Dying;
+		//console.assert(src instanceof Ship);
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 		this.world.onShipDying(this, <Ship>src);
-		let tw = egret.Tween.get(this.gameObject);
-		//tw.to({alpha: 0}, 500);
+		let tw: egret.Tween;
+		let g: egret.Graphics = null;
+		if (this.gameObject instanceof egret.Shape) {
+			g = this.gameObject.graphics;
+		} else if (this.gameObject instanceof egret.Sprite) {
+			g = this.gameObject.graphics;
+		}
+		if (g != null) {
+			let from = 20;
+			let to = (this.width + this.height) / 2;
+			g.clear();
+			g.lineStyle(5, 0xffffff);
+			g.beginFill(0xfefe69, 1);
+			g.drawCircle(this.gameObject.anchorOffsetX, this.gameObject.anchorOffsetY, to);
+			g.endFill();
+			this.gameObject.scaleX = from / to;
+			this.gameObject.scaleY = this.gameObject.scaleX;
+			let effect = this.pools.newObject(Effect, 20, to);
+			effect.setOnChanged((effect: Effect):void=>{
+				this.gameObject.scaleX = effect.value / effect.maximum;
+				this.gameObject.scaleY = this.gameObject.scaleX;
+				this.gameObject.alpha = 1 - (effect.value - effect.minimum) / (effect.maximum - effect.minimum);
+			}, this);
+			tw = egret.Tween.get(effect);
+			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
+			tw.call(()=>{
+				this.pools.delObject(effect);
+			}, this);
+		} else {
+			tw = egret.Tween.get(this.gameObject);
+		}
 		tw.call(()=>{
 			this.status = UnitStatus.Dead;
 		}, this);
@@ -105,6 +130,9 @@ class Ship extends HpUnit {
 		this.guns[gun.id] = gun;
 		if (main == true) {
 			this.mainGun = gun;
+		}
+		if (this.force.force == 1) {
+			gun.bulletColor = 0x569cd6;
 		}
 		return gun;
 	}

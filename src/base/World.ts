@@ -3,6 +3,7 @@ class World {
 	readonly width: number;
 	readonly height: number;
 	readonly rect: egret.Rectangle;
+	readonly pools: tutils.ObjectPools = new tutils.ObjectPools();
 
 	readonly ships: { [id: string]: Ship } = {};
 	shipsNum: number = 0;
@@ -10,6 +11,8 @@ class World {
 	bulletsNum: number = 0;
 	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
+
+	private readonly obShip: Ship;
 
 	// 部分监听器可以从world广播优化成ship单播 
 	// from unit
@@ -32,13 +35,13 @@ class World {
 		this.height = height;
 		this.rect = new egret.Rectangle(0, 0, width, height);
 
-		// 创建世界飞船，用于保持持续碰撞检测
-        let worldShip = new Ship(1, 1);
-		worldShip.hero = true;
-        worldShip.force.force = tutils.EnemyForce;
-        this.addShip(worldShip);
-        worldShip.x = -200;
-        worldShip.y = -200;
+		// 创建观察者飞船，用于保持持续碰撞检测
+        this.obShip = new Ship(1, 1);
+		this.obShip.hero = true;
+        this.obShip.force.force = tutils.EnemyForce;
+        this.addShip(this.obShip);
+        this.obShip.x = -200;
+        this.obShip.y = -200;
 	}
 
 	public start(frameRate: number): void {
@@ -50,17 +53,57 @@ class World {
 	}
 
 	public getShip(id: string): Ship {
-		if (!this.ships.hasOwnProperty(id)) {
+		if (!(id in this.ships)) {
 			return null;
 		}
 		return this.ships[id];
 	}
 
 	public getBullet(id: string): Bullet {
-		if (!this.bullets.hasOwnProperty(id)) {
+		if (!(id in this.bullets)) {
 			return null;
 		}
 		return this.bullets[id];
+	}
+
+	public findNearestFrontAliveEnemyShip(x: number, y: number, force: Force, maxDist?: number): Ship {
+		let min = -1;
+		let target: Ship = null;
+		if (maxDist == undefined) {
+			maxDist = tutils.LongDistance;
+		}
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			if (!ship.isAlive() || !ship.force.isMyEnemy(force) || ship.gameObject.y>y || ship==this.obShip) {
+				continue;
+			}
+			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
+			if (dis <= maxDist && (target==null || min>dis)) {
+				min = dis;
+				target = ship;
+			}
+		}
+		return target;
+	}
+
+	public findNearestHeroShip(x: number, y: number, maxDist?: number): Ship {
+		let min = -1;
+		let target: Ship = null;
+		if (maxDist == undefined) {
+			maxDist = tutils.LongDistance;
+		}
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			if (ship==this.obShip || !ship.hero || !ship.isAlive()) {
+				continue;
+			}
+			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
+			if (dis <= maxDist && (target==null || min>dis)) {
+				min = dis;
+				target = ship;
+			}
+		}
+		return target;
 	}
 
 	public addShip(ship: Ship): Ship {
@@ -74,7 +117,7 @@ class World {
 	}
 
 	public removeShip(id: string) {
-		if (!this.ships.hasOwnProperty(id)) {
+		if (!(id in this.ships)) {
 			console.log('ship('+id+') not found');
 			return;
 		}
@@ -98,7 +141,7 @@ class World {
 	}
 
 	public removeBullet(id: string) {
-		if (!this.bullets.hasOwnProperty(id)) {
+		if (!(id in this.bullets)) {
 			console.log('bullet('+id+') not found');
 			return;
 		}
@@ -108,6 +151,7 @@ class World {
 		bullet.world = null;
 		delete this.bullets[id];
 		this.bulletsNum--;
+		this.pools.delObject(bullet);
 	}
 
 	public addSupply(supply: Supply): Supply {
@@ -121,7 +165,7 @@ class World {
 	}
 
 	public removeSupply(id: string) {
-		if (!this.supplies.hasOwnProperty(id)) {
+		if (!(id in this.supplies)) {
 			console.log('supply('+id+') not found');
 			return;
 		}
@@ -131,7 +175,12 @@ class World {
 		supply.world = null;
 		delete this.supplies[id];
 		this.suppliesNum--;
-		//console.log('ship('+id+') removed');
+		this.pools.delObject(supply);
+	}
+
+	public createSupply<SupplyType extends Supply>(ctor: new(...args: any[])=>SupplyType, ...args: any[]): SupplyType {
+		let supply = this.pools.newObject(ctor, ...args);
+		return supply;
 	}
 
 	protected step(dt: number) {
@@ -191,7 +240,7 @@ class World {
 					if (!ship2.isAlive()) {
 						continue;
 					}
-					if (ship2.force.isMyEnemy(ship.force) && ship2.hitTest(ship)) {
+					if (ship.force.isMyEnemy(ship2.force) && ship.hitTest(ship2)) {
 						//console.log("ship hit!");
 						ship.damaged(ship2.maxHp, ship2);
 						ship2.damaged(ship.maxHp, ship);
@@ -222,7 +271,7 @@ class World {
 						supply.status = UnitStatus.Dead;
 						continue;
 					}
-					if (ship.hitTest(supply)) {
+					if (supply.hitTest(ship)) {
 						supply.onHitShip(ship);
 						this.onShipHitSupply(ship, supply);
 						supply.status = UnitStatus.Dead;

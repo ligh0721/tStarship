@@ -3,18 +3,16 @@ class BattleLayer extends tutils.Layer {
     private hero: HeroShip;
 	private score: Score;
     private enemyCtrl: EnemyController;
-    private buffuis: BuffProgress[];
-    private bossui: BossHpProgress;  // = null FUCK???
-    private bossuiShowing: boolean;
+    private readonly buffuis: BuffProgress[] = [];
+    private bossui: BossHpProgress = null;
+    private bossuiShowing: boolean = true;
+    private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
+    private heroHpBar: ShapeProgress;
 
     $pathPercent: number = 0;
 	
 	protected onInit() {
         this.stage.frameRate = 60;
-        this.buffuis = [];
-        this.bossui = null;
-        this.bossuiShowing = true;
-
         let bg = tutils.createBitmapByName("grid100_png");
         this.layer.addChild(bg);
         let stageW = this.stage.stageWidth;
@@ -51,9 +49,9 @@ class BattleLayer extends tutils.Layer {
         this.world.addShip(hero);
         hero.force.force = tutils.Player1Force;
         hero.x = stageW * 0.5;
-        hero.y = stageH - hero.height * 0.5;
-        hero.speed.baseValue = 50;
-        let gun = Gun.createGun(Gun, Bullet);
+        hero.y = stageH - hero.height * 2;
+        hero.speed.baseValue = 300;
+        let gun = Gun.createGun(Gun, EllipseWaveBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
         gun.bulletPower.baseValue = 3;
@@ -63,6 +61,12 @@ class BattleLayer extends tutils.Layer {
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
+
+        // 创建玩家飞船血条
+        this.heroHpBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.LeftToRight, 200, 30, 0xcc3333, 0xcc3333);
+        hero.heroHpBar = this.heroHpBar;
+        this.heroHpBar.gameObject.x = 5;
+        this.heroHpBar.gameObject.y = 100;
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -72,7 +76,7 @@ class BattleLayer extends tutils.Layer {
         testSupplyTimer.start(5000, true, 0);
 
         // 创建测试敌军
-        //this.createTestEnemyShip(10);
+        //this.createTestEnemyShip(1);
 
         // 创建BOSS飞船
         //this.createTestMotherShip();
@@ -136,7 +140,10 @@ class BattleLayer extends tutils.Layer {
 
             this.score._score
         } else if (this.hero.force.isMyEnemy(ship.force)) {
-            this.score.setScore(this.score.score+100, 1);
+            //this.score.setScore(this.score.score+100, 1);
+            let supply = this.world.pools.newObject(CoinSupply, Math.floor(ship.maxHp*20/100)*100, this.score);
+            this.world.addSupply(supply);
+            supply.drop(ship.gameObject.x, ship.gameObject.y);
         }
     }
 
@@ -229,20 +236,34 @@ class BattleLayer extends tutils.Layer {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY-100);
+        this.beginDelta.x = evt.localX - this.hero.gameObject.x;
+        this.beginDelta.y = evt.localY - this.hero.gameObject.y;
+        //this.hero.move(evt.localX, evt.localY-100);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
         if (!this.hero.isAlive()) {
             return;
         }
-        this.hero.move(evt.localX, evt.localY-100);
+        let toX = evt.localX-this.beginDelta.x;
+        if (toX < 0) {
+            toX = 0;
+        } else if (toX > this.stage.stageWidth) {
+            toX = this.stage.stageWidth;
+        }
+        let toY = evt.localY-this.beginDelta.y;
+        if (toY < 0) {
+            toY = 0;
+        } else if (toY > this.stage.stageHeight) {
+            toY = this.stage.stageHeight;
+        }
+        this.hero.move(toX, toY);
     }
 
 	// FIXME: test
 	private createTestEnemyShip(n: number) {
 		for (let i=0; i<n; i++) {
-			let ship = new Ship(30, 60);
+			let ship = new EnemyShip(30, 60, "tri");
 			this.world.addShip(ship);
 			ship.force.force = tutils.EnemyForce;
             ship.resetHp(Math.floor(Math.random()*10)+1);
@@ -306,24 +327,26 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=0; i<100; i++) {
+        for (let i=0; i<10; i++) {
             let es = [];
-            let n = Math.floor(Math.random()*3+1);
+            let n = Math.floor(Math.random()*5+3);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
                 e.resetHp(5);
                 es.push(e);
             }
             
-            let delay = Math.random() * 5000;
-            let dur = Math.random() * 2000 + 2000;
+            let delay = Math.random() * 5000 + 2000;
+            let dur = Math.random() * 3000 + 3000;
             let interval = Math.random() * 200 + 100;
             let a = Math.random() * 200 + 80
             let x = Math.random() * (this.stage.stageWidth - a * 2) + a;
-            let t = Math.random() * 1000 + 1000;
+            let t = Math.random() * 1000 + 2000;
             let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
             this.enemyCtrl.addRush(rushItem);
         }
+        rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
+        this.enemyCtrl.addRush(rushItem);
         this.enemyCtrl.startRush(30);
     }
 
@@ -334,18 +357,18 @@ class BattleLayer extends tutils.Layer {
         ship.x = this.stage.stageWidth * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(1000);
+        ship.resetHp(200);
 
-        let gunShip = new MotherGunShip(40, 80);
+        let gunShip = new MotherGunShip(40, 80, "tri");
         ship.addGunShip(gunShip, -100, 100);
-        gunShip.resetHp(100);
+        gunShip.resetHp(50);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, Bullet);
         gunShip.addGun(gun);
         
-        let gunShip2 = new MotherGunShip(40, 80);
+        let gunShip2 = new MotherGunShip(40, 80, "rect");
         ship.addGunShip(gunShip2, 100, 100);
-        gunShip2.resetHp(200);
+        gunShip2.resetHp(50);
         gunShip2.angle = 180;
         let gun2 = Gun.createGun(ShotGun, Bullet);
         gun2.fireCooldown.baseValue = 1000;
@@ -390,7 +413,7 @@ class BattleLayer extends tutils.Layer {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*9);
+        let i = Math.floor(Math.random()*10);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);
@@ -444,6 +467,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "SoundWaveGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 5:
@@ -457,10 +481,11 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "ShakeWaveGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 6:
-            gun = Gun.createGun(ShotGun, Bullet);
+            gun = Gun.createGun(ShotGun, EllipseWaveBullet);
             (<ShotGun>gun).bulletAngleDelta = 10;
             (<ShotGun>gun).bulletNum = 5;
             gun.fireCooldown.baseValue = 600;
@@ -471,10 +496,11 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "ShotGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 7:
-            gun = Gun.createGun(RowGun, Bullet);
+            gun = Gun.createGun(RowGun, EllipseWaveBullet);
             (<RowGun>gun).bulletNum = 3;
             gun.fireCooldown.baseValue = 400;
             gun.bulletSpeed.baseValue = 60;
@@ -484,6 +510,7 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "RowGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
 
             case 8:
@@ -496,6 +523,20 @@ class BattleLayer extends tutils.Layer {
             supply = new GunSupply(gun);
             supply.text = "ExplosionGun";
             supply.color = 0xc586c0;
+            supply.pickDist = 0;
+            break;
+
+            case 9:
+            gun = Gun.createGun(GuideGun, ShakeWaveBullet);
+            gun.fireCooldown.baseValue = 300;
+            gun.bulletSpeed.baseValue = 80;
+            gun.bulletPower.baseValue = 1;
+            gun.bulletPowerLossPer = 1;
+            gun.bulletPowerLossInterval.baseValue = 1000;
+            supply = new GunSupply(gun);
+            supply.text = "GuideGun";
+            supply.color = 0xc586c0;
+            supply.pickDist = 0;
             break;
         }
 

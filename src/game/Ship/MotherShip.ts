@@ -1,5 +1,10 @@
 class MotherShip extends Ship {
-	readonly gunShips: { [id: string]: {gunShip: MotherGunShip, offsetX: number, offsetY: number} } = {};
+	readonly gunShips: { [id: string]: {gunShip: MotherGunShip, offsetX: number, offsetY: number} };
+
+	public constructor(width: number, height: number) {
+		super(width, height);
+		this.gunShips===undefined ? this.gunShips={} : this.gunShips.constructor();
+	}
 
 	public addGunShip(gunShip: MotherGunShip, offsetX: number, offsetY: number): MotherGunShip {
 		this.world.addShip(gunShip);
@@ -22,6 +27,17 @@ class MotherShip extends Ship {
 		delete this.gunShips[id];
 	}
 
+	protected onDying(src: HpUnit): void {
+		for (let i in this.gunShips) {
+			let gunShip = this.gunShips[i].gunShip;
+			if (gunShip.isAlive()) {
+				gunShip.damaged(gunShip.hp, null);
+			}
+		}
+		this.gameObject.cacheAsBitmap = false;
+		super.onDying(src);
+	}
+
 	protected onCreate(): egret.DisplayObject {
 		let gameObject = new egret.Shape();
 		gameObject.graphics.lineStyle(0);
@@ -32,6 +48,7 @@ class MotherShip extends Ship {
         gameObject.graphics.drawRoundRect(0, 0, this.width, this.height, 20, 20);
         gameObject.anchorOffsetX = this.width * 0.5;
         gameObject.anchorOffsetY = this.height * 0.5;
+		gameObject.cacheAsBitmap = true;
 		return gameObject;
 	}
 

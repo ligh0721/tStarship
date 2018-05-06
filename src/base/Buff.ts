@@ -1,6 +1,6 @@
 class Buff {
 	public id: string;
-	public ship: Ship = null;
+	public ship: Ship;
 	public readonly duration: number;
 	public name: string = "";
 	private $left: number;

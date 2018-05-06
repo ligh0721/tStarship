@@ -1,63 +1,82 @@
 class ExplosionBullet extends Bullet {
 	radius: number = 20;
-	explosionRadius: number = 200;
-	explosionPowerEvery = 2;
-	explosionPowerLossInterval = 200;
-	isExplosion: boolean = false;
-	$_explosion: number = 0;
-	
+	explosionRadius: number = 100;
+	explosionPowerEvery: number = 2;
+	explosionPowerLossInterval: number = 200;
 
+	// override
 	protected onCreate(): egret.DisplayObject {
-		let bullet = new egret.Shape();
-		if (!this.isExplosion) {
-			bullet.graphics.beginFill(0xffffff, 1.0);
-			bullet.graphics.lineStyle(1, 0xffffff);
-			bullet.graphics.drawCircle(0, 0, this.radius);
-			bullet.graphics.endFill();
+		if (this.gameObject !== undefined) {
+			return this.gameObject;
 		}
-        
+		let bullet = new egret.Shape();
+		bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
+		bullet.graphics.lineStyle(1, this.gun.bulletColor);
+		bullet.graphics.drawCircle(0, 0, this.radius);
+		bullet.graphics.endFill();
 		return bullet;
-	}
-
-	public get $explosion(): number {
-		return this.$_explosion;
-	}
-
-	public set $explosion(value: number) {
-		this.$_explosion = value;
-		let r = this.radius + (this.explosionRadius - this.radius) * value
-		let g = (<egret.Shape>this.gameObject).graphics;
-		g.clear();
-		g.lineStyle(10, 0xffffff);
-		g.drawCircle(0, 0, r);
-		this.gameObject.alpha = (1-value);
 	}
 
 	protected onDying(src: HpUnit) {
 		super.onDying(src);
-		if (this.isExplosion) {
-			return;
-		}
+		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
+		bullet.radius = this.radius;
+		bullet.explosionRadius = this.explosionRadius;
+		bullet.powerLossPer = 0.0001;
+		bullet.resetHp(this.explosionPowerEvery/bullet.powerLossPer);
+		bullet.powerLossInterval = this.explosionPowerLossInterval;
+		bullet.staticBounds = false;
+		this.world.addBullet(bullet);
+		bullet.gameObject.x = this.gameObject.x;
+		bullet.gameObject.y = this.gameObject.y;
 
-		let explosion = new ExplosionBullet(this.gun);
-		explosion.isExplosion = true;
-		explosion.radius = this.radius;
-		explosion.explosionRadius = this.explosionRadius;
-		explosion.powerLossPer = 0.0001;
-		explosion.resetHp(this.explosionPowerEvery/explosion.powerLossPer);
-		explosion.powerLossInterval = this.explosionPowerLossInterval;
-		explosion.staticBounds = false;
-		this.world.addBullet(explosion);
-		explosion.x = this.gameObject.x;
-		explosion.y = this.gameObject.y;
-
-		let tw = egret.Tween.get(explosion);
-		tw.to({$explosion: 1}, 400, egret.Ease.getPowOut(3));
-		//tw.wait(2000);
+		let tw = egret.Tween.get(bullet);
+		tw.to({factor: 1}, 400, egret.Ease.getPowOut(3));
 		tw.call(()=>{
-			explosion.damaged(explosion.hp, null);
+			bullet.damaged(bullet.hp, null);
 		}, this);
-		tw = egret.Tween.get(explosion.gameObject);
-		tw.to({alpha: 0}, 500, egret.Ease.getPowOut(5));
+	}
+}
+
+class ExplosionEffectBullet extends Bullet {
+	radius: number = 20;
+	explosionRadius: number = 100;
+	explosionPowerEvery:number = 2;
+	explosionPowerLossInterval: number = 200;
+	private $factor: number = 0;
+	private orgWidth: number;
+	private orgHeight: number;
+
+	// override
+	protected onCreate(): egret.DisplayObject {
+		if (this.gameObject !== undefined) {
+			return this.gameObject;
+		}
+		let bullet = new egret.Shape();
+		bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
+		bullet.graphics.lineStyle(1, this.gun.bulletColor);
+		bullet.graphics.drawCircle(0, 0, this.explosionRadius);
+		bullet.graphics.endFill();
+		this.orgWidth = bullet.width;
+		this.orgHeight = bullet.height;
+		bullet.scaleX = this.radius / this.explosionRadius;
+		bullet.scaleY = bullet.scaleX;
+		bullet.width = this.orgWidth * bullet.scaleX;
+		bullet.height = this.orgHeight * bullet.scaleY;
+		return bullet;
+	}
+
+	public get factor(): number {
+		return this.$factor;
+	}
+
+	public set factor(value: number) {
+		this.$factor = value;
+		this.gameObject.scaleX = value - (this.radius / this.explosionRadius) * (value - 1);
+		this.gameObject.scaleY = this.gameObject.scaleX;
+		this.gameObject.width = this.orgWidth * this.gameObject.scaleX;
+		this.gameObject.height = this.orgHeight * this.gameObject.scaleY;
+		this.gameObject.alpha = (1-value);
+		//console.log(this.gameObject.scaleX);
 	}
 }

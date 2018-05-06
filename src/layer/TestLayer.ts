@@ -20,5 +20,15 @@ class TestLayer extends tutils.Layer {
         prog.gameObject.x = 500;
         prog.gameObject.y = 500;
         //prog.percent = 1;
+        let cl:any = TestLayer;
+        console.log(cl.name);
+        let p = new tutils.ObjectPools();
+        let ship2: Ship = new HeroShip(1, 2);
+        ship2.id = "11";
+        p.delObject(ship2);
+        let ship3 = p.newObject(HeroShip);
+        console.log(ship3.id);
+        let ship4 = p.newObject(HeroShip, 10, 20);
+        console.log(ship4.width);
 	}
 }

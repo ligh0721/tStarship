@@ -1,5 +1,5 @@
 class EaseGun extends Gun {
-	ease: Function;
+	ease: Function = null;
 
 	public fire() {
 		let firePos = this.getFirePosition();

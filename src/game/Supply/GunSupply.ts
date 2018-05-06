@@ -17,6 +17,8 @@ class GunSupply extends Supply {
 				(<EaseGun>ship.mainGun).bulletPower.baseValue += 5;
 			} else if ((ship.mainGun instanceof SoundWaveGun) && (this.gun instanceof SoundWaveGun)) {
 				(<SoundWaveGun>ship.mainGun).bulletNum += 1;
+			} else if ((ship.mainGun instanceof GuideGun) && (this.gun instanceof GuideGun)) {
+				ship.mainGun.bulletPower.baseValue += 1;
 			} else {
 				ship.removeGun(ship.mainGun.id);
 				ship.addGun(this.gun, true).autoFire = true;

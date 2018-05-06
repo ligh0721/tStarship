@@ -4,8 +4,13 @@ class SatelliteGun extends Gun {
 	period: number = 1000;
 	antiClockWise: boolean = false;
 	private bullets: string[] = null;
-	private readonly timer: tutils.Timer = new tutils.Timer();
+	private readonly timer: tutils.Timer;
 	private radius: number;
+
+	public constructor() {
+		super();
+		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+	}
 
 	public fire() {
 		if (this.bullets == null) {

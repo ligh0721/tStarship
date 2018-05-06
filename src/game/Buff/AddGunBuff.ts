@@ -8,7 +8,7 @@ class AddGunBuff extends Buff {
 
 	// override
 	public onAddBuff() {
-		console.log('AddGunBuff::onAddBuff');
+		//console.log('AddGunBuff::onAddBuff');
 		for (let i in this.guns) {
 			let gun = this.guns[i];
 			this.ship.addGun(gun).autoFire = true;
@@ -17,10 +17,10 @@ class AddGunBuff extends Buff {
 
 	// override
 	public onRemoveBuff() {
-		console.log('AddGunBuff::onRemoveBuff');
+		//console.log('AddGunBuff::onRemoveBuff');
 		for (let i in this.guns) {
 			let gun = this.guns[i];
-			console.log('removeGun('+gun.id+')');
+			//console.log('removeGun('+gun.id+')');
 			this.ship.removeGun(gun.id);
 		}
 	}
