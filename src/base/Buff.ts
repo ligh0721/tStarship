@@ -11,12 +11,16 @@ class Buff {
 		this.$left = duration;
 	}
 
-	// override
-	public onAddBuff() {
+	public reset(): void {
+		this.$left = this.duration;
 	}
 
 	// override
-	public onRemoveBuff() {
+	public onAddBuff(): void {
+	}
+
+	// override
+	public onRemoveBuff(): void {
 	}
 
 	public step(dt: number): boolean {

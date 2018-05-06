@@ -1,9 +1,11 @@
 class HeroShip extends Ship {
     hitRadius: number = 5;
     private hitRect: egret.Rectangle;
-    private power: number = 0;
-    private maxPower: number = 100;
+    power: number = 0;
+    maxPower: number = 100;
     heroHpBar: ShapeProgress = null;
+    heroPowerBar: ShapeProgress = null;
+    skill: Skill = null;
 
     public constructor(width: number, height: number) {
 		super(width, height);
@@ -17,6 +19,41 @@ class HeroShip extends Ship {
             this.heroHpBar.percent = this.hp / this.maxHp;
         }
 	}
+
+    public addPower(value: number): void {
+        this.power += value;
+        if (this.power > this.maxPower) {
+            this.power = this.maxPower;
+        }
+        if (this.heroPowerBar) {
+            this.heroPowerBar.percent = this.power / this.maxPower;
+        }
+    }
+
+    public clearPower(): void {
+        this.power = 0;
+        if (this.heroPowerBar) {
+            this.heroPowerBar.percent = this.power / this.maxPower;
+        }
+    }
+
+    public isPowerFull(): boolean {
+        return this.power >= this.maxPower;
+    }
+
+    public setSkill(skill: Skill): Skill {
+        skill.ship = this;
+        this.skill = skill;
+        return skill;
+    }
+
+    public castSkill(): void {
+        if (this.skill == null) {
+            return;
+        }
+        this.clearPower();
+        this.skill.cast();
+    }
 
     protected onCreate(): egret.DisplayObject {
 		let gameObject = new egret.Shape();

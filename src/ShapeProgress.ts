@@ -38,8 +38,8 @@ class ShapeProgress {
 		fill.x = 5;
 		fill.y = 5;
 		//fill.cacheAsBitmap = true;
-		fill.width+=1;
-		fill.height+=1;
+		fill.width += 1;
+		fill.height += 1;
 		this.fill = new tutils.ProgressFill(fill, this.direction);
 		return gameObject;
 	}

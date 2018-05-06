@@ -7,7 +7,7 @@ class AddGunBuff extends Buff {
 	}
 
 	// override
-	public onAddBuff() {
+	public onAddBuff(): void {
 		//console.log('AddGunBuff::onAddBuff');
 		for (let i in this.guns) {
 			let gun = this.guns[i];
@@ -16,7 +16,7 @@ class AddGunBuff extends Buff {
 	}
 
 	// override
-	public onRemoveBuff() {
+	public onRemoveBuff(): void {
 		//console.log('AddGunBuff::onRemoveBuff');
 		for (let i in this.guns) {
 			let gun = this.guns[i];

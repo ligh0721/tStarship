@@ -12,7 +12,7 @@ class GunBuff extends Buff {
 	}
 
 	// override
-	public onAddBuff() {
+	public onAddBuff(): void {
 		//console.log('GunBuff::onAddBuff');
 		for (let id in this.ship.guns) {
 			let gun = this.ship.guns[id];
@@ -24,7 +24,7 @@ class GunBuff extends Buff {
 	}
 
 	// override
-	public onRemoveBuff() {
+	public onRemoveBuff(): void {
 		//console.log('GunBuff::onRemoveBuff');
 		while (this.guns.length > 0) {
 			let gun = this.guns.pop();

@@ -1,6 +1,6 @@
 module tutils {
 	export class Timer {
-		public interval: number;
+		private $interval: number;
 		public times: number = 1;
 		public autoSkip: boolean = true;
 		private onTimerListener: (dt: number)=>void = null;
@@ -9,6 +9,18 @@ module tutils {
 		private $tick: number;  // last tick
 		private $left: number;
 		private $wantTick: number;
+		private static MinInterval: number = 1000/60;
+
+		public get interval(): number {
+			return this.$interval;
+		}
+
+		public set interval(value: number) {
+			if (value < Timer.MinInterval) {
+				value = Timer.MinInterval;
+			}
+			this.$interval = value;
+		}
 
 		public onTimer(evt: egret.TimerEvent) {
 			if (!this.$running) {
@@ -33,9 +45,9 @@ module tutils {
 
 			let interval: number;
 			do {
-				interval = Math.max(this.interval-egret.getTimer()+this.$wantTick, 0)
+				interval = Math.max(this.$interval-egret.getTimer()+this.$wantTick, 0)
 				//console.log('@@'+start+', '+interval+', '+this.$wantTick+', '+this.interval);
-				this.$wantTick += this.interval;
+				this.$wantTick += this.$interval;
 			} while (this.autoSkip && interval==0);
 			let tw = egret.Tween.get(this);
 			tw.wait(interval);
@@ -67,9 +79,9 @@ module tutils {
 
 			let tw = egret.Tween.get(this);
 			if (instantly != true) {
-				let interval = Math.max(this.interval-egret.getTimer()+start, 0);
+				let interval = Math.max(this.$interval-egret.getTimer()+start, 0);
 				tw.wait(interval);
-				this.$wantTick += this.interval;
+				this.$wantTick += this.$interval;
 			}
 			tw.call(this.onTimer, this, null);
 			return this.$tick;

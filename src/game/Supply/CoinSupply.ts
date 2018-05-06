@@ -1,5 +1,6 @@
 class CoinSupply extends Supply {
 	private coins: number;
+	power: number;
 	private score: Score;
 
 	public constructor(coins: number, score: Score) {
@@ -22,5 +23,8 @@ class CoinSupply extends Supply {
 	// override
 	public onHitShip(ship: Ship): void {
 		this.score.score += this.coins;
+		if (ship instanceof HeroShip) {
+			ship.addPower(this.power);
+		}
 	}
 }

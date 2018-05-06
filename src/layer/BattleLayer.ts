@@ -8,6 +8,7 @@ class BattleLayer extends tutils.Layer {
     private bossuiShowing: boolean = true;
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private heroHpBar: ShapeProgress;
+    private heroPowerBar: ShapeProgress;
 
     $pathPercent: number = 0;
 	
@@ -51,6 +52,7 @@ class BattleLayer extends tutils.Layer {
         hero.x = stageW * 0.5;
         hero.y = stageH - hero.height * 2;
         hero.speed.baseValue = 300;
+        hero.resetHp(100);
         let gun = Gun.createGun(Gun, EllipseWaveBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
@@ -62,11 +64,25 @@ class BattleLayer extends tutils.Layer {
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
 
-        // 创建玩家飞船血条
-        this.heroHpBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.LeftToRight, 200, 30, 0xcc3333, 0xcc3333);
+        let buff = new GunBuff(5000, -0.80, 0, +1.00);
+        let skill = new AddBuffSkill([buff]);
+        hero.setSkill(skill);
+
+        // 创建玩家飞船血条、能量条
+        this.heroHpBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.BottomToTop, 50, 100, 0xf48771, 0xf48771);
         hero.heroHpBar = this.heroHpBar;
-        this.heroHpBar.gameObject.x = 5;
-        this.heroHpBar.gameObject.y = 100;
+        this.heroHpBar.gameObject.x = 10;
+        this.heroHpBar.gameObject.y = this.stage.stageHeight - 100 - 10;
+        this.heroHpBar.percent = this.hero.hp / this.hero.maxHp;
+
+        this.heroPowerBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.BottomToTop, 50, 100, 0x9cdcfe, 0x9cdcfe);
+        hero.heroPowerBar = this.heroPowerBar;
+        this.heroPowerBar.gameObject.x = this.stage.stageWidth - 50 - 10;
+        this.heroPowerBar.gameObject.y = this.stage.stageHeight - 100 - 10;
+        this.heroPowerBar.percent = this.hero.power / this.hero.maxPower;
+        this.heroPowerBar.gameObject.touchEnabled = true;
+        this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
+        this.hero.addPower(100);
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -87,6 +103,13 @@ class BattleLayer extends tutils.Layer {
         // 创建敌军小队
         this.createTestEnemyRushes();
 	}
+
+    protected onTouchTapHeroPower(evt: egret.TouchEvent): void {
+        if (evt.target != this.heroPowerBar.gameObject || !this.hero.isPowerFull()) {
+            return;
+        }
+        this.hero.castSkill();
+    }
 
     public get pathPercent(): number {
         return this.$pathPercent;
@@ -133,9 +156,10 @@ class BattleLayer extends tutils.Layer {
             txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 + 50;
 
             this.score._score
-        } else if (this.hero.force.isMyEnemy(ship.force)) {
+        } else if (this.hero.force.isMyEnemy(ship.force) && killer == this.hero) {
             //this.score.setScore(this.score.score+100, 1);
             let supply = this.world.pools.newObject(CoinSupply, Math.floor(ship.maxHp*20/100)*100, this.score);
+            supply.power = ship.maxHp;
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
         }
@@ -145,7 +169,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onShipAddBuff(ship: Ship, buff: Buff) {
-        const baseX = 10;
+        const baseX = 200;
         const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
         const dt = 10;
         let color: number = 0xffffff;
@@ -165,6 +189,9 @@ class BattleLayer extends tutils.Layer {
             case "SatelliteGun":
             color = 0xdcdcaa;
             break;
+
+            default:
+            return;
         }
 
         let buffui = new BuffProgress(this.layer, buff, color);
@@ -203,7 +230,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     private updateBuffUIPosition() {
-        const baseX = 10;
+        const baseX = 200;
         const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
         const dt = 10;
         for (let i=0; i<this.buffuis.length; i++) {
@@ -227,7 +254,8 @@ class BattleLayer extends tutils.Layer {
     }
 
 	private onTouchBegin(evt: egret.TouchEvent) {
-        if (!this.hero.isAlive()) {
+        if (evt.target != this.layer || !this.hero.isAlive()) {
+            this.beginDelta.x = -1;
             return;
         }
         this.beginDelta.x = evt.localX - this.hero.gameObject.x;
@@ -236,7 +264,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
-        if (!this.hero.isAlive()) {
+        if (this.beginDelta.x == -1 || !this.hero.isAlive()) {
             return;
         }
         let toX = evt.localX-this.beginDelta.x;
