@@ -99,8 +99,8 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        tutils.Layer.createAt(HeroShipsLayer, this);
-        // tutils.Layer.createAt(BattleLayer, this);
+        // tutils.Layer.createAt(HeroShipsLayer, this);
+        tutils.Layer.createAt(BattleLayer, this);
         // tutils.Layer.createAt(PathLayer, this);
         // tutils.Layer.createAt(TestLayer, this);
     }
