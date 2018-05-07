@@ -178,8 +178,8 @@ class BattleLayer extends tutils.Layer {
             this.score._score
         } else if (this.hero.force.isMyEnemy(ship.force) && killer == this.hero) {
             let score = Math.floor(ship.maxHp*20/100)*100;
-            this.score.setScore(this.score.score+score, 200);
-            //this.score.score += score;
+            // this.score.setScore(this.score.score+score, 200);
+            this.score.score += score;
             let supply = this.world.pools.newObject(PowerSupply, ship.maxHp);
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
