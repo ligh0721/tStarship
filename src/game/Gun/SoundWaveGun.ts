@@ -4,6 +4,7 @@ class SoundWaveGun extends Gun {
 	bulletNum: number = 4;
 
 	public fire() {
+		tutils.playSound("SoundWaveGunShoot_mp3");
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		for (let i=0; i<n; i++) {

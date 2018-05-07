@@ -110,6 +110,7 @@ class BattleLayer extends tutils.Layer {
         // this.enemyCtrl.addRush(rushItem);
 
         // this.enemyCtrl.startRush(30);
+        tutils.playSound("Bgmusic_mp3");
 	}
 
     protected onTouchTapHeroPower(evt: egret.TouchEvent): void {
@@ -117,6 +118,7 @@ class BattleLayer extends tutils.Layer {
             return;
         }
         if (this.hero.castSkill()) {
+            tutils.playSound("Powerup_mp3");
             this.turbo(200, 20, 5000);
         }
     }
@@ -157,6 +159,8 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onShipDying(ship: Ship, killer: Ship) {
+        const sounds = ["Explosion0_mp3", "Explosion2_mp3"];
+        tutils.playSound(sounds[Math.floor(Math.random()*sounds.length)]);
         if (this.hero == ship) {
             // TODO: GAME OVER
             let txt = new egret.TextField();
@@ -214,6 +218,7 @@ class BattleLayer extends tutils.Layer {
             default:
             return;
         }
+        tutils.playSound("Powerup_mp3");
 
         let buffui = new BuffProgress(this.layer, buff, color);
         buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * this.buffuis.length;

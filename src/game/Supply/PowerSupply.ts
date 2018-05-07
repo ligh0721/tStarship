@@ -21,6 +21,7 @@ class PowerSupply extends Supply {
 	public onHitShip(ship: Ship): void {
 		if (ship instanceof HeroShip) {
 			ship.addPower(this.power);
+			tutils.playSound("PickPower_mp3");
 		}
 	}
 }

@@ -220,6 +220,7 @@ class World {
 					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
 					ship.damaged(dt, bullet.gun.ship);
 					bullet.damaged(dt, ship);
+					//tutils.playSound("Hit_mp3");
 					if (!ship.isAlive()) {
 						//console.log("dead!");
 						//console.log('ship('+shipId+') push toDel '+ship.hp.hp);

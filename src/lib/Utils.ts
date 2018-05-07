@@ -46,4 +46,9 @@ module tutils {
         gameObject.texture = texture;
         return gameObject;
     }
+
+	export function playSound(name: string) {
+		let sound: egret.Sound = RES.getRes(name);
+  		sound.play(0, 1);
+	}
 }

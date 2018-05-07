@@ -3,6 +3,7 @@ class ShotGun extends Gun {
 	bulletAngleDelta: number = 15;
 	
 	public fire() {
+		tutils.playSound("RowGunShoot_mp3");
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		let r = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2;
