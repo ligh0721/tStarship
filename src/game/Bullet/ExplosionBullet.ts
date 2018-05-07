@@ -49,7 +49,7 @@ class ExplosionEffectBullet extends Bullet {
 
 	// override
 	protected onCreate(): egret.DisplayObject {
-		tutils.playSound("Explosion1_mp3");
+		tutils.playSound("ExplosionBullet_mp3");
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}

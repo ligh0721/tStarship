@@ -110,7 +110,7 @@ class BattleLayer extends tutils.Layer {
         // this.enemyCtrl.addRush(rushItem);
 
         // this.enemyCtrl.startRush(30);
-        tutils.playSound("Bgmusic_mp3");
+        tutils.playSound("Bgmusic_mp3", 0);
 	}
 
     protected onTouchTapHeroPower(evt: egret.TouchEvent): void {
