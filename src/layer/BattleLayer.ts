@@ -15,7 +15,7 @@ class BattleLayer extends tutils.Layer {
 	
 	protected onInit() {
         this.stage.frameRate = 60;
-        this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bg_jpg").create();
+        this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "grid100_png").create();
         this.bgCtrl.start(20);
         this.layer.addChild(this.bgCtrl.gameObject);
         let stageW = this.stage.stageWidth;
@@ -178,8 +178,10 @@ class BattleLayer extends tutils.Layer {
 
             this.score._score
         } else if (this.hero.force.isMyEnemy(ship.force) && killer == this.hero) {
-            //this.score.setScore(this.score.score+100, 1);
-            let supply = this.world.pools.newObject(CoinSupply, Math.floor(ship.maxHp*20/100)*100, this.score);
+            let score = Math.floor(ship.maxHp*20/100)*100;
+            //this.score.setScore(this.score.score+score, 0);
+            this.score.score += score;
+            let supply = this.world.pools.newObject(CoinSupply, 0, this.score);
             supply.power = ship.maxHp;
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
@@ -400,7 +402,7 @@ class BattleLayer extends tutils.Layer {
         ship.x = this.stage.stageWidth * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(2000);
+        ship.resetHp(1000);
 
         let gunShip = new MotherGunShip(40, 80, "tri");
         ship.addGunShip(gunShip, -100, 100);
@@ -411,7 +413,7 @@ class BattleLayer extends tutils.Layer {
         
         let gunShip2 = new MotherGunShip(40, 80, "rect");
         ship.addGunShip(gunShip2, 100, 100);
-        gunShip2.resetHp(100);
+        gunShip2.resetHp(150);
         gunShip2.angle = 180;
         let gun2 = Gun.createGun(ShotGun, Bullet);
         gun2.fireCooldown.baseValue = 1000;
