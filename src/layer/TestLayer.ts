@@ -31,11 +31,12 @@ class TestLayer extends tutils.Layer {
         let ship4 = p.newObject(HeroShip, 10, 20);
         console.log(ship4.width);
 
-        let e = new egret.EventDispatcher();
-        e.addEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
+        let t = new tutils.Timer();
+        t.setOnTimerListener(this.onTimer, this);
+        t.start(1000, false, 0);
 	}
 
-    public onTimer(evt: egret.TimerEvent) {
-        console.log(1);
+    public onTimer(dt: number) {
+        console.log(egret.getTimer());
     }
 }

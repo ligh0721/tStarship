@@ -9,13 +9,13 @@ class BackgroundController {
 	private children: egret.DisplayObject[] = [];
 	private timer: tutils.Timer = new tutils.Timer();
 	//private timer: egret.Timer;
-	private tick: number;
+	//private tick: number;
 
 	public constructor(width: number, height: number, bgname: string) {
 		this.width = width;
 		this.height = height;
 		this.bgname = bgname;
-		//this.timer.setOnTimerListener(this.onTimer, this);
+		this.timer.setOnTimerListener(this.onTimer, this);
 		//this.timer = new egret.Timer(1000/60, 0);
 		//this.timer.addEventListener(egret.TimerEvent.TIMER, this.onTimer, this);
 	}
@@ -48,7 +48,6 @@ class BackgroundController {
 			bd.y = minY - this.childHeight;
 			minY = bd.y;
 		}
-		console.log(this.children.length);
 
 		return this;
 	}
@@ -56,8 +55,8 @@ class BackgroundController {
 	public start(speed: number): void {
 		this.speed = speed;
 		this.timer.start(1000/60, true, 0);
-		// this.timer.start();
-		this.tick = egret.getTimer();
+		//this.timer.start();
+		//this.tick = egret.getTimer();
 	}
 
 	public stop(): void {
@@ -66,9 +65,9 @@ class BackgroundController {
 
 	public onTimer(dt: number): void {
 	//public onTimer(evt: egret.TimerEvent) {
-		let now = egret.getTimer();
-		dt = now - this.tick;
-		this.tick = now;
+		// let now = egret.getTimer();
+		// dt = now - this.tick;
+		// this.tick = now;
 		let delta = this.speed * dt / tutils.SpeedFactor;
 		let outOf: egret.DisplayObject[] = [];
 		let minY: number;

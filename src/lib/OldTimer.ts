@@ -1,5 +1,5 @@
 module tutils {
-	export class Timer {
+	export class OldTimer {
 		private $interval: number;
 		public times: number = 1;
 		public autoSkip: boolean = true;
@@ -10,23 +10,14 @@ module tutils {
 		private $left: number;
 		private $wantTick: number;
 		private static MinInterval: number = 1000/60;
-		private timer: egret.DisplayObject;
-
-		public constructor() {
-			if (this.timer===undefined) {
-				this.timer=new egret.DisplayObject();
-			} else {
-				this.timer.removeEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
-			}
-		}
 
 		public get interval(): number {
 			return this.$interval;
 		}
 
 		public set interval(value: number) {
-			if (value < Timer.MinInterval) {
-				value = Timer.MinInterval;
+			if (value < OldTimer.MinInterval) {
+				value = OldTimer.MinInterval;
 			}
 			this.$interval = value;
 		}
@@ -36,9 +27,6 @@ module tutils {
 				return;
 			}
 			let start = egret.getTimer();
-			if (start < this.$wantTick) {
-				return;
-			}
 			let last = this.$tick;
 			this.$tick = start;
 			if (this.times > 0) {
@@ -55,9 +43,15 @@ module tutils {
 				return;
 			}
 
+			let interval: number;
 			do {
+				interval = Math.max(this.$interval-egret.getTimer()+this.$wantTick, 0)
+				//console.log('@@'+start+', '+interval+', '+this.$wantTick+', '+this.interval);
 				this.$wantTick += this.$interval;
-			} while (this.autoSkip && start > this.$wantTick);
+			} while (this.autoSkip && interval==0);
+			let tw = egret.Tween.get(this);
+			tw.wait(interval);
+			tw.call(this.onTimer, this, null);
 		}
 
 		public setOnTimerListener(listener: (dt: number)=>void, thisObject?: any) {
@@ -76,21 +70,25 @@ module tutils {
 			}
 			this.$tick = start;
 			this.$wantTick = start;
-			this.timer.addEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
 			this.$running = true;
+			egret.Tween.removeTweens(this);
 			this.interval = interval;
 			this.times = times==undefined ? 1 : times;
 			this.autoSkip = autoSkip!=false;
 			this.$left = this.times;
 
+			let tw = egret.Tween.get(this);
 			if (instantly != true) {
+				let interval = Math.max(this.$interval-egret.getTimer()+start, 0);
+				tw.wait(interval);
 				this.$wantTick += this.$interval;
 			}
+			tw.call(this.onTimer, this, null);
 			return this.$tick;
 		}
 
 		public stop(): void {
-			this.timer.removeEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
+			let tw = egret.Tween.removeTweens(this);
 			this.$running = false;
 		}
 
