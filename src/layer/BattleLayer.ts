@@ -107,6 +107,7 @@ class BattleLayer extends tutils.Layer {
         this.heroHpBar.gameObject.x = 10;
         this.heroHpBar.gameObject.y = this.stage.stageHeight - 100 - 10;
         this.heroHpBar.percent = this.hero.hp / this.hero.maxHp;
+        this.heroHpBar.gameObject.visible = false;
 
         this.heroPowerBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.BottomToTop, 50, 100, 0x9cdcfe, 0x9cdcfe);
         hero.heroPowerBar = this.heroPowerBar;
@@ -115,6 +116,7 @@ class BattleLayer extends tutils.Layer {
         this.heroPowerBar.percent = this.hero.power / this.hero.maxPower;
         this.heroPowerBar.gameObject.touchEnabled = true;
         this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
+        this.heroPowerBar.gameObject.visible = false;
         this.hero.addPower(100);
 
         // 创建分数板
@@ -149,8 +151,11 @@ class BattleLayer extends tutils.Layer {
         tw.to({y: this.stage.stageHeight - 200}, 1000);
         tw.wait(1000);
         tw.call(() => {
-            this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.heroHpBar.gameObject.visible = true;
+            this.heroPowerBar.gameObject.visible = true;
             this.hero.mainGun.autoFire = true;
+
+            this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             // 创建敌军小队
             this.createTestEnemyRushes();
         });
