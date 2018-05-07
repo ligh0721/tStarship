@@ -11,6 +11,8 @@ class BattleLayer extends tutils.Layer {
     private heroPowerBar: ShapeProgress;
     private bgCtrl: BackgroundController;
 
+    private txtPushStart: egret.TextField;
+
     private sldHeroScale: eui.HSlider;
     private txtHeroScale: egret.TextField;
 
@@ -24,8 +26,6 @@ class BattleLayer extends tutils.Layer {
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
         this.layer.touchEnabled = true;
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
 		
         // 创建世界
         this.world = new World(this.layer, stageW, stageH);
@@ -38,23 +38,51 @@ class BattleLayer extends tutils.Layer {
         // this.world.dbgTextField = new egret.TextField()
         // this.world.dbgDrawSprite.addChild(this.world.dbgTextField);
 
-        // 创建分数板
-		let score = new Score(this.layer);
-		score.digits = 10;
-		score.score = 0;
-        this.score = score;
-        this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.textWidth;
-
         // 创建敌军控制器
         this.enemyCtrl = new EnemyController(this.world);
+
+        // 创建PUSH START
+        this.createPushStart();
+	}
+
+    protected createPushStart(): void {
+        this.txtPushStart = new egret.TextField();
+        this.txtPushStart.text = "PUSH  START";
+        this.txtPushStart.bold = true;
+        this.txtPushStart.size = 60;
+        this.layer.addChild(this.txtPushStart);
+        this.txtPushStart.x = (this.stage.stageWidth - this.txtPushStart.textWidth) * 0.5;
+        this.txtPushStart.y = (this.stage.stageHeight - this.txtPushStart.textHeight) * 0.7;
+
+        let change = (txt: egret.TextField) => {
+            let tw = egret.Tween.get(txt);
+            tw.to({ "alpha": 1 }, 500);
+            tw.wait(1000);
+            tw.to({ "alpha": 0 }, 500);
+            tw.call(change, this, [txt]);
+        }
+        change(this.txtPushStart);
+        this.layer.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart, this);
+    }
+
+    protected onTouchTapPushStart(evt: egret.TouchEvent): void {
+        this.layer.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart, this);
+        egret.Tween.removeTweens(this.txtPushStart);
+        this.layer.removeChild(this.txtPushStart);
+        this.txtPushStart = null;
+        this.startGame();
+    }
+
+    protected startGame(): void {
+        tutils.playSound("Bgmusic_mp3", 0);
 
         // 创建玩家飞船
         let hero = new HeroShip(40, 80);
         this.hero = hero;
         this.world.addShip(hero);
         hero.force.force = tutils.Player1Force;
-        hero.x = stageW * 0.5;
-        hero.y = stageH - hero.height * 2;
+        hero.x = this.stage.stageWidth * 0.5;
+        hero.y = this.stage.stageHeight + 200;
         hero.speed.baseValue = 200;
         hero.resetHp(100);
         let gun = Gun.createGun(Gun, EllipseWaveBullet);
@@ -63,7 +91,7 @@ class BattleLayer extends tutils.Layer {
         gun.bulletPower.baseValue = 3;
         gun.bulletPowerLossPer = 1;
         gun.bulletPowerLossInterval.baseValue = 1000;
-        hero.addGun(gun, true).autoFire = true;
+        hero.addGun(gun, true);
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
@@ -88,6 +116,13 @@ class BattleLayer extends tutils.Layer {
         this.heroPowerBar.gameObject.touchEnabled = true;
         this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
         this.hero.addPower(100);
+
+        // 创建分数板
+		let score = new Score(this.layer);
+		score.digits = 10;
+		score.score = 0;
+        this.score = score;
+        this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.textWidth;
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -108,16 +143,18 @@ class BattleLayer extends tutils.Layer {
         // 绘制测试路径
         //this.drawTestPath();
 
-        // 创建敌军小队
-        this.createTestEnemyRushes();
-        // let enemy1 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
-        // enemy1.resetHp(5);
-        // let rushItem = new RushItem([enemy1], 'path', 1000, 4000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
-        // this.enemyCtrl.addRush(rushItem);
-
-        // this.enemyCtrl.startRush(30);
-        tutils.playSound("Bgmusic_mp3", 0);
-	}
+        // 最后添加事件监听器
+        this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        let tw = egret.Tween.get(this.hero);
+        tw.to({y: this.stage.stageHeight - 200}, 1000);
+        tw.wait(1000);
+        tw.call(() => {
+            this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.hero.mainGun.autoFire = true;
+            // 创建敌军小队
+            this.createTestEnemyRushes();
+        });
+    }
 
     protected onTouchTapHeroPower(evt: egret.TouchEvent): void {
         if (evt.target != this.heroPowerBar.gameObject || !this.hero.isPowerFull()) {
@@ -130,6 +167,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     public turbo(speed: number, orgSpeed: number, dur: number): void {
+        this.heroPowerBar.gameObject.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
         if (dur < 1500) {
             dur = 1500;
         }
@@ -137,6 +175,9 @@ class BattleLayer extends tutils.Layer {
         tw.to({speed: speed}, 1000, egret.Ease.getPowOut(2));
         tw.wait(dur-1500);
         tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
+        tw.call(() => {
+            this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
+        });
     }
 
     public get pathPercent(): number {
@@ -321,9 +362,11 @@ class BattleLayer extends tutils.Layer {
         this.sldHeroScale.x = 0;
         this.sldHeroScale.y = 300;
         this.sldHeroScale.width = 200;
-        this.sldHeroScale.minimum = 0;
+        this.sldHeroScale.minimum = 10;
         this.sldHeroScale.maximum = 300;
-        this.sldHeroScale.value = 100;
+        this.sldHeroScale.value = 150;
+        this.hero.gameObject.scaleX = this.sldHeroScale.value / 100;
+        this.hero.gameObject.scaleY = this.sldHeroScale.value / 100;
         this.sldHeroScale.addEventListener(eui.UIEvent.CHANGE, this.onHeroScaleChanged, this)
         this.txtHeroScale = new egret.TextField();
         this.layer.addChild(this.txtHeroScale);
@@ -333,7 +376,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     protected onHeroScaleChanged(evt: eui.UIEvent) {
-        const align = 20;
+        const align = 10;
         let value = evt.target.value;
         let dt = (value/align) - Math.floor(value/align);
         if (dt < 0.5) {
