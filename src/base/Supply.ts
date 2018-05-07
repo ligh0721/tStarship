@@ -61,7 +61,7 @@ class Supply extends Unit {
 				if (target == null) {
 					return;
 				} else {
-					timer.interval = 1000/60;
+					timer.interval = 0;
 					targetId = target.id;
 					egret.Tween.removeTweens(this.gameObject);
 				}

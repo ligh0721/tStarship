@@ -21,7 +21,7 @@ class SatelliteGun extends Gun {
 			}
 			this.radius = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2 + this.radiusDelta;
 			this.timer.setOnTimerListener(this.onTimer, this);
-			this.timer.start(1000/60, true, 0);
+			this.timer.start(0, true, 0);
 		}
 
 		let periodPer = (egret.getTimer() % this.period) / this.period;

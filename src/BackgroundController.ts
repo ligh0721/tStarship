@@ -54,7 +54,7 @@ class BackgroundController {
 
 	public start(speed: number): void {
 		this.speed = speed;
-		this.timer.start(1000/60, true, 0);
+		this.timer.start(0, true, 0);
 		//this.timer.start();
 		//this.tick = egret.getTimer();
 	}

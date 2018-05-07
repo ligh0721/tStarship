@@ -36,7 +36,7 @@ module tutils {
 				return;
 			}
 			let start = egret.getTimer();
-			if (start < this.$wantTick) {
+			if (this.$interval > Timer.MinInterval && start < this.$wantTick) {
 				return;
 			}
 			let last = this.$tick;

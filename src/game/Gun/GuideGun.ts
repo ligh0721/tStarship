@@ -33,6 +33,6 @@ class GuideGun extends Gun {
 			bullet.gameObject.x = to.x;
 			bullet.gameObject.y = to.y;
 		}, this);
-		timer.start(1000/60, true, 0);
+		timer.start(0, true, 0);
 	}
 }
