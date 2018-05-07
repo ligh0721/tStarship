@@ -12,7 +12,7 @@ class SatelliteGun extends Gun {
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
 	}
 
-	public fire() {
+	public fire(): void {
 		if (this.bullets == null) {
 			this.bullets = [];
 			this.bullets.length = this.maxBullets;
@@ -61,7 +61,7 @@ class SatelliteGun extends Gun {
 		bullet.angle = angle;
 	}
 
-	protected onCleanup() {
+	protected onCleanup(): void {
 		super.onCleanup();
 		if (this.timer != null) {
 			this.timer.stop();

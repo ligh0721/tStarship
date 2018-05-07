@@ -55,10 +55,11 @@ class Gun {
 		bullet.moveStraight(angle==undefined?this.ship.angle:angle, this.bulletSpeed.value, fixedRotation, ease)
 	}
 
-	public fire() {
+	public fire(): void {
 		if (this.ship == null || !this.ship.isAlive()) {
 			return;
 		}
+		this.onFire();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
@@ -95,13 +96,18 @@ class Gun {
 		}
 	}
 
-	public cleanup() {
+	public cleanup(): void {
 		this.autoFireTimer.stop();
 		this.onCleanup();
 	}
 
 	// override
-	protected onCleanup() {
+	protected onFire(): void {
+		tutils.playSound("GunShoot_mp3");
+	}
+
+	// override
+	protected onCleanup(): void {
 		egret.Tween.removeTweens(this);
 	}
 

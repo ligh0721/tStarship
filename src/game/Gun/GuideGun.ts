@@ -1,5 +1,6 @@
 class GuideGun extends Gun {
 	public fire() {
+		this.onFire();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
@@ -8,7 +9,7 @@ class GuideGun extends Gun {
 		this.fireBulletGuild(bullet, null);
 	}
 
-	protected fireBulletGuild(bullet: Bullet, target: Ship) {
+	protected fireBulletGuild(bullet: Bullet, target: Ship): void {
 		let bulletId = bullet.id;
 		let targetId = "";
 		let timer = new tutils.Timer();
@@ -34,5 +35,10 @@ class GuideGun extends Gun {
 			bullet.gameObject.y = to.y;
 		}, this);
 		timer.start(0, true, 0);
+	}
+
+	// override
+	protected onFire(): void {
+		tutils.playSound("GuideGunShoot_mp3");
 	}
 }

@@ -3,8 +3,8 @@ class RowGun extends Gun {
 	bulletXDelta: number = 50;
 	bulletYDelta: number = 20;
 
-	public fire() {
-		tutils.playSound("RowGunShoot_mp3");
+	public fire(): void {
+		this.onFire();
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		for (let i=0; i<n; i++) {
@@ -21,5 +21,10 @@ class RowGun extends Gun {
 			// tw2.to({x: x+a}, 100, egret.Ease.sineOut);
 			// tw2.to({x: x}, 100, egret.Ease.sineIn);
 		}
+	}
+
+	// override
+	protected onFire(): void {
+		tutils.playSound("RowGunShoot_mp3");
 	}
 }

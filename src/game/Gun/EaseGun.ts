@@ -1,12 +1,18 @@
 class EaseGun extends Gun {
 	ease: Function = null;
 
-	public fire() {
+	public fire(): void {
+		this.onFire();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
 		this.fireBulletStraight(bullet, this.ship.angle, false, this.ease);
+	}
+
+	// override
+	protected onFire(): void {
+		tutils.playSound("EaseGunShoot_mp3");
 	}
 }

@@ -3,8 +3,8 @@ class SoundWaveGun extends Gun {
 	bulletHeight: number = 10;
 	bulletNum: number = 4;
 
-	public fire() {
-		tutils.playSound("SoundWaveGunShoot_mp3");
+	public fire(): void {
+		this.onFire();
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		for (let i=0; i<n; i++) {
@@ -20,5 +20,10 @@ class SoundWaveGun extends Gun {
 			bullet.y = firePos.y - i * 15;
 			this.fireBulletStraight(bullet);
 		}
+	}
+
+	// override
+	protected onFire(): void {
+		tutils.playSound("SoundWaveGunShoot_mp3");
 	}
 }

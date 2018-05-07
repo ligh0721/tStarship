@@ -562,7 +562,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 8:
-            gun = Gun.createGun(Gun, ExplosionBullet);
+            gun = Gun.createGun(ExplosionGun, ExplosionBullet);
             gun.fireCooldown.baseValue = 500;
             gun.bulletSpeed.baseValue = 60;
             gun.bulletPower.baseValue = 5;
