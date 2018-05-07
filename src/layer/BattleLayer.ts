@@ -39,7 +39,6 @@ class BattleLayer extends tutils.Layer {
 		let score = new Score(this.layer);
 		score.digits = 10;
 		score.score = 0;
-		//score.setScore(10000, 5000);
         this.score = score;
         this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.textWidth;
 
@@ -179,10 +178,9 @@ class BattleLayer extends tutils.Layer {
             this.score._score
         } else if (this.hero.force.isMyEnemy(ship.force) && killer == this.hero) {
             let score = Math.floor(ship.maxHp*20/100)*100;
-            //this.score.setScore(this.score.score+score, 0);
-            this.score.score += score;
-            let supply = this.world.pools.newObject(CoinSupply, 0, this.score);
-            supply.power = ship.maxHp;
+            this.score.setScore(this.score.score+score, 200);
+            //this.score.score += score;
+            let supply = this.world.pools.newObject(PowerSupply, ship.maxHp);
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
         }

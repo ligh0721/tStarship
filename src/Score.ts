@@ -17,8 +17,8 @@ class Score {
 		return bmpText;
 	}
 
-	protected update(value: number) {
-		let txt = value.toString();
+	protected update() {
+		let txt = this.$_score.toString();
 		let len = txt.length;
 		for (let i=0; i<this.digits-len; i++) {
 			txt = "0" + txt;
@@ -34,10 +34,12 @@ class Score {
 		value = Math.floor(value);
 		if (this.$score != value) {
 			this.$score = value;
-			this.update(value);
 		}
 		egret.Tween.removeTweens(this);
-		this.$_score = value;
+		if (this.$_score != value) {
+			this.$_score = value;
+			this.update();
+		}
 	}
 
 	public get _score(): number {
@@ -48,7 +50,7 @@ class Score {
 		value = Math.floor(value);
 		if (this.$_score != value) {
 			this.$_score = value;
-			this.update(value);
+			this.update();
 		}
 	}
 
@@ -60,6 +62,7 @@ class Score {
 		this.$score = Math.floor(value);
 		egret.Tween.removeTweens(this)
 		let tw = egret.Tween.get(this);
+		console.log(this.$score);
 		tw.to({_score: this.$score}, dur);
 	}
 }
