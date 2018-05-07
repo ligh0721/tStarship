@@ -34,18 +34,30 @@ class EllipseWaveBullet extends Bullet {
     height: number = 50;
 
 	// override
+	// protected onCreate(): egret.DisplayObject {
+	// 	if (this.gameObject !== undefined) {
+	// 		return this.gameObject;
+	// 	}
+	// 	let bullet = new egret.Shape();
+	// 	bullet.graphics.lineStyle(0, this.gun.bulletColor);
+	// 	bullet.graphics.beginFill(this.gun.bulletColor);
+	// 	bullet.graphics.drawEllipse(0, 0, this.width, this.height);
+	// 	bullet.graphics.endFill();
+	// 	bullet.anchorOffsetX = this.width * 0.5;
+	// 	bullet.anchorOffsetY = this.height * 0.5;
+        
+	// 	return bullet;
+	// }
+
 	protected onCreate(): egret.DisplayObject {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let bullet = new egret.Shape();
-		bullet.graphics.lineStyle(0, this.gun.bulletColor);
-		bullet.graphics.beginFill(this.gun.bulletColor);
-		bullet.graphics.drawEllipse(0, 0, this.width, this.height);
-		bullet.graphics.endFill();
-		bullet.anchorOffsetX = this.width * 0.5;
-		bullet.anchorOffsetY = this.height * 0.5;
-        
-		return bullet;
+		let gameObject = tutils.createBitmapByName("Bullet_png");
+		this.width = gameObject.width;
+		this.height = gameObject.height;
+		gameObject.anchorOffsetX = gameObject.width * 0.5;
+		gameObject.anchorOffsetY = gameObject.height * 0.5;
+		return gameObject;
 	}
 }

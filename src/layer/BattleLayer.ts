@@ -11,6 +11,9 @@ class BattleLayer extends tutils.Layer {
     private heroPowerBar: ShapeProgress;
     private bgCtrl: BackgroundController;
 
+    private sldHeroScale: eui.HSlider;
+    private txtHeroScale: egret.TextField;
+
     $pathPercent: number = 0;
 	
 	protected onInit() {
@@ -93,6 +96,9 @@ class BattleLayer extends tutils.Layer {
         });
         testSupplyTimer.start(5000, true, 0);
 
+        // 创建调试面板
+        this.createDebugPanel();
+
         // 创建测试敌军
         //this.createTestEnemyShip(1);
 
@@ -117,7 +123,7 @@ class BattleLayer extends tutils.Layer {
         if (evt.target != this.heroPowerBar.gameObject || !this.hero.isPowerFull()) {
             return;
         }
-        if (this.hero.castSkill()) {
+        if (this.hero.isAlive() && this.hero.castSkill()) {
             tutils.playSound("Powerup_mp3");
             this.turbo(200, 20, 5000);
         }
@@ -306,6 +312,39 @@ class BattleLayer extends tutils.Layer {
             toY = this.stage.stageHeight;
         }
         this.hero.move(toX, toY);
+    }
+
+    private createDebugPanel() {
+        // sinT
+        this.sldHeroScale = new eui.HSlider();
+        this.layer.addChild(this.sldHeroScale);
+        this.sldHeroScale.x = 0;
+        this.sldHeroScale.y = 300;
+        this.sldHeroScale.width = 200;
+        this.sldHeroScale.minimum = 0;
+        this.sldHeroScale.maximum = 300;
+        this.sldHeroScale.value = 100;
+        this.sldHeroScale.addEventListener(eui.UIEvent.CHANGE, this.onHeroScaleChanged, this)
+        this.txtHeroScale = new egret.TextField();
+        this.layer.addChild(this.txtHeroScale);
+        this.txtHeroScale.x = 0;
+        this.txtHeroScale.y = 270;
+        this.txtHeroScale.text = "HeroScale: " + this.sldHeroScale.value + "%";
+    }
+
+    protected onHeroScaleChanged(evt: eui.UIEvent) {
+        const align = 20;
+        let value = evt.target.value;
+        let dt = (value/align) - Math.floor(value/align);
+        if (dt < 0.5) {
+            value = Math.floor(value/align) * align;
+        } else {
+            value = Math.floor(value/align) * align + align;
+        }
+        evt.target.value = value;
+        this.txtHeroScale.text = "HeroScale: " + this.sldHeroScale.value + "%";
+        this.hero.gameObject.scaleX = value / 100;
+        this.hero.gameObject.scaleY = value / 100;
     }
 
 	// FIXME: test

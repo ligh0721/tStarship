@@ -1,6 +1,6 @@
 class Ship extends HpUnit {
-	readonly width: number;
-	readonly height: number;
+	width: number;
+	height: number;
 	
 	force: Force;
 	mainGun: Gun = null;
