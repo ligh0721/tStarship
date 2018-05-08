@@ -3,7 +3,7 @@ class ShotGun extends Gun {
 	bulletAngleDelta: number = 15;
 	
 	public fire(): void {
-		this.onFire();
+		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		let r = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2;
@@ -19,7 +19,7 @@ class ShotGun extends Gun {
 	}
 
 	// override
-	protected onFire(): void {
+	protected playFireSound(): void {
 		tutils.playSound("ShotGunShoot_mp3");
 	}
 }

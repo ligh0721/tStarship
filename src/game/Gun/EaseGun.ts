@@ -2,7 +2,7 @@ class EaseGun extends Gun {
 	ease: Function = null;
 
 	public fire(): void {
-		this.onFire();
+		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
@@ -12,7 +12,7 @@ class EaseGun extends Gun {
 	}
 
 	// override
-	protected onFire(): void {
+	protected playFireSound(): void {
 		tutils.playSound("EaseGunShoot_mp3");
 	}
 }

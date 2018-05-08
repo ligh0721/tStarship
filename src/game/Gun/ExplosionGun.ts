@@ -5,7 +5,7 @@ class ExplosionGun extends Gun {
 		if (this.ship == null || !this.ship.isAlive()) {
 			return;
 		}
-		this.onFire();
+		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		if (bullet instanceof ExplosionBullet) {
@@ -18,7 +18,7 @@ class ExplosionGun extends Gun {
 	}
 	
 	// override
-	protected onFire(): void {
+	protected playFireSound(): void {
 		tutils.playSound("ExplosionGunShoot_mp3");
 	}
 }

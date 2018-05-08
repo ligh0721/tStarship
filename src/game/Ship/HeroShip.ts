@@ -56,6 +56,13 @@ class HeroShip extends Ship {
         return true;
     }
 
+    public move(x: number, y: number): void {
+		if (!this.isAlive()) {
+			return;
+		}
+		this.moveTo(x, y, this.speed.value, true);
+	}
+
     // protected onCreate(): egret.DisplayObject {
 	// 	let gameObject = new egret.Shape();
 	// 	gameObject.graphics.lineStyle(10, 0x9cdcfe);

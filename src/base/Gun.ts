@@ -8,7 +8,9 @@ class Gun {
 	readonly bulletSpeed: Value;
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 	bulletColor: number = 0xffffff;
+	$bulletLeft: number = -1;  // 可发射的剩余子弹数，-1为无限
 
+	private $autoFire: boolean = false;
 	private autoFireTimer: tutils.Timer;
 
 	public constructor() {
@@ -42,8 +44,6 @@ class Gun {
 	public createBullet(): Bullet {
 		//let bullet = new this.bulletType(this);
 		let bullet = this.ship.pools.newObject(this.bulletType, this);
-		//bullet.reset();
-		//bullet.setGun(this);
 		return bullet;
 	}
 
@@ -52,14 +52,14 @@ class Gun {
 	}
 
 	protected fireBulletStraight(bullet: Bullet, angle?: number, fixedRotation?: boolean, ease?: Function) {
-		bullet.moveStraight(angle==undefined?this.ship.angle:angle, this.bulletSpeed.value, fixedRotation, ease)
+		bullet.moveStraight(angle===undefined?this.ship.angle:angle, this.bulletSpeed.value, fixedRotation, ease)
 	}
 
 	public fire(): void {
 		if (this.ship == null || !this.ship.isAlive()) {
 			return;
 		}
-		this.onFire();
+		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
@@ -69,7 +69,7 @@ class Gun {
 	}
 
 	public get autoFire(): boolean {
-		return this.autoFireTimer.running;
+		return this.$autoFire;
 	}
 
 	public set autoFire(value: boolean) {
@@ -80,18 +80,40 @@ class Gun {
 		if (this.autoFireTimer.running) {
 			this.autoFireTimer.stop();
 		}
-		if (this.autoFireTimer.running == value) {
+		if (this.$autoFire == value) {
 			return;
 		}
+		this.$autoFire = value;
 		if (value) {
 			if (!this.autoFireTimer.hasOnTimerListener()) {
-				this.autoFireTimer.setOnTimerListener((dt: number): void=>{
-					this.fire();
+				this.autoFireTimer.setOnTimerListener((dt: number): void => {
+					if (this.$bulletLeft != 0) {
+						this.fire();
+						if (this.$bulletLeft > 0) {
+							this.$bulletLeft--;
+							if (this.$bulletLeft == 0) {
+								this.autoFireTimer.stop();
+							}
+						}
+					}
 					if (this.autoFireTimer.interval != this.fireCooldown.value) {
 						this.autoFireTimer.interval = this.fireCooldown.value
 					}
 				}, this);
 			}
+			if (this.$bulletLeft != 0) {
+				this.autoFireTimer.start(this.fireCooldown.value, true, 0);
+			}
+		}
+	}
+
+	public get bulletLeft(): number {
+		return this.$bulletLeft;
+	}
+
+	public set bulletLeft(value: number) {
+		this.$bulletLeft = value;
+		if (value != 0 && this.$autoFire && !this.autoFireTimer.running) {
 			this.autoFireTimer.start(this.fireCooldown.value, true, 0);
 		}
 	}
@@ -102,7 +124,7 @@ class Gun {
 	}
 
 	// override
-	protected onFire(): void {
+	protected playFireSound(): void {
 		tutils.playSound("GunShoot_mp3");
 	}
 

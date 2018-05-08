@@ -1,6 +1,6 @@
 class GuideGun extends Gun {
 	public fire() {
-		this.onFire();
+		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
 		this.addBulletToWorld(bullet)
@@ -38,7 +38,7 @@ class GuideGun extends Gun {
 	}
 
 	// override
-	protected onFire(): void {
+	protected playFireSound(): void {
 		tutils.playSound("GuideGunShoot_mp3");
 	}
 }

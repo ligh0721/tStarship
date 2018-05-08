@@ -4,7 +4,7 @@ class RowGun extends Gun {
 	bulletYDelta: number = 20;
 
 	public fire(): void {
-		this.onFire();
+		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let n = this.bulletNum;
 		for (let i=0; i<n; i++) {
@@ -24,7 +24,7 @@ class RowGun extends Gun {
 	}
 
 	// override
-	protected onFire(): void {
+	protected playFireSound(): void {
 		tutils.playSound("RowGunShoot_mp3");
 	}
 }

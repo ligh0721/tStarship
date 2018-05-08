@@ -95,4 +95,18 @@ class Unit {
 		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
 		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
 	}
+
+	public moveTo(x: number, y: number, speed: number, fixedRotation?: boolean, ease?: Function): void {
+		let xx = x-this.gameObject.x;
+		let yy = y-this.gameObject.y;
+		if (fixedRotation != true) {
+			let angle = Math.atan2(yy, xx);
+			this.angle = angle * tutils.DegPerRad + 90;
+		}
+		let dis = Math.sqrt(xx*xx+yy*yy);
+        let dur = dis * tutils.SpeedFactor / speed;
+        egret.Tween.removeTweens(this);
+        let tw = egret.Tween.get(this);
+        tw.to({x: x, y: y}, dur, ease);
+	}
 }

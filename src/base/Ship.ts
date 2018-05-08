@@ -31,19 +31,6 @@ class Ship extends HpUnit {
 		this.buffs===undefined ? this.buffs={} : this.buffs.constructor();
 	}
 
-	public move(x: number, y: number): void {
-		if (!this.isAlive()) {
-			return;
-		}
-		let xx = x-this.gameObject.x;
-		let yy = y-this.gameObject.y;
-		let dis = Math.sqrt(xx*xx+yy*yy);
-        let dur = dis * tutils.SpeedFactor / this.speed.value;
-        egret.Tween.removeTweens(this);
-        let tw = egret.Tween.get(this);
-        tw.to({x: x, y: y}, dur);
-	}
-
 	protected onCreate(): egret.DisplayObject {
 		let gameObject = new egret.Shape();
 		gameObject.graphics.lineStyle(10, 0xffffff);
