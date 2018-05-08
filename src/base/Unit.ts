@@ -96,7 +96,8 @@ class Unit {
 		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
 	}
 
-	public moveTo(x: number, y: number, speed: number, fixedRotation?: boolean, ease?: Function): void {
+	// fixedRotation=false
+	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, onMoveEnd?: (unit: Unit)=>void, thisObject?: any): void {
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
 		if (fixedRotation != true) {
@@ -108,5 +109,8 @@ class Unit {
         egret.Tween.removeTweens(this);
         let tw = egret.Tween.get(this);
         tw.to({x: x, y: y}, dur, ease);
+		if (onMoveEnd != null) {
+			tw.call(onMoveEnd, thisObject, [this]);
+		}
 	}
 }

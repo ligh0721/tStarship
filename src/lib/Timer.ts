@@ -69,6 +69,7 @@ module tutils {
 			return this.onTimerListener != null;
 		}
 
+		// instantly=false, times=0, autoSkip=true
 		public start(interval: number, instantly?: boolean, times?: number, autoSkip?: boolean): number {
 			let start = egret.getTimer();
 			if (this.$running) {
@@ -79,7 +80,7 @@ module tutils {
 			this.timer.addEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
 			this.$running = true;
 			this.interval = interval;
-			this.times = times==undefined ? 1 : times;
+			this.times = times===undefined ? 0 : times;
 			this.autoSkip = autoSkip!=false;
 			this.$left = this.times;
 

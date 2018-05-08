@@ -8,7 +8,7 @@ class Gun {
 	readonly bulletSpeed: Value;
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 	bulletColor: number = 0xffffff;
-	$bulletLeft: number = -1;  // 可发射的剩余子弹数，-1为无限
+	private $bulletLeft: number = -1;  // 可发射的剩余子弹数，-1为无限
 
 	private $autoFire: boolean = false;
 	private autoFireTimer: tutils.Timer;

@@ -111,6 +111,7 @@ class Ship extends HpUnit {
 		}
 	}
 
+	// main=false
 	public addGun(gun: Gun, main?: boolean): Gun {
 		gun.id = this.world.nextId();
 		gun.ship = this;

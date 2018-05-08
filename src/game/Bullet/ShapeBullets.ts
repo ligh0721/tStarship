@@ -29,7 +29,7 @@ class ShakeWaveBullet extends Bullet {
 	}
 }
 
-class EllipseWaveBullet extends Bullet {
+class EllipseBullet extends Bullet {
 	width: number = 10;
     height: number = 50;
 

@@ -85,7 +85,7 @@ class BattleLayer extends tutils.Layer {
         hero.y = this.stage.stageHeight + 200;
         hero.speed.baseValue = 200;
         hero.resetHp(100);
-        let gun = Gun.createGun(Gun, EllipseWaveBullet);
+        let gun = Gun.createGun(Gun, EllipseBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
         gun.bulletPower.baseValue = 3;
@@ -117,7 +117,7 @@ class BattleLayer extends tutils.Layer {
         this.heroPowerBar.gameObject.touchEnabled = true;
         this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
         this.heroPowerBar.gameObject.visible = false;
-        this.hero.addPower(100);
+        this.hero.addPower(6);
 
         // 创建分数板
 		let score = new Score(this.layer);
@@ -236,7 +236,8 @@ class BattleLayer extends tutils.Layer {
             let score = Math.floor(ship.maxHp*20/100)*100;
             // this.score.setScore(this.score.score+score, 200);
             this.score.score += score;
-            let supply = this.world.pools.newObject(PowerSupply, ship.maxHp);
+            let power = Math.max(ship.maxHp/10, 1);
+            let supply = this.world.pools.newObject(PowerSupply, power);
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
         }
@@ -620,7 +621,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 6:
-            gun = Gun.createGun(ShotGun, EllipseWaveBullet);
+            gun = Gun.createGun(ShotGun, EllipseBullet);
             (<ShotGun>gun).bulletAngleDelta = 10;
             (<ShotGun>gun).bulletNum = 5;
             gun.fireCooldown.baseValue = 600;
@@ -635,7 +636,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 7:
-            gun = Gun.createGun(RowGun, EllipseWaveBullet);
+            gun = Gun.createGun(RowGun, EllipseBullet);
             (<RowGun>gun).bulletNum = 3;
             gun.fireCooldown.baseValue = 400;
             gun.bulletSpeed.baseValue = 60;
