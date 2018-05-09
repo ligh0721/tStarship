@@ -138,4 +138,73 @@ class EnemyController {
 			rushItem.callback.call(rushItem.callbackThisObject);
 		}
 	}
+
+	public createBoss1():MotherShip {
+		let w = this.world.width;
+        let h = this.world.height;
+
+		let ship = new MotherShip(400, 200);
+        this.world.addShip(ship);
+        ship.angle = 180;
+        ship.x = this.world.width * 0.5;
+        ship.y = -ship.height;
+        ship.force.force = tutils.EnemyForce;
+        ship.resetHp(1000);
+
+		let gunShip = new MotherGunShip(40, 80, "tri");
+        ship.addGunShip(gunShip, 0, 100);
+        gunShip.resetHp(200);
+        gunShip.angle = 180;
+        let gun = Gun.createGun(ShotGun, Bullet);
+		gun.fireCooldown.baseValue = 10;
+		gun.bulletSpeed.baseValue = 20;
+		gunShip.addGun(gun, true);
+		gun.bulletLeft = 0;
+		gun.autoFire = true;
+        
+		let smgr = new tutils.StateManager();
+        let moveToRight = new tutils.State();
+		let moveToLeft = new tutils.State();
+        let ajustAngle = new tutils.State();
+        let fire5 = new tutils.State();
+
+		moveToRight.setListener(()=>{
+            ship.moveTo(w*0.8, h*0.1, ship.speed.value, true, null, (unit: Unit)=>{
+                smgr.change(ajustAngle, moveToLeft);
+            });
+        }, null, this);
+
+        moveToLeft.setListener(()=>{
+            ship.moveTo(w*0.2, h*0.1, ship.speed.value, true, null, (unit: Unit)=>{
+                smgr.change(ajustAngle, moveToRight);
+            });
+        }, null, this);
+
+        ajustAngle.setListener(()=>{
+			let hero = this.world.findNearestHeroShip(ship.x, ship.y);
+
+			let x = w * 0.5;
+			let y = h;
+			if (hero) {
+				x = hero.x;
+				y = hero.y;
+			}
+            let angle = Math.atan2(y - gunShip.y, x - gunShip.x);
+			let targetAngle = angle * tutils.DegPerRad + 90;
+			if(targetAngle > 180) {
+				targetAngle = targetAngle - 360;
+			}
+
+			gunShip.mainGun.bulletLeft = 50;
+			egret.Tween.get(gunShip).to({angle: targetAngle}, 1000);
+        }, (dt: number, state: tutils.State)=>{
+            if (gunShip.mainGun.bulletLeft == 0) {
+                smgr.change(state.args[0]);
+            }
+        }, this);
+
+        smgr.start(10, moveToLeft);
+
+		return ship;
+	}
 }

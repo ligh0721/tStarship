@@ -1,6 +1,7 @@
 class TestLayer extends tutils.Layer {
     private world: World;
     private hero: HeroShip;
+    private enemyController: EnemyController;
 
 	protected onInit() {
         let w = this.stage.stageWidth;
@@ -13,6 +14,8 @@ class TestLayer extends tutils.Layer {
         this.world.addShip(this.hero);
         let gun = Gun.createGun(Gun, EllipseBullet);
         this.hero.addGun(gun, true);
+        this.hero.x = w * 0.5;
+        this.hero.y = h * 0.9;
         gun.bulletLeft = 0;
         gun.autoFire = true;
         this.layer.touchEnabled = true;
@@ -46,7 +49,10 @@ class TestLayer extends tutils.Layer {
                 smgr.change(state.args[0]);
             }
         }, this);
-        smgr.start(10, moveToMiddleTop);
+        // smgr.start(10, moveToMiddleTop);
+
+        this.enemyController = new EnemyController(this.world);
+        this.enemyController.createBoss1();
 	}
 
     private onTouchBegin(evt: egret.TouchEvent) {
