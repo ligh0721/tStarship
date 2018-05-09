@@ -146,6 +146,7 @@ class EnemyController {
 		let ship = new MotherShip(400, 200);
         this.world.addShip(ship);
         ship.angle = 180;
+		ship.speed.baseValue = 20;
         ship.x = this.world.width * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
@@ -156,8 +157,8 @@ class EnemyController {
         gunShip.resetHp(200);
         gunShip.angle = 180;
         let gun = Gun.createGun(ShotGun, Bullet);
-		gun.fireCooldown.baseValue = 10;
-		gun.bulletSpeed.baseValue = 20;
+		gun.fireCooldown.baseValue = 20;
+		gun.bulletSpeed.baseValue = 30;
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
@@ -189,11 +190,12 @@ class EnemyController {
 				x = hero.x;
 				y = hero.y;
 			}
-            let angle = Math.atan2(y - gunShip.y, x - gunShip.x);
-			let targetAngle = angle * tutils.DegPerRad + 90;
-			if(targetAngle > 180) {
-				targetAngle = targetAngle - 360;
-			}
+
+			let targetAngle = Unit.getAngle(gunShip.x, gunShip.y, x, y);
+			console.log(gunShip.angle+" to "+targetAngle);
+			// if (targetAngle - gunShip.angle > 180) {
+			//  	targetAngle = targetAngle - 360;
+			// }
 
 			gunShip.mainGun.bulletLeft = 50;
 			egret.Tween.get(gunShip).to({angle: targetAngle}, 1000);

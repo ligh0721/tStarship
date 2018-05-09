@@ -34,12 +34,12 @@ module tutils {
 		private $curState: State = null;
 		private timer: tutils.Timer = new tutils.Timer();
 
-		public start(timerRate: number, startState: State): void {
+		public start(timerRate: number, startState: State, ...args: any[]): void {
 			if (!this.timer.hasOnTimerListener()) {
 				this.timer.setOnTimerListener(this.onTimer, this);
 			}
 			this.timer.start(1000/timerRate, true);
-			this.change(startState);
+			this.change(startState, ...args);
 		}
 
 		public change(state: State, ...args: any[]): void {

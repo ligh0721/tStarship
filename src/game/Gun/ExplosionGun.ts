@@ -19,6 +19,8 @@ class ExplosionGun extends Gun {
 	
 	// override
 	protected playFireSound(): void {
-		tutils.playSound("ExplosionGunShoot_mp3");
+		if (this.ship.hero) {
+			tutils.playSound("ExplosionGunShoot_mp3");
+		}
 	}
 }

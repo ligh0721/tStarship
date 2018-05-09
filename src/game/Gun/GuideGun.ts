@@ -39,6 +39,8 @@ class GuideGun extends Gun {
 
 	// override
 	protected playFireSound(): void {
-		tutils.playSound("GuideGunShoot_mp3");
+		if (this.ship.hero) {
+			tutils.playSound("GuideGunShoot_mp3");
+		}
 	}
 }

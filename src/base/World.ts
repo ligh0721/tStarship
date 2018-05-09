@@ -89,7 +89,7 @@ class World {
 	public findNearestHeroShip(x: number, y: number, maxDist?: number): Ship {
 		let min = -1;
 		let target: Ship = null;
-		if (maxDist == undefined) {
+		if (maxDist === undefined) {
 			maxDist = tutils.LongDistance;
 		}
 		for (let i in this.ships) {

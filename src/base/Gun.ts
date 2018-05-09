@@ -87,6 +87,10 @@ class Gun {
 		if (value) {
 			if (!this.autoFireTimer.hasOnTimerListener()) {
 				this.autoFireTimer.setOnTimerListener((dt: number): void => {
+					if (this.ship == null || !this.ship.isAlive()) {
+						this.autoFireTimer.stop();
+						return;
+					}
 					if (this.$bulletLeft != 0) {
 						this.fire();
 						if (this.$bulletLeft > 0) {
@@ -125,7 +129,9 @@ class Gun {
 
 	// override
 	protected playFireSound(): void {
-		tutils.playSound("GunShoot_mp3");
+		if (this.ship.hero) {
+			tutils.playSound("GunShoot_mp3");
+		}
 	}
 
 	// override

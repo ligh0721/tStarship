@@ -87,6 +87,14 @@ class Unit {
 		return Math.sqrt(dtx*dtx+dty*dty);
 	}
 
+	public static getAngle(x0: number, y0: number, x1: number, y1: number) {
+		let angle = Math.atan2(y1 - y0, x1 - x0) * tutils.DegPerRad + 90;
+		if (angle > 180) {
+			angle = angle - 360;
+		}
+		return angle;
+	}
+
 	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
 		if (fixedRotation != true) {
 			this.angle = angle;

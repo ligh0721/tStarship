@@ -84,7 +84,7 @@ class BattleLayer extends tutils.Layer {
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
         hero.speed.baseValue = 200;
-        hero.resetHp(100);
+        hero.resetHp(6);
         let gun = Gun.createGun(Gun, EllipseBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
@@ -117,7 +117,6 @@ class BattleLayer extends tutils.Layer {
         this.heroPowerBar.gameObject.touchEnabled = true;
         this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
         this.heroPowerBar.gameObject.visible = false;
-        this.hero.addPower(6);
 
         // 创建分数板
 		let score = new Score(this.layer);
@@ -157,7 +156,9 @@ class BattleLayer extends tutils.Layer {
 
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             // 创建敌军小队
-            this.createTestEnemyRushes();
+            //this.createTestEnemyRushes();
+            let boss = this.enemyCtrl.createBoss1();
+            this.createBossUI(boss);
         });
     }
 
@@ -326,9 +327,7 @@ class BattleLayer extends tutils.Layer {
         }
         this.bossui.percent = ship.hp / ship.maxHp;
         if (ship.hp <= 0) {
-            this.bossui.cleanup();
-            this.layer.removeChild(this.bossui.gameObject);
-            this.score.gameObject.visible = true;
+            this.removeBossUI();
         }
     }
 
@@ -463,12 +462,12 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=0; i<50; i++) {
+        for (let i=0; i<30; i++) {
             let es = [];
             let n = Math.floor(Math.random()*5+3);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
-                e.resetHp(5);
+                e.resetHp(5+Math.floor(i/5));
                 es.push(e);
             }
             
@@ -538,11 +537,21 @@ class BattleLayer extends tutils.Layer {
             gun2.autoFire = true;
         }, this);
 
-        this.bossui = new BossHpProgress(this.layer, ship, 0xffffff);
+        this.createBossUI(ship);
+    }
+
+    private createBossUI(boss: Ship) {
+        this.bossui = new BossHpProgress(this.layer, boss, 0xffffff);
         this.bossui.show();
-        ship.setOnHpChangedListener(this.onShipHpChanged, this);
-        //ship.damaged(1, null);
+        boss.setOnHpChangedListener(this.onShipHpChanged, this);
         this.score.gameObject.visible = false;
+    }
+
+    private removeBossUI(): void {
+        this.bossui.cleanup();
+        this.layer.removeChild(this.bossui.gameObject);
+        this.bossui = null;
+        this.score.gameObject.visible = true;
     }
 
     private createTestSupply() {
