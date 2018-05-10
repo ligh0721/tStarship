@@ -84,7 +84,7 @@ class BattleLayer extends tutils.Layer {
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
         hero.speed.baseValue = 200;
-        hero.resetHp(3);
+        hero.resetHp(10);
         let gun = Gun.createGun(Gun, EllipseBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
@@ -157,6 +157,8 @@ class BattleLayer extends tutils.Layer {
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             // 创建敌军小队
             this.createTestEnemyRushes();
+            // let boss = this.enemyCtrl.createBoss2();
+            // this.createBossUI(boss);
         });
     }
 
@@ -470,7 +472,7 @@ class BattleLayer extends tutils.Layer {
                 continue;
             } else if (i == 60) {
                 let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
-                    let boss = this.enemyCtrl.createBoss1();
+                    let boss = this.enemyCtrl.createBoss2();
                     this.createBossUI(boss);
                 }, this);
                 this.enemyCtrl.addRush(rushItem);
@@ -480,7 +482,7 @@ class BattleLayer extends tutils.Layer {
             let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
-                e.resetHp(5+Math.floor(i/4));
+                e.resetHp(5+Math.floor(i/6));
                 es.push(e);
             }
             
@@ -646,7 +648,7 @@ class BattleLayer extends tutils.Layer {
             (<ShotGun>gun).bulletNum = 5;
             gun.fireCooldown.baseValue = 600;
             gun.bulletSpeed.baseValue = 60;
-            gun.bulletPower.baseValue = 2;
+            gun.bulletPower.baseValue = 4;
             gun.bulletPowerLossPer = 1;
             gun.bulletPowerLossInterval.baseValue = 1000;
             supply = new GunSupply(gun);
@@ -660,7 +662,7 @@ class BattleLayer extends tutils.Layer {
             (<RowGun>gun).bulletNum = 3;
             gun.fireCooldown.baseValue = 400;
             gun.bulletSpeed.baseValue = 60;
-            gun.bulletPower.baseValue = 2;
+            gun.bulletPower.baseValue = 3;
             gun.bulletPowerLossPer = 1;
             gun.bulletPowerLossInterval.baseValue = 100;
             supply = new GunSupply(gun);
@@ -686,7 +688,7 @@ class BattleLayer extends tutils.Layer {
             gun = Gun.createGun(GuideGun, ShakeWaveBullet);
             gun.fireCooldown.baseValue = 300;
             gun.bulletSpeed.baseValue = 80;
-            gun.bulletPower.baseValue = 1;
+            gun.bulletPower.baseValue = 3;
             gun.bulletPowerLossPer = 1;
             gun.bulletPowerLossInterval.baseValue = 1000;
             supply = new GunSupply(gun);

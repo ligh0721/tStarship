@@ -302,7 +302,7 @@ class EnemyController {
 		gunL.fireCooldown.baseValue = 30;
 		gunR.fireCooldown.baseValue = 30;
 		let gunReloadCDLR = 500;
-		let angleSpeed = 30/1000;
+		let angleSpeed = 50/1000;
 		let angleSpeedLR = 40/1000;
 		let bulletReload = 20;
 		let gunReloadLR = 3;
@@ -318,7 +318,11 @@ class EnemyController {
 
 		moveTo.setListener((pos: {x: number, y: number})=>{
 			boss.moveTo(pos.x, pos.y, boss.speed.value, true, null, ()=>{
-				smgr.change(adjustAngle, {x: w*0.7, y: boss.height*0.5+70});
+				if (pos.x == w*0.7) {
+					smgr.change(adjustAngle, {x: w*0.3, y: boss.height*0.5+70}); 
+				} else {
+					smgr.change(adjustAngle, {x: w*0.7, y: boss.height*0.5+70});
+				}
 			}, this)
 			tick = 0;
 		}, (dt: number)=>{
