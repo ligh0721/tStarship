@@ -29,7 +29,7 @@ class BattleLayer extends tutils.Layer {
 		
         // 创建世界
         this.world = new World(this.layer, stageW, stageH);
-        this.world.start(30);
+        this.world.start(60);
         this.world.setOnShipDyingListener(this.onShipDying, this);
         this.world.setOnShipHitSupplyListener(this.onShipHitSupply, this);
 
@@ -157,7 +157,7 @@ class BattleLayer extends tutils.Layer {
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             // 创建敌军小队
             //this.createTestEnemyRushes();
-            let boss = this.enemyCtrl.createBoss1();
+            let boss = this.enemyCtrl.createBoss2();
             this.createBossUI(boss);
         });
     }

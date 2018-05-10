@@ -2,7 +2,8 @@ class EnemyController {
 	readonly world: World;
 	private rushes: RushItem[] = [];
 	private tick: number = 0;
-	private timer: tutils.Timer = null;
+	private timer: tutils.Timer = new tutils.Timer();;
+	private hero: Ship = null;
 
 	public constructor(world: World) {
 		this.world = world;
@@ -85,8 +86,7 @@ class EnemyController {
 	}
 
 	public startRush(frameRate: number) {
-		if (this.timer == null) {
-			this.timer = new tutils.Timer();
+		if (!this.timer.hasOnTimerListener()) {
 			this.timer.setOnTimerListener(this.rushStep, this);
 		}
 		this.timer.start(1000/frameRate, true, 0);
@@ -139,74 +139,246 @@ class EnemyController {
 		}
 	}
 
-	public createBoss1():MotherShip {
+	public getHero(): Ship {
+		if (this.hero == null || !this.hero.isAlive()) {
+			this.hero = this.world.findNearestHeroShip(this.world.width*0.5, this.world.height*0.5);
+		}
+		return this.hero;
+	}
+
+	public getHeroPos(): {x: number, y: number} {
+		let x = this.world.width * 0.5;
+		let y = this.world.height;
+		let hero = this.getHero();
+		if (hero != null) {
+			x = hero.x;
+			y = hero.y;
+		}
+		return {x: x, y: y};
+	}
+
+	public adjustAngle(ship: Ship, dt: number, angleSpeed: number, x?: number, y?: number): void {
+		let pos: {x: number, y: number};
+		if (x===undefined || y===undefined) {
+			pos = this.getHeroPos();
+		} else {
+			pos = {x: x, y: y};
+		}
+		let orgAngle = ship.angle;
+		let angle = ship.getAngle(pos.x, pos.y);
+		let dtAngle = dt * angleSpeed;
+		if (angle > orgAngle) {
+			if (orgAngle + dtAngle > angle) {
+				ship.angle = angle;
+			} else {
+				ship.angle += dtAngle;
+			}
+		} else if (angle < orgAngle) {
+			if (orgAngle - dtAngle < angle) {
+				ship.angle = angle;
+			} else {
+				ship.angle -= dtAngle;
+			}
+		}
+	}
+
+	public createBoss1(): MotherShip {
 		let w = this.world.width;
         let h = this.world.height;
 
-		let ship = new MotherShip(400, 200);
-        this.world.addShip(ship);
-        ship.angle = 180;
-		ship.speed.baseValue = 20;
-        ship.x = this.world.width * 0.5;
-        ship.y = -ship.height;
-        ship.force.force = tutils.EnemyForce;
-        ship.resetHp(1000);
+		let boss = new MotherShip(200, 150);
+        this.world.addShip(boss);
+        boss.angle = 180;
+        boss.x = this.world.width * 0.5;
+        boss.y = -boss.height;
+        boss.force.force = tutils.EnemyForce;
 
 		let gunShip = new MotherGunShip(40, 80, "tri");
-        ship.addGunShip(gunShip, 0, 100);
-        gunShip.resetHp(200);
+        boss.addGunShip(gunShip, 0, 100);
         gunShip.angle = 180;
         let gun = Gun.createGun(ShotGun, Bullet);
-		gun.fireCooldown.baseValue = 20;
-		gun.bulletSpeed.baseValue = 30;
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
-        
+		
+		boss.speed.baseValue = 30;
+		boss.resetHp(1000);
+		gunShip.resetHp(200);
+		gun.fireCooldown.baseValue = 20;
+		gun.bulletSpeed.baseValue = 40;
+		let angleSpeed = 20/1000;
+		let bulletLeft = 20;
+
 		let smgr = new tutils.StateManager();
         let moveToRight = new tutils.State();
 		let moveToLeft = new tutils.State();
         let ajustAngle = new tutils.State();
-        let fire5 = new tutils.State();
+        let fire = new tutils.State();
+
+		
 
 		moveToRight.setListener(()=>{
-            ship.moveTo(w*0.8, h*0.1, ship.speed.value, true, null, (unit: Unit)=>{
+            boss.moveTo(w-boss.width*0.5-20, boss.height*0.5+70, boss.speed.value, true, null, ()=>{
                 smgr.change(ajustAngle, moveToLeft);
-            });
-        }, null, this);
+            }, this);
+        }, (dt: number)=>{
+			this.adjustAngle(gunShip, dt, angleSpeed);
+        }, this);
 
         moveToLeft.setListener(()=>{
-            ship.moveTo(w*0.2, h*0.1, ship.speed.value, true, null, (unit: Unit)=>{
+            boss.moveTo(boss.width*0.5+20, boss.height*0.5+70, boss.speed.value, true, null, ()=>{
                 smgr.change(ajustAngle, moveToRight);
-            });
-        }, null, this);
+            }, this);
+        }, (dt: number)=>{
+			this.adjustAngle(gunShip, dt, angleSpeed);
+        }, this);
 
         ajustAngle.setListener(()=>{
-			let hero = this.world.findNearestHeroShip(ship.x, ship.y);
-
-			let x = w * 0.5;
-			let y = h;
-			if (hero) {
-				x = hero.x;
-				y = hero.y;
-			}
-
-			let targetAngle = Unit.getAngle(gunShip.x, gunShip.y, x, y);
-			console.log(gunShip.angle+" to "+targetAngle);
-			// if (targetAngle - gunShip.angle > 180) {
-			//  	targetAngle = targetAngle - 360;
-			// }
-
-			gunShip.mainGun.bulletLeft = 50;
-			egret.Tween.get(gunShip).to({angle: targetAngle}, 1000);
-        }, (dt: number, state: tutils.State)=>{
+			gunShip.mainGun.bulletLeft = bulletLeft;
+        }, (dt: number)=>{
+			this.adjustAngle(gunShip, dt, angleSpeed);
             if (gunShip.mainGun.bulletLeft == 0) {
-                smgr.change(state.args[0]);
+                smgr.change(ajustAngle.args[0]);
             }
         }, this);
 
         smgr.start(10, moveToLeft);
 
-		return ship;
+		return boss;
+	}
+
+	public createBoss2(): MotherShip {
+		let w = this.world.width;
+        let h = this.world.height;
+
+		let boss = new MotherShip(250, 150);
+        this.world.addShip(boss);
+        boss.angle = 180;
+        boss.x = this.world.width * 0.5;
+        boss.y = -boss.height;
+        boss.force.force = tutils.EnemyForce;
+
+		let gunShip = new MotherGunShip(40, 80, "tri");
+        boss.addGunShip(gunShip, 0, 100);
+        gunShip.angle = 180;
+        let gun = Gun.createGun(Gun, Bullet);
+		gunShip.addGun(gun, true);
+		gun.bulletLeft = 0;
+		gun.autoFire = true;
+
+		let gunShipL = new MotherGunShip(40, 80, "tri");
+        boss.addGunShip(gunShipL, -80, 60);
+        gunShipL.angle = 180;
+        let gunL = Gun.createGun(Gun, Bullet);
+		gunShipL.addGun(gunL, true);
+		gunL.bulletLeft = 0;
+		gunL.autoFire = true;
+
+		let gunShipR = new MotherGunShip(40, 80, "tri");
+        boss.addGunShip(gunShipR, 80, 60);
+        gunShipR.angle = 180;
+        let gunR = Gun.createGun(Gun, Bullet);
+		gunShipR.addGun(gunR, true);
+		gunR.bulletLeft = 0;
+		gunR.autoFire = true;
+		
+		boss.speed.baseValue = 10;
+		boss.resetHp(1000);
+		gunShip.resetHp(200);
+		gunShipL.resetHp(200);
+		gunShipR.resetHp(200);
+		gun.bulletSpeed.baseValue = 150;
+		gunL.bulletSpeed.baseValue = 100;
+		gunR.bulletSpeed.baseValue = 100;
+		gun.fireCooldown.baseValue = 20;
+		gunL.fireCooldown.baseValue = 20;
+		gunR.fireCooldown.baseValue = 20;
+		let gunReloadCDLR = 500;
+		let angleSpeed = 50/1000;
+		let angleSpeedLR = 45/1000;
+		let bulletReload = 20;
+		let gunReloadLR = 3;
+
+		let smgr = new tutils.StateManager();
+		let moveToLeft = new tutils.State();
+		let moveToRight = new tutils.State();
+		let adjustAngle = new tutils.State();
+		let wait = new tutils.State();
+		let fire = new tutils.State();
+		let tick = 0;
+		let fired = false;
+
+		moveToLeft.setListener(() => {
+			boss.moveTo(w*0.3, boss.width*0.5+70, boss.speed.value, true, null, () => {
+				smgr.change(adjustAngle, moveToRight);
+			}, this)
+			tick = 0;
+		}, (dt: number) => {
+			tick += dt;
+			this.adjustAngle(gunShip, dt, angleSpeed, gunShip.x, gunShip.y+100);
+			if (tick > gunReloadCDLR) {
+				tick -= gunReloadCDLR;
+				gunL.bulletLeft = gunReloadLR;
+				gunR.bulletLeft = gunReloadLR;
+			} else if (gunL.bulletLeft == 0 && gunR.bulletLeft == 0) {
+				this.adjustAngle(gunShipL, dt, angleSpeedLR);
+				this.adjustAngle(gunShipR, dt, angleSpeedLR);
+			}
+		}, this);
+
+		moveToRight.setListener(() => {
+			boss.moveTo(w*0.7, boss.width*0.5+70, boss.speed.value, true, null, () => {
+				smgr.change(adjustAngle, moveToLeft);
+			}, this);
+			tick = 0;
+		}, (dt: number) => {
+			tick += dt;
+			this.adjustAngle(gunShip, dt, angleSpeed, gunShip.x, gunShip.y+100);
+			if (tick > gunReloadCDLR) {
+				tick -= gunReloadCDLR;
+				gunL.bulletLeft = gunReloadLR;
+				gunR.bulletLeft = gunReloadLR;
+			} else if (gunL.bulletLeft == 0 && gunR.bulletLeft == 0) {
+				this.adjustAngle(gunShipL, dt, angleSpeedLR);
+				this.adjustAngle(gunShipR, dt, angleSpeedLR);
+			}
+		}, this);
+
+		adjustAngle.setListener(() => {
+			tick = 0;
+			fired === false
+		}, (dt: number) => {
+			tick += dt;
+			if (tick < 5000) {
+				this.adjustAngle(gunShip, dt, 100);
+			} else {
+				smgr.change(wait, 500, fire, adjustAngle.args[0])
+			}
+		}, this);
+
+		wait.setListener(() => {
+			tick = 0;
+		}, (dt: number) => {
+			tick += dt;
+			if (tick >= wait.args[0]) {
+				if (wait.args[1] === fire) {
+					smgr.change(fire, wait.args[2]);
+				} else {
+					smgr.change(wait.args[1]);
+				}
+			}
+		}, this);
+
+		fire.setListener(() => {
+			tick = 0;
+			gun.bulletLeft = bulletReload;
+		}, (dt: number) => {
+			if (gun.bulletLeft == 0) {
+				smgr.change(wait, 1000, fire.args[0]);
+			}
+		}, this);
+		smgr.start(30, moveToLeft);
+
+		return boss;
 	}
 }

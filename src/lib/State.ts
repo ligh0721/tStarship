@@ -6,11 +6,11 @@ module tutils {
 
 	export class State implements State {
 		protected onEnterListener: ()=>void = null;
-		protected onTimerListener: (dt: number, state: State)=>void = null;
+		protected onTimerListener: (dt: number)=>void = null;
 		protected thisObject: any = null;
 		public args: any[];
 
-		public setListener(onEnter: (...args: any[])=>void, onTimer: (dt: number, state: State)=>void, thisObject: any) {
+		public setListener(onEnter: (...args: any[])=>void, onTimer: (dt: number)=>void, thisObject: any) {
 			this.onEnterListener = onEnter;
 			this.onTimerListener = onTimer;
 			this.thisObject = thisObject;
@@ -25,7 +25,7 @@ module tutils {
 
 		public onTimer(dt: number) {
 			if (this.onTimerListener != null) {
-				this.onTimerListener.call(this.thisObject, dt, this);
+				this.onTimerListener.call(this.thisObject, dt);
 			}
 		}
 	}

@@ -28,25 +28,25 @@ class TestLayer extends tutils.Layer {
         let fire5 = new tutils.State();
         
         moveToLeftBottom.setListener(()=>{
-            this.hero.moveTo(w*0.1, h*0.9, this.hero.speed.value, false, null, (unit: Unit)=>{
+            this.hero.moveTo(w*0.1, h*0.9, this.hero.speed.value, false, null, ()=>{
                 smgr.change(fire5, moveToRightBottom);
-            });
+            }, this);
         }, null, this);
         moveToRightBottom.setListener(()=>{
-            this.hero.moveTo(w*0.9, h*0.9, this.hero.speed.value, false, null, (unit: Unit)=>{
+            this.hero.moveTo(w*0.9, h*0.9, this.hero.speed.value, false, null, ()=>{
                 smgr.change(fire5, moveToMiddleTop);
-            });
+            }, this);
         }, null, this);
         moveToMiddleTop.setListener(()=>{
-            this.hero.moveTo(w*0.5, h*0.1, this.hero.speed.value, false, null, (unit: Unit)=>{
+            this.hero.moveTo(w*0.5, h*0.1, this.hero.speed.value, false, null, ()=>{
                 smgr.change(fire5, moveToLeftBottom);
-            });
+            }, this);
         }, null, this);
         fire5.setListener((nextState: tutils.State)=>{
             this.hero.mainGun.bulletLeft = 5;
-        }, (dt: number, state: tutils.State)=>{
+        }, (dt: number)=>{
             if (this.hero.mainGun.bulletLeft == 0) {
-                smgr.change(state.args[0]);
+                smgr.change(fire5.args[0]);
             }
         }, this);
         // smgr.start(10, moveToMiddleTop);

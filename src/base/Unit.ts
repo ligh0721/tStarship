@@ -81,16 +81,20 @@ class Unit {
 		return tutils.getDirectionPoint(x0, y0, a, dis);
 	}
 
-	public static getDistance(unit0: Unit, unit1: Unit) {
-		let dtx = unit0.gameObject.x - unit1.gameObject.x;
-		let dty = unit0.gameObject.y - unit1.gameObject.y;
+	public getDistance(x: number, y: number) {
+		let dtx = this.gameObject.x - x;
+		let dty = this.gameObject.y - y;
 		return Math.sqrt(dtx*dtx+dty*dty);
 	}
 
-	public static getAngle(x0: number, y0: number, x1: number, y1: number) {
-		let angle = Math.atan2(y1 - y0, x1 - x0) * tutils.DegPerRad + 90;
-		if (angle > 180) {
+	public getAngle(x: number, y: number) {
+		let angle = Math.atan2(y - this.gameObject.y, x - this.gameObject.x) * tutils.DegPerRad + 90;
+		let dt = angle - this.angle;
+		// console.log(this.angle+' <to> '+angle);
+		if (dt > 180) {
 			angle = angle - 360;
+		} else if (dt < -180) {
+			angle = angle + 360;
 		}
 		return angle;
 	}
@@ -105,7 +109,7 @@ class Unit {
 	}
 
 	// fixedRotation=false
-	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, onMoveEnd?: (unit: Unit)=>void, thisObject?: any): void {
+	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, onMoveEnd?: ()=>void, thisObject?: any): void {
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
 		if (fixedRotation != true) {
