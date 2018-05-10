@@ -84,7 +84,7 @@ class BattleLayer extends tutils.Layer {
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
         hero.speed.baseValue = 200;
-        hero.resetHp(6);
+        hero.resetHp(3);
         let gun = Gun.createGun(Gun, EllipseBullet);
         gun.fireCooldown.baseValue = 200;
         gun.bulletSpeed.baseValue = 80;
@@ -156,9 +156,7 @@ class BattleLayer extends tutils.Layer {
 
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             // 创建敌军小队
-            //this.createTestEnemyRushes();
-            let boss = this.enemyCtrl.createBoss2();
-            this.createBossUI(boss);
+            this.createTestEnemyRushes();
         });
     }
 
@@ -462,12 +460,27 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=0; i<30; i++) {
+        for (let i=1; i<=30*2; i++) {
+            if (i == 30) {
+                let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
+                    let boss = this.enemyCtrl.createBoss1();
+                    this.createBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rushItem);
+                continue;
+            } else if (i == 60) {
+                let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
+                    let boss = this.enemyCtrl.createBoss1();
+                    this.createBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rushItem);
+                continue;
+            }
             let es = [];
-            let n = Math.floor(Math.random()*5+3);
+            let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
-                e.resetHp(5+Math.floor(i/5));
+                e.resetHp(5+Math.floor(i/2));
                 es.push(e);
             }
             
@@ -480,8 +493,6 @@ class BattleLayer extends tutils.Layer {
             let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
             this.enemyCtrl.addRush(rushItem);
         }
-        rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, this.createTestMotherShip, this);
-        this.enemyCtrl.addRush(rushItem);
         this.enemyCtrl.startRush(30);
     }
 

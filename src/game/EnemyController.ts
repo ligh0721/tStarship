@@ -158,6 +158,9 @@ class EnemyController {
 	}
 
 	public adjustAngle(ship: Ship, dt: number, angleSpeed: number, x?: number, y?: number): void {
+		if (!ship.isAlive()) {
+			return;
+		}
 		let pos: {x: number, y: number};
 		if (x===undefined || y===undefined) {
 			pos = this.getHeroPos();
@@ -203,7 +206,7 @@ class EnemyController {
 		
 		boss.speed.baseValue = 30;
 		boss.resetHp(1000);
-		gunShip.resetHp(200);
+		gunShip.resetHp(500);
 		gun.fireCooldown.baseValue = 20;
 		gun.bulletSpeed.baseValue = 40;
 		let angleSpeed = 20/1000;
@@ -212,10 +215,9 @@ class EnemyController {
 		let smgr = new tutils.StateManager();
         let moveToRight = new tutils.State();
 		let moveToLeft = new tutils.State();
+		let moveToBottom = new tutils.State();
         let ajustAngle = new tutils.State();
         let fire = new tutils.State();
-
-		
 
 		moveToRight.setListener(()=>{
             boss.moveTo(w-boss.width*0.5-20, boss.height*0.5+70, boss.speed.value, true, null, ()=>{
@@ -242,6 +244,12 @@ class EnemyController {
             }
         }, this);
 
+		moveToBottom.setListener(()=>{
+			boss.moveTo(boss.x, h+boss.height+100, boss.speed.value*0.5, true, null, ()=>{
+				boss.damaged(boss.hp, null);
+			})
+		}, null, this);
+
         smgr.start(10, moveToLeft);
 
 		return boss;
@@ -261,7 +269,7 @@ class EnemyController {
 		let gunShip = new MotherGunShip(40, 80, "tri");
         boss.addGunShip(gunShip, 0, 100);
         gunShip.angle = 180;
-        let gun = Gun.createGun(Gun, Bullet);
+        let gun = Gun.createGun(Gun, ShakeWave2Bullet);
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
@@ -284,36 +292,40 @@ class EnemyController {
 		
 		boss.speed.baseValue = 10;
 		boss.resetHp(1000);
-		gunShip.resetHp(200);
-		gunShipL.resetHp(200);
-		gunShipR.resetHp(200);
+		gunShip.resetHp(500);
+		gunShipL.resetHp(500);
+		gunShipR.resetHp(500);
 		gun.bulletSpeed.baseValue = 150;
 		gunL.bulletSpeed.baseValue = 100;
 		gunR.bulletSpeed.baseValue = 100;
 		gun.fireCooldown.baseValue = 20;
-		gunL.fireCooldown.baseValue = 20;
-		gunR.fireCooldown.baseValue = 20;
+		gunL.fireCooldown.baseValue = 30;
+		gunR.fireCooldown.baseValue = 30;
 		let gunReloadCDLR = 500;
-		let angleSpeed = 50/1000;
-		let angleSpeedLR = 45/1000;
+		let angleSpeed = 30/1000;
+		let angleSpeedLR = 40/1000;
 		let bulletReload = 20;
 		let gunReloadLR = 3;
 
 		let smgr = new tutils.StateManager();
-		let moveToLeft = new tutils.State();
-		let moveToRight = new tutils.State();
+		let moveTo = new tutils.State();
+		let moveToBottom = new tutils.State();
 		let adjustAngle = new tutils.State();
 		let wait = new tutils.State();
 		let fire = new tutils.State();
 		let tick = 0;
-		let fired = false;
+		boss.ai = smgr;
 
-		moveToLeft.setListener(() => {
-			boss.moveTo(w*0.3, boss.width*0.5+70, boss.speed.value, true, null, () => {
-				smgr.change(adjustAngle, moveToRight);
+		moveTo.setListener((pos: {x: number, y: number})=>{
+			boss.moveTo(pos.x, pos.y, boss.speed.value, true, null, ()=>{
+				smgr.change(adjustAngle, {x: w*0.7, y: boss.height*0.5+70});
 			}, this)
 			tick = 0;
-		}, (dt: number) => {
+		}, (dt: number)=>{
+			if (!gunShip.isAlive() && !gunShipL.isAlive() && !gunShipR.isAlive()) {
+				smgr.change(moveToBottom);
+				return;
+			}
 			tick += dt;
 			this.adjustAngle(gunShip, dt, angleSpeed, gunShip.x, gunShip.y+100);
 			if (tick > gunReloadCDLR) {
@@ -321,63 +333,62 @@ class EnemyController {
 				gunL.bulletLeft = gunReloadLR;
 				gunR.bulletLeft = gunReloadLR;
 			} else if (gunL.bulletLeft == 0 && gunR.bulletLeft == 0) {
-				this.adjustAngle(gunShipL, dt, angleSpeedLR);
-				this.adjustAngle(gunShipR, dt, angleSpeedLR);
+				if (gunL.bulletLeft == 0) {
+					this.adjustAngle(gunShipL, dt, angleSpeedLR);
+				}
+				if (gunR.bulletLeft == 0) {
+					this.adjustAngle(gunShipR, dt, angleSpeedLR);
+				}
 			}
 		}, this);
 
-		moveToRight.setListener(() => {
-			boss.moveTo(w*0.7, boss.width*0.5+70, boss.speed.value, true, null, () => {
-				smgr.change(adjustAngle, moveToLeft);
-			}, this);
+		adjustAngle.setListener(()=>{
 			tick = 0;
-		}, (dt: number) => {
-			tick += dt;
-			this.adjustAngle(gunShip, dt, angleSpeed, gunShip.x, gunShip.y+100);
-			if (tick > gunReloadCDLR) {
-				tick -= gunReloadCDLR;
-				gunL.bulletLeft = gunReloadLR;
-				gunR.bulletLeft = gunReloadLR;
-			} else if (gunL.bulletLeft == 0 && gunR.bulletLeft == 0) {
-				this.adjustAngle(gunShipL, dt, angleSpeedLR);
-				this.adjustAngle(gunShipR, dt, angleSpeedLR);
+		}, (dt: number)=>{
+			if (!gunShip.isAlive() && !gunShipL.isAlive() && !gunShipR.isAlive()) {
+				smgr.change(moveToBottom);
+				return;
 			}
-		}, this);
-
-		adjustAngle.setListener(() => {
-			tick = 0;
-			fired === false
-		}, (dt: number) => {
 			tick += dt;
 			if (tick < 5000) {
-				this.adjustAngle(gunShip, dt, 100);
+				this.adjustAngle(gunShip, dt, angleSpeed);
 			} else {
-				smgr.change(wait, 500, fire, adjustAngle.args[0])
+				smgr.change(wait, 100, fire, adjustAngle.args[0])
 			}
 		}, this);
 
-		wait.setListener(() => {
+		wait.setListener(()=>{
 			tick = 0;
-		}, (dt: number) => {
+		}, (dt: number)=>{
+			if (!gunShip.isAlive() && !gunShipL.isAlive() && !gunShipR.isAlive()) {
+				smgr.change(moveToBottom);
+				return;
+			}
 			tick += dt;
 			if (tick >= wait.args[0]) {
 				if (wait.args[1] === fire) {
 					smgr.change(fire, wait.args[2]);
 				} else {
-					smgr.change(wait.args[1]);
+					smgr.change(moveTo, wait.args[1]);
 				}
 			}
 		}, this);
 
-		fire.setListener(() => {
+		fire.setListener(()=>{
 			tick = 0;
 			gun.bulletLeft = bulletReload;
-		}, (dt: number) => {
-			if (gun.bulletLeft == 0) {
+		}, (dt: number)=>{
+			if (gun.bulletLeft == 0 || !gunShip.isAlive()) {
 				smgr.change(wait, 1000, fire.args[0]);
 			}
 		}, this);
-		smgr.start(30, moveToLeft);
+
+		moveToBottom.setListener(()=>{
+			boss.moveTo(boss.x, h-boss.height*0.5, boss.speed.value*0.5, true, null, ()=>{
+				boss.damaged(boss.hp, null);
+			})
+		}, null, this);
+		smgr.start(60, moveTo, {x: w*0.3, y: boss.height*0.5+70});
 
 		return boss;
 	}

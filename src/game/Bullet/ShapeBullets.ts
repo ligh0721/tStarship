@@ -29,6 +29,21 @@ class ShakeWaveBullet extends Bullet {
 	}
 }
 
+class ShakeWave2Bullet extends Bullet {
+	// override
+	protected onCreate(): egret.DisplayObject {
+		if (this.gameObject !== undefined) {
+			return this.gameObject;
+		}
+		let bullet = new egret.Shape();
+		bullet.graphics.lineStyle(3, this.gun.bulletColor);
+		bullet.graphics.drawArc(0, 0, 50, -175/tutils.DegPerRad, -5/tutils.DegPerRad);
+		bullet.graphics.drawArc(0, 20, 55, -155/tutils.DegPerRad, -25/tutils.DegPerRad);
+        
+		return bullet;
+	}
+}
+
 class EllipseBullet extends Bullet {
 	width: number = 10;
     height: number = 50;

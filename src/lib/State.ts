@@ -32,7 +32,11 @@ module tutils {
 
 	export class StateManager {
 		private $curState: State = null;
-		private timer: tutils.Timer = new tutils.Timer();
+		private timer: tutils.Timer;
+
+		public constructor() {
+			this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+		}
 
 		public start(timerRate: number, startState: State, ...args: any[]): void {
 			if (!this.timer.hasOnTimerListener()) {
@@ -40,6 +44,11 @@ module tutils {
 			}
 			this.timer.start(1000/timerRate, true);
 			this.change(startState, ...args);
+		}
+
+		public stop(): void {
+			this.timer.stop();
+			this.$curState = null;
 		}
 
 		public change(state: State, ...args: any[]): void {

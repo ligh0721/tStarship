@@ -12,6 +12,8 @@ class Ship extends HpUnit {
 	readonly buffs: { [id: string]: Buff };
 	buffsNum: number = 0;
 
+	ai: tutils.StateManager;
+
 	// from unit
 	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onAddBuffThisObject: any = null;
@@ -29,6 +31,7 @@ class Ship extends HpUnit {
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
 		this.buffs===undefined ? this.buffs={} : this.buffs.constructor();
+		this.ai===undefined ? this.ai=new tutils.StateManager() : this.ai.constructor();
 	}
 
 	protected onCreate(): egret.DisplayObject {
@@ -59,6 +62,7 @@ class Ship extends HpUnit {
 		//console.assert(src instanceof Ship);
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
+		this.ai.stop();
 		this.world.onShipDying(this, <Ship>src);
 		let tw: egret.Tween;
 		let g: egret.Graphics = null;
