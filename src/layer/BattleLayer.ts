@@ -235,7 +235,7 @@ class BattleLayer extends tutils.Layer {
             let score = Math.floor(ship.maxHp*20/100)*100;
             // this.score.setScore(this.score.score+score, 200);
             this.score.score += score;
-            let power = Math.max(ship.maxHp/10, 1);
+            let power = Math.max(ship.maxHp/5, 1);
             let supply = this.world.pools.newObject(PowerSupply, power);
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
@@ -480,7 +480,7 @@ class BattleLayer extends tutils.Layer {
             let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
-                e.resetHp(5+Math.floor(i/2));
+                e.resetHp(5+Math.floor(i/4));
                 es.push(e);
             }
             
