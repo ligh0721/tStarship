@@ -10,7 +10,8 @@ type ShipDataItem = {
 	fireCD: number,
 	bulletPower: number,
 	bulletNum: number,
-	bulletHitTimes: number
+	bulletHitTimes: number,
+	bulletHitInterval: number
 }
 type ShipsData = {
 	[id: string]: ShipDataItem

@@ -8,8 +8,9 @@ const GlobalShipsData: ShipsData = {
 		bulletSpeed: 80,
         fireCD: 200,
 		bulletPower: 3,
-		bulletHitTimes: 5,
 		bulletNum: 4,
+		bulletHitTimes: 5,
+		bulletHitInterval: 100,
 		skillName: "turbo"
 	},
     ship_hero: {
@@ -21,8 +22,9 @@ const GlobalShipsData: ShipsData = {
 		bulletSpeed: 80,
         fireCD: 200,
 		bulletPower: 10,
-		bulletHitTimes: 1,
 		bulletNum: 1,
+		bulletHitTimes: 1,
+		bulletHitInterval: 1000,
 		skillName: "turbo"
 	},
     ship_soundwave: {
@@ -36,6 +38,7 @@ const GlobalShipsData: ShipsData = {
 		bulletPower: 10,
 		bulletNum: 5,
 		bulletHitTimes: 2,
+		bulletHitInterval: 200,
 		skillName: "turbo"
     }
 };
