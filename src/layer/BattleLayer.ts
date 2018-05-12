@@ -77,21 +77,18 @@ class BattleLayer extends tutils.Layer {
         tutils.playSound("Bgmusic_mp3", 0);
 
         // 创建玩家飞船
-        let hero = new HeroShip(40, 80);
+        egret.localStorage.clear();
+        if (PlayerPrefs.instance.load() == null) {
+            PlayerPrefs.instance.reset();
+            PlayerPrefs.instance.addNewShip("ship_test");
+            PlayerPrefs.instance.save();
+        }
+
+        let hero = ShipManager.instance.createHeroShip(PlayerPrefs.instance.data.ships[0].id, this.world);
         this.hero = hero;
-        this.world.addShip(hero);
         hero.force.force = tutils.Player1Force;
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
-        hero.speed.baseValue = 200;
-        hero.resetHp(10);
-        let gun = Gun.createGun(Gun, EllipseBullet);
-        gun.fireCooldown.baseValue = 200;
-        gun.bulletSpeed.baseValue = 80;
-        gun.bulletPower.baseValue = 3;
-        gun.bulletPowerLossPer = 1;
-        gun.bulletPowerLossInterval.baseValue = 1000;
-        hero.addGun(gun, true);
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
@@ -140,9 +137,6 @@ class BattleLayer extends tutils.Layer {
 
         // 创建BOSS飞船
         //this.createTestMotherShip();
-        
-        // 绘制测试路径
-        //this.drawTestPath();
 
         // 最后添加事件监听器
         this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
@@ -157,8 +151,11 @@ class BattleLayer extends tutils.Layer {
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             // 创建敌军小队
             this.createTestEnemyRushes();
+            
             // let boss = this.enemyCtrl.createBoss2();
             // this.createBossUI(boss);
+            // 绘制测试路径
+            //this.drawTestPath();
         });
     }
 
@@ -191,15 +188,10 @@ class BattleLayer extends tutils.Layer {
     }
 
     public set pathPercent(value: number) {
-        const dur = 10000;
-        const dis = 1000;
-        const T = 1000;
-        const pX = 500;
-        const pY = 0;
-        const A = 100;
-        this.$pathPercent = value;
-        let y = pY + dis * value;
-        let x = pX + A * Math.sin(value*dur/2*Math.PI/T);
+        let a = 400;
+        let b = 400;
+        let y = value*1000;
+        let x = Math.sqrt(Math.pow(Math.sqrt(a*a+b*b)*2*Math.sin((Math.atan(b/a)-Math.asin((b-y)/Math.sqrt(a*a+b*b)))/2), 2)-y*y);
         let g = this.layer.graphics;
         g.drawCircle(x, y, 1);
     }
@@ -633,8 +625,8 @@ class BattleLayer extends tutils.Layer {
             (<EaseGun>gun).ease = egret.Ease.getPowIn(2);
             gun.fireCooldown.baseValue = 1000;
             gun.bulletSpeed.baseValue = 100;
-            gun.bulletPower.baseValue = 30;
-            gun.bulletPowerLossPer = 0.2;
+            gun.bulletPower.baseValue = 1000;
+            gun.bulletPowerLossPer = 0.005;
             gun.bulletPowerLossInterval.baseValue = 100;
             supply = new GunSupply(gun);
             supply.text = "ShakeWaveGun";

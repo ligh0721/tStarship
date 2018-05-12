@@ -1,40 +1,67 @@
-type ShipInfo = {
+type ShipDataItem = {
+	id?: string,
 	name: string,
-	mainGun: tutils.Constructor<Gun>,
-	mainGunBullet: tutils.Constructor<Bullet>,
-	mainGunBulletPower: number,
-	mainGunBulletSpeed: number,
-	mainGunBulletHitTimes: number,
-	mainGunCD: number,
 	skillName: string,
 	maxHp: number,
-	speed: number
+	speed: number,
+	gun: tutils.Constructor<Gun>,
+	bullet: tutils.Constructor<Bullet>,
+	bulletSpeed: number,
+	fireCD: number,
+	bulletPower: number,
+	bulletNum: number,
+	bulletHitTimes: number
+}
+type ShipsData = {
+	[id: string]: ShipDataItem
 };
 
-type ShipInfoMap = {[name: string]: ShipInfo};
-
 class ShipManager {
-	shipInfos: ShipInfoMap = {};
+	private readonly data: ShipsData = {};
 	private static $inst;
+
+	public constructor() {
+		this.data = this.fix(GlobalShipsData);
+		console.log("load ships data", this.data);
+	}
 	
 	public static get instance(): ShipManager {
 		return ShipManager.$inst!==undefined ? ShipManager.$inst : ShipManager.$inst=new ShipManager();
 	}
 
-	public createHeroShip(name: string): HeroShip {
-		let shipInfo = this.shipInfos[name];
+	private fix(data: ShipsData): ShipsData {
+		for (let id in data) {
+			let shipInfo = data[id];
+			shipInfo.id = id;
+		}
+		return data;
+	}
+
+	public createHeroShip(id: string, world: World): HeroShip {
+		let shipInfo = this.data[id];
 		if (shipInfo === undefined) {
 			return null;
 		}
 		let hero = new HeroShip(40, 80);
+		world.addShip(hero);
 		hero.resetHp(shipInfo.maxHp);
 		hero.speed.baseValue = shipInfo.speed;
-		let gun = Gun.createGun(shipInfo.mainGun, shipInfo.mainGunBullet);
-		gun.bulletPowerLossPer = 1 / shipInfo.mainGunBulletHitTimes;
-		gun.bulletPower.baseValue = shipInfo.mainGunBulletPower * shipInfo.mainGunBulletHitTimes;
-		gun.bulletSpeed.baseValue = shipInfo.mainGunBulletSpeed;
-		gun.fireCooldown.baseValue = shipInfo.mainGunCD;
+
+		let gun = Gun.createGun(shipInfo.gun, shipInfo.bullet);
+		gun.bulletSpeed.baseValue = shipInfo.bulletSpeed;
+		gun.fireCooldown.baseValue = shipInfo.fireCD;
+		gun.bulletPowerLossPer = 1 / shipInfo.bulletHitTimes;
+		gun.bulletPower.baseValue = shipInfo.bulletPower * shipInfo.bulletHitTimes;
+		gun.bulletNum = shipInfo.bulletNum;
 		hero.addGun(gun, true);
 		return hero;
+	}
+
+	public getShipDataItem(id: string): ShipDataItem {
+		let item = this.data[id];
+		if (item === undefined) {
+			return null;
+		}
+		return item;
 	}
 }

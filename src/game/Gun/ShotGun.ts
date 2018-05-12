@@ -1,6 +1,6 @@
 class ShotGun extends Gun {
 	bulletNum: number = 5;
-	bulletAngleDelta: number = 15;
+	bulletAngleDelta: number = 10;
 	
 	public fire(): void {
 		this.playFireSound();

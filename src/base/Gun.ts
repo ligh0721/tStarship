@@ -3,6 +3,7 @@ class Gun {
 	ship: Ship;
 	readonly fireCooldown: Value;
 	readonly bulletPower: Value;
+	bulletNum: number = 1;
 	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
 	readonly bulletPowerLossInterval: Value;  // 子弹能量下降时间间隔
 	readonly bulletSpeed: Value;
