@@ -26,14 +26,14 @@
 			<e:Group>
 			<e:List horizontalCenter="0" top="0" itemRendererSkinName="shipListIRSkin" anchorOffsetX="0">
 				<e:ArrayCollection>
-				<e:Array>
-					<e:Object icon="heros02_png" heroName="亚特伍德" checked="false" comment="AAAAAA"/>
-					<e:Object icon="heros03_png" heroName="南瓜头" checked="true" comment="BBBBB"/>
-					<e:Object icon="heros04_png" heroName="矮人" checked="false" comment="CCCCCC"/>
-					<e:Object icon="heros05_png" heroName="怪人" checked="false" comment="DDDDDDD"/>
-					<e:Object icon="heros06_png" heroName="尼娅" checked="false" comment="EEEEE"/>
-					<e:Object icon="heros07_png" heroName="僵尸" checked="false" comment="FFFFFF"/>
-				</e:Array>
+					<e:Array>
+						<e:Object icon="heros02_png" heroName="亚特伍德" checked="false" comment="AAAAAA"/>
+						<e:Object icon="heros03_png" heroName="南瓜头" checked="true" comment="BBBBB"/>
+						<e:Object icon="heros04_png" heroName="矮人" checked="false" comment="CCCCCC"/>
+						<e:Object icon="heros05_png" heroName="怪人" checked="false" comment="DDDDDDD"/>
+						<e:Object icon="heros06_png" heroName="尼娅" checked="false" comment="EEEEE"/>
+						<e:Object icon="heros07_png" heroName="僵尸" checked="false" comment="FFFFFF"/>
+					</e:Array>
 				</e:ArrayCollection>
 			</e:List>
 			</e:Group>
