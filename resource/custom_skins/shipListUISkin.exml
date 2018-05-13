@@ -24,7 +24,7 @@
 			</e:VScrollBar>
 			</e:Skin>
 			<e:Group>
-			<e:List horizontalCenter="0" top="0" itemRendererSkinName="shipListIRSkin">
+			<e:List horizontalCenter="0" top="0" itemRendererSkinName="shipListIRSkin" anchorOffsetX="0">
 				<e:ArrayCollection>
 				<e:Array>
 					<e:Object icon="heros02_png" heroName="亚特伍德" checked="false" comment="AAAAAA"/>

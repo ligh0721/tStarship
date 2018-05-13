@@ -18,8 +18,14 @@ class BattleLayer extends tutils.Layer {
 
     $pathPercent: number = 0;
 	
-	protected onInit() {
+    // override
+    protected onCfgStage(): void {
         this.stage.frameRate = 60;
+        this.stage.frameRate = 60;
+        this.stage.scaleMode = egret.StageScaleMode.FIXED_HEIGHT;
+    }
+
+	protected onInit() {
         this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "grid100_png").create();
         this.bgCtrl.start(20);
         this.layer.addChild(this.bgCtrl.gameObject);

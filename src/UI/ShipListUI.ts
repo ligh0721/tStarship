@@ -56,7 +56,7 @@ class ShipListUI extends eui.Component {
     protected createChildren():void {
         super.createChildren();
 
-        this.scrListHeros.horizontalScrollBar = null;
+        //this.scrListHeros.horizontalScrollBar = null;
     }
 
     private btnOK:eui.Button;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="test" width="400" height="300" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-	<e:Button label="Button" x="13" y="12" anchorOffsetX="0" width="96" anchorOffsetY="0" height="29"/>
-	<e:List id="listHeros" width="379" height="204" x="12" y="70" anchorOffsetX="0" anchorOffsetY="0"/>
+<e:Skin class="test" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<w:Config id="163577e15d0"/>
+	<e:Panel width="702.49" height="453.09" x="22.42" y="80" anchorOffsetX="0" anchorOffsetY="0"/>
 </e:Skin>

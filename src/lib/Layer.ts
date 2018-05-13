@@ -22,17 +22,26 @@ module tutils {
 		}
 
 		public create(): egret.Sprite {
+			this.onCfgStage();
+			console.log("stage size: "+this.stage.stageWidth+"x"+this.stage.stageHeight);
 			this.layer = this.onCreate();
 			this.onInit();
 			return this.layer;
 		}
 
+		// override
+		protected onCfgStage(): void {
+			this.stage.frameRate = 60;
+		}
+
+		// override
 		protected onCreate(): egret.Sprite {
 			let layer = tutils.createLayer(this.root, 0x000000, 1.0);
 			return layer;
 		}
 
-		protected onInit() {
+		// override
+		protected onInit(): void {
 		}
 	}
 }

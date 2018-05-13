@@ -1,0 +1,15 @@
+{
+  "global": {
+    "globalAutoLayerMarkEnable": true
+  },
+  "163577e15d0": {
+    "guideLinesEnabled": false,
+    "backgroundX": 0,
+    "backgroundY": 0,
+    "backgroundWidth": -1,
+    "backgroundHeight": -1,
+    "useBgImage": true,
+    "useBgColor": true,
+    "backgroundAlpha": 100
+  }
+}
