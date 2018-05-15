@@ -367,7 +367,7 @@ class BattleLayer extends tutils.Layer {
         this.sldHeroScale.width = 200;
         this.sldHeroScale.minimum = 10;
         this.sldHeroScale.maximum = 300;
-        this.sldHeroScale.value = 150;
+        this.sldHeroScale.value = 100;
         this.hero.gameObject.scaleX = this.sldHeroScale.value / 100;
         this.hero.gameObject.scaleY = this.sldHeroScale.value / 100;
         this.sldHeroScale.addEventListener(eui.UIEvent.CHANGE, this.onHeroScaleChanged, this)

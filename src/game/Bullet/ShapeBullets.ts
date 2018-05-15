@@ -3,14 +3,30 @@ class SoundWaveBullet extends Bullet {
     height: number = 40;
     
 	// override
+	// protected onCreate(): egret.DisplayObject {
+	// 	let bullet = this.gameObject===undefined ? new egret.Shape() : <egret.Shape>this.gameObject;
+	// 	bullet.graphics.clear();
+	// 	bullet.graphics.lineStyle(3, this.gun.bulletColor);
+	// 	bullet.graphics.drawEllipse(0, 0, this.width, this.height);
+	// 	bullet.anchorOffsetX = this.width * 0.5;
+	// 	bullet.anchorOffsetY = this.height * 0.5;
+	// 	return bullet;
+	// }
+
 	protected onCreate(): egret.DisplayObject {
-		let bullet = this.gameObject===undefined ? new egret.Shape() : <egret.Shape>this.gameObject;
-		bullet.graphics.clear();
-		bullet.graphics.lineStyle(3, this.gun.bulletColor);
-		bullet.graphics.drawEllipse(0, 0, this.width, this.height);
-		bullet.anchorOffsetX = this.width * 0.5;
-		bullet.anchorOffsetY = this.height * 0.5;
-		return bullet;
+		if (this.gameObject !== undefined) {
+			this.gameObject.width = this.width;
+			this.gameObject.height = this.height;
+			this.gameObject.anchorOffsetX = this.width * 0.5;
+			this.gameObject.anchorOffsetY = this.height * 0.5;
+			return this.gameObject;
+		}
+		let gameObject = tutils.createBitmapByName("SoundWaveBullet_png");
+		gameObject.width = this.width;
+		gameObject.height = this.height;
+		gameObject.anchorOffsetX = this.width * 0.5;
+		gameObject.anchorOffsetY = this.height * 0.5;
+		return gameObject;
 	}
 }
 
@@ -68,7 +84,7 @@ class EllipseBullet extends Bullet {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName("Bullet_png");
+		let gameObject = tutils.createBitmapByName("BigBlueEllipseBullet1_png");
 		this.width = gameObject.width;
 		this.height = gameObject.height;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
