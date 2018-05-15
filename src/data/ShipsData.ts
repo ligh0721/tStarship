@@ -1,13 +1,13 @@
 const GlobalShipsData: ShipsData = {
 	ship_test: {
 		name: "Test",
-		maxHp: 100,
+		maxHp: 5,
 		speed: 200,
 		gun: FocusGun,
 		bullet: EllipseBullet,
 		bulletSpeed: 80,
         fireCD: 200,
-		bulletPower: 3,
+		bulletPower: 1,
 		bulletNum: 4,
 		bulletHitTimes: 5,
 		bulletHitInterval: 100,
