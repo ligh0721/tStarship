@@ -84,7 +84,7 @@ class EllipseBullet extends Bullet {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName("BigBlueEllipseBullet1_png");
+		let gameObject = tutils.createBitmapByName("Bullet_png");
 		this.width = gameObject.width;
 		this.height = gameObject.height;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
