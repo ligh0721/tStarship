@@ -29,7 +29,7 @@ class Bullet extends HpUnit {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName("BigRedEllipseBullet1_png");
+		let gameObject = tutils.createBitmapByName("RedBullet1_png");
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
 		gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;
