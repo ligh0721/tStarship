@@ -47,9 +47,9 @@ class BezierCurve {
 			let x1 = this.point1.x + (this.point2.x - this.point1.x) * value;
 			let y1 = this.point1.y + (this.point2.y - this.point1.y) * value;
 
-			let angle = Math.atan2(y1 - y0, x1 - x0) * tutils.DegPerRad;
+			let angle = Math.atan2(y1-y0, x1-x0) * tutils.DegPerRad;
 			//this.ship.gameObject.rotation = angle - 90;
-			this.obj.angle = angle - 90;
+			this.obj.angle = angle + 90;
 		}
 	}
 }

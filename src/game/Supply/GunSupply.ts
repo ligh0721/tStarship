@@ -10,16 +10,16 @@ class GunSupply extends Supply {
 	public onHitShip(ship: Ship): void {
 		if (ship.mainGun != null) {
 			if ((ship.mainGun instanceof ShotGun) && (this.gun instanceof ShotGun)) {
-				(<ShotGun>ship.mainGun).bulletNum++;
+				ship.mainGun.bulletNum++;
 				tutils.playSound("GunPowerup_mp3");
 			} else if ((ship.mainGun instanceof RowGun) && (this.gun instanceof RowGun)) {
-				(<RowGun>ship.mainGun).bulletNum++;
+				ship.mainGun.bulletNum++;
 				tutils.playSound("GunPowerup_mp3");
 			} else if ((ship.mainGun instanceof EaseGun) && (this.gun instanceof EaseGun)) {
-				ship.mainGun.bulletPower.baseValue += 400;
+				ship.mainGun.bulletPower.baseValue += 2/ship.mainGun.bulletPowerLossPer;
 				tutils.playSound("GunPowerup_mp3");
 			} else if ((ship.mainGun instanceof SoundWaveGun) && (this.gun instanceof SoundWaveGun)) {
-				(<SoundWaveGun>ship.mainGun).bulletNum += 1;
+				ship.mainGun.bulletNum += 1;
 				tutils.playSound("GunPowerup_mp3");
 			} else if ((ship.mainGun instanceof GuideGun) && (this.gun instanceof GuideGun)) {
 				ship.mainGun.bulletPower.baseValue += 2;
@@ -27,6 +27,9 @@ class GunSupply extends Supply {
 			} else if ((ship.mainGun instanceof ExplosionGun) && (this.gun instanceof ExplosionGun)) {
 				ship.mainGun.explosionRadius *= 1.2;
 				ship.mainGun.bulletPower.baseValue += 5;
+				tutils.playSound("GunPowerup_mp3");
+			} else if ((ship.mainGun instanceof FocusGun) && (this.gun instanceof FocusGun)) {
+				ship.mainGun.bulletNum++;
 				tutils.playSound("GunPowerup_mp3");
 			} else {
 				ship.removeGun(ship.mainGun.id);

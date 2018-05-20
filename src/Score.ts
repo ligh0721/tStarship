@@ -1,5 +1,6 @@
 class Score {
-	gameObject: egret.BitmapText;
+	gameObject: egret.DisplayObjectContainer;
+	private bmpTxt: egret.BitmapText;
 	digits: number = 1;
 	private $score: number = null;
 	private $_score: number = null;
@@ -11,10 +12,16 @@ class Score {
 		this.gameObject.y = y;
 	}
 
-	protected onCreate(): egret.BitmapText {
-		let bmpText = new egret.BitmapText();
-		bmpText.font = RES.getRes("font_fnt");
-		return bmpText;
+	protected onCreate(): egret.DisplayObjectContainer {
+		let gameObject = new egret.DisplayObjectContainer();
+		let bmp = tutils.createBitmapByName("score_title_png");
+		gameObject.addChild(bmp);
+
+		this.bmpTxt = new egret.BitmapText();
+		this.bmpTxt.font = RES.getRes("score_fnt");
+		gameObject.addChild(this.bmpTxt);
+		this.bmpTxt.x = bmp.x + bmp.width + 50;
+		return gameObject;
 	}
 
 	protected update() {
@@ -23,7 +30,7 @@ class Score {
 		for (let i=0; i<this.digits-len; i++) {
 			txt = "0" + txt;
 		}
-		this.gameObject.text = txt;
+		this.bmpTxt.text = txt;
 	}
 
 	public get score(): number {

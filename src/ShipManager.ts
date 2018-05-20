@@ -1,6 +1,7 @@
 type ShipDataItem = {
 	id?: string,
 	name: string,
+	model: string,
 	skillName: string,
 	maxHp: number,
 	speed: number,
@@ -43,7 +44,7 @@ class ShipManager {
 		if (shipInfo === undefined) {
 			return null;
 		}
-		let hero = new HeroShip(40, 80);
+		let hero = new HeroShip(shipInfo.model);
 		world.addShip(hero);
 		hero.resetHp(shipInfo.maxHp);
 		hero.speed.baseValue = shipInfo.speed;

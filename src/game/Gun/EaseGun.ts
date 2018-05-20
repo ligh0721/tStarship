@@ -1,5 +1,5 @@
 class EaseGun extends Gun {
-	ease: Function = null;
+	ease: Function = egret.Ease.getPowIn(2);
 
 	public fire(): void {
 		this.playFireSound();

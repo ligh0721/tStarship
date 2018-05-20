@@ -1,8 +1,8 @@
 class MotherShip extends Ship {
 	readonly gunShips: { [id: string]: {gunShip: MotherGunShip, offsetX: number, offsetY: number} };
 
-	public constructor(width: number, height: number) {
-		super(width, height);
+	public constructor(model: string, scale?: number) {
+		super(model, scale);
 		this.gunShips===undefined ? this.gunShips={} : this.gunShips.constructor();
 	}
 
@@ -38,19 +38,19 @@ class MotherShip extends Ship {
 		super.onDying(src);
 	}
 
-	protected onCreate(): egret.DisplayObject {
-		let gameObject = new egret.Shape();
-		gameObject.graphics.lineStyle(0);
-		gameObject.graphics.beginFill(0x993333);
-		gameObject.graphics.drawRoundRect(0, 0, this.width, this.height, 20, 20);
-		gameObject.graphics.endFill();
-		gameObject.graphics.lineStyle(10, 0xf48771);
-        gameObject.graphics.drawRoundRect(0, 0, this.width, this.height, 20, 20);
-        gameObject.anchorOffsetX = this.width * 0.5;
-        gameObject.anchorOffsetY = this.height * 0.5;
-		gameObject.cacheAsBitmap = true;
-		return gameObject;
-	}
+	// protected onCreate(): egret.DisplayObject {
+	// 	let gameObject = new egret.Shape();
+	// 	gameObject.graphics.lineStyle(0);
+	// 	gameObject.graphics.beginFill(0x993333);
+	// 	gameObject.graphics.drawRoundRect(0, 0, this.width, this.height, 20, 20);
+	// 	gameObject.graphics.endFill();
+	// 	gameObject.graphics.lineStyle(10, 0xf48771);
+    //     gameObject.graphics.drawRoundRect(0, 0, this.width, this.height, 20, 20);
+    //     gameObject.anchorOffsetX = this.width * 0.5;
+    //     gameObject.anchorOffsetY = this.height * 0.5;
+	// 	gameObject.cacheAsBitmap = true;
+	// 	return gameObject;
+	// }
 
 	protected onCleanup(): void {
 		for (let i in this.gunShips) {

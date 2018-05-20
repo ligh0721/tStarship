@@ -24,9 +24,12 @@ class BackgroundController {
 		this.gameObject = new egret.DisplayObjectContainer();
 		let minY = 0;
 		let maxY = 0;
+		let w = egret.MainContext.instance.stage.stageWidth;
 		let bd: egret.DisplayObject;
 		while (maxY <= this.height+this.cacheHeight) {
 			bd = tutils.createBitmapByName(this.bgname);
+			bd.height = bd.height/bd.width * w;
+			bd.width = w;
 			if (this.childHeight===undefined) {
 				this.childHeight = bd.height;
 			}
@@ -39,6 +42,8 @@ class BackgroundController {
 
 		while (minY >= -this.cacheHeight) {
 			bd = tutils.createBitmapByName(this.bgname);
+			bd.height = bd.height/bd.width * w;
+			bd.width = w;
 			if (this.childHeight===undefined) {
 				this.childHeight = bd.height;
 			}

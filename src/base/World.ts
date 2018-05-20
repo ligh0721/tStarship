@@ -36,7 +36,7 @@ class World {
 		this.rect = new egret.Rectangle(0, 0, width, height);
 
 		// 创建观察者飞船，用于保持持续碰撞检测
-        this.obShip = new Ship(1, 1);
+        this.obShip = new Ship("");
 		this.obShip.hero = true;
         this.obShip.force.force = tutils.EnemyForce;
         this.addShip(this.obShip);

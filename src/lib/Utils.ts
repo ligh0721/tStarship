@@ -41,8 +41,10 @@ module tutils {
 
 	export function createBitmapByName(name: string) {
         let gameObject = new egret.Bitmap();
-        let texture: egret.Texture = RES.getRes(name);
-        gameObject.texture = texture;
+		if (name) {
+			let texture: egret.Texture = RES.getRes(name);
+        	gameObject.texture = texture;
+		}
         return gameObject;
     }
 

@@ -7,8 +7,8 @@ class HeroShip extends Ship {
     heroPowerBar: ShapeProgress = null;
     skill: Skill = null;
 
-    public constructor(width: number, height: number) {
-		super(width, height);
+    public constructor(model: string, scale?: number) {
+		super(model, scale);
         this.hero = true;
         this.hitRect===undefined ? this.hitRect=new egret.Rectangle() : this.hitRect.constructor();
 	}
@@ -80,17 +80,6 @@ class HeroShip extends Ship {
     //     this.hitRect.height = this.hitRadius * 2;
 	// 	return gameObject;
 	// }
-
-    protected onCreate(): egret.DisplayObject {
-        let gameObject = tutils.createBitmapByName("Hero_png");
-        this.width = gameObject.width;
-		this.height = gameObject.height;
-		gameObject.anchorOffsetX = gameObject.width * 0.5;
-		gameObject.anchorOffsetY = gameObject.height * 0.5;
-        // gameObject.scaleX *= 2;
-        // gameObject.scaleY *= 2;
-        return gameObject;
-    }
 
     public hitTest(other: Unit): boolean {
         this.hitRect.x = this.gameObject.x - this.hitRadius;

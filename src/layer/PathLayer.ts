@@ -151,7 +151,7 @@ class PathLayer extends tutils.Layer {
         }
         let ships: EnemyShip[] = []
         for (let i=0; i< this.sldNum.value; i++) {
-            let ship = this.enemyCtrl.createEnemyShip(40, 80, "tri");
+            let ship = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             ships.push(ship);
         }
         let item = new RushItem(ships, PathLayer.typeTxts[this.sldType.value], 0, this.sldDur.value, this.sldItv.value, pts, null, this.sldSinT.value, this.sldSinA.value);

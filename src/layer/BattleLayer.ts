@@ -26,7 +26,7 @@ class BattleLayer extends tutils.Layer {
     }
 
 	protected onInit() {
-        this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "grid100_png").create();
+        this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
         this.bgCtrl.start(20);
         this.layer.addChild(this.bgCtrl.gameObject);
         let stageW = this.stage.stageWidth;
@@ -86,7 +86,7 @@ class BattleLayer extends tutils.Layer {
         egret.localStorage.clear();
         if (PlayerPrefs.instance.load() == null) {
             PlayerPrefs.instance.reset();
-            PlayerPrefs.instance.addNewShip("ship_test");
+            PlayerPrefs.instance.addNewShip("ship_energy");
             PlayerPrefs.instance.save();
         }
 
@@ -126,7 +126,7 @@ class BattleLayer extends tutils.Layer {
 		score.digits = 10;
 		score.score = 0;
         this.score = score;
-        this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.textWidth;
+        this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.width;
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -136,10 +136,10 @@ class BattleLayer extends tutils.Layer {
         testSupplyTimer.start(5000, true, 0);
 
         // 创建调试面板
-        this.createDebugPanel();
+        // this.createDebugPanel();
 
         // 创建测试敌军
-        //this.createTestEnemyShip(1);
+        // this.createTestEnemyShip(1);
 
         // 创建BOSS飞船
         //this.createTestMotherShip();
@@ -396,7 +396,7 @@ class BattleLayer extends tutils.Layer {
 	// FIXME: test
 	private createTestEnemyShip(n: number) {
 		for (let i=0; i<n; i++) {
-			let ship = new EnemyShip(30, 60, "tri");
+			let ship = new MotherShip("BossShip1_png", 2);
 			this.world.addShip(ship);
 			ship.force.force = tutils.EnemyForce;
             ship.resetHp(Math.floor(Math.random()*10)+1);
@@ -412,27 +412,27 @@ class BattleLayer extends tutils.Layer {
         let en3: EnemyShip[] = []; 
         let n = 10;
         for (let i=0; i<n; i++) {
-            let enemy0 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            let enemy0 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             enemy0.resetHp(5);
             en0.push(enemy0);
 
-            let enemy1 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            let enemy1 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             enemy1.resetHp(5);
             en1.push(enemy1);
 
-            let enemy2 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            let enemy2 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             enemy2.resetHp(5);
             en2.push(enemy2);
 
-            let enemy3 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+            let enemy3 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             enemy3.resetHp(5);
             en3.push(enemy3);
         }
 
-        let enemy0 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+        let enemy0 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
         enemy0.resetHp(5);
 
-        let enemy1 = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+        let enemy1 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
         enemy0.resetHp(5);
 
         // this.enemyCtrl.enemyShipMoveInStraightLine(enemyShip, enemyShip.width*0.5);
@@ -479,7 +479,7 @@ class BattleLayer extends tutils.Layer {
             let es = [];
             let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
-                let e = this.enemyCtrl.createEnemyShip(40, 60, "tri");
+                let e = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
                 e.resetHp(5+Math.floor(i/6));
                 es.push(e);
             }
@@ -497,7 +497,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     private createTestMotherShip() {
-        let ship = new MotherShip(400, 200);
+        let ship = new MotherShip("BossShip1_png", 1.5);
         this.world.addShip(ship);
         ship.angle = 180;
         ship.x = this.stage.stageWidth * 0.5;
@@ -505,14 +505,14 @@ class BattleLayer extends tutils.Layer {
         ship.force.force = tutils.EnemyForce;
         ship.resetHp(1000);
 
-        let gunShip = new MotherGunShip(40, 80, "tri");
+        let gunShip = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip, -100, 100);
         gunShip.resetHp(200);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, Bullet);
         gunShip.addGun(gun);
         
-        let gunShip2 = new MotherGunShip(40, 80, "rect");
+        let gunShip2 = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip2, 100, 100);
         gunShip2.resetHp(150);
         gunShip2.angle = 180;
@@ -569,7 +569,7 @@ class BattleLayer extends tutils.Layer {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*10);
+        let i = Math.floor(Math.random()*11);
         switch (i) {
             case 0:
             buff = new GunBuff(8000, -0.30, 0, 0);
@@ -691,6 +691,20 @@ class BattleLayer extends tutils.Layer {
             gun.bulletPowerLossInterval.baseValue = 1000;
             supply = new GunSupply(gun);
             supply.text = "GuideGun";
+            supply.color = 0xc586c0;
+            supply.pickDist = 0;
+            break;
+
+            case 10:
+            gun = Gun.createGun(FocusGun, EllipseBullet);
+            gun.fireCooldown.baseValue = 200;
+            gun.bulletSpeed.baseValue = 80;
+            gun.bulletPower.baseValue = 5;
+            gun.bulletPowerLossPer = 1/5;
+            gun.bulletNum = 2;
+            gun.bulletPowerLossInterval.baseValue = 100;
+            supply = new GunSupply(gun);
+            supply.text = "FocusGun";
             supply.color = 0xc586c0;
             supply.pickDist = 0;
             break;

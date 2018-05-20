@@ -1,6 +1,8 @@
 class Ship extends HpUnit {
 	width: number;
 	height: number;
+	private model: string;
+	private scale: number;
 	
 	force: Force;
 	mainGun: Gun = null;
@@ -22,10 +24,10 @@ class Ship extends HpUnit {
 	private onRemoveBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onRemoveBuffThisObject: any = null;
 
-	public constructor(width: number, height: number) {
+	public constructor(model: string, scale?: number) {
 		super();
-		this.width = width;
-		this.height = height;
+		this.model = model;
+		this.scale = scale===undefined ? 1.0 : scale;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.guns===undefined ? this.guns={} : this.guns.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
@@ -35,14 +37,13 @@ class Ship extends HpUnit {
 	}
 
 	protected onCreate(): egret.DisplayObject {
-		let gameObject = new egret.Shape();
-		gameObject.graphics.lineStyle(10, 0xffffff);
-        gameObject.graphics.moveTo(this.width * 0.5, 0);
-        gameObject.graphics.lineTo(0, this.height);
-        gameObject.graphics.lineTo(this.width, this.height);
-        gameObject.graphics.lineTo(this.width * 0.5, 0);
-        gameObject.anchorOffsetX = this.width * 0.5;
-        gameObject.anchorOffsetY = this.height * 0.5;
+		let gameObject = tutils.createBitmapByName(this.model);
+		gameObject.width *= this.scale;
+		gameObject.height *= this.scale;
+        this.width = gameObject.width;
+		this.height = gameObject.height;
+		gameObject.anchorOffsetX = gameObject.width * 0.5;
+		gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;
 	}
 
@@ -66,17 +67,28 @@ class Ship extends HpUnit {
 		this.world.onShipDying(this, <Ship>src);
 		let tw: egret.Tween;
 		let g: egret.Graphics = null;
+		let from = 20;
+		let to = (this.width + this.height) / 2;
 		if (this.gameObject instanceof egret.Shape) {
 			g = this.gameObject.graphics;
 		} else if (this.gameObject instanceof egret.Sprite) {
 			g = this.gameObject.graphics;
+		} else if (this.gameObject instanceof egret.Bitmap) {
+			let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
+			this.gameObject.parent.addChild(effect.gameObject);
+			tw = egret.Tween.get(effect);
+			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
+			tw.call(()=>{
+				this.gameObject.parent.removeChild(effect.gameObject);
+				this.pools.delObject(effect);
+			}, this);
+			this.gameObject.visible = false;
 		}
+
 		if (g != null) {
-			let from = 20;
-			let to = (this.width + this.height) / 2;
 			g.clear();
-			g.lineStyle(5, 0xffffff);
-			g.beginFill(0xfefe69, 1);
+			g.lineStyle(5, 0xff2916);
+			g.beginFill(0xfef23b, 1);
 			g.drawCircle(this.gameObject.anchorOffsetX, this.gameObject.anchorOffsetY, to);
 			g.endFill();
 			this.gameObject.scaleX = from / to;
@@ -92,7 +104,7 @@ class Ship extends HpUnit {
 			tw.call(()=>{
 				this.pools.delObject(effect);
 			}, this);
-		} else {
+		} else if (!tw) {
 			tw = egret.Tween.get(this.gameObject);
 		}
 		tw.call(()=>{

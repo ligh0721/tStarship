@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,font_fnt,font_png,grid100_png,coin_png,about-bg_png,about_png,close_png,bgListPage_jpg,btnOK_png,checked_png,checkNo_png,goods01_png,goods02_png,goods03_png,goods04_png,goods05_png,goods06_png,goods07_png,goodsTitle_png,heros01_png,heros02_png,heros03_png,heros04_png,heros05_png,heros06_png,heros07_png,herosTitle_png,hScrollBar01_png,hScrollBar02_png,listItemBkgd_png,commonBg_jpg,homeBg_jpg,loading_jpg,loading2_png,toast-bg_png,btnEquip_png,btnReturn_png,btnStrengthen_png,mbtnAbout_png,mbtnGoods_png,mbtnHero_png,mbtnPlayer_png,mbtn_Bg_png,mbtn_BgFc_png,profileContent_png,profileTitle_png,skillBg_png,skillIcon01_png,skillIcon02_png,skillIcon03_png,skillIcon04_png,skillIcon05_png,skillIcon06_png,skillIcon07_png,skillItemFrame_png,Hit_mp3,Powerup_mp3,Explosion2_mp3,Explosion0_mp3,Explosion1_mp3,Bgmusic_mp3,RowGunShoot_mp3,ExplosionGunShoot_mp3,PickPower_mp3,SoundWaveGunShoot_mp3,GunShoot_mp3,ShotGunShoot_mp3,EaseGunShoot_mp3,ExplosionBullet_mp3,GuideGunShoot_mp3,GunPowerup_mp3,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,Test_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,font_fnt,font_png,grid100_png,coin_png,Hit_mp3,Powerup_mp3,Explosion2_mp3,Explosion0_mp3,Explosion1_mp3,Bgmusic_mp3,RowGunShoot_mp3,ExplosionGunShoot_mp3,PickPower_mp3,SoundWaveGunShoot_mp3,GunShoot_mp3,ShotGunShoot_mp3,EaseGunShoot_mp3,ExplosionBullet_mp3,GuideGunShoot_mp3,GunPowerup_mp3,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,Test_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,bgGrey_png,bgGrey_jpg,score_title_png,score_png,score_fnt,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png",
 			"name": "preload"
 		}
 	],
@@ -155,261 +155,6 @@
 			"url": "assets/coin.png",
 			"type": "image",
 			"name": "coin_png"
-		},
-		{
-			"url": "art/about/about-bg.png",
-			"type": "image",
-			"name": "about-bg_png"
-		},
-		{
-			"url": "art/about/about.png",
-			"type": "image",
-			"name": "about_png"
-		},
-		{
-			"url": "art/about/close.png",
-			"type": "image",
-			"name": "close_png"
-		},
-		{
-			"url": "art/heros_goods/bgListPage.jpg",
-			"type": "image",
-			"name": "bgListPage_jpg"
-		},
-		{
-			"url": "art/heros_goods/btnOK.png",
-			"type": "image",
-			"name": "btnOK_png"
-		},
-		{
-			"url": "art/heros_goods/checked.png",
-			"type": "image",
-			"name": "checked_png"
-		},
-		{
-			"url": "art/heros_goods/checkNo.png",
-			"type": "image",
-			"name": "checkNo_png"
-		},
-		{
-			"url": "art/heros_goods/goods01.png",
-			"type": "image",
-			"name": "goods01_png"
-		},
-		{
-			"url": "art/heros_goods/goods02.png",
-			"type": "image",
-			"name": "goods02_png"
-		},
-		{
-			"url": "art/heros_goods/goods03.png",
-			"type": "image",
-			"name": "goods03_png"
-		},
-		{
-			"url": "art/heros_goods/goods04.png",
-			"type": "image",
-			"name": "goods04_png"
-		},
-		{
-			"url": "art/heros_goods/goods05.png",
-			"type": "image",
-			"name": "goods05_png"
-		},
-		{
-			"url": "art/heros_goods/goods06.png",
-			"type": "image",
-			"name": "goods06_png"
-		},
-		{
-			"url": "art/heros_goods/goods07.png",
-			"type": "image",
-			"name": "goods07_png"
-		},
-		{
-			"url": "art/heros_goods/goodsTitle.png",
-			"type": "image",
-			"name": "goodsTitle_png"
-		},
-		{
-			"url": "art/heros_goods/heros01.png",
-			"type": "image",
-			"name": "heros01_png"
-		},
-		{
-			"url": "art/heros_goods/heros02.png",
-			"type": "image",
-			"name": "heros02_png"
-		},
-		{
-			"url": "art/heros_goods/heros03.png",
-			"type": "image",
-			"name": "heros03_png"
-		},
-		{
-			"url": "art/heros_goods/heros04.png",
-			"type": "image",
-			"name": "heros04_png"
-		},
-		{
-			"url": "art/heros_goods/heros05.png",
-			"type": "image",
-			"name": "heros05_png"
-		},
-		{
-			"url": "art/heros_goods/heros06.png",
-			"type": "image",
-			"name": "heros06_png"
-		},
-		{
-			"url": "art/heros_goods/heros07.png",
-			"type": "image",
-			"name": "heros07_png"
-		},
-		{
-			"url": "art/heros_goods/herosTitle.png",
-			"type": "image",
-			"name": "herosTitle_png"
-		},
-		{
-			"url": "art/heros_goods/hScrollBar01.png",
-			"type": "image",
-			"name": "hScrollBar01_png"
-		},
-		{
-			"url": "art/heros_goods/hScrollBar02.png",
-			"type": "image",
-			"name": "hScrollBar02_png"
-		},
-		{
-			"url": "art/heros_goods/listItemBkgd.png",
-			"type": "image",
-			"name": "listItemBkgd_png"
-		},
-		{
-			"url": "art/home/commonBg.jpg",
-			"type": "image",
-			"name": "commonBg_jpg"
-		},
-		{
-			"url": "art/home/homeBg.jpg",
-			"type": "image",
-			"name": "homeBg_jpg"
-		},
-		{
-			"url": "art/loading/loading.jpg",
-			"type": "image",
-			"name": "loading_jpg"
-		},
-		{
-			"url": "art/loading/loading2.png",
-			"type": "image",
-			"name": "loading2_png"
-		},
-		{
-			"url": "art/loading/toast-bg.png",
-			"type": "image",
-			"name": "toast-bg_png"
-		},
-		{
-			"url": "art/profile/btnEquip.png",
-			"type": "image",
-			"name": "btnEquip_png"
-		},
-		{
-			"url": "art/profile/btnReturn.png",
-			"type": "image",
-			"name": "btnReturn_png"
-		},
-		{
-			"url": "art/profile/btnStrengthen.png",
-			"type": "image",
-			"name": "btnStrengthen_png"
-		},
-		{
-			"url": "art/profile/mbtnAbout.png",
-			"type": "image",
-			"name": "mbtnAbout_png"
-		},
-		{
-			"url": "art/profile/mbtnGoods.png",
-			"type": "image",
-			"name": "mbtnGoods_png"
-		},
-		{
-			"url": "art/profile/mbtnHero.png",
-			"type": "image",
-			"name": "mbtnHero_png"
-		},
-		{
-			"url": "art/profile/mbtnPlayer.png",
-			"type": "image",
-			"name": "mbtnPlayer_png"
-		},
-		{
-			"url": "art/profile/mbtn_Bg.png",
-			"type": "image",
-			"name": "mbtn_Bg_png"
-		},
-		{
-			"url": "art/profile/mbtn_BgFc.png",
-			"type": "image",
-			"name": "mbtn_BgFc_png"
-		},
-		{
-			"url": "art/profile/profileContent.png",
-			"type": "image",
-			"name": "profileContent_png"
-		},
-		{
-			"url": "art/profile/profileTitle.png",
-			"type": "image",
-			"name": "profileTitle_png"
-		},
-		{
-			"url": "art/profile/skillBg.png",
-			"type": "image",
-			"name": "skillBg_png"
-		},
-		{
-			"url": "art/profile/skillIcon01.png",
-			"type": "image",
-			"name": "skillIcon01_png"
-		},
-		{
-			"url": "art/profile/skillIcon02.png",
-			"type": "image",
-			"name": "skillIcon02_png"
-		},
-		{
-			"url": "art/profile/skillIcon03.png",
-			"type": "image",
-			"name": "skillIcon03_png"
-		},
-		{
-			"url": "art/profile/skillIcon04.png",
-			"type": "image",
-			"name": "skillIcon04_png"
-		},
-		{
-			"url": "art/profile/skillIcon05.png",
-			"type": "image",
-			"name": "skillIcon05_png"
-		},
-		{
-			"url": "art/profile/skillIcon06.png",
-			"type": "image",
-			"name": "skillIcon06_png"
-		},
-		{
-			"url": "art/profile/skillIcon07.png",
-			"type": "image",
-			"name": "skillIcon07_png"
-		},
-		{
-			"url": "art/profile/skillItemFrame.png",
-			"type": "image",
-			"name": "skillItemFrame_png"
 		},
 		{
 			"name": "Hit_mp3",
@@ -610,6 +355,91 @@
 			"name": "Energy_png",
 			"type": "image",
 			"url": "assets/Ships/Energy.png"
+		},
+		{
+			"name": "SoundWave_png",
+			"type": "image",
+			"url": "assets/Ships/SoundWave.png"
+		},
+		{
+			"name": "bgGrey_png",
+			"type": "image",
+			"url": "assets/bgGrey.png"
+		},
+		{
+			"name": "bgGrey_jpg",
+			"type": "image",
+			"url": "assets/bgGrey.jpg"
+		},
+		{
+			"name": "score_title_png",
+			"type": "image",
+			"url": "assets/score_title.png"
+		},
+		{
+			"name": "score_png",
+			"type": "image",
+			"url": "assets/score.png"
+		},
+		{
+			"name": "score_fnt",
+			"type": "font",
+			"url": "assets/score.fnt"
+		},
+		{
+			"name": "GunShip1_png",
+			"type": "image",
+			"url": "assets/Ships/GunShip1.png"
+		},
+		{
+			"name": "BossShip1_png",
+			"type": "image",
+			"url": "assets/Ships/BossShip1.png"
+		},
+		{
+			"name": "Explosion_png",
+			"type": "image",
+			"url": "assets/Explosion.png"
+		},
+		{
+			"name": "GunShip2_png",
+			"type": "image",
+			"url": "assets/Ships/GunShip2.png"
+		},
+		{
+			"name": "loading2_png",
+			"type": "image",
+			"url": "assets/loading2.png"
+		},
+		{
+			"name": "toast-bg_png",
+			"type": "image",
+			"url": "assets/toast-bg.png"
+		},
+		{
+			"name": "BlueBallBullet_png",
+			"type": "image",
+			"url": "assets/Bullets/BlueBallBullet.png"
+		},
+		{
+			"name": "ShakeWaveBullet_png",
+			"type": "image",
+			"url": "assets/Bullets/ShakeWaveBullet.png"
+		},
+		{
+			"name": "ShakeWaveBullet2_png",
+			"type": "image",
+			"url": "assets/Bullets/ShakeWaveBullet2.png"
+		},
+		{
+			"name": "RedPixel_png",
+			"type": "image",
+			"url": "assets/RedPixel.png"
+		},
+		{
+			"name": "GreyPixel_png",
+			"type": "image",
+			"url": "assets/GreyPixel.png"
 		}
 	]
 }
