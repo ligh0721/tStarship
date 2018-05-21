@@ -12,7 +12,7 @@ class TestLayer extends tutils.Layer {
 
         this.hero = new HeroShip("Test_png");
         this.world.addShip(this.hero);
-        let gun = Gun.createGun(Gun, EllipseBullet);
+        let gun = Gun.createGun(Gun, Bullet);
         this.hero.addGun(gun, true);
         this.hero.x = w * 0.5;
         this.hero.y = h * 0.9;

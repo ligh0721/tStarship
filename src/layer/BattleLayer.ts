@@ -509,14 +509,14 @@ class BattleLayer extends tutils.Layer {
         ship.addGunShip(gunShip, -100, 100);
         gunShip.resetHp(200);
         gunShip.angle = 180;
-        let gun = Gun.createGun(Gun, Bullet);
+        let gun = Gun.createGun(Gun, RedEllipseBullet);
         gunShip.addGun(gun);
         
         let gunShip2 = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip2, 100, 100);
         gunShip2.resetHp(150);
         gunShip2.angle = 180;
-        let gun2 = Gun.createGun(ShotGun, Bullet);
+        let gun2 = Gun.createGun(ShotGun, RedEllipseBullet);
         gun2.fireCooldown.baseValue = 1000;
         gunShip2.addGun(gun2);
 
@@ -641,7 +641,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 6:
-            gun = Gun.createGun(ShotGun, EllipseBullet);
+            gun = Gun.createGun(ShotGun, Bullet);
             (<ShotGun>gun).bulletAngleDelta = 10;
             (<ShotGun>gun).bulletNum = 5;
             gun.fireCooldown.baseValue = 600;
@@ -656,7 +656,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 7:
-            gun = Gun.createGun(RowGun, EllipseBullet);
+            gun = Gun.createGun(RowGun, Bullet);
             (<RowGun>gun).bulletNum = 3;
             gun.fireCooldown.baseValue = 400;
             gun.bulletSpeed.baseValue = 60;
@@ -696,7 +696,7 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 10:
-            gun = Gun.createGun(FocusGun, EllipseBullet);
+            gun = Gun.createGun(FocusGun, Bullet);
             gun.fireCooldown.baseValue = 200;
             gun.bulletSpeed.baseValue = 80;
             gun.bulletPower.baseValue = 5;

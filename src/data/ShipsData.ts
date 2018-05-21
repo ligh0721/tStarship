@@ -5,7 +5,7 @@ const GlobalShipsData: ShipsData = {
 		maxHp: 5,
 		speed: 200,
 		gun: FocusGun,
-		bullet: EllipseBullet,
+		bullet: Bullet,
 		bulletSpeed: 80,
         fireCD: 200,
 		bulletPower: 1,

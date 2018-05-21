@@ -199,7 +199,7 @@ class EnemyController {
 		let gunShip = new MotherGunShip("GunShip2_png", 2.0);
         boss.addGunShip(gunShip, 0, 100);
         gunShip.angle = 180;
-        let gun = Gun.createGun(ShotGun, Bullet);
+        let gun = Gun.createGun(ShotGun, RedEllipseBullet);
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
@@ -277,7 +277,7 @@ class EnemyController {
 		let gunShipL = new MotherGunShip("GunShip2_png", 2.0);
         boss.addGunShip(gunShipL, -80, 60);
         gunShipL.angle = 180;
-        let gunL = Gun.createGun(Gun, Bullet);
+        let gunL = Gun.createGun(Gun, RedEllipseBullet);
 		gunShipL.addGun(gunL, true);
 		gunL.bulletLeft = 0;
 		gunL.autoFire = true;
@@ -285,7 +285,7 @@ class EnemyController {
 		let gunShipR = new MotherGunShip("GunShip2_png", 2.0);
         boss.addGunShip(gunShipR, 80, 60);
         gunShipR.angle = 180;
-        let gunR = Gun.createGun(Gun, Bullet);
+        let gunR = Gun.createGun(Gun, RedEllipseBullet);
 		gunShipR.addGun(gunR, true);
 		gunR.bulletLeft = 0;
 		gunR.autoFire = true;

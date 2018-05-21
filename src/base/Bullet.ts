@@ -4,10 +4,12 @@ class Bullet extends HpUnit {
 	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	removeOutOfWorld: boolean = true;
 	private readonly effectedShips: { [id: string]: number };
+	model: string;
 
-	public constructor(gun: Gun) {
+	public constructor(gun: Gun, model?: string) {
 		super();
 		this.gun = gun;
+		this.model = model===undefined ? "Bullet_png" : model;
 		this.resetHp(gun.bulletPower.value);
 		this.powerLossPer = gun.bulletPowerLossPer;
 		this.powerLossInterval = gun.bulletPowerLossInterval.value;
@@ -29,7 +31,7 @@ class Bullet extends HpUnit {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName("RedBullet1_png");
+		let gameObject = tutils.createBitmapByName(this.model);
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
 		gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;
