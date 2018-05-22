@@ -1,5 +1,5 @@
 class SatelliteGun extends Gun {
-	radiusDelta: number = 80;
+	distance: number = 80;
 	maxBullets: number = 5;
 	period: number = 1000;
 	antiClockWise: boolean = false;
@@ -19,7 +19,7 @@ class SatelliteGun extends Gun {
 			for (let i=0; i<this.bullets.length; i++) {
 				this.bullets[i] = "";
 			}
-			this.radius = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2 + this.radiusDelta;
+			this.radius = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2 + this.distance;
 			this.timer.setOnTimerListener(this.onTimer, this);
 			this.timer.start(0, true, 0);
 		}

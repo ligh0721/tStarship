@@ -1,17 +1,17 @@
 const GlobalShipsData: ShipsData = {
 	ship_test: {
 		name: "Test",
-		model: "Test_png",
+		model: "Energy_png",
 		maxHp: 5,
 		speed: 200,
-		gun: FocusGun,
-		bullet: Bullet,
-		bulletSpeed: 80,
-        fireCD: 200,
+		gun: StormGun,
+		bullet: ExplosionBullet,
+		bulletSpeed: 50,
+        fireCD: 0,
 		bulletPower: 1,
-		bulletNum: 4,
-		bulletHitTimes: 5,
-		bulletHitInterval: 100,
+		bulletNum: 1,
+		bulletHitTimes: 1,
+		bulletHitInterval: 1000,
 		skillName: "turbo"
 	},
     ship_hero: {

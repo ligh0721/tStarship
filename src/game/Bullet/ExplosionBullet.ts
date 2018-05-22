@@ -4,24 +4,15 @@ class ExplosionBullet extends Bullet {
 	explosionPowerEveryPer: number = 0.2;
 	explosionPowerLossInterval: number = 10000;
 
-	// override
-	// protected onCreate(): egret.DisplayObject {
-	// 	if (this.gameObject !== undefined) {
-	// 		return this.gameObject;
-	// 	}
-	// 	let bullet = new egret.Shape();
-	// 	bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
-	// 	bullet.graphics.lineStyle(1, this.gun.bulletColor);
-	// 	bullet.graphics.drawCircle(0, 0, this.radius);
-	// 	bullet.graphics.endFill();
-	// 	return bullet;
-	// }
+	public constructor(gun: Gun) {
+		super(gun, "BlueBallBullet_png");
+	}
 
 	protected onCreate(): egret.DisplayObject {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName("BlueBallBullet_png");
+		let gameObject = this.createModel();
 		gameObject.width = this.radius * 2;
 		gameObject.height = this.radius * 2;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
@@ -59,29 +50,13 @@ class ExplosionEffectBullet extends Bullet {
 	private orgWidth: number;
 	private orgHeight: number;
 
-	// override
-	// protected onCreate(): egret.DisplayObject {
-	// 	tutils.playSound("ExplosionBullet_mp3");
-	// 	if (this.gameObject !== undefined) {
-	// 		return this.gameObject;
-	// 	}
-	// 	let bullet = new egret.Shape();
-	// 	bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
-	// 	bullet.graphics.lineStyle(1, this.gun.bulletColor);
-	// 	bullet.graphics.drawCircle(0, 0, this.explosionRadius);
-	// 	bullet.graphics.endFill();
-	// 	this.orgWidth = bullet.width;
-	// 	this.orgHeight = bullet.height;
-	// 	bullet.scaleX = this.radius / this.explosionRadius;
-	// 	bullet.scaleY = bullet.scaleX;
-	// 	bullet.width = this.orgWidth * bullet.scaleX;
-	// 	bullet.height = this.orgHeight * bullet.scaleY;
-	// 	return bullet;
-	// }
+	public constructor(gun: Gun) {
+		super(gun, "BlueBallBullet_png");
+	}
 
 	protected onCreate(): egret.DisplayObject {
 		tutils.playSound("ExplosionBullet_mp3");
-		let gameObject = this.gameObject!==undefined ? this.gameObject : tutils.createBitmapByName("BlueBallBullet_png");
+		let gameObject = this.gameObject!==undefined ? this.gameObject : tutils.createBitmapByName(this.model);
 		gameObject.width = this.explosionRadius * 2;
 		gameObject.height = this.explosionRadius * 2;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;

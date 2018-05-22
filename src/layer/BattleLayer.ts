@@ -86,7 +86,7 @@ class BattleLayer extends tutils.Layer {
         egret.localStorage.clear();
         if (PlayerPrefs.instance.load() == null) {
             PlayerPrefs.instance.reset();
-            PlayerPrefs.instance.addNewShip("ship_energy");
+            PlayerPrefs.instance.addNewShip("ship_test");
             PlayerPrefs.instance.save();
         }
 

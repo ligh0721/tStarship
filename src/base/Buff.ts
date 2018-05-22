@@ -23,6 +23,11 @@ class Buff {
 	public onRemoveBuff(): void {
 	}
 
+	// override
+	public onDamaged(value: number, src: HpUnit): number {
+		return value;
+	}
+
 	public step(dt: number): boolean {
 		this.$left -= dt;
 		return this.$left > 0;

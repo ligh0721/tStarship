@@ -14,7 +14,7 @@ class SoundWaveBullet extends Bullet {
 			this.gameObject.anchorOffsetY = this.height * 0.5;
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName(this.model);
+		let gameObject = this.createModel();
 		gameObject.width = this.width;
 		gameObject.height = this.height;
 		gameObject.anchorOffsetX = this.width * 0.5;

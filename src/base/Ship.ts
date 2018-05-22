@@ -127,6 +127,11 @@ class Ship extends HpUnit {
 		}
 	}
 
+	public damaged(value: number, src: HpUnit): void {
+		
+		super.damaged(value, src);
+	}
+
 	// main=false
 	public addGun(gun: Gun, main?: boolean): Gun {
 		gun.id = this.world.nextId();

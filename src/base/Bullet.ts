@@ -16,22 +16,15 @@ class Bullet extends HpUnit {
 		this.effectedShips===undefined ? this.effectedShips={} : this.effectedShips.constructor();
 	}
 
-	// protected onCreate(): egret.DisplayObject {
-	// 	if (this.gameObject !== undefined) {
-	// 		return this.gameObject;
-	// 	}
-	// 	let bullet = new egret.Shape();
-    //     bullet.graphics.beginFill(this.gun.bulletColor, 1.0);
-    //     bullet.graphics.drawCircle(0, 0, 6);
-    //     bullet.graphics.endFill();
-	// 	return bullet;
-	// }
+	protected createModel(): egret.DisplayObject {
+		return tutils.createBitmapByName(this.model);
+	}
 
 	protected onCreate(): egret.DisplayObject {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName(this.model);
+		let gameObject = this.createModel();
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
 		gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;
