@@ -14,6 +14,8 @@ class Ship extends HpUnit {
 	readonly buffs: { [id: string]: Buff };
 	buffsNum: number = 0;
 
+	readonly onDamagedTriggers: { [id: string]: Buff };
+
 	ai: tutils.StateManager;
 
 	// from unit
@@ -33,9 +35,11 @@ class Ship extends HpUnit {
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
 		this.buffs===undefined ? this.buffs={} : this.buffs.constructor();
+		this.onDamagedTriggers===undefined ? this.onDamagedTriggers={} : this.onDamagedTriggers.constructor();
 		this.ai===undefined ? this.ai=new tutils.StateManager() : this.ai.constructor();
 	}
 
+	// override
 	protected onCreate(): egret.DisplayObject {
 		let gameObject = tutils.createBitmapByName(this.model);
 		gameObject.width *= this.scale;
@@ -47,6 +51,7 @@ class Ship extends HpUnit {
 		return gameObject;
 	}
 
+	// override
 	protected onCleanup(): void {
 		for (let i in this.guns) {
 			let gun = this.guns[i];
@@ -58,6 +63,7 @@ class Ship extends HpUnit {
 		super.onCleanup();
 	}
 
+	// override
 	protected onDying(src: HpUnit): void {
 		this.status = UnitStatus.Dying;
 		//console.assert(src instanceof Ship);
@@ -112,6 +118,7 @@ class Ship extends HpUnit {
 		}, this);
 	}
 
+	// override
 	public onTimer(dt: number): void {
 		//console.log('onTimer: '+egret.getTimer());
 		let toDelBuffs: Buff[] = [];
@@ -127,8 +134,28 @@ class Ship extends HpUnit {
 		}
 	}
 
+	// override
+	public onHitEnemyShipTest(ship: Ship): boolean {
+		return this.hitTest(ship);
+	}
+
+	protected addTrigger(buff: Buff): void {
+		if (buff.triggerFlags & ShipTrigger.OnDamaged) {
+			this.onDamagedTriggers[buff.id] = buff;
+		}
+	}
+
+	protected removeTrigger(buff: Buff): void {
+		if (buff.triggerFlags & ShipTrigger.OnDamaged) {
+			delete this.onDamagedTriggers[buff.id];
+		}
+	}
+
 	public damaged(value: number, src: HpUnit): void {
-		
+		for (let id in this.onDamagedTriggers) {
+			let buff = this.onDamagedTriggers[id];
+			value = buff.onDamaged(value, src);
+		}
 		super.damaged(value, src);
 	}
 
@@ -166,6 +193,7 @@ class Ship extends HpUnit {
 		buff.onAddBuff();
 		this.buffs[buff.id] = buff;
 		this.buffsNum++;
+		this.addTrigger(buff);
 		if (this.buffsNum > 0) {
 			if (!this.timer.hasOnTimerListener()) {
 				this.timer.setOnTimerListener(this.onTimer, this);
@@ -188,6 +216,7 @@ class Ship extends HpUnit {
 		buff.ship = null;
 		delete this.buffs[id];
 		this.buffsNum--;
+		this.removeTrigger(buff);
 		if (this.buffsNum <= 0 && this.timer.running) {
 			this.timer.stop();
 		}
@@ -216,3 +245,9 @@ class Ship extends HpUnit {
 		this.onRemoveBuffThisObject = thisObject;
 	}
 }
+
+enum ShipTrigger {
+	OnInterval = 1 << 0,
+	OnDamaged = 1 << 1
+}
+type ShipTriggerFlags = number;

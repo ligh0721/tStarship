@@ -1,6 +1,5 @@
 class StormGun extends Gun {
-	radius: number = 150;
-	timer: tutils.Timer;
+	private timer: tutils.Timer;
 	period: number = 500;
 	antiClockWise: boolean = false;
 

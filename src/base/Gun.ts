@@ -15,7 +15,7 @@ class Gun {
 	private autoFireTimer: tutils.Timer;
 
 	public constructor() {
-		this.fireCooldown===undefined ? this.fireCooldown=new Value(500, 50, 10000) : this.fireCooldown.constructor(500, 50, 1000);
+		this.fireCooldown===undefined ? this.fireCooldown=new Value(500, 0, 10000) : this.fireCooldown.constructor(500, 50, 1000);
 		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
 		this.bulletPowerLossInterval===undefined ? this.bulletPowerLossInterval=new Value(500, 100) : this.bulletPowerLossInterval.constructor(500, 100);
 		this.bulletSpeed===undefined ? this.bulletSpeed=new Value(50, 0, 200) : this.bulletSpeed.constructor(50, 0, 200);

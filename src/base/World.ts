@@ -241,7 +241,7 @@ class World {
 					if (!ship2.isAlive()) {
 						continue;
 					}
-					if (ship.force.isMyEnemy(ship2.force) && ship.hitTest(ship2)) {
+					if (ship.force.isMyEnemy(ship2.force) && ship.onHitEnemyShipTest(ship2)) {
 						//console.log("ship hit!");
 						ship.damaged(ship2.maxHp, ship2);
 						ship2.damaged(ship.maxHp, ship);

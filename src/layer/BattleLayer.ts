@@ -99,10 +99,14 @@ class BattleLayer extends tutils.Layer {
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
 
-        let buff = new GunBuff(5000, -0.80, 0, +1.00);
-        let buff2 = new ShipBuff(5000, -0.80);
-        let skill = new AddBuffSkill([buff, buff2]);
+        // let buff = new GunBuff(5000, -0.80, 0, +1.00);
+        // let buff2 = new ShipBuff(5000, -0.80);
+        // let skill = new AddBuffSkill([buff, buff2]);
+        let skill = new ShieldBallSkill();
+        hero.power = 100;
         hero.setSkill(skill);
+
+        hero.addBuff(new ShieldBuff(-1, 10));
 
         // 创建玩家飞船血条、能量条
         this.heroHpBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.BottomToTop, 50, 100, 0xf48771, 0xf48771);
