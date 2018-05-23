@@ -17,4 +17,10 @@ class EaseGun extends Gun {
 			tutils.playSound("EaseGunShoot_mp3");
 		}
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletPower.baseValue += 2 / this.bulletPowerLossPer;
+	}
 }
+

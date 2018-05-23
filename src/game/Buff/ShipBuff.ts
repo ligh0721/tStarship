@@ -1,5 +1,6 @@
 class ShipBuff extends Buff {
 	private readonly speedA: number;
+	
 	public constructor(duration: number, speedA: number) {
 		super(duration);
 		this.speedA = speedA;

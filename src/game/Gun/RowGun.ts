@@ -29,4 +29,9 @@ class RowGun extends Gun {
 			tutils.playSound("RowGunShoot_mp3");
 		}
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletNum++;
+	}
 }

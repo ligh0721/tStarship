@@ -24,4 +24,9 @@ class ShotGun extends Gun {
 			tutils.playSound("ShotGunShoot_mp3");
 		}
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletNum++;
+	}
 }

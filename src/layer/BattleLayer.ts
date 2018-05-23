@@ -82,16 +82,8 @@ class BattleLayer extends tutils.Layer {
     protected startGame(): void {
         tutils.playSound("Bgmusic_mp3", 0);
 
-        // 初始化玩家存档
-        egret.localStorage.clear();
-        if (PlayerPrefs.instance.load() == null) {
-            PlayerPrefs.instance.reset();
-            PlayerPrefs.instance.addNewShip("ship_test");
-            PlayerPrefs.instance.save();
-        }
-
         // 创建玩家飞船
-        let hero = ShipManager.instance.createHeroShip(GameController.instance.battleShips[0], this.world);
+        let hero = GameController.instance.createHeroShip(GameController.instance.battleShips[0], this.world);
         this.hero = hero;
         hero.force.force = tutils.Player1Force;
         hero.x = this.stage.stageWidth * 0.5;
@@ -138,7 +130,7 @@ class BattleLayer extends tutils.Layer {
         testSupplyTimer.setOnTimerListener((dt: number): void=>{
             this.createTestSupply();
         });
-        testSupplyTimer.start(5000, true, 0);
+        testSupplyTimer.start(8000, true, 0);
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -236,7 +228,7 @@ class BattleLayer extends tutils.Layer {
             txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 + 50;
 
             this.score._score
-        } else if (this.hero.force.isMyEnemy(ship.force) && killer == this.hero) {
+        } else if (this.hero.force.isMyEnemy(ship.force) && ((killer == this.hero) || (killer instanceof IntervalHitShip && killer.ship == this.hero))) {
             let score = Math.floor(ship.maxHp*20/100)*100;
             // this.score.setScore(this.score.score+score, 200);
             this.score.score += score;
@@ -264,12 +256,12 @@ class BattleLayer extends tutils.Layer {
             color = 0xf48771;
             break;
 
-            case "GunSpeed":
-            color = 0x49bba4;
+            case "GunLevelUp":
+            color = 0xdcdcaa;
             break;
 
             case "SatelliteGun":
-            color = 0xdcdcaa;
+            color = 0x49bba4;
             break;
 
             default:
@@ -485,7 +477,7 @@ class BattleLayer extends tutils.Layer {
             let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-                e.resetHp(5+Math.floor(i/6));
+                e.resetHp(5+Math.floor(i/3));
                 es.push(e);
             }
             
@@ -574,15 +566,18 @@ class BattleLayer extends tutils.Layer {
         let buff: Buff;
         let supply: Supply;
         let gun: Gun;
-        let i = Math.floor(Math.random()*11);
+        let i = Math.floor(Math.random()*4);
         switch (i) {
             case 0:
-            buff = new GunBuff(8000, -0.30, 0, 0);
-            buff.name = "GunCDR";
-            buff.uniq = "GunCDR";
+            if (Math.random()*100 > 30) {
+                return;
+            }
+            buff = new GunLevelUpBuff(1);
+            buff.name = "GunLevelUp";
+            buff.uniq = "GunLevelUp";
             supply = new BuffSupply([buff]);
-            supply.text = "GunCDR";
-            supply.color = 0x4f86ff;
+            supply.text = "GunLevelUp";
+            supply.color = 0xdcdcaa;
             break;
 
             case 1:
@@ -595,12 +590,12 @@ class BattleLayer extends tutils.Layer {
             break;
 
             case 2:
-            buff = new GunBuff(8000, 0, 0, +1.00);
-            buff.name = "GunSpeed";
-            buff.uniq = "GunSpeed";
+            buff = new GunBuff(8000, -0.30, 0, 0);
+            buff.name = "GunCDR";
+            buff.uniq = "GunCDR";
             supply = new BuffSupply([buff]);
-            supply.text = "GunSpeed";
-            supply.color = 0x49bba4;
+            supply.text = "GunCDR";
+            supply.color = 0x4f86ff;
             break;
 
             case 3:
@@ -614,7 +609,7 @@ class BattleLayer extends tutils.Layer {
             buff.uniq = "SatelliteGun";
             supply = new BuffSupply([buff]);
             supply.text = "SatelliteGun";
-            supply.color = 0xdcdcaa;
+            supply.color = 0x49bba4;
             break;
 
             case 4:

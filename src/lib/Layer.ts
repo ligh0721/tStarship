@@ -13,7 +13,7 @@ module tutils {
 
 		public static createAt<LAYER extends Layer>(t: new(r: Main) => LAYER, root: Main): LAYER {
 			let layer = new t(root);
-			layer.create();
+			layer.$create();
 			return layer;
 		}
 
@@ -21,7 +21,7 @@ module tutils {
 			return this.layer.addChild(child);
 		}
 
-		public create(): egret.Sprite {
+		public $create(): egret.Sprite {
 			this.onCfgStage();
 			console.log("stage size: "+this.stage.stageWidth+"x"+this.stage.stageHeight);
 			this.layer = this.onCreate();
@@ -42,6 +42,11 @@ module tutils {
 
 		// override
 		protected onInit(): void {
+		}
+
+		public cleanUp(): void {
+			this.root.removeChild(this.layer);
+			this.layer = null;
 		}
 	}
 }

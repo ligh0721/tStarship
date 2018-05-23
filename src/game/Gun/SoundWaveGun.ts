@@ -28,4 +28,9 @@ class SoundWaveGun extends Gun {
 			tutils.playSound("SoundWaveGunShoot_mp3");
 		}
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletNum++;
+	}
 }

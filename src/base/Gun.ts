@@ -14,6 +14,8 @@ class Gun {
 	private $autoFire: boolean = false;
 	private autoFireTimer: tutils.Timer;
 
+	level: number = 1;
+
 	public constructor() {
 		this.fireCooldown===undefined ? this.fireCooldown=new Value(500, 0, 10000) : this.fireCooldown.constructor(500, 50, 1000);
 		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
@@ -142,5 +144,16 @@ class Gun {
 
 	public getFirePosition(): {x: number, y: number} {
 		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.angle, this.ship.height*0.5);
+	}
+
+	public levelUp(): void {
+		this.level++;
+		this.onLevelUp();
+		tutils.playSound("GunPowerup_mp3");
+	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletPower.baseValue++;
 	}
 }

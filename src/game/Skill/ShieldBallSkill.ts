@@ -1,5 +1,5 @@
 class ShieldBallSkill extends Skill {
-	power: number = 5;
+	power: number = 10;
 	hitShipInterval: number = 100;
 
 	public constructor() {
@@ -8,7 +8,8 @@ class ShieldBallSkill extends Skill {
 
 	// override
 	protected onCast(): void {
-		let ship = new IntervalHitShip("BlueBallBullet_png", 1.5);
+		let ship = new IntervalHitShip("BlueBallBullet_png", 2);
+		ship.ship = this.ship;
 		this.ship.world.addShip(ship);
 		ship.resetHp(this.power);
 		ship.hitShipInterval = this.hitShipInterval;

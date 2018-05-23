@@ -3,6 +3,9 @@ class HeroShipsPanel extends eui.Component {
     shipDetail: eui.Group;
     lstShips: eui.List;
     btnGo: eui.Button;
+    lblName: eui.Label;
+    lblGunDesc: eui.Label;
+
     private curShipId: string;
 
 	constructor() {
@@ -18,16 +21,16 @@ class HeroShipsPanel extends eui.Component {
     private initList(): void {
         let items: HeroShipsPanelListItem[] = [];
         let lockedItems: HeroShipsPanelListItem[] = [];
-        for (let i in ShipManager.instance.allShips) {
-            let shipId = ShipManager.instance.allShips[i];
-            let shipData = ShipManager.instance.getShipDataItem(shipId);
+        for (let i in GameController.instance.allShips) {
+            let shipId = GameController.instance.allShips[i];
+            let shipData = GameController.instance.getShipDataById(shipId);
             let item: HeroShipsPanelListItem = {id: shipId, icon: shipData.model, level: "Lv.1", selected: null};
 
-            let playerShipData = PlayerPrefs.instance.data.ships[shipId];
+            let playerShipData = GameController.instance.playerData.ships[shipId];
             if (playerShipData !== undefined) {
                 // player ships
                 let exp = playerShipData.exp;
-                item.level = "Lv." + ShipManager.instance.expToLevel(exp);
+                item.level = "Lv." + GameController.instance.expToLevel(exp);
                 items.push(item);
             } else {
                 // other ships
@@ -65,14 +68,15 @@ class HeroShipsPanel extends eui.Component {
             return;
         }
         this.curShipId = shipId;
-        console.log(shipId);
+        
+        let shipData = GameController.instance.getShipDataById(shipId);
+        this.lblName.text = shipData.name;
+        this.lblGunDesc.text = shipData.gunName;
     }
 
     private onTapBtnGo(event:egret.TouchEvent): void {
-        let timer = new tutils.Timer();
-        timer.setOnTimerListener((dt: number): void=>{
-            
-        }, this);
+        GameController.instance.setBattleShips([this.curShipId]);
+        GameController.instance.replaceRootLayerNextFrame(BattleLayer);
     }
 }
 

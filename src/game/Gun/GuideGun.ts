@@ -43,4 +43,9 @@ class GuideGun extends Gun {
 			tutils.playSound("GuideGunShoot_mp3");
 		}
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletPower.baseValue += 2;
+	}
 }

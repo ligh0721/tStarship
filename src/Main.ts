@@ -28,8 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
-
-
     protected createChildren(): void {
         super.createChildren();
 
@@ -99,11 +97,11 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        tutils.Layer.createAt(HeroShipsLayer, this);
-        // tutils.Layer.createAt(BattleLayer, this);
-        //tutils.Layer.createAt(PathLayer, this);
-        // tutils.Layer.createAt(TestLayer, this);
+        GameController.instance.init(this);
+        GameController.instance.createRootLayer(HeroShipsLayer);
     }
+
+    public 
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.

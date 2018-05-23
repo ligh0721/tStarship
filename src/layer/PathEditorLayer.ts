@@ -1,4 +1,4 @@
-class PathLayer extends tutils.Layer {
+class PathEditorLayer extends tutils.Layer {
     private world: World;
     private enemyCtrl: EnemyController;
     pressLayer: boolean = false;
@@ -60,7 +60,7 @@ class PathLayer extends tutils.Layer {
         this.layer.addChild(this.txtType);
         this.txtType.x = 0;
         this.txtType.y = 270;
-        this.txtType.text = "Type: " + PathLayer.typeTxts[this.sldType.value];
+        this.txtType.text = "Type: " + PathEditorLayer.typeTxts[this.sldType.value];
 
         // duration
         this.sldDur = new eui.HSlider();
@@ -154,7 +154,7 @@ class PathLayer extends tutils.Layer {
             let ship = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             ships.push(ship);
         }
-        let item = new RushItem(ships, PathLayer.typeTxts[this.sldType.value], 0, this.sldDur.value, this.sldItv.value, pts, null, this.sldSinT.value, this.sldSinA.value);
+        let item = new RushItem(ships, PathEditorLayer.typeTxts[this.sldType.value], 0, this.sldDur.value, this.sldItv.value, pts, null, this.sldSinT.value, this.sldSinA.value);
         this.enemyCtrl.addRush(item);
         this.enemyCtrl.startRush(30);
     }
@@ -177,7 +177,7 @@ class PathLayer extends tutils.Layer {
         //     value = Math.floor(value/align) * align + align;
         // }
         evt.target.value = value;
-        this.txtType.text = "Type: " + PathLayer.typeTxts[this.sldType.value];
+        this.txtType.text = "Type: " + PathEditorLayer.typeTxts[this.sldType.value];
     }
 
     protected onDurChanged(evt: eui.UIEvent) {

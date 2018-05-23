@@ -204,7 +204,7 @@ class EnemyController {
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
 		
-		boss.speed.baseValue = 30;
+		boss.speed.baseValue = 20;
 		boss.resetHp(1000);
 		gunShip.resetHp(500);
 		gun.fireCooldown.baseValue = 20;

@@ -1,6 +1,5 @@
 class SatelliteGun extends Gun {
 	distance: number = 80;
-	maxBullets: number = 5;
 	period: number = 1000;
 	antiClockWise: boolean = false;
 	private bullets: string[] = null;
@@ -15,7 +14,7 @@ class SatelliteGun extends Gun {
 	public fire(): void {
 		if (this.bullets == null) {
 			this.bullets = [];
-			this.bullets.length = this.maxBullets;
+			this.bullets.length = this.bulletNum;
 			for (let i=0; i<this.bullets.length; i++) {
 				this.bullets[i] = "";
 			}
@@ -78,5 +77,11 @@ class SatelliteGun extends Gun {
 				bullet.damaged(bullet.hp, null);
 			}
 		}
+	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bullets.push("");
+		this.bulletNum = this.bullets.length;
 	}
 }

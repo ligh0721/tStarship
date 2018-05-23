@@ -23,4 +23,10 @@ class ExplosionGun extends Gun {
 			tutils.playSound("ExplosionGunShoot_mp3");
 		}
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.explosionRadius *= 1.2;
+		this.bulletPower.baseValue += 5;
+	}
 }

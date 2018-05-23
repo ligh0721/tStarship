@@ -41,4 +41,9 @@ class FocusGun extends Gun {
 		}, this);
 		tw.to({x: toPos1.x, y: toPos1.y}, tutils.LongDistance*tutils.SpeedFactor/this.bulletSpeed.value, egret.Ease.getPowIn(1));
 	}
+
+	// override
+	protected onLevelUp(): void {
+		this.bulletNum++;
+	}
 }

@@ -6,9 +6,9 @@ class GunBuff extends Buff {
 
 	public constructor(duration: number, fireCooldownA?: number, bulletPowerA?: number, bulletSpeedA?: number) {
 		super(duration);
-		this.fireCooldownA = fireCooldownA==undefined ? 0 : fireCooldownA;
-		this.bulletPowerA = bulletPowerA==undefined ? 0 : bulletPowerA;
-		this.bulletSpeedA = bulletSpeedA==undefined ? 0 : bulletSpeedA;
+		this.fireCooldownA = fireCooldownA===undefined ? 0 : fireCooldownA;
+		this.bulletPowerA = bulletPowerA===undefined ? 0 : bulletPowerA;
+		this.bulletSpeedA = bulletSpeedA===undefined ? 0 : bulletSpeedA;
 	}
 
 	// override
