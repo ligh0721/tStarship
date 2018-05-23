@@ -69,7 +69,10 @@ class HeroShipsPanel extends eui.Component {
     }
 
     private onTapBtnGo(event:egret.TouchEvent): void {
-        
+        let timer = new tutils.Timer();
+        timer.setOnTimerListener((dt: number): void=>{
+            
+        }, this);
     }
 }
 
