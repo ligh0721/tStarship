@@ -5,5 +5,5 @@
 	<e:Rect width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xffba23" strokeColor="0xffba23" enabled="false" visible="{data.selected}"/>
 	<e:Rect width="90%" height="90%" fillAlpha="1" ellipseWidth="35" ellipseHeight="35" strokeColor="0x000000" verticalCenter="0" horizontalCenter="0" enabled="false" fillColor="0x00223d"/>
 	<e:Image id="icon" width="100%" height="100%" source="{data.icon}"/>
-	<e:Label text="{data.level}" size="18" bottom="14" left="14" textColor="0xffffff" bold="true" verticalAlign="middle" textAlign="left" stroke="3"/>
+	<e:Label id="level" size="18" bottom="14" left="14" textColor="0xffffff" bold="true" verticalAlign="middle" textAlign="left" stroke="3" text="{data.level}"/>
 </e:Skin>

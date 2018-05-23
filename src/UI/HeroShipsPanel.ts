@@ -2,6 +2,8 @@ class HeroShipsPanel extends eui.Component {
     fitHeightScroller: eui.Group;
     shipDetail: eui.Group;
     lstShips: eui.List;
+    btnGo: eui.Button;
+    private curShipId: string;
 
 	constructor() {
         super();
@@ -14,19 +16,18 @@ class HeroShipsPanel extends eui.Component {
 	}
 
     private initList(): void {
-        type DataItem = {id: string, icon: string, level: number, selected: string};
-        let items: DataItem[] = [];
-        let lockedItems: DataItem[] = [];
+        let items: HeroShipsPanelListItem[] = [];
+        let lockedItems: HeroShipsPanelListItem[] = [];
         for (let i in ShipManager.instance.allShips) {
             let shipId = ShipManager.instance.allShips[i];
             let shipData = ShipManager.instance.getShipDataItem(shipId);
-            let item: DataItem = {id: shipId, icon: shipData.model, level: 1, selected: null};
+            let item: HeroShipsPanelListItem = {id: shipId, icon: shipData.model, level: "Lv.1", selected: null};
 
             let playerShipData = PlayerPrefs.instance.data.ships[shipId];
             if (playerShipData !== undefined) {
                 // player ships
                 let exp = playerShipData.exp;
-                item.level = ShipManager.instance.expToLevel(exp);
+                item.level = "Lv." + ShipManager.instance.expToLevel(exp);
                 items.push(item);
             } else {
                 // other ships
@@ -39,12 +40,33 @@ class HeroShipsPanel extends eui.Component {
             items.push(item);
         }
         this.lstShips.dataProvider = new eui.ArrayCollection(items);
-        
-        this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP,this.onTapListItem,this);
+
+        this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
+        this.setListItemSelected(0);
+
+        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapBtnGo,this);
     }
 
     private onTapListItem(e: eui.PropertyEvent): void {
-        //获取点击消息
-        console.log(this.lstShips.selectedItem,this.lstShips.selectedIndex);
+        for (let i=0; i<this.lstShips.dataProvider.length; i++) {
+            let item: HeroShipsPanelListItem = this.lstShips.dataProvider.getItemAt(i);
+            item.selected = this.lstShips.selectedIndex===i ? true : null;
+        }
+        this.updateDetail(this.lstShips.selectedItem.id);
+    }
+
+    private setListItemSelected(index: number): void {
+        this.lstShips.selectedIndex = index;
+        this.lstShips.dispatchEventWith(eui.ItemTapEvent.ITEM_TAP); //, false, true);
+    }
+
+    private updateDetail(shipId: string): void {
+        if (this.curShipId === shipId) {
+            return;
+        }
+        this.curShipId = shipId;
+        console.log(shipId);
     }
 }
+
+type HeroShipsPanelListItem = {id: string, icon: string, level: string, selected: boolean};

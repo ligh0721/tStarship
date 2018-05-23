@@ -26,10 +26,10 @@
 			<e:Label id="lblPower" text="威力" left="50" top="150" textAlign="left" verticalAlign="middle" fontFamily="Microsoft YaHei" textColor="0xff7c7c" stroke="2"/>
 			<e:Label id="lblFireRate" text="射速" left="50" top="200" textAlign="left" verticalAlign="middle" fontFamily="Microsoft YaHei" textColor="0xff7c7c" stroke="2"/>
 			<e:Label id="lblGunDesc" text="能量波动炮(穿透)" left="255" top="33" textAlign="left" verticalAlign="middle" fontFamily="Microsoft YaHei" stroke="2" textColor="0xff7c7c"/>
-			<e:Button id="btnLevelUp" label="升级 1000" anchorOffsetX="0" width="203" anchorOffsetY="0" height="58" enabled="true" top="311" horizontalCenter="0">
+			<e:Button id="btnGo" label="开始" anchorOffsetX="0" width="203" anchorOffsetY="0" height="58" enabled="true" top="311" horizontalCenter="0">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="bluebutton_down_png"/>
+					<e:Image width="100%" height="100%" source="greenbutton_normal_png" source.down="greenbutton_down_png"/>
 					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
 					</e:Skin>
 				</e:skinName>
