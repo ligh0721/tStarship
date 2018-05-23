@@ -44,7 +44,7 @@ class HeroShipsPanel extends eui.Component {
         this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
         this.setListItemSelected(0);
 
-        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapBtnGo,this);
+        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapBtnGo, this);
     }
 
     private onTapListItem(e: eui.PropertyEvent): void {
@@ -66,6 +66,10 @@ class HeroShipsPanel extends eui.Component {
         }
         this.curShipId = shipId;
         console.log(shipId);
+    }
+
+    private onTapBtnGo(event:egret.TouchEvent): void {
+        
     }
 }
 
