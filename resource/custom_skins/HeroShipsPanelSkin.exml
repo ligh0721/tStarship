@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="HeroShipListSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-	<e:Rect width="100%" height="100%" top="0" left="0" enabled="false" fillColor="0x007ab7"/>
+	<e:Rect width="100%" height="100%" top="0" left="0" enabled="false" fillColor="0x084863"/>
 	<e:Label text="全部飞船" fontFamily="Microsoft YaHei" anchorOffsetX="0" anchorOffsetY="0" size="80" textColor="0xffba23" horizontalCenter="0" top="15" stroke="8" strokeColor="0x000000"/>
 	<e:Group width="100%" height="100%" horizontalCenter="0" top="0">
 		<e:Group id="fitHeightScroller" width="650" x="260" y="1080" scaleX="1" scaleY="1" height="745">
@@ -11,65 +11,13 @@
 					<e:layout>
 					<e:TileLayout orientation="rows" horizontalGap="30" verticalGap="30" rowHeight="110" columnWidth="110" requestedColumnCount="4" paddingLeft="30" paddingRight="30" paddingTop="50" paddingBottom="50"/>
 					</e:layout>
-					<e:ArrayCollection>
-						<e:Array>
-							<e:Object icon="Test_png" level="Lv.12" selected=""/>
-							<e:Object icon="Hero_png" level="Lv.20" selected="1"/>
-							<e:Object icon="Solar_png" level="Lv.1" selected=""/>
-							<e:Object icon="Test_png" level="Lv.12" selected=""/>
-							<e:Object icon="Hero_png" level="Lv.20" selected=""/>
-							<e:Object icon="Solar_png" level="Lv.1" selected=""/>
-							<e:Object icon="Test_png" level="Lv.12" selected=""/>
-							<e:Object icon="Hero_png" level="Lv.20" selected=""/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-							<e:Object icon="Test_png" level="Lv.12"/>
-							<e:Object icon="Hero_png" level="Lv.20"/>
-							<e:Object icon="Solar_png" level="Lv.1"/>
-						</e:Array>
-					</e:ArrayCollection>
 				</e:List>
 					<e:layout>
 						<e:BasicLayout/>
 					</e:layout>
 				</e:Group>
 			</e:Scroller>
-			<e:Rect width="100%" height="100%" scaleX="1" scaleY="1" fillAlpha="0" strokeWeight="19" strokeColor="0xffba23" enabled="false" ellipseWidth="20" ellipseHeight="20"/>
+			<e:Rect width="100%" height="100%" scaleX="1" scaleY="1" fillAlpha="0" strokeWeight="19" enabled="false" ellipseWidth="20" ellipseHeight="20" strokeColor="0x002e42"/>
 		</e:Group>
 		<e:Group id="shipDetail" width="100%" height="400" top="620" horizontalCenter="0" x="0" y="620" scaleX="1" scaleY="1">
 			<e:Label id="lblName" text="英雄号" size="50" top="20" left="35" textAlign="left" verticalAlign="middle" fontFamily="Microsoft YaHei" bold="true" textColor="0xffba23" stroke="5"/>
@@ -80,10 +28,10 @@
 			<e:Label id="lblGunDesc" text="能量波动炮(穿透)" left="255" top="33" textAlign="left" verticalAlign="middle" fontFamily="Microsoft YaHei" stroke="2" textColor="0xff7c7c"/>
 			<e:Button id="btnLevelUp" label="升级 1000" anchorOffsetX="0" width="203" anchorOffsetY="0" height="58" enabled="true" top="311" horizontalCenter="0">
 				<e:skinName>
-				<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="mbtn_Bg_png" source.down="mbtn_BgFc_png"/>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="bluebutton_down_png"/>
 					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-				</e:Skin>
+					</e:Skin>
 				</e:skinName>
 			</e:Button>
 			<e:Group width="405.33" height="30.67" x="157.84" y="98" anchorOffsetX="0" anchorOffsetY="0">
@@ -105,10 +53,10 @@
 	</e:Group>
 	<e:Button id="btnBack" label="返回" anchorOffsetX="0" anchorOffsetY="0" height="58" enabled="true" width="119" x="35" y="25">
 		<e:skinName>
-		<e:Skin states="up,down,disabled">
-			<e:Image width="100%" height="100%" source="mbtn_Bg_png" source.down="mbtn_BgFc_png"/>
+			<e:Skin states="up,down,disabled">
+			<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="bluebutton_down_png"/>
 			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-		</e:Skin>
+			</e:Skin>
 		</e:skinName>
 	</e:Button>
 </e:Skin>

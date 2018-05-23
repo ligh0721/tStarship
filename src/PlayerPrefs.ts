@@ -6,12 +6,11 @@ type PlayPrefsData = {
 	},
 	maxStage: number,
 	coins: number,
-	ships: {
-		id: string,
+	ships: {[id: string]: {
 		exp: number,
 		use: number,
 		enemy: number,
-	}[],
+	}},
 };
 
 class PlayerPrefs {
@@ -65,18 +64,12 @@ class PlayerPrefs {
 	public addNewShip(id: string): void {
 		console.assert(this.data != null);
 		console.assert(ShipManager.instance.getShipDataItem(id) != null);
-		for (let i in this.data.ships) {
-			let ship = this.data.ships[i];
-			if (ship.id == id) {
-				console.assert(false, "ship("+id+") is already exists");
-				break;
-			}
-		}
-		this.data.ships.push({
-			id: id,
+		let playerShipData = this.data.ships[id];
+		console.assert(playerShipData===undefined, "ship("+id+") is already exists");
+		this.data.ships[id] = {
 			exp: 0,
 			use: 0,
 			enemy: 0,
-		});
+		};
 	}
 }

@@ -23,31 +23,6 @@ class TestLayer extends tutils.Layer {
         
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
-
-        if (PlayerPrefs.instance.load() == null) {
-            PlayerPrefs.instance.data = {
-                highscore: {
-                    score: 10000,
-                    stage: 12,
-                    shipId: 'hero_001',
-                },
-                maxStage: 12,
-                coins: 25000,
-                ships: [{
-                    id: 'hero_001',
-                    exp: 3000,
-                    use: 10,
-                    enemy: 1210,
-                }, {
-                    id: 'solar_001',
-                    exp: 1200,
-                    use: 4,
-                    enemy: 350,
-                }]
-            };
-            PlayerPrefs.instance.save();
-        }
-        ShipManager.instance;
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

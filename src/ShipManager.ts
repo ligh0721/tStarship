@@ -14,16 +14,21 @@ type ShipDataItem = {
 	bulletHitTimes: number,
 	bulletHitInterval: number
 }
+
 type ShipsData = {
 	[id: string]: ShipDataItem
 };
 
 class ShipManager {
-	private readonly data: ShipsData = {};
-	private static $inst;
+	private readonly data: ShipsData;
+	readonly allShips: string[];
+	private readonly expTable: number[];
+	private static $inst: ShipManager;
 
 	public constructor() {
 		this.data = this.fix(GlobalShipsData);
+		this.allShips = this.checkAllShips(GlobalAllShips);
+		this.expTable = GlobalExpTable;
 		console.log("load ships data", this.data);
 	}
 	
@@ -37,6 +42,14 @@ class ShipManager {
 			shipInfo.id = id;
 		}
 		return data;
+	}
+
+	private checkAllShips(ships: string[]): string[] {
+		for (let i in ships) {
+			let shipId = ships[i];
+			console.assert(this.getShipDataItem(shipId)!==null);
+		}
+		return ships;
 	}
 
 	public createHeroShip(id: string, world: World): HeroShip {
@@ -65,5 +78,14 @@ class ShipManager {
 			return null;
 		}
 		return item;
+	}
+
+	public expToLevel(exp: number): number {
+		for (let i=0; i<this.expTable.length; i++) {
+			if (this.expTable[i] > exp) {
+				return i + 1;
+			}
+		}
+		return this.expTable.length;
 	}
 }

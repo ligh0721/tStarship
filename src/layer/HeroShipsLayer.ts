@@ -6,11 +6,19 @@ class HeroShipsLayer extends tutils.Layer {
     }
 
     protected onInit() {
+        // 初始化玩家存档
+        egret.localStorage.clear();
+        if (PlayerPrefs.instance.load() == null) {
+            PlayerPrefs.instance.reset();
+            PlayerPrefs.instance.addNewShip("ship_test");
+            PlayerPrefs.instance.save();
+        }
+        
         let layer = new eui.UILayer();
         this.addChild(layer);
-        let list = new HeroShipsPanel();
-        list.height = this.stage.stageHeight;
-        list.fitHeightScroller.height = list.height - list.shipDetail.height - 135;
-        layer.addChild(list);
+        let panel = new HeroShipsPanel();
+        panel.height = this.stage.stageHeight;
+        panel.fitHeightScroller.height = panel.height - panel.shipDetail.height - 135;
+        layer.addChild(panel);
     }
 }

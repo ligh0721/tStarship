@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,font_fnt,font_png,grid100_png,coin_png,Hit_mp3,Powerup_mp3,Explosion2_mp3,Explosion0_mp3,Explosion1_mp3,Bgmusic_mp3,RowGunShoot_mp3,ExplosionGunShoot_mp3,PickPower_mp3,SoundWaveGunShoot_mp3,GunShoot_mp3,ShotGunShoot_mp3,EaseGunShoot_mp3,ExplosionBullet_mp3,GuideGunShoot_mp3,GunPowerup_mp3,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,Test_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,bgGrey_png,bgGrey_jpg,score_title_png,score_png,score_fnt,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,font_fnt,font_png,grid100_png,coin_png,Hit_mp3,Powerup_mp3,Explosion2_mp3,Explosion0_mp3,Explosion1_mp3,Bgmusic_mp3,RowGunShoot_mp3,ExplosionGunShoot_mp3,PickPower_mp3,SoundWaveGunShoot_mp3,GunShoot_mp3,ShotGunShoot_mp3,EaseGunShoot_mp3,ExplosionBullet_mp3,GuideGunShoot_mp3,GunPowerup_mp3,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,Test_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,bgGrey_png,bgGrey_jpg,score_title_png,score_png,score_fnt,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png",
 			"name": "preload"
 		}
 	],
@@ -440,6 +440,26 @@
 			"name": "GreyPixel_png",
 			"type": "image",
 			"url": "assets/GreyPixel.png"
+		},
+		{
+			"name": "bluebutton_normal_png",
+			"type": "image",
+			"url": "custom_skins/bluebutton_normal.png"
+		},
+		{
+			"name": "bluebutton_down_png",
+			"type": "image",
+			"url": "custom_skins/bluebutton_down.png"
+		},
+		{
+			"name": "greenbutton_normal_png",
+			"type": "image",
+			"url": "custom_skins/greenbutton_normal.png"
+		},
+		{
+			"name": "greenbutton_down_png",
+			"type": "image",
+			"url": "custom_skins/greenbutton_down.png"
 		}
 	]
 }

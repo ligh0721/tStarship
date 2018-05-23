@@ -60,3 +60,12 @@ const GlobalShipsData: ShipsData = {
 		skillName: "turbo"
     }
 };
+
+const GlobalAllShips: string[] = [
+	"ship_test",
+	"ship_hero",
+	"ship_soundwave",
+	"ship_energy"
+];
+
+const GlobalExpTable = [100, 200, 300, 500, 800, 1300, 2100, 3400, 5500, 8900, 14400, 23300, 37700, 61000, 98700, 159700, 258400, 418100, 676500, 1094600];

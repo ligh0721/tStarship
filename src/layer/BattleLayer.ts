@@ -82,7 +82,7 @@ class BattleLayer extends tutils.Layer {
     protected startGame(): void {
         tutils.playSound("Bgmusic_mp3", 0);
 
-        // 创建玩家飞船
+        // 初始化玩家存档
         egret.localStorage.clear();
         if (PlayerPrefs.instance.load() == null) {
             PlayerPrefs.instance.reset();
@@ -90,7 +90,8 @@ class BattleLayer extends tutils.Layer {
             PlayerPrefs.instance.save();
         }
 
-        let hero = ShipManager.instance.createHeroShip(PlayerPrefs.instance.data.ships[0].id, this.world);
+        // 创建玩家飞船
+        let hero = ShipManager.instance.createHeroShip(GameController.instance.battleShips[0], this.world);
         this.hero = hero;
         hero.force.force = tutils.Player1Force;
         hero.x = this.stage.stageWidth * 0.5;

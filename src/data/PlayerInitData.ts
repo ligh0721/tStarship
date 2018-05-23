@@ -6,5 +6,5 @@ const GlobalPlayerInitData: PlayPrefsData = {
     },
     maxStage: 0,
     coins: 0,
-    ships: [],
+    ships: {},
 };
