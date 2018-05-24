@@ -10,6 +10,7 @@ class BattleLayer extends tutils.Layer {
     private heroHpBar: ShapeProgress;
     private heroPowerBar: ShapeProgress;
     private bgCtrl: BackgroundController;
+    private bgMusic: egret.SoundChannel;
 
     private txtPushStart: egret.TextField;
 
@@ -51,6 +52,17 @@ class BattleLayer extends tutils.Layer {
         this.createPushStart();
 	}
 
+    // override
+    protected onCleanUp(): void {
+        for (let i in this.buffuis) {
+            let buffui = this.buffuis[i];
+            egret.Tween.removeTweens(buffui);
+        }
+        this.enemyCtrl.stopRush();
+        this.bgMusic.stop();
+        this.world.cleanup();
+    }
+
     protected createPushStart(): void {
         this.txtPushStart = new egret.TextField();
         this.txtPushStart.text = "PUSH  START";
@@ -80,7 +92,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     protected startGame(): void {
-        tutils.playSound("Bgmusic_mp3", 0);
+        this.bgMusic = tutils.playSound("Bgmusic_mp3", 0);
 
         // 创建玩家飞船
         let hero = GameController.instance.createHeroShip(GameController.instance.battleShips[0], this.world);
@@ -206,28 +218,12 @@ class BattleLayer extends tutils.Layer {
         this.layer.graphics.lineStyle(1, 0xffffff);
     }
 
-    private onShipDying(ship: Ship, killer: Ship) {
+    private onShipDying(ship: Ship, killer: Ship): void {
         const sounds = ["Explosion0_mp3", "Explosion2_mp3"];
         tutils.playSound(sounds[Math.floor(Math.random()*sounds.length)]);
         if (this.hero == ship) {
-            // TODO: GAME OVER
-            let txt = new egret.TextField();
-            txt.text = "GAME OVER";
-            txt.bold = true;
-            txt.size = 100;
-            this.layer.addChild(txt);
-            txt.x = (this.stage.stageWidth - txt.textWidth) * 0.5;
-            txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 - 50;
-
-            txt = new egret.TextField();
-            txt.text = "SCORE: " + this.score.score;
-            txt.bold = true;
-            txt.size = 50;
-            this.layer.addChild(txt);
-            txt.x = (this.stage.stageWidth - txt.textWidth) * 0.5;
-            txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 + 50;
-
-            this.score._score
+            this.gameOver();
+            return;
         } else if (this.hero.force.isMyEnemy(ship.force) && ((killer == this.hero) || (killer instanceof IntervalHitShip && killer.ship == this.hero))) {
             let score = Math.floor(ship.maxHp*20/100)*100;
             // this.score.setScore(this.score.score+score, 200);
@@ -236,13 +232,57 @@ class BattleLayer extends tutils.Layer {
             let supply = this.world.pools.newObject(PowerSupply, power);
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
+
+            let shipId = GameController.instance.battleShips[0];
+            let playerShipData = GameController.instance.playerData.ships[shipId];
+            playerShipData.exp += ship.maxHp;
+            playerShipData.enemy++;
         }
     }
 
-    private onShipHitSupply(ship: Ship, supply: Supply) {
+    private gameOver(): void {
+        // TODO: GAME OVER
+        let txt = new egret.TextField();
+        txt.text = "GAME OVER";
+        txt.bold = true;
+        txt.size = 100;
+        this.layer.addChild(txt);
+        txt.x = (this.stage.stageWidth - txt.textWidth) * 0.5;
+        txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 - 50;
+
+        txt = new egret.TextField();
+        txt.text = "SCORE: " + this.score.score;
+        txt.bold = true;
+        txt.size = 50;
+        this.layer.addChild(txt);
+        txt.x = (this.stage.stageWidth - txt.textWidth) * 0.5;
+        txt.y = (this.stage.stageHeight - txt.textHeight) * 0.5 + 50;
+
+        this.layer.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        this.layer.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+
+        GameController.instance.savePlayerData();
+
+        let timer = new tutils.Timer();
+        timer.setOnTimerListener((dt: number):void=>{
+            let btn = new eui.Button();
+            this.layer.addChild(btn);
+            btn.label = "回到总部";
+            btn.width = 250;
+            btn.height = 80;
+            btn.x = (this.stage.stageWidth - btn.width) * 0.5;
+            btn.y = (this.stage.stageHeight - btn.height) * 0.5 + 150;
+            btn.addEventListener(egret.TouchEvent.TOUCH_TAP, ():void=>{
+                GameController.instance.replaceRootLayerNextFrame(HeroShipsLayer);
+            }, this);
+        }, this);
+        timer.start(2000, false, 1);
     }
 
-    private onShipAddBuff(ship: Ship, buff: Buff) {
+    private onShipHitSupply(ship: Ship, supply: Supply): void {
+    }
+
+    private onShipAddBuff(ship: Ship, buff: Buff): void {
         const baseX = 200;
         const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
         const dt = 10;
@@ -337,7 +377,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
-        if (this.beginDelta.x == -1 || !this.hero.isAlive()) {
+        if (evt.target != this.layer || this.beginDelta.x == -1 || !this.hero.isAlive()) {
             return;
         }
         let toX = evt.localX-this.beginDelta.x;
@@ -406,7 +446,7 @@ class BattleLayer extends tutils.Layer {
         let en0: EnemyShip[] = [];
         let en1: EnemyShip[] = [];
         let en2: EnemyShip[] = [];
-        let en3: EnemyShip[] = []; 
+        let en3: EnemyShip[] = [];
         let n = 10;
         for (let i=0; i<n; i++) {
             let enemy0 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
@@ -477,7 +517,7 @@ class BattleLayer extends tutils.Layer {
             let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-                e.resetHp(5+Math.floor(i/3));
+                e.resetHp(10+Math.floor(i/5 * 1));
                 es.push(e);
             }
             
@@ -500,18 +540,18 @@ class BattleLayer extends tutils.Layer {
         ship.x = this.stage.stageWidth * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(1000);
+        ship.resetHp(2000);
 
         let gunShip = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip, -100, 100);
-        gunShip.resetHp(200);
+        gunShip.resetHp(300);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, RedEllipseBullet);
         gunShip.addGun(gun);
         
         let gunShip2 = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip2, 100, 100);
-        gunShip2.resetHp(150);
+        gunShip2.resetHp(250);
         gunShip2.angle = 180;
         let gun2 = Gun.createGun(ShotGun, RedEllipseBullet);
         gun2.fireCooldown.baseValue = 1000;
@@ -602,6 +642,7 @@ class BattleLayer extends tutils.Layer {
             gun = Gun.createGun(SatelliteGun, ExplosionBullet);
             gun.fireCooldown.baseValue = 1000;
             gun.bulletPower.baseValue = 5;
+            gun.bulletNum = 5;
             gun.bulletPowerLossPer = 1.0;
             gun.bulletPowerLossInterval.baseValue = 1000;
             buff = new AddGunBuff(8000, [gun]);

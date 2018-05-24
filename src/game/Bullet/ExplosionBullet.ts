@@ -44,8 +44,6 @@ class ExplosionBullet extends Bullet {
 class ExplosionEffectBullet extends Bullet {
 	radius: number = 30;
 	explosionRadius: number = 200;
-	explosionPowerEvery:number = 2;
-	explosionPowerLossInterval: number = 200;
 	private $factor: number = 0;
 	private orgWidth: number;
 	private orgHeight: number;

@@ -44,9 +44,14 @@ module tutils {
 		protected onInit(): void {
 		}
 
-		public cleanUp(): void {
+		public cleanup(): void {
+			this.onCleanUp();
 			this.root.removeChild(this.layer);
-			this.layer = null;
+			// this.layer = null;
+		}
+
+		// override
+		protected onCleanUp(): void {
 		}
 	}
 }

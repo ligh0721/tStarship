@@ -7,7 +7,7 @@ class HeroShipsLayer extends tutils.Layer {
 
     protected onInit() {
         // 初始化玩家存档
-        egret.localStorage.clear();  // FIXME
+        // egret.localStorage.clear();  // FIXME
         if (GameController.instance.loadPlayerData() === null) {
             GameController.instance.resetPlayerData();
             GameController.instance.addNewHeroShip("ship_test");
@@ -15,8 +15,8 @@ class HeroShipsLayer extends tutils.Layer {
             GameController.instance.addNewHeroShip("ship_soundwave");
             GameController.instance.addNewHeroShip("ship_energy");
             GameController.instance.addNewHeroShip("ship_hunter");
-            GameController.instance.addNewHeroShip("ship_row");
-            GameController.instance.addNewHeroShip("ship_shot");
+            // GameController.instan ce.addNewHeroShip("ship_row");
+            // GameController.instance.addNewHeroShip("ship_shot");
             GameController.instance.addNewHeroShip("ship_explosion");
             GameController.instance.addNewHeroShip("ship_focus");
             GameController.instance.savePlayerData();

@@ -52,6 +52,10 @@ class World {
 		t.start(1000/frameRate, true, 0);
 	}
 
+	public cleanup(): void {
+		
+	}
+
 	public getShip(id: string): Ship {
 		if (!(id in this.ships)) {
 			return null;

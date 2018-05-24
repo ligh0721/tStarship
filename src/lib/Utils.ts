@@ -48,8 +48,8 @@ module tutils {
         return gameObject;
     }
 
-	export function playSound(name: string, loop: number=1) {
+	export function playSound(name: string, loop: number=1): egret.SoundChannel {
 		let sound: egret.Sound = RES.getRes(name);
-  		sound.play(0, loop);
+		return sound.play(0, loop);
 	}
 }

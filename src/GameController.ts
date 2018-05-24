@@ -6,7 +6,7 @@ class GameController {
 
 	private readonly allShipsData: ShipsData;
 	readonly allShips: string[];
-	private readonly expTable: number[];
+	readonly expTable: number[];
 
 	playerData: PlayPrefsData = null;
 	private static KeyData: string = "PlayPrefsData";
@@ -40,7 +40,7 @@ class GameController {
 		}
 		this.timer.setOnTimerListener((dt: number):void=>{
 			if (this.curRootLayer) {
-				this.curRootLayer.cleanUp();
+				this.curRootLayer.cleanup();
 			}
 			this.createRootLayer(t);
 		}, this);
@@ -144,9 +144,9 @@ class GameController {
 	}
 
 	public expToLevel(exp: number): number {
-		for (let i=0; i<this.expTable.length; i++) {
-			if (this.expTable[i] > exp) {
-				return i + 1;
+		for (let i=1; i<=this.expTable.length; i++) {
+			if (this.expTable[i-1] > exp) {
+				return i;
 			}
 		}
 		return this.expTable.length;

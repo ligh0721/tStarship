@@ -85,15 +85,19 @@ class EnemyController {
 		this.rushes.push(rushItem);
 	}
 
-	public startRush(frameRate: number) {
+	public startRush(frameRate: number): void {
 		if (!this.timer.hasOnTimerListener()) {
 			this.timer.setOnTimerListener(this.rushStep, this);
 		}
-		this.timer.start(1000/frameRate, true, 0);
 		this.tick = 0;
+		this.timer.start(1000/frameRate, true, 0);
 	}
 
-	public rushStep(dt: number) {
+	public stopRush(): void {
+		this.timer.stop();
+	}
+
+	public rushStep(dt: number): void {
 		if(this.rushes.length <= 0) {
 			this.timer.stop();
 			this.tick = 0;
@@ -110,7 +114,7 @@ class EnemyController {
 		}
 	}
 
-	private rush(rushItem: RushItem) {
+	private rush(rushItem: RushItem): void {
 		switch(rushItem.type) {
 		case "bezier":
 			if(rushItem.path.length < 3) {
@@ -204,10 +208,10 @@ class EnemyController {
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
 		
-		boss.speed.baseValue = 20;
-		boss.resetHp(1000);
+		boss.speed.baseValue = 10;
+		boss.resetHp(2000);
 		gunShip.resetHp(500);
-		gun.fireCooldown.baseValue = 20;
+		gun.fireCooldown.baseValue = 100;
 		gun.bulletSpeed.baseValue = 40;
 		let angleSpeed = 20/1000;
 		let bulletLeft = 20;
@@ -291,10 +295,10 @@ class EnemyController {
 		gunR.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(1000);
-		gunShip.resetHp(500);
-		gunShipL.resetHp(500);
-		gunShipR.resetHp(500);
+		boss.resetHp(2000);
+		gunShip.resetHp(600);
+		gunShipL.resetHp(800);
+		gunShipR.resetHp(600);
 		gun.bulletSpeed.baseValue = 150;
 		gunL.bulletSpeed.baseValue = 100;
 		gunR.bulletSpeed.baseValue = 100;

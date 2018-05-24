@@ -16,6 +16,7 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
+		"resource/custom_skins/GameOverPanel.exml",
 		"resource/custom_skins/HeroShipIRSkin.exml",
 		"resource/custom_skins/HeroShipsPanelSkin.exml",
 		"resource/eui_skins/ButtonSkin.exml",
