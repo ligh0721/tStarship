@@ -106,7 +106,7 @@ class HeroShipsPanel extends eui.Component {
         this.lblName.text = shipData.name;
         this.lblGunDesc.text = shipData.gunName;
         this.lblHpV.text = shipData.maxHp.toString();
-        this.lblPowerV.text = shipData.bulletPower.toString() + " x " + shipData.bulletNum.toString();
+        this.lblPowerV.text = shipData.bulletPower.toString() + (shipData.bulletNum===1 ? "" : " x " + shipData.bulletNum.toString());
         this.lblFireRateV.text = (1000 / Math.max(1000/60, shipData.fireCD)).toFixed(2) + "/s";
         let level = GameController.instance.expToLevel(playerShipData.exp);
         if (level === GameController.instance.expTable.length) {

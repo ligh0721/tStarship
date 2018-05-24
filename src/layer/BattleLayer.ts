@@ -107,7 +107,8 @@ class BattleLayer extends tutils.Layer {
         // let buff = new GunBuff(5000, -0.80, 0, +1.00);
         // let buff2 = new ShipBuff(5000, -0.80);
         // let skill = new AddBuffSkill([buff, buff2]);
-        let skill = new ShieldBallSkill();
+        // let skill = new ShieldBallSkill();
+        let skill = new GhostShipSkill();
         hero.power = 100;
         hero.setSkill(skill);
 

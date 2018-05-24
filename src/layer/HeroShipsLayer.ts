@@ -7,7 +7,7 @@ class HeroShipsLayer extends tutils.Layer {
 
     protected onInit() {
         // 初始化玩家存档
-        // egret.localStorage.clear();  // FIXME
+        //egret.localStorage.clear();  // FIXME
         if (GameController.instance.loadPlayerData() === null) {
             GameController.instance.resetPlayerData();
             GameController.instance.addNewHeroShip("ship_test");
