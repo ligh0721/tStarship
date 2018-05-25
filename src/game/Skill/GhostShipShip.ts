@@ -57,20 +57,16 @@ class GhostShipSkill extends Skill {
 
 		let timer = new tutils.Timer();
 		timer.setOnTimerListener((dt: number):void=>{
-			this.timer.stop();
-			for (let i in this.ships) {
-				let ship = this.ships[i];
-				let buffId = this.buffIds[i];
-				ship.removeBuff(buffId);
-				ship.damaged(ship.hp, null);
-			}
-			this.ships.length = 0;
-			this.buffIds.length = 0;
+			this.cleanup();
 		}, this);
 		timer.start(this.duration, false, 1);
 	}
 
 	private onTimer(dt: number): void {
+		if (!this.ship.isAlive()) {
+			this.cleanup();
+			return;
+		}
 		for (let i=0; i<this.ships.length; i++) {
 			let dstX = i===0 ? this.ship.x : this.ships[i-1].x;
 			let dstY = i===0 ? this.ship.y : this.ships[i-1].y;
@@ -90,4 +86,19 @@ class GhostShipSkill extends Skill {
         let v = Math.log(d*0.015+1);
         return v;
     }
+
+	private cleanup(): void {
+		if (!this.timer.running) {
+			return;
+		}
+		this.timer.stop();
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			let buffId = this.buffIds[i];
+			ship.removeBuff(buffId);
+			ship.damaged(ship.hp, null);
+		}
+		this.ships.length = 0;
+		this.buffIds.length = 0;
+	}
 }
