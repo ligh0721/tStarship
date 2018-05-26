@@ -67,17 +67,21 @@ class Main extends eui.UILayer {
     }
 
     private async loadResource() {
-        try {
-            const loadingView = new LoadingUI();
-            this.stage.addChild(loadingView);
-            await RES.loadConfig("resource/default.res.json", "resource/");
-            await this.loadTheme();
-            await RES.loadGroup("preload", 0, loadingView);
-            this.stage.removeChild(loadingView);
-        }
-        catch (e) {
-            console.error(e);
-        }
+        const loadingView = new LoadingUI();
+        this.stage.addChild(loadingView);
+        await RES.loadConfig("resource/default.res.json", "resource/");
+        await this.loadTheme();
+        let loadOK = false;
+        do {
+            try {
+                await RES.loadGroup("preload", 0, loadingView);
+                this.stage.removeChild(loadingView);
+                loadOK = true;
+            }
+            catch (e) {
+                console.error(e);
+            }
+        } while (!loadOK);
     }
 
     private loadTheme() {
@@ -99,7 +103,7 @@ class Main extends eui.UILayer {
     protected createGameScene(): void {
         GameController.instance.init(this);
         GameController.instance.createRootLayer(HeroShipsLayer);
-        // GameController.instance.createRootLayer(TestLayer2);
+        // GameController.instance.createRootLayer(TestLayer);
         // GameController.instance.createRootLayer(PathEditorLayer);
     }
 

@@ -182,6 +182,15 @@ class World {
 		this.pools.delObject(supply);
 	}
 
+	public addEffect(effect: Effect): Effect {
+		this.gameObject.addChild(effect.gameObject);
+		return effect;
+	}
+
+	public removeEffect(effect: Effect): void {
+		this.gameObject.removeChild(effect.gameObject);
+	}
+
 	public createSupply<SupplyType extends Supply>(ctor: new(...args: any[])=>SupplyType, ...args: any[]): SupplyType {
 		let supply = this.pools.newObject(ctor, ...args);
 		return supply;

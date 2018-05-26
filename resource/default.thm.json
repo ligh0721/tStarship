@@ -16,9 +16,11 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
-		"resource/custom_skins/GameOverPanel.exml",
+		"resource/custom_skins/BattleHUDSkin.exml",
+		"resource/custom_skins/GameOverPanelSkin.exml",
 		"resource/custom_skins/HeroShipIRSkin.exml",
 		"resource/custom_skins/HeroShipsPanelSkin.exml",
+		"resource/custom_skins/NewShipPanelSkin.exml",
 		"resource/eui_skins/ButtonSkin.exml",
 		"resource/eui_skins/CheckBoxSkin.exml",
 		"resource/eui_skins/HScrollBarSkin.exml",

@@ -25,8 +25,7 @@ class HeroShipsLayer extends tutils.Layer {
         let layer = new eui.UILayer();
         this.addChild(layer);
         let panel = new HeroShipsPanel();
-        panel.height = this.stage.stageHeight;
-        panel.fitHeightScroller.height = panel.height - panel.shipDetail.height - 135;
+        
         layer.addChild(panel);
     }
 }

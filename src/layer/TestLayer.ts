@@ -23,6 +23,11 @@ class TestLayer extends tutils.Layer {
         
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
+        let data = {high: 15454100, stages: 10, enemies: 212, bosses: 3, score: 5454100};
+        let panel = new GameOverPanel(data);
+        this.addChild(panel);
+        panel.x = (this.stage.stageWidth - panel.width) / 2;
+        panel.y = (this.stage.stageHeight - panel.height) / 2;
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

@@ -1,5 +1,6 @@
 class Effect {
 	$value: number = 0;
+	gameObject: egret.DisplayObject;
 	readonly minimum: number = 0;
 	readonly maximum: number = 100;
 	onChanged: (effect: Effect)=>void = null;

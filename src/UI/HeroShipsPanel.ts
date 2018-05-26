@@ -1,20 +1,20 @@
 class HeroShipsPanel extends eui.Component {
-    fitHeightScroller: eui.Group;
-    shipDetail: eui.ViewStack;
-    lstShips: eui.List;
-    btnGo: eui.Button;
-    lblName: eui.Label;
-    lblGunDesc: eui.Label;
+    private fitHeightScroller: eui.Group;
+    private shipDetail: eui.ViewStack;
+    private lstShips: eui.List;
+    private btnGo: eui.Button;
+    private lblName: eui.Label;
+    private lblGunDesc: eui.Label;
 
-    lblHpV: eui.Label;
-    lblPowerV: eui.Label;
-    lblFireRateV: eui.Label;
-    lblExpV: eui.Label;
+    private lblHpV: eui.Label;
+    private lblPowerV: eui.Label;
+    private lblFireRateV: eui.Label;
+    private lblExpV: eui.Label;
 
-    progHp: eui.Rect;
-    progPower: eui.Rect;
-    progFireRate: eui.Rect;
-    progExp: eui.Rect;
+    private progHp: eui.Rect;
+    private progPower: eui.Rect;
+    private progFireRate: eui.Rect;
+    private progExp: eui.Rect;
 
     private curShipId: string;
 
@@ -30,6 +30,8 @@ class HeroShipsPanel extends eui.Component {
 
     private onUIComplete(): void {
         this.initList();
+        this.height = egret.MainContext.instance.stage.stageHeight;
+        this.fitHeightScroller.height = this.height - this.shipDetail.height - 135;
 	}
 
     private initList(): void {

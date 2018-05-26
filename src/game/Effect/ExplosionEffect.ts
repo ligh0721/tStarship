@@ -1,7 +1,6 @@
 class ExplosionEffect extends Effect {
 	trace: egret.DisplayObject;
 	model: string;
-	gameObject: egret.DisplayObject;
 
 	public constructor(minimum: number, maximum: number, model: string, trace?: egret.DisplayObject) {
 		super(minimum, maximum);

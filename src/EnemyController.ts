@@ -190,6 +190,60 @@ class EnemyController {
 	}
 
 	public createBoss1(): MotherShip {
+		let ship = new MotherShip("BossShip1_png", 1.5);
+        this.world.addShip(ship);
+        ship.angle = 180;
+        ship.x = this.world.width * 0.5;
+        ship.y = -ship.height;
+        ship.force.force = tutils.EnemyForce;
+        ship.resetHp(2000);
+
+        let gunShip = new MotherGunShip("GunShip2_png", 1.5);
+        ship.addGunShip(gunShip, -100, 100);
+        gunShip.resetHp(300);
+        gunShip.angle = 180;
+        let gun = Gun.createGun(Gun, RedEllipseBullet);
+        gunShip.addGun(gun);
+        
+        let gunShip2 = new MotherGunShip("GunShip2_png", 1.5);
+        ship.addGunShip(gunShip2, 100, 100);
+        gunShip2.resetHp(250);
+        gunShip2.angle = 180;
+        let gun2 = Gun.createGun(ShotGun, RedEllipseBullet);
+        gun2.fireCooldown.baseValue = 1000;
+        gunShip2.addGun(gun2);
+
+        let moveMotherShip = (ship: MotherShip)=>{
+            let tw = egret.Tween.get(ship);
+            tw.to({x: this.world.width * 0.4}, 2000);
+            tw.to({x: this.world.width * 0.6}, 4000);
+            tw.to({x: this.world.width * 0.5}, 2000);
+            tw.call(moveMotherShip, this, [ship]);
+        };
+
+        let rotateGunShip = (gunShip: MotherGunShip)=>{
+            let tw = egret.Tween.get(gunShip);
+            tw.set({angle: 180});
+            tw.to({angle: 180+45}, 1000);
+            tw.to({angle: 180-45}, 2000);
+            tw.to({angle: 180}, 2000);
+            tw.call(rotateGunShip, this, [gunShip]);
+        };
+
+        let tw = egret.Tween.get(ship);
+        tw.to({y: ship.height*0.5+100}, 5000)
+        tw.wait(1000);
+        tw.call(()=>{
+            moveMotherShip(ship);
+            rotateGunShip(gunShip);
+            rotateGunShip(gunShip2);
+            gun.autoFire = true;
+            gun2.autoFire = true;
+        }, this);
+		return ship;
+	}
+
+	public createBoss2(): MotherShip {
 		let w = this.world.width;
         let h = this.world.height;
 
@@ -259,7 +313,7 @@ class EnemyController {
 		return boss;
 	}
 
-	public createBoss2(): MotherShip {
+	public createBoss3(): MotherShip {
 		let w = this.world.width;
         let h = this.world.height;
 

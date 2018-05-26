@@ -3,7 +3,7 @@ class Score {
 	private bmpTxt: egret.BitmapText;
 	digits: number = 1;
 	private $score: number = null;
-	private $_score: number = null;
+	private $$_score: number = null;
 
 	public constructor(layer: egret.DisplayObjectContainer, x: number=0, y: number=0) {
 		this.gameObject = this.onCreate();
@@ -25,7 +25,7 @@ class Score {
 	}
 
 	protected update() {
-		let txt = this.$_score.toString();
+		let txt = this.$$_score.toString();
 		let len = txt.length;
 		for (let i=0; i<this.digits-len; i++) {
 			txt = "0" + txt;
@@ -43,20 +43,20 @@ class Score {
 			this.$score = value;
 		}
 		egret.Tween.removeTweens(this);
-		if (this.$_score != value) {
-			this.$_score = value;
+		if (this.$$_score != value) {
+			this.$$_score = value;
 			this.update();
 		}
 	}
 
-	public get _score(): number {
-		return this.$_score;
+	public get $_score(): number {
+		return this.$$_score;
 	}
 
-	public set _score(value: number) {
+	public set $_score(value: number) {
 		value = Math.floor(value);
-		if (this.$_score != value) {
-			this.$_score = value;
+		if (this.$$_score != value) {
+			this.$$_score = value;
 			this.update();
 		}
 	}
@@ -70,6 +70,6 @@ class Score {
 		egret.Tween.removeTweens(this)
 		let tw = egret.Tween.get(this);
 		console.log(this.$score);
-		tw.to({_score: this.$score}, dur);
+		tw.to({$_score: this.$score}, dur);
 	}
 }

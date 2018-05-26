@@ -65,8 +65,6 @@ class Ship extends HpUnit {
 
 	// override
 	protected onDying(src: HpUnit): void {
-		this.status = UnitStatus.Dying;
-		//console.assert(src instanceof Ship);
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 		this.ai.stop();
@@ -81,11 +79,11 @@ class Ship extends HpUnit {
 			g = this.gameObject.graphics;
 		} else if (this.gameObject instanceof egret.Bitmap) {
 			let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
-			this.gameObject.parent.addChild(effect.gameObject);
+			this.world.addEffect(effect);
 			tw = egret.Tween.get(effect);
 			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
 			tw.call(()=>{
-				this.gameObject.parent.removeChild(effect.gameObject);
+				this.world.removeEffect(effect);
 				this.pools.delObject(effect);
 			}, this);
 			this.gameObject.visible = false;

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameOverPanelSkin" currentState="init" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="init,final"  width="1280" height="1280">
+	<w:Declarations>
+		<tween:TweenGroup id="open">
+			<tween:TweenItem target="{lblGameOver}">
+				<tween:Set>
+					<tween:props>
+						<e:Object y="{600}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1000"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object y="{600}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="500" ease="cubicOut">
+					<tween:props>
+						<e:Object y="{390}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblStages}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" x="{-300}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="2250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" x="{-300}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250" ease="quadOut">
+					<tween:props>
+						<e:Object alpha="{1}" x="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblEnemies}">
+				<tween:Set>
+				<tween:props>
+					<e:Object alpha="{0}" x="{-300}"/>
+				</tween:props>
+				</tween:Set>
+				<tween:Wait duration="2400"/>
+				<tween:Set>
+				<tween:props>
+					<e:Object alpha="{0}" x="{-300}"/>
+				</tween:props>
+				</tween:Set>
+				<tween:To duration="250" ease="quadOut">
+				<tween:props>
+					<e:Object alpha="{1}" x="{0}"/>
+				</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblBosses}">
+				<tween:Set>
+				<tween:props>
+					<e:Object alpha="{0}" x="{-300}"/>
+				</tween:props>
+				</tween:Set>
+				<tween:Wait duration="2550"/>
+				<tween:Set>
+				<tween:props>
+					<e:Object alpha="{0}" x="{-300}"/>
+				</tween:props>
+				</tween:Set>
+				<tween:To duration="250" ease="quadOut">
+				<tween:props>
+					<e:Object alpha="{1}" x="{0}"/>
+				</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblHighScore}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1750"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250" ease="quadOut">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblScoreTitle}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="3250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblScore}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="3250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{btnReturn}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="4250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{rctBg}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0.5}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect id="rctBg" width="100%" height="100%" x="0" y="0" fillAlpha="1" fillAlpha.final="0.25" enabled.final="false" enabled.init="false" enabled="false"/>
+	<e:Button id="btnReturn" label="返回总部" horizontalCenter="0" width="250" height="60" verticalCenter="324">
+		<e:skinName>
+			<e:Skin states="up,down,disabled">
+			<e:Image width="100%" height="100%" source="greenbutton_normal_png" source.down="greenbutton_down_png"/>
+			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+			</e:Skin>
+		</e:skinName>
+	</e:Button>
+	<e:Label id="lblHighScore" text="High Score: 500000" fontFamily="Arial" textAlign="center" verticalAlign="middle" horizontalCenter="0" size="30" y="481" width="500"/>
+	<e:Label id="lblGameOver" text="GAME OVER" fontFamily="Arial" bold="true" textAlign="center" verticalAlign="middle" size="80" scaleX="1" scaleY="1" horizontalCenter="0" y="390" y.init="600" width="1280"/>
+	<e:Label id="lblStages" text="stages: 20" y="591" x.init="-300" width="1280" textAlign="center" x="0" verticalAlign="middle"/>
+	<e:Label id="lblEnemies" text="enemies: 231" y="625" x="0" x.init="-300" y.final="625" y.init="625" width="1280" textAlign="center" verticalAlign="middle"/>
+	<e:Label id="lblBosses" text="bosses: 5" y="661" x="0" x.init="-300" width="1280" textAlign="center" verticalAlign="middle"/>
+	<e:Label id="lblScoreTitle" text="- SCORE -" horizontalCenter="0" size="70" bold="true" y="747" width="1280" textAlign="center" verticalAlign="middle"/>
+	<e:Label id="lblScore" text="500000" horizontalCenter="0" size="50" bold="true" y="827" width="1280" textAlign="center" verticalAlign="middle"/>
+</e:Skin>
