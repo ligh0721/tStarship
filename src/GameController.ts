@@ -97,6 +97,26 @@ class GameController {
 			use: 0,
 			enemy: 0,
 		};
+		this.savePlayerData();
+	}
+
+	public showGameOverPanel(parent: egret.DisplayObjectContainer, data: any): void {
+		let panel = new GameOverPanel(data);
+        parent.addChild(panel);
+        panel.x = (this.root.stage.stageWidth - panel.width) / 2;
+        panel.y = (this.root.stage.stageHeight - panel.height) / 2;
+	}
+
+	public async showNewShipPanel(parent: egret.DisplayObjectContainer, data: any): Promise<any> {
+		let p = new Promise<any>((resolve, reject)=>{
+			let panel = new NewShipPanel(data, (res: any): void=>{
+				resolve(res);
+			});
+			parent.addChild(panel);
+			panel.x = (this.root.stage.stageWidth - panel.width) / 2;
+			panel.y = (this.root.stage.stageHeight - panel.height) / 2;
+		});
+		return p;
 	}
 
 	private fixShipsData(data: ShipsData): ShipsData {
@@ -150,6 +170,14 @@ class GameController {
 			}
 		}
 		return this.expTable.length;
+	}
+
+	public getPlayerShipDataById(id: string): {exp: number, use: number, enemy: number} {
+		let item = this.playerData.ships[id];
+		if (item === undefined) {
+			return null;
+		}
+		return item;
 	}
 }
 

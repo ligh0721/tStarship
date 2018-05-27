@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
+    public static menu: any;
+    private static _that: egret.DisplayObjectContainer;
+
     protected createChildren(): void {
         super.createChildren();
 
@@ -49,17 +52,24 @@ class Main extends eui.UILayer {
         egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
         egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
 
+        this.initializeAsync();
+        FBInstant.startGameAsync().then(() => {
+            egret.log("start game");
+            Main._that = this;
+            Main.menu = new Menu("Egret Facebook SDK Demo")
+            this.addChild(Main.menu);
+            this.createMenu();
 
-        this.runGame().catch(e => {
-            console.log(e);
-        })
+            this.runGame().catch(e => {
+                console.log(e);
+            })
+        });
     }
 
     private async runGame() {
-        await this.loadResource()
+        await this.loadResource();
         this.createGameScene();
         const result = await RES.getResAsync("description_json")
-        //this.startAnimation(result);
         //await platform.login();
         //const userInfo = await platform.getUserInfo();
         //console.log(userInfo);
@@ -95,68 +105,222 @@ class Main extends eui.UILayer {
         })
     }
 
-    private textfield: egret.TextField;
     /**
      * 创建场景界面
      * Create scene interface
      */
     protected createGameScene(): void {
+        egret.localStorage.clear();
         GameController.instance.init(this);
         GameController.instance.createRootLayer(HeroShipsLayer);
         // GameController.instance.createRootLayer(TestLayer);
         // GameController.instance.createRootLayer(PathEditorLayer);
     }
 
-    public 
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
-     */
-    private createBitmapByName(name: string): egret.Bitmap {
-        let result = new egret.Bitmap();
-        let texture: egret.Texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
+    public static backMenu(): void {
+        Main._that.removeChildren();
+        Main._that.addChild(Main.menu);
     }
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    private startAnimation(result: Array<any>): void {
-        let parser = new egret.HtmlTextParser();
 
-        let textflowArr = result.map(text => parser.parse(text));
-        let textfield = this.textfield;
-        let count = -1;
-        let change = () => {
-            count++;
-            if (count >= textflowArr.length) {
-                count = 0;
-            }
-            let textFlow = textflowArr[count];
+    private createMenu(): void {
+        Main.menu.addTestFunc("baseinfo", this.baseinfo, this);
+        Main.menu.addTestFunc("quit", this.quit, this);
+        Main.menu.addTestFunc("logEvent", this.logEvent, this);
+        Main.menu.addTestFunc("shareAsync", this.shareAsync, this);
+        Main.menu.addTestFunc("player", this.player, this);
+        Main.menu.addTestFunc("getConnectedPlayersAsync", this.getEgretConnectedPlayersAsync, this);
+        Main.menu.addTestFunc("contextinfo", this.contextinfo, this);
+        Main.menu.addTestFunc("share", this.share, this);
+    }
 
-            // 切换描述内容
-            // Switch to described content
-            textfield.textFlow = textFlow;
-            let tw = egret.Tween.get(textfield);
-            tw.to({ "alpha": 1 }, 200);
-            tw.wait(2000);
-            tw.to({ "alpha": 0 }, 200);
-            tw.call(change, this);
+    private initializeAsync(): void {
+        FBInstant.initializeAsync().then(function () {
+            egret.log("getLocale:", FBInstant.getLocale());
+            egret.log("getPlatform:", FBInstant.getPlatform());
+            egret.log("getSDKVersion", FBInstant.getSDKVersion());
+            egret.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
+            egret.log("getEntryPointData", FBInstant.getEntryPointData());
+        })
+        setTimeout(function () {
+            FBInstant.setLoadingProgress(100);
+        }, 1000);
+    }
+
+    private baseinfo() {
+        egret.log("baseinfo");
+        egret.log("getLocale:", FBInstant.getLocale());
+        egret.log("getPlatform:", FBInstant.getPlatform());
+        egret.log("getSDKVersion", FBInstant.getSDKVersion());
+        egret.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
+        egret.log("getEntryPointData", FBInstant.getEntryPointData());
+    }
+
+    private quit(): void {
+        egret.log("quit");
+        FBInstant.quit();
+    }
+
+    private logEvent(): void {
+        egret.log("logEvent");
+        FBInstant.logEvent("test", 2, { "test": "ta" });
+    }
+
+    private shareAsync(): void {
+        egret.log("shareAsync");
+        let data: FBInstant.SharePayload = {
+            intent: "",
+            text: "",
+            image: "",
         };
-
-        change();
+        FBInstant.shareAsync(data);
     }
 
-    /**
-     * 点击按钮
-     * Click the button
-     */
-    private onButtonClick(e: egret.TouchEvent) {
-        let panel = new eui.Panel();
-        panel.title = "Title";
-        panel.horizontalCenter = 0;
-        panel.verticalCenter = 0;
-        this.addChild(panel);
+    private player() {
+        egret.log("player");
+        egret.log("player.getID", FBInstant.player.getID());
+        egret.log("player.getName", FBInstant.player.getName());
+        egret.log("player.getPhoto", FBInstant.player.getPhoto());
+    }
+
+    private async getEgretConnectedPlayersAsync() {
+        egret.log("frends info:::");
+        let datas: FBInstant.ConnectedPlayer[] = await FBInstant.player.getConnectedPlayersAsync();
+        egret.log(datas);
+        datas.forEach(element => {
+            egret.log("player.getID", element.getID());
+            egret.log("player.getName", element.getName());
+            egret.log("player.getPhoto", element.getPhoto());
+        });
+    }
+
+    private contextinfo(): void {
+        egret.log("Context.getID", FBInstant.context.getID());
+        egret.log("Context.getType", FBInstant.context.getType());
+    }
+
+    private share(): void {
+        egret.log("share");
+        let data: FBInstant.SharePayload = {
+            intent: "",
+            text: "",
+            image: "",
+        };
+        FBInstant.shareAsync(data);
+    }
+}
+
+class Menu extends egret.Sprite {
+    public constructor(title: string) {
+        super();
+        this.graphics.lineStyle(2, 0x282828);
+        this.graphics.moveTo(0, 35);
+        this.graphics.lineTo(egret.MainContext.instance.stage.stageWidth, 35);
+        this.graphics.endFill();
+        this.graphics.lineStyle(2, 0x6a6a6a);
+        this.graphics.moveTo(0, 37);
+        this.graphics.lineTo(egret.MainContext.instance.stage.stageWidth, 37);
+        this.graphics.endFill();
+        this.drawText(title);
+        this.addChild(this.textF);
+    }
+    private textF: egret.TextField;
+    private drawText(label: string): void {
+        if (this.textF == null) {
+            let text: egret.TextField = new egret.TextField();
+            text.text = label;
+            text.width = egret.MainContext.instance.stage.stageWidth
+            text.height = 35;
+            text.size = 22;
+            text.verticalAlign = egret.VerticalAlign.MIDDLE;
+            text.textAlign = egret.HorizontalAlign.CENTER;
+            this.textF = text;
+            this.textF.strokeColor = 0x292b2f;
+        }
+    }
+    private viewNum: number = 0;
+    public addTestFunc(label: string, callback: Function, target: Object): void {
+        let btn: Button = new Button(label);
+        btn.x = (egret.MainContext.instance.stage.stageWidth - 30) / 2 + 20;
+        btn.y = 48 + this.viewNum* 47;
+        this.addChild(btn);
+        btn.addEventListener("CHAGE_STAGE", callback, target);
+        this.viewNum++;
+    }
+}
+class Button extends egret.Sprite {
+    public constructor(label: string) {
+        super();
+        this.drawText(label);
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.touch_begin, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_END, this.touch_end, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.click, this);
+        this.draw();
+        this.touchEnabled = true;
+    }
+    private touch_begin(evt: egret.TouchEvent): void {
+        this.isUp = false;
+        this.draw();
+    }
+    private touch_end(evt: egret.TouchEvent): void {
+        this.isUp = true;
+        this.draw();
+    }
+    private click(evt: egret.TouchEvent): void {
+        this.dispatchEvent(new egret.Event("CHAGE_STAGE"));
+    }
+    private isUp: boolean = true;
+    private draw(): void {
+        this.graphics.clear();
+        this.removeChildren();
+        if (this.isUp) {
+            this.drawUp();
+        } else {
+            this.drawDown();
+        }
+        this.addChild(this.textF);
+    }
+    private textF: egret.TextField;
+    private drawText(label: string): void {
+        if (this.textF == null) {
+            let text: egret.TextField = new egret.TextField();
+            text.text = label;
+            text.width = (egret.MainContext.instance.stage.stageWidth - 30) / 2;
+            text.height = 35;
+            text.size = 22;
+            text.verticalAlign = egret.VerticalAlign.MIDDLE;
+            text.textAlign = egret.HorizontalAlign.CENTER;
+            this.textF = text;
+            this.textF.strokeColor = 0x292b2f;
+        }
+    }
+    private drawUp(): void {
+        this.graphics.beginFill(0x666666);
+        this.graphics.lineStyle(2, 0x282828);
+        this.graphics.drawRoundRect(0, 0, (egret.MainContext.instance.stage.stageWidth - 30) / 2, 35, 15, 15);
+        this.graphics.endFill();
+        this.graphics.lineStyle(2, 0x909090, 0.5);
+        this.graphics.moveTo(5, 2);
+        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 2);
+        this.graphics.endFill();
+        this.graphics.lineStyle(2, 0x676767, 0.7);
+        this.graphics.moveTo(5, 37);
+        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 37);
+        this.graphics.endFill();
+        this.textF.stroke = 0;
+    }
+    private drawDown(): void {
+        this.graphics.beginFill(0x3b3b3b);
+        this.graphics.lineStyle(2, 0x282828);
+        this.graphics.drawRoundRect(0, 0, (egret.MainContext.instance.stage.stageWidth - 30) / 2, 35, 15, 15);
+        this.graphics.endFill();
+        this.graphics.lineStyle(2, 0x313131, 0.5);
+        this.graphics.moveTo(5, 2);
+        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 2);
+        this.graphics.endFill();
+        this.graphics.lineStyle(2, 0x676767, 0.7);
+        this.graphics.moveTo(5, 37);
+        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 37);
+        this.graphics.endFill();
+        this.textF.stroke = 1;
     }
 }

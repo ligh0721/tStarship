@@ -15,6 +15,7 @@ class BattleLayer extends tutils.Layer {
     private heroHpBar: ShapeProgress;
     private heroPowerBar: ShapeProgress;
     private bgCtrl: BackgroundController;
+    // private bgCtrl2: BackgroundController;
     private bgMusic: egret.SoundChannel;
 
     private txtPushStart: egret.TextField;
@@ -55,9 +56,15 @@ class BattleLayer extends tutils.Layer {
         this.layer.addChild(this.msgLayer);
 
         // 背景滚动器
+        // let bg = tutils.createLayer(this.worldLayer, 0x191231, 1);
+        
         this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
         this.bgCtrl.start(20);
         this.worldLayer.addChild(this.bgCtrl.gameObject);
+
+        // this.bgCtrl2 = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "NearSpace_png").create();
+        // this.bgCtrl2.start(20);
+        // this.worldLayer.addChild(this.bgCtrl2.gameObject);
 		
         // 创建世界
         this.world = new World(this.worldLayer, stageW, stageH);
@@ -119,7 +126,7 @@ class BattleLayer extends tutils.Layer {
     protected startGame(): void {
         for (let i in GameController.instance.battleShips) {
             let shipId = GameController.instance.battleShips[i];
-            let playerShipData = GameController.instance.playerData.ships[shipId];
+            let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
             playerShipData.use++;
         }
         GameController.instance.savePlayerData();
@@ -210,16 +217,17 @@ class BattleLayer extends tutils.Layer {
         }
         if (this.hero.isAlive() && this.hero.castSkill()) {
             tutils.playSound("Powerup_mp3");
-            this.turbo(200, 20, 5000);
+            this.turbo(this.bgCtrl, 100, 10, 5000);
+            // this.turbo(this.bgCtrl2, 200, 20, 5000);
         }
     }
 
-    public turbo(speed: number, orgSpeed: number, dur: number): void {
+    public turbo(bgCtrl: BackgroundController, speed: number, orgSpeed: number, dur: number): void {
         this.heroPowerBar.gameObject.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
         if (dur < 1500) {
             dur = 1500;
         }
-        let tw = egret.Tween.get(this.bgCtrl);
+        let tw = egret.Tween.get(bgCtrl);
         tw.to({speed: speed}, 1000, egret.Ease.getPowOut(2));
         tw.wait(dur-1500);
         tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
@@ -264,7 +272,7 @@ class BattleLayer extends tutils.Layer {
             supply.drop(ship.gameObject.x, ship.gameObject.y);
 
             let shipId = GameController.instance.battleShips[0];
-            let playerShipData = GameController.instance.playerData.ships[shipId];
+            let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
             playerShipData.exp += ship.maxHp;
             playerShipData.enemy++;
             this.destroyEnemies++;
@@ -299,10 +307,7 @@ class BattleLayer extends tutils.Layer {
         GameController.instance.savePlayerData();
         
         let data = {high: playerData.highscore.score, stages: this.reachStage, enemies: this.destroyEnemies, bosses: this.destroyBosses, score: this.score.score};
-        let panel = new GameOverPanel(data);
-        this.gameOverLayer.addChild(panel);
-        panel.x = (this.stage.stageWidth - panel.width) / 2;
-        panel.y = (this.stage.stageHeight - panel.height) / 2;
+        GameController.instance.showGameOverPanel(this.gameOverLayer, data);
     }
 
     private onShipHitSupply(ship: Ship, supply: Supply): void {

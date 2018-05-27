@@ -16,10 +16,6 @@ class GameOverPanel extends eui.Component {
         this.currentState = "init";
     }
 
-    protected createChildren(): void {
-        super.createChildren();
-    }
-
     private onUIComplete(): void {
         this.btnReturn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnReturn, this);
         this.lblHighScore.text = "HIGH SCORE: " + this.data.high;

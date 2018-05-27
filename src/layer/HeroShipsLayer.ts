@@ -1,4 +1,6 @@
 class HeroShipsLayer extends tutils.Layer {
+    panel: HeroShipsPanel;
+
     // override
     protected onCfgStage(): void {
         this.stage.frameRate = 60;
@@ -6,26 +8,58 @@ class HeroShipsLayer extends tutils.Layer {
     }
 
     protected onInit() {
-        // 初始化玩家存档
-        //egret.localStorage.clear();  // FIXME
+        let initPlayerData = false;
         if (GameController.instance.loadPlayerData() === null) {
+            // 初始化玩家存档
             GameController.instance.resetPlayerData();
-            GameController.instance.addNewHeroShip("ship_test");
-            GameController.instance.addNewHeroShip("ship_hero");
-            GameController.instance.addNewHeroShip("ship_soundwave");
-            GameController.instance.addNewHeroShip("ship_energy");
-            GameController.instance.addNewHeroShip("ship_hunter");
-            // GameController.instan ce.addNewHeroShip("ship_row");
-            // GameController.instance.addNewHeroShip("ship_shot");
-            GameController.instance.addNewHeroShip("ship_explosion");
-            GameController.instance.addNewHeroShip("ship_focus");
-            GameController.instance.savePlayerData();
+            initPlayerData = true;
         }
+
+        this.panel = new HeroShipsPanel();
+        this.layer.addChild(this.panel);
         
-        let layer = new eui.UILayer();
-        this.addChild(layer);
-        let panel = new HeroShipsPanel();
-        
-        layer.addChild(panel);
+        if (initPlayerData) {
+            this.addShips();
+        }
+    }
+
+    public async addShips() {
+        GameController.instance.addNewHeroShip("ship_test");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_test"});
+
+        GameController.instance.addNewHeroShip("ship_hero");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_hero"});
+
+        GameController.instance.addNewHeroShip("ship_soundwave");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_soundwave"});
+
+        GameController.instance.addNewHeroShip("ship_energy");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_energy"});
+
+        GameController.instance.addNewHeroShip("ship_explosion");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_explosion"});
+
+        GameController.instance.addNewHeroShip("ship_focus");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_focus"});
+
+        GameController.instance.addNewHeroShip("ship_row");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_row"});
+
+        GameController.instance.addNewHeroShip("ship_shot");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_shot"});
+
+        GameController.instance.addNewHeroShip("ship_hunter");
+        this.panel.updateList();
+        await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_hunter"});
+
+        GameController.instance.savePlayerData();
     }
 }

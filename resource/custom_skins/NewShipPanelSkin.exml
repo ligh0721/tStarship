@@ -1,3 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="NewShipPanelSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui">
+<e:Skin class="NewShipPanelSkin" width="1280" height="1280" currentState="init" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="final,init" >
+	<w:Declarations>
+		<tween:TweenGroup id="open">
+			<tween:TweenItem target="{lblTitle}">
+				<tween:Wait duration="100"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="400" ease="backOut">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{lblShipName}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="950"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleY="{3}" scaleX="{3}" alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="350" ease="bounceOut">
+					<tween:props>
+						<e:Object alpha="{1}" scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{btnReturn}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleY="{0}" scaleX="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1600"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}" scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="150" ease="backOut">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{btnShare}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1600"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}" scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="150" ease="backOut">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{imgShip}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="350" ease="backOut">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{rctShipBg}">
+				<tween:Set>
+				<tween:props>
+					<e:Object scaleX="{0}" scaleY="{0}"/>
+				</tween:props>
+				</tween:Set>
+				<tween:Wait duration="250"/>
+				<tween:Set/>
+				<tween:To duration="450" ease="backOut">
+				<tween:props>
+					<e:Object scaleX="{1}" scaleY="{1}"/>
+				</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillColor="0x155f9b"/>
+	<e:Label id="lblTitle" text="解锁新飞船!" horizontalCenter="0" verticalCenter="-334" size="80" fontFamily="Microsoft YaHei" strokeColor="0x000000" stroke="3" textColor="0xff7a59" bold="true" width.init="1280" textAlign.init="center" text.init="获得新飞船!"/>
+	<e:Label id="lblShipName" text="英雄号" horizontalCenter="0" verticalCenter="174" size="70" fontFamily="Microsoft JhengHei" textColor="0xffba23" strokeColor="0x000000" stroke="5" textAlign="center" verticalAlign="middle" width="1280" bold="true"/>
+	<e:Button id="btnReturn" label="返回" anchorOffsetY="0" height="68.18" anchorOffsetX="0" width="236.36" horizontalCenter="-150" verticalCenter="331">
+		<e:skinName>
+			<e:Skin states="up,down,disabled">
+			<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="bluebutton_down_png"/>
+			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+			</e:Skin>
+		</e:skinName>
+	</e:Button>
+	<e:Button id="btnShare" label="分享" anchorOffsetY="0" height="68.18" anchorOffsetX="0" width="236.36" horizontalCenter="150" verticalCenter="331">
+		<e:skinName>
+			<e:Skin states="up,down,disabled">
+			<e:Image width="100%" height="100%" source="greenbutton_normal_png" source.down="greenbutton_down_png"/>
+			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+			</e:Skin>
+		</e:skinName>
+	</e:Button>
+	<e:Rect id="rctShipBg" width="300" height="300" enabled="false" strokeAlpha="1" strokeWeight="20" ellipseWidth="50" ellipseHeight="50" fillColor="0x143054" strokeColor="0xffffff" verticalCenter="-38" horizontalCenter="0"/>
+	<e:Image id="imgShip" source="Hero_png" scaleX="1" scaleY="1" width="300" height="300" anchorOffsetX="150" anchorOffsetY="150" horizontalCenter="0" verticalCenter="-38"/>
+	<e:Group id="grpShip" width="300" height="300" verticalCenter="-38" horizontalCenter="0">
+	</e:Group>
 </e:Skin>

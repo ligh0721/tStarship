@@ -24,17 +24,21 @@ class HeroShipsPanel extends eui.Component {
         this.skinName = "resource/custom_skins/HeroShipsPanelSkin.exml";
     }
 
-    protected createChildren(): void {
-        super.createChildren();
-    }
-
     private onUIComplete(): void {
-        this.initList();
+        this.progHp.percentWidth = 0;
+        this.progPower.percentWidth = 0;
+        this.progFireRate.percentWidth = 0;
+        this.progExp.percentWidth = 0;
+
+        this.updateList();
         this.height = egret.MainContext.instance.stage.stageHeight;
         this.fitHeightScroller.height = this.height - this.shipDetail.height - 135;
+        this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
+        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnGo, this);
 	}
 
-    private initList(): void {
+    public updateList(): void {
+        let firstUnlockedIndex = -1;
         let items: HeroShipsPanelListItem[] = [];
         let lockedItems: HeroShipsPanelListItem[] = [];
         for (let i in GameController.instance.allShips) {
@@ -42,11 +46,14 @@ class HeroShipsPanel extends eui.Component {
             let shipData = GameController.instance.getShipDataById(shipId);
             let item: HeroShipsPanelListItem = {id: shipId, icon: shipData.model, level: "Locked", selected: null};
 
-            let playerShipData = GameController.instance.playerData.ships[shipId];
-            if (playerShipData !== undefined) {
+            let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
+            if (playerShipData) {
                 // player ships
                 let exp = playerShipData.exp;
                 item.level = "Lv." + GameController.instance.expToLevel(exp);
+                if (firstUnlockedIndex < 0) {
+                    firstUnlockedIndex = items.length;
+                }
                 items.push(item);
             } else {
                 // other ships
@@ -58,12 +65,18 @@ class HeroShipsPanel extends eui.Component {
             let item = lockedItems[i];
             items.push(item);
         }
+
         this.lstShips.dataProvider = new eui.ArrayCollection(items);
-
-        this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
-        this.setListItemSelected(0);
-
-        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapBtnGo, this);
+        if (this.lstShips.selectedIndex < 0) {
+            this.setListItemSelected(0);
+        } else {
+            this.curShipId = null;
+            if (firstUnlockedIndex >= 0) {
+                this.setListItemSelected(firstUnlockedIndex);
+            } else {
+                this.setListItemSelected(this.lstShips.selectedIndex);
+            }
+        }
     }
 
     private onTapListItem(e: eui.PropertyEvent): void {
@@ -76,29 +89,29 @@ class HeroShipsPanel extends eui.Component {
 
     private setListItemSelected(index: number): void {
         this.lstShips.selectedIndex = index;
-        this.lstShips.dispatchEventWith(eui.ItemTapEvent.ITEM_TAP); //, false, true);
+        this.onTapListItem(null);
     }
 
     private updateDetail(shipId: string): void {
-        if (this.curShipId === shipId) {
+        if (this.curShipId===shipId) {
             return;
         }
         this.curShipId = shipId;
 
-        let playerShipData = GameController.instance.playerData.ships[shipId];
-        if (playerShipData === undefined) {
+        let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
+        if (!playerShipData) {
             this.shipDetail.selectedIndex = 1;
-            // this.lblName.text = "未知";
-            // this.lblGunDesc.text = "未知";
-            // this.lblHpV.text = "--";
-            // this.lblPowerV.text = "--";
-            // this.lblFireRateV.text = "--";
-            // this.lblExpV.text = "--";
-            // this.progHp.percentWidth = 0;
-            // this.progPower.percentWidth = 0;
-            // this.progFireRate.percentWidth = 0;
-            // this.progExp.percentWidth = 0;
-            // this.btnGo.visible = false;
+            this.lblName.text = "未知";
+            this.lblGunDesc.text = "未知";
+            this.lblHpV.text = "--";
+            this.lblPowerV.text = "--";
+            this.lblFireRateV.text = "--";
+            this.lblExpV.text = "--";
+            this.progHp.percentWidth = 0;
+            this.progPower.percentWidth = 0;
+            this.progFireRate.percentWidth = 0;
+            this.progExp.percentWidth = 0;
+            this.btnGo.visible = false;
             return;
         }
         
@@ -111,21 +124,39 @@ class HeroShipsPanel extends eui.Component {
         this.lblPowerV.text = shipData.bulletPower.toString() + (shipData.bulletNum===1 ? "" : " x " + shipData.bulletNum.toString());
         this.lblFireRateV.text = (1000 / Math.max(1000/60, shipData.fireCD)).toFixed(2) + "/s";
         let level = GameController.instance.expToLevel(playerShipData.exp);
-        if (level === GameController.instance.expTable.length) {
-            this.lblExpV.text = "MAX";
-            this.progExp.percentWidth = 100;
-        } else {
+        let expText = "MAX";
+        let expPerWidth = 100;
+        if (level !== GameController.instance.expTable.length) {
             let expBase = level===1 ? 0 : GameController.instance.expTable[level-2];
             let expNext = GameController.instance.expTable[level-1];
-            this.progExp.percentWidth = (playerShipData.exp - expBase) * 100 / (expNext - expBase);
-            this.lblExpV.text = this.progExp.percentWidth.toFixed(0) + "%";
+            expPerWidth = (playerShipData.exp - expBase) * 100 / (expNext - expBase);
+            expText = expPerWidth.toFixed(0) + "%";
         }
-        this.progHp.percentWidth = Math.min(100, shipData.maxHp * 100 / GlobalMaxHp);
-        this.progPower.percentWidth = Math.min(100, shipData.bulletPower * shipData.bulletNum * 100 / GlobalMaxPower);
-        this.progFireRate.percentWidth = Math.min(100, 100000 / shipData.fireCD / GlobalMaxFireRate);
+        this.lblExpV.text = expText;
+
+        egret.Tween.removeTweens(this.progHp);
+        egret.Tween.removeTweens(this.progPower);
+        egret.Tween.removeTweens(this.progFireRate);
+        egret.Tween.removeTweens(this.progExp);
+        
+        let tw = egret.Tween.get(this.progHp)
+        tw.to({percentWidth: Math.min(100, shipData.maxHp * 100 / GlobalMaxHp)}, 200, egret.Ease.getPowOut(2));
+        
+        tw = egret.Tween.get(this.progPower)
+        tw.to({percentWidth: Math.min(100, shipData.bulletPower * shipData.bulletNum * 100 / GlobalMaxPower)}, 200, egret.Ease.getPowOut(2));
+        
+        tw = egret.Tween.get(this.progFireRate)
+        tw.to({percentWidth: Math.min(100, 100000 / shipData.fireCD / GlobalMaxFireRate)}, 200, egret.Ease.getPowOut(2));
+        
+        tw = egret.Tween.get(this.progExp)
+        tw.to({percentWidth: expPerWidth}, 200, egret.Ease.getPowOut(2));
+        // this.progHp.percentWidth = Math.min(100, shipData.maxHp * 100 / GlobalMaxHp);
+        // this.progPower.percentWidth = Math.min(100, shipData.bulletPower * shipData.bulletNum * 100 / GlobalMaxPower);
+        // this.progFireRate.percentWidth = Math.min(100, 100000 / shipData.fireCD / GlobalMaxFireRate);
+        // this.progExp.percentWidth = expPerWidth;
     }
 
-    private onTapBtnGo(event:egret.TouchEvent): void {
+    private onBtnGo(event:egret.TouchEvent): void {
         GameController.instance.setBattleShips([this.curShipId]);
         GameController.instance.replaceRootLayerNextFrame(BattleLayer);
     }
