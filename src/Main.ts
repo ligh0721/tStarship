@@ -28,8 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
-    public static menu: any;
-    private static _that: egret.DisplayObjectContainer;
+    private mode: "web"|"fb"|"wc" = "web";
 
     protected createChildren(): void {
         super.createChildren();
@@ -52,40 +51,67 @@ class Main extends eui.UILayer {
         egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
         egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
 
-        this.initializeAsync();
-        FBInstant.startGameAsync().then(() => {
-            egret.log("start game");
-            Main._that = this;
-            Main.menu = new Menu("Egret Facebook SDK Demo")
-            this.addChild(Main.menu);
-            this.createMenu();
-
-            this.runGame().catch(e => {
-                console.log(e);
-            })
-        });
+        this.mode = "fb";
+        this.runGame().catch(e => {
+            console.log(e);
+        })
     }
 
     private async runGame() {
-        await this.loadResource();
+        switch (this.mode) {
+        case "web":
+            await this.runGameAsWeb();
+            break;
+        case "fb":
+            await this.runGameAsFb();
+            break;
+        case "wc":
+            await this.runGameAsWc();
+            break;
+        }
+    }
+
+    private async runGameAsWeb() {
+        const loadingView = new LoadingUI();
+        this.stage.addChild(loadingView);
+        await this.loadResource(loadingView);
+        this.stage.removeChild(loadingView);
+
         this.createGameScene();
-        const result = await RES.getResAsync("description_json")
+        // const result = await RES.getResAsync("description_json")
         //await platform.login();
         //const userInfo = await platform.getUserInfo();
         //console.log(userInfo);
-
     }
 
-    private async loadResource() {
-        const loadingView = new LoadingUI();
-        this.stage.addChild(loadingView);
+    private async runGameAsFb() {
+        await FBInstant.initializeAsync();
+        egret.log("getLocale:", FBInstant.getLocale());
+        egret.log("getPlatform:", FBInstant.getPlatform());
+        egret.log("getSDKVersion", FBInstant.getSDKVersion());
+        egret.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
+        egret.log("getEntryPointData", FBInstant.getEntryPointData());
+
+        let reporter = new FBInstantLoadingReporter();
+        await this.loadResource(reporter);
+        await FBInstant.startGameAsync();
+        egret.log("start game");
+        this.fbContextInfo();
+        this.fbPlayerInfo();
+
+        this.createGameScene();
+    }
+
+    private async runGameAsWc() {
+    }
+
+    private async loadResource(reporter?: RES.PromiseTaskReporter) {
         await RES.loadConfig("resource/default.res.json", "resource/");
         await this.loadTheme();
         let loadOK = false;
         do {
             try {
-                await RES.loadGroup("preload", 0, loadingView);
-                this.stage.removeChild(loadingView);
+                await RES.loadGroup("preload", 0, reporter);
                 loadOK = true;
             }
             catch (e) {
@@ -117,35 +143,6 @@ class Main extends eui.UILayer {
         // GameController.instance.createRootLayer(PathEditorLayer);
     }
 
-    public static backMenu(): void {
-        Main._that.removeChildren();
-        Main._that.addChild(Main.menu);
-    }
-
-    private createMenu(): void {
-        Main.menu.addTestFunc("baseinfo", this.baseinfo, this);
-        Main.menu.addTestFunc("quit", this.quit, this);
-        Main.menu.addTestFunc("logEvent", this.logEvent, this);
-        Main.menu.addTestFunc("shareAsync", this.shareAsync, this);
-        Main.menu.addTestFunc("player", this.player, this);
-        Main.menu.addTestFunc("getConnectedPlayersAsync", this.getEgretConnectedPlayersAsync, this);
-        Main.menu.addTestFunc("contextinfo", this.contextinfo, this);
-        Main.menu.addTestFunc("share", this.share, this);
-    }
-
-    private initializeAsync(): void {
-        FBInstant.initializeAsync().then(function () {
-            egret.log("getLocale:", FBInstant.getLocale());
-            egret.log("getPlatform:", FBInstant.getPlatform());
-            egret.log("getSDKVersion", FBInstant.getSDKVersion());
-            egret.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
-            egret.log("getEntryPointData", FBInstant.getEntryPointData());
-        })
-        setTimeout(function () {
-            FBInstant.setLoadingProgress(100);
-        }, 1000);
-    }
-
     private baseinfo() {
         egret.log("baseinfo");
         egret.log("getLocale:", FBInstant.getLocale());
@@ -175,7 +172,7 @@ class Main extends eui.UILayer {
         FBInstant.shareAsync(data);
     }
 
-    private player() {
+    private fbPlayerInfo() {
         egret.log("player");
         egret.log("player.getID", FBInstant.player.getID());
         egret.log("player.getName", FBInstant.player.getName());
@@ -193,7 +190,7 @@ class Main extends eui.UILayer {
         });
     }
 
-    private contextinfo(): void {
+    private fbContextInfo(): void {
         egret.log("Context.getID", FBInstant.context.getID());
         egret.log("Context.getType", FBInstant.context.getType());
     }
@@ -206,121 +203,5 @@ class Main extends eui.UILayer {
             image: "",
         };
         FBInstant.shareAsync(data);
-    }
-}
-
-class Menu extends egret.Sprite {
-    public constructor(title: string) {
-        super();
-        this.graphics.lineStyle(2, 0x282828);
-        this.graphics.moveTo(0, 35);
-        this.graphics.lineTo(egret.MainContext.instance.stage.stageWidth, 35);
-        this.graphics.endFill();
-        this.graphics.lineStyle(2, 0x6a6a6a);
-        this.graphics.moveTo(0, 37);
-        this.graphics.lineTo(egret.MainContext.instance.stage.stageWidth, 37);
-        this.graphics.endFill();
-        this.drawText(title);
-        this.addChild(this.textF);
-    }
-    private textF: egret.TextField;
-    private drawText(label: string): void {
-        if (this.textF == null) {
-            let text: egret.TextField = new egret.TextField();
-            text.text = label;
-            text.width = egret.MainContext.instance.stage.stageWidth
-            text.height = 35;
-            text.size = 22;
-            text.verticalAlign = egret.VerticalAlign.MIDDLE;
-            text.textAlign = egret.HorizontalAlign.CENTER;
-            this.textF = text;
-            this.textF.strokeColor = 0x292b2f;
-        }
-    }
-    private viewNum: number = 0;
-    public addTestFunc(label: string, callback: Function, target: Object): void {
-        let btn: Button = new Button(label);
-        btn.x = (egret.MainContext.instance.stage.stageWidth - 30) / 2 + 20;
-        btn.y = 48 + this.viewNum* 47;
-        this.addChild(btn);
-        btn.addEventListener("CHAGE_STAGE", callback, target);
-        this.viewNum++;
-    }
-}
-class Button extends egret.Sprite {
-    public constructor(label: string) {
-        super();
-        this.drawText(label);
-        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.touch_begin, this);
-        this.addEventListener(egret.TouchEvent.TOUCH_END, this.touch_end, this);
-        this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.click, this);
-        this.draw();
-        this.touchEnabled = true;
-    }
-    private touch_begin(evt: egret.TouchEvent): void {
-        this.isUp = false;
-        this.draw();
-    }
-    private touch_end(evt: egret.TouchEvent): void {
-        this.isUp = true;
-        this.draw();
-    }
-    private click(evt: egret.TouchEvent): void {
-        this.dispatchEvent(new egret.Event("CHAGE_STAGE"));
-    }
-    private isUp: boolean = true;
-    private draw(): void {
-        this.graphics.clear();
-        this.removeChildren();
-        if (this.isUp) {
-            this.drawUp();
-        } else {
-            this.drawDown();
-        }
-        this.addChild(this.textF);
-    }
-    private textF: egret.TextField;
-    private drawText(label: string): void {
-        if (this.textF == null) {
-            let text: egret.TextField = new egret.TextField();
-            text.text = label;
-            text.width = (egret.MainContext.instance.stage.stageWidth - 30) / 2;
-            text.height = 35;
-            text.size = 22;
-            text.verticalAlign = egret.VerticalAlign.MIDDLE;
-            text.textAlign = egret.HorizontalAlign.CENTER;
-            this.textF = text;
-            this.textF.strokeColor = 0x292b2f;
-        }
-    }
-    private drawUp(): void {
-        this.graphics.beginFill(0x666666);
-        this.graphics.lineStyle(2, 0x282828);
-        this.graphics.drawRoundRect(0, 0, (egret.MainContext.instance.stage.stageWidth - 30) / 2, 35, 15, 15);
-        this.graphics.endFill();
-        this.graphics.lineStyle(2, 0x909090, 0.5);
-        this.graphics.moveTo(5, 2);
-        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 2);
-        this.graphics.endFill();
-        this.graphics.lineStyle(2, 0x676767, 0.7);
-        this.graphics.moveTo(5, 37);
-        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 37);
-        this.graphics.endFill();
-        this.textF.stroke = 0;
-    }
-    private drawDown(): void {
-        this.graphics.beginFill(0x3b3b3b);
-        this.graphics.lineStyle(2, 0x282828);
-        this.graphics.drawRoundRect(0, 0, (egret.MainContext.instance.stage.stageWidth - 30) / 2, 35, 15, 15);
-        this.graphics.endFill();
-        this.graphics.lineStyle(2, 0x313131, 0.5);
-        this.graphics.moveTo(5, 2);
-        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 2);
-        this.graphics.endFill();
-        this.graphics.lineStyle(2, 0x676767, 0.7);
-        this.graphics.moveTo(5, 37);
-        this.graphics.lineTo((egret.MainContext.instance.stage.stageWidth - 30) / 2 - 5, 37);
-        this.graphics.endFill();
-        this.textF.stroke = 1;
     }
 }
