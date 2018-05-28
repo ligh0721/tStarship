@@ -51,7 +51,12 @@ class Main extends eui.UILayer {
         egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
         egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
 
-        this.mode = "fb";
+        if (typeof(FBInstant) === typeof(undefined)) {
+            this.mode = "web";
+        } else {
+            this.mode = "fb";
+        }
+        
         this.runGame().catch(e => {
             console.log(e);
         })
