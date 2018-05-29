@@ -115,6 +115,15 @@ class EnemyController {
 	}
 
 	private rush(rushItem: RushItem): void {
+		// 设置组信息
+		if (rushItem.ships && rushItem.ships.length > 1) {
+			let group = new EnemyGroup();
+			group.incMember(rushItem.ships.length);
+			rushItem.ships.forEach((ship, i, arr)=>{
+				ship.setGroup(group);
+			});
+		}
+
 		switch(rushItem.type) {
 		case "bezier":
 			if(rushItem.path.length < 3) {
@@ -144,7 +153,7 @@ class EnemyController {
 	}
 
 	public getHero(): Ship {
-		if (this.hero == null || !this.hero.isAlive()) {
+		if (this.hero == null || !this.hero.alive) {
 			this.hero = this.world.findNearestHeroShip(this.world.width*0.5, this.world.height*0.5);
 		}
 		return this.hero;
@@ -162,7 +171,7 @@ class EnemyController {
 	}
 
 	public adjustAngle(ship: Ship, dt: number, angleSpeed: number, x?: number, y?: number): void {
-		if (!ship.isAlive()) {
+		if (!ship.alive) {
 			return;
 		}
 		let pos: {x: number, y: number};
@@ -384,7 +393,7 @@ class EnemyController {
 			}, this)
 			tick = 0;
 		}, (dt: number)=>{
-			if (!gunShip.isAlive() && !gunShipL.isAlive() && !gunShipR.isAlive()) {
+			if (!gunShip.alive && !gunShipL.alive && !gunShipR.alive) {
 				smgr.change(moveToBottom);
 				return;
 			}
@@ -407,7 +416,7 @@ class EnemyController {
 		adjustAngle.setListener(()=>{
 			tick = 0;
 		}, (dt: number)=>{
-			if (!gunShip.isAlive() && !gunShipL.isAlive() && !gunShipR.isAlive()) {
+			if (!gunShip.alive && !gunShipL.alive && !gunShipR.alive) {
 				smgr.change(moveToBottom);
 				return;
 			}
@@ -422,7 +431,7 @@ class EnemyController {
 		wait.setListener(()=>{
 			tick = 0;
 		}, (dt: number)=>{
-			if (!gunShip.isAlive() && !gunShipL.isAlive() && !gunShipR.isAlive()) {
+			if (!gunShip.alive && !gunShipL.alive && !gunShipR.alive) {
 				smgr.change(moveToBottom);
 				return;
 			}
@@ -440,7 +449,7 @@ class EnemyController {
 			tick = 0;
 			gun.bulletLeft = bulletReload;
 		}, (dt: number)=>{
-			if (gun.bulletLeft == 0 || !gunShip.isAlive()) {
+			if (gun.bulletLeft == 0 || !gunShip.alive) {
 				smgr.change(wait, 1000, fire.args[0]);
 			}
 		}, this);

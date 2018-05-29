@@ -29,7 +29,7 @@ class Supply extends Unit {
 		return gameObject;
 	}
 
-	public isAlive(): boolean {
+	public get alive(): boolean {
 		return this.status == UnitStatus.Alive;
 	}
 
@@ -52,7 +52,7 @@ class Supply extends Unit {
 		let thisId = this.id;
 		let timer = new tutils.Timer();
 		timer.setOnTimerListener((dt: number)=> {
-			if (!this.isAlive() || this.id != thisId || (target != null && (!target.isAlive() || target.id != targetId))) {
+			if (!this.alive || this.id != thisId || (target != null && (!target.alive || target.id != targetId))) {
 				timer.stop();
 				return;
 			}

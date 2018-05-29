@@ -35,7 +35,7 @@ class SinCurve {
 			egret.Tween.removeTweens(this);
 			return;
 		}
-		if ((this.obj instanceof HpUnit && !this.obj.isAlive()) || (this.obj instanceof Supply && !this.obj.isAlive())) {
+		if ((this.obj instanceof HpUnit && !this.obj.alive) || (this.obj instanceof Supply && !this.obj.alive)) {
 			egret.Tween.removeTweens(this);
 			return;
 		}

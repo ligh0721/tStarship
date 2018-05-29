@@ -78,7 +78,7 @@ class World {
 		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
-			if (!ship.isAlive() || !ship.force.isMyEnemy(force) || ship.gameObject.y>y || ship==this.obShip) {
+			if (!ship.alive || !ship.force.isMyEnemy(force) || ship.gameObject.y>y || ship==this.obShip) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
@@ -98,7 +98,7 @@ class World {
 		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
-			if (ship==this.obShip || !ship.hero || !ship.isAlive()) {
+			if (ship==this.obShip || !ship.hero || !ship.alive) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
@@ -208,7 +208,7 @@ class World {
 				ship.status = UnitStatus.Removed;
 				toDelShips.push(ship);
 			}
-			if (!ship.isAlive()) {
+			if (!ship.alive) {
 				continue;
 			}
 			
@@ -219,7 +219,7 @@ class World {
 					bullet.status = UnitStatus.Removed;
 					toDelBullets.push(bullet);
 				}
-				if (!bullet.isAlive()) {
+				if (!bullet.alive) {
 					continue;
 				}
 				if (bullet.removeOutOfWorld && !this.rect.intersects(bullet.getBounds())) {
@@ -234,7 +234,7 @@ class World {
 					ship.damaged(dt, bullet.gun.ship);
 					bullet.damaged(dt, ship);
 					//tutils.playSound("Hit_mp3");
-					if (!ship.isAlive()) {
+					if (!ship.alive) {
 						//console.log("dead!");
 						//console.log('ship('+shipId+') push toDel '+ship.hp.hp);
 						break;
@@ -244,21 +244,21 @@ class World {
 
 			if (ship.hero) {
 				// 子弹碰撞检测后，再次验活
-				if (!ship.isAlive()) {
+				if (!ship.alive) {
 					continue;
 				}
 
 				// 检测飞船撞击
 				for (let shipId2 in this.ships) {
 					let ship2: Ship = this.ships[shipId2];
-					if (!ship2.isAlive()) {
+					if (!ship2.alive) {
 						continue;
 					}
 					if (ship.force.isMyEnemy(ship2.force) && ship.onHitEnemyShipTest(ship2)) {
 						//console.log("ship hit!");
 						ship.damaged(ship2.maxHp, ship2);
 						ship2.damaged(ship.maxHp, ship);
-						if (!ship.isAlive()) {
+						if (!ship.alive) {
 							//console.log("dead!");
 							break;
 						}
@@ -266,7 +266,7 @@ class World {
 				}
 				
 				// 撞机检测后，再次验活
-				if (!ship.isAlive()) {
+				if (!ship.alive) {
 					continue;
 				}
 
@@ -277,7 +277,7 @@ class World {
 						supply.status = UnitStatus.Removed;
 						toDelSupplies.push(supply);
 					}
-					if (!supply.isAlive()) {
+					if (!supply.alive) {
 						continue;
 					}
 					if (supply.y > this.height+supply.gameObject.height*0.5) {

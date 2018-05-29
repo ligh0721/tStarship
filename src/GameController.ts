@@ -173,13 +173,19 @@ class GameController {
 		return this.expTable.length;
 	}
 
-	public getPlayerShipDataById(id: string): {exp: number, use: number, enemy: number} {
+	public getPlayerShipDataById(id: string): PlayerShipData {
 		let item = this.playerData.ships[id];
 		if (item === undefined) {
 			return null;
 		}
 		return item;
 	}
+}
+
+type PlayerShipData = {
+	exp: number,
+	use: number,
+	enemy: number
 }
 
 type PlayPrefsData = {
@@ -190,11 +196,7 @@ type PlayPrefsData = {
     },
     maxStage: number,
     coins: number,
-    ships: {[id: string]: {
-        exp: number,
-        use: number,
-        enemy: number,
-    }},
+    ships: {[id: string]: PlayerShipData},
 };
 
 type ShipDataItem = {

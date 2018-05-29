@@ -15,11 +15,11 @@ class GuideGun extends Gun {
 		let timer = new tutils.Timer();
 		let bulletAngleRaw = -Math.PI/2;
 		timer.setOnTimerListener((dt: number)=> {
-			if (!bullet.isAlive() || bullet.id != bulletId) {
+			if (!bullet.alive || bullet.id != bulletId) {
 				timer.stop();
 				return;
 			}
-			if ((target==null || !target.isAlive() || target.id != targetId) && this.ship.isAlive()) {
+			if ((target==null || !target.alive || target.id != targetId) && this.ship.alive) {
 				targetId = "";
 				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force);
 				if (target != null) {

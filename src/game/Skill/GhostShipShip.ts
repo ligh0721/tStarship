@@ -63,7 +63,7 @@ class GhostShipSkill extends Skill {
 	}
 
 	private onTimer(dt: number): void {
-		if (!this.ship.isAlive()) {
+		if (!this.ship.alive) {
 			this.cleanup();
 			return;
 		}

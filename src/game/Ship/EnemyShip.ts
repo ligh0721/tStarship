@@ -1,13 +1,15 @@
 class EnemyShip extends Ship {
 	private hpBar: ShipHpBar = null;
 
+	private group: EnemyGroup = null;
+
 	public constructor(model: string, scale?: number) {
 		super(model, scale);
 	}
 
 	public damaged(value: number, src: HpUnit): void {
 		super.damaged(value, src);
-		if (this.isAlive()) {
+		if (this.alive) {
 			if (this.hpBar == null) {
 				this.hpBar = this.pools.newObject(ShipHpBar, this).create();
 				this.world.gameObject.addChild(this.hpBar.gameObject);
@@ -59,5 +61,40 @@ class EnemyShip extends Ship {
 			this.hpBar = null;
 		}
 		super.onCleanup();
+	}
+
+	// override
+	protected onDying(src: HpUnit): void {
+		if (this.group) {
+			this.group.decMember();
+		}
+		super.onDying(src);
+	}
+
+	public setGroup(group: EnemyGroup): void {
+		this.group = group;
+	}
+
+	public isLastGroupMember(): boolean {
+		if (!this.group) {
+			return false;
+		}
+		if (this.alive) {
+			return this.group.num === 1
+		} else {
+			return this.group.num === 0;
+		}
+	}
+}
+
+class EnemyGroup {
+	num: number = 0;
+
+	public incMember(count: number=1): void {
+		this.num += count;
+	}
+
+	public decMember(): void {
+		this.num--;
 	}
 }

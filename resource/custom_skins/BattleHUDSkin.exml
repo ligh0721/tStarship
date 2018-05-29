@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="BattleHUDSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing">
-	<e:Group id="grpBossHpBar" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" width="670" horizontalCenter="0" top="20" height="40" visible="false">
+<e:Skin class="BattleHUDSkin" width="720" height="1280" currentState="init" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing" states="final,init" >
+	<e:Group id="grpBossHpBar" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" width="670" horizontalCenter="0" top="20" height="40" width.init="95%" visible.init="false">
 		<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" fillColor="0xFFFFFF" strokeWeight="0"/>
 		<e:Group width="100%" height="100%" scaleX="1" scaleY="1" horizontalCenter="0">
 		<e:Rect id="progBossHpBar" width="50%" height="100%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0xff3d3d"/>
@@ -29,18 +29,18 @@
 	</e:Group>
 	<e:Group id="grpBuff" width="550" height="50" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" bottom="10"/>
 	<e:Group id="grpScore" width="220" height="60" anchorOffsetX="0" anchorOffsetY="0" right="20" top="20">
-		<e:Image source="coin2_png" right="0" verticalCenter="0" width="74" height="70"/>
+		<e:Image source="coin2_png" right="0" verticalCenter="0" width="70" height="70"/>
 		<e:Label id="lblScore" text="500" size="60" textColor="0xffb959" strokeColor="0x000000" stroke="3" right="83" width="200" bold="true" textAlign="right" bottom="0" italic="true"/>
 	</e:Group>
 	<e:Group id="grpHighScore" width="220" anchorOffsetX="0" anchorOffsetY="0" top="20" left="20" height="80">
 		<e:Label id="lblHighScore" text="1000" size="60" italic="true" bold="true" textColor="0xFFB959" strokeColor="0x000000" stroke="3" textAlign="left" width="200" bottom="0" left="0"/>
 		<e:Label text="Last High Score" top="0" left="-1" size="20" stroke="2" bold="true"/>
 	</e:Group>
-	<e:Group id="grpTip" width="220" height="100" right="-20" top="300">
+	<e:Group id="grpTip" width="220" height="100" right="-20" top="300" top.init="300" right.init="-220">
+		<e:Rect width="100%" height="100%" fillAlpha="0.5" ellipseWidth="20" ellipseHeight="20" x.final="0" y.final="0" scaleX.final="1" scaleY.final="1"/>
 		<e:Group width="200" height="100%" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1">
-			<e:Rect width="100%" height="100%" fillAlpha="0.5" ellipseWidth="20" ellipseHeight="20"/>
-			<e:Image id="tipIcon" width="44" height="43" horizontalCenter="-23.5" top="15" source="coin2_png"/>
-			<e:Label id="lblTipNum" text="+1" horizontalCenter="34" top="15" size="45" textAlign="left" verticalAlign="middle" stroke="3" italic="true" bold="true"/>
+			<e:Image id="imgTipIcon" width="38" height="38" horizontalCenter="-23" top="17" source="coin2_png"/>
+			<e:Label id="lblTipNum" text="+1" horizontalCenter="34" top="20" size="35" textAlign="left" verticalAlign="middle" stroke="3" italic="true"/>
 			<e:Label id="lblTipDesc" text="Wave Clear" textAlign="center" verticalAlign="middle" horizontalCenter="0" top="65" size="25" stroke="2" bold="true"/>
 		</e:Group>
 	</e:Group>

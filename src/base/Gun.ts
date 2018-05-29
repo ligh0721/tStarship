@@ -59,7 +59,7 @@ class Gun {
 	}
 
 	public fire(): void {
-		if (this.ship == null || !this.ship.isAlive()) {
+		if (this.ship == null || !this.ship.alive) {
 			return;
 		}
 		this.playFireSound();
@@ -76,7 +76,7 @@ class Gun {
 	}
 
 	public set autoFire(value: boolean) {
-		if (this.ship == null || !this.ship.isAlive()) {
+		if (this.ship == null || !this.ship.alive) {
 			this.autoFireTimer.stop();
 			return;
 		}
@@ -90,7 +90,7 @@ class Gun {
 		if (value) {
 			if (!this.autoFireTimer.hasOnTimerListener()) {
 				this.autoFireTimer.setOnTimerListener((dt: number): void => {
-					if (this.ship == null || !this.ship.isAlive()) {
+					if (this.ship == null || !this.ship.alive) {
 						this.autoFireTimer.stop();
 						return;
 					}

@@ -4,13 +4,15 @@ class BattleLayer extends tutils.Layer {
     private gameOverLayer: egret.Sprite;
     private msgLayer: egret.Sprite;
 
+    private hud: BattleHUD;
+
 	private world: World;
     private hero: HeroShip;
-	private score: Score;
+    private heroShipData: PlayerShipData;
+
+	// private score: Score;
     private enemyCtrl: EnemyController;
     private readonly buffuis: BuffProgress[] = [];
-    private bossui: BossHpProgress = null;
-    private bossuiShowing: boolean = true;
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private heroHpBar: ShapeProgress;
     private heroPowerBar: ShapeProgress;
@@ -23,9 +25,13 @@ class BattleLayer extends tutils.Layer {
     private sldHeroScale: eui.HSlider;
     private txtHeroScale: egret.TextField;
 
+    private tickerEffect = new Effect(1, 10);
+
     $pathPercent: number = 0;
 
     // 统计项
+    private score: number = 0;
+    private highScore: number = 0;
     private destroyEnemies: number = 0;
     private destroyBosses: number = 0;
     private reachStage: number = 1;
@@ -82,6 +88,15 @@ class BattleLayer extends tutils.Layer {
 
         // 创建PUSH START
         this.createPushStart();
+
+        // 初始化HUD
+        this.hud = new BattleHUD();
+        this.hudLayer.addChild(this.hud);
+        this.hud.alpha = 0;
+        let playerData = GameController.instance.playerData;
+        this.highScore = playerData.highscore.score;
+        this.hud.updateScore(this.score);
+        this.hud.updateHighScore(this.highScore);
 	}
 
     // override
@@ -134,14 +149,18 @@ class BattleLayer extends tutils.Layer {
         this.bgMusic = tutils.playSound("Bgmusic_mp3", 0);
 
         // 创建玩家飞船
-        let hero = GameController.instance.createHeroShip(GameController.instance.battleShips[0], this.world);
+        let heroShipId = GameController.instance.battleShips[0];
+        let hero = GameController.instance.createHeroShip(heroShipId, this.world);
         this.hero = hero;
+        this.heroShipData = GameController.instance.getPlayerShipDataById(heroShipId);
         hero.force.force = tutils.Player1Force;
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
+
+        hero.heroHUD = this.hud;
 
         // let buff = new GunBuff(5000, -0.80, 0, +1.00);
         // let buff2 = new ShipBuff(5000, -0.80);
@@ -153,36 +172,17 @@ class BattleLayer extends tutils.Layer {
 
         hero.addBuff(new ShieldBuff(-1, 10));
 
+
         // 创建玩家飞船血条、能量条
-        this.heroHpBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.BottomToTop, 50, 100, 0xf48771, 0xf48771);
-        hero.heroHpBar = this.heroHpBar;
-        this.heroHpBar.gameObject.x = 10;
-        this.heroHpBar.gameObject.y = this.stage.stageHeight - 100 - 10;
-        this.heroHpBar.percent = this.hero.hp / this.hero.maxHp;
-        this.heroHpBar.gameObject.visible = false;
-
-        this.heroPowerBar = new ShapeProgress(this.layer, tutils.ProgressFillDirection.BottomToTop, 50, 100, 0x9cdcfe, 0x9cdcfe);
-        hero.heroPowerBar = this.heroPowerBar;
-        this.heroPowerBar.gameObject.x = this.stage.stageWidth - 50 - 10;
-        this.heroPowerBar.gameObject.y = this.stage.stageHeight - 100 - 10;
-        this.heroPowerBar.percent = this.hero.power / this.hero.maxPower;
-        this.heroPowerBar.gameObject.touchEnabled = true;
-        this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
-        this.heroPowerBar.gameObject.visible = false;
-
-        // 创建分数板
-		let score = new Score(this.hudLayer);
-		score.digits = 10;
-		score.score = 0;
-        this.score = score;
-        this.score.gameObject.x = this.stage.stageWidth - this.score.gameObject.width;
+        this.hud.updateHpBar(hero.hp*100/hero.maxHp);
+        this.hud.updatePowerBar(hero.power*100/hero.maxPower);
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
         testSupplyTimer.setOnTimerListener((dt: number): void=>{
             this.createTestSupply();
         });
-        testSupplyTimer.start(8000, true, 0);
+        testSupplyTimer.start(3000, true, 0);
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -196,11 +196,13 @@ class BattleLayer extends tutils.Layer {
         tw.to({y: this.stage.stageHeight - 200}, 1000);  
         tw.wait(1000);
         tw.call(() => {
-            this.heroHpBar.gameObject.visible = true;
-            this.heroPowerBar.gameObject.visible = true;
+            let tw = egret.Tween.get(this.hud);
+            tw.to({alpha: 1}, 500);
+
             this.hero.mainGun.autoFire = true;
 
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.layer.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
             // 创建敌军小队
             this.createTestEnemyRushes();
             
@@ -215,7 +217,7 @@ class BattleLayer extends tutils.Layer {
         if (evt.target != this.heroPowerBar.gameObject || !this.hero.isPowerFull()) {
             return;
         }
-        if (this.hero.isAlive() && this.hero.castSkill()) {
+        if (this.hero.alive && this.hero.castSkill()) {
             tutils.playSound("Powerup_mp3");
             this.turbo(this.bgCtrl, 100, 10, 5000);
             // this.turbo(this.bgCtrl2, 200, 20, 5000);
@@ -263,21 +265,26 @@ class BattleLayer extends tutils.Layer {
             this.gameOver();
             return;
         } else if (this.hero.force.isMyEnemy(ship.force) && ((killer == this.hero) || (killer instanceof IntervalHitShip && killer.ship == this.hero))) {
-            let score = Math.floor(ship.maxHp*20/100)*100;
-            // this.score.setScore(this.score.score+score, 200);
-            this.score.score += score;
-            let power = Math.max(ship.maxHp/5, 1);
-            let supply = this.world.pools.newObject(PowerSupply, power);
+            // 击败敌军
+            let score = 1;
+            let supply = this.world.pools.newObject(ScoreSupply, score);
             this.world.addSupply(supply);
             supply.drop(ship.gameObject.x, ship.gameObject.y);
 
-            let shipId = GameController.instance.battleShips[0];
-            let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
-            playerShipData.exp += ship.maxHp;
-            playerShipData.enemy++;
+            if (ship instanceof EnemyShip && ship.isLastGroupMember()) {
+                this.hud.showTip("coin2_png", "+1", "Wave Clear!");
+                this.addScore(1);
+            }
+
+            let power = Math.max(ship.maxHp/10, 1);
+            this.hero.addPower(power);
+
+            // 更新统计
+            this.heroShipData.exp += ship.maxHp;
+            this.heroShipData.enemy++;
             this.destroyEnemies++;
             if (ship instanceof MotherShip) {
-                this.removeBossUI();
+                this.hideBossUI();
                 this.enemyCtrl.startRush(30);
                 this.destroyBosses++;
                 this.reachStage++;
@@ -286,18 +293,27 @@ class BattleLayer extends tutils.Layer {
         }
     }
 
+    private addScore(score: number): void {
+        this.score += score;
+        this.hud.updateScore(this.score);
+        if (this.score > this.highScore) {
+            this.highScore = this.score;
+            this.hud.updateHighScore(this.highScore);
+        }
+    }
+
     private gameOver(): void {
         // GAME OVER
         this.layer.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
         this.layer.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+        this.layer.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
         this.enemyCtrl.stopRush();
 
         // 玩家数据
         let playerData = GameController.instance.playerData;
-        let score = this.score.score;
-        if (score > playerData.highscore.score) {
+        if (this.score > playerData.highscore.score) {
             // new high score!
-            playerData.highscore.score = score;
+            playerData.highscore.score = this.score;
             playerData.highscore.stage = this.reachStage;
             playerData.highscore.shipId = GameController.instance.battleShips[0];
         }
@@ -306,11 +322,14 @@ class BattleLayer extends tutils.Layer {
         }
         GameController.instance.savePlayerData();
         
-        let data = {high: playerData.highscore.score, stages: this.reachStage, enemies: this.destroyEnemies, bosses: this.destroyBosses, score: this.score.score};
+        let data = {high: playerData.highscore.score, stages: this.reachStage, enemies: this.destroyEnemies, bosses: this.destroyBosses, score: this.score};
         GameController.instance.showGameOverPanel(this.gameOverLayer, data);
     }
 
     private onShipHitSupply(ship: Ship, supply: Supply): void {
+        if (supply instanceof ScoreSupply) {
+            this.addScore(supply.score);
+        }
     }
 
     private onShipAddBuff(ship: Ship, buff: Buff): void {
@@ -321,18 +340,22 @@ class BattleLayer extends tutils.Layer {
         switch (buff.name) {
             case "GunCDR":
             color = 0x4f86ff;
+            this.hud.showTip("GunCDR_png", Math.floor(buff.duration/1000).toString() + "s", "Fire CDR Up!")
             break;
             
             case "GunPower":
             color = 0xf48771;
+            this.hud.showTip("GunPower_png", Math.floor(buff.duration/1000).toString() + "s", "Power Up!");
             break;
 
             case "GunLevelUp":
             color = 0xdcdcaa;
+            this.hud.showTip("GunLevelUp_png", "+1", "Level Up!")
             break;
 
             case "SatelliteGun":
             color = 0x49bba4;
+            this.hud.showTip("SatelliteGun_png", Math.floor(buff.duration/1000).toString() + "s", "Satellite Gun!");
             break;
 
             default:
@@ -387,15 +410,15 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onBossHpChanged(ship: HpUnit, changed: number) {
-        console.assert(this.bossui != null);
-        if (this.bossui == null || this.bossui.showing) {
-            return;
-        }
-        this.bossui.percent = ship.hp / ship.maxHp;
+        this.hud.updateBossHpBar(ship.hp*100/ship.maxHp);
     }
 
 	private onTouchBegin(evt: egret.TouchEvent) {
-        if (evt.target != this.layer || !this.hero.isAlive()) {
+        // egret.Tween.removeTweens(this.tickerEffect);
+        // let tw = egret.Tween.get(this.tickerEffect);
+        // tw.to({value: this.tickerEffect.maximum}, (this.tickerEffect.maximum-this.tickerEffect.value)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
+
+        if (evt.target != this.layer || !this.hero.alive) {
             this.beginDelta.x = -1;
             return;
         }
@@ -405,7 +428,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
-        if (evt.target != this.layer || this.beginDelta.x == -1 || !this.hero.isAlive()) {
+        if (evt.target != this.layer || this.beginDelta.x == -1 || !this.hero.alive) {
             return;
         }
         let toX = evt.localX-this.beginDelta.x;
@@ -421,6 +444,16 @@ class BattleLayer extends tutils.Layer {
             toY = this.stage.stageHeight;
         }
         this.hero.move(toX, toY);
+    }
+
+    private onTouchEnd(evt: egret.TouchEvent) {
+        // this.tickerEffect.setOnChanged((effect: Effect)=>{
+        //     egret.Ticker.getInstance().setTimeScale(effect.value/10);
+        // }, this);
+
+        // egret.Tween.removeTweens(this.tickerEffect);
+        // let tw = egret.Tween.get(this.tickerEffect);
+        // tw.to({value: this.tickerEffect.minimum}, (this.tickerEffect.value-this.tickerEffect.minimum)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
     }
 
     private createDebugPanel() {
@@ -525,7 +558,7 @@ class BattleLayer extends tutils.Layer {
         rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
             this.enemyCtrl.stopRush();
             let boss = this.enemyCtrl.createBoss1();
-            this.createBossUI(boss);
+            this.showBossUI(boss);
         }, this);
         this.enemyCtrl.addRush(rushItem);
 
@@ -534,7 +567,7 @@ class BattleLayer extends tutils.Layer {
                 let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss2();
-                    this.createBossUI(boss);
+                    this.showBossUI(boss);
                 }, this);
                 this.enemyCtrl.addRush(rushItem);
                 continue;
@@ -542,7 +575,7 @@ class BattleLayer extends tutils.Layer {
                 let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
-                    this.createBossUI(boss);
+                    this.showBossUI(boss);
                 }, this);
                 this.enemyCtrl.addRush(rushItem);
                 continue;
@@ -567,18 +600,15 @@ class BattleLayer extends tutils.Layer {
         this.enemyCtrl.startRush(30);
     }
 
-    private createBossUI(boss: Ship) {
-        this.bossui = new BossHpProgress(this.hudLayer, boss, 0xffffff);
-        this.bossui.show();
+    private showBossUI(boss: Ship) {
+        this.hud.showBossHpBar(()=>{
+            this.hud.updateBossHpBar(boss.hp*100/boss.maxHp);
+        }, this);
         boss.setOnHpChangedListener(this.onBossHpChanged, this);
-        this.score.gameObject.visible = false;
     }
 
-    private removeBossUI(): void {
-        this.bossui.cleanup();
-        this.hudLayer.removeChild(this.bossui.gameObject);
-        this.bossui = null;
-        this.score.gameObject.visible = true;
+    private hideBossUI(): void {
+        this.hud.hideBossHpBar();
     }
 
     private createTestSupply() {

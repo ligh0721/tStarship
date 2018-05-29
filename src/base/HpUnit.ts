@@ -40,7 +40,7 @@ class HpUnit extends Unit {
 		this.$hp.reset(maxHp);
 	}
 
-	public isAlive(): boolean {
+	public get alive(): boolean {
 		return this.status == UnitStatus.Alive;
 	}
 

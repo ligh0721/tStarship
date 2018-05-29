@@ -30,7 +30,7 @@ class MotherShip extends Ship {
 	protected onDying(src: HpUnit): void {
 		for (let i in this.gunShips) {
 			let gunShip = this.gunShips[i].gunShip;
-			if (gunShip.isAlive()) {
+			if (gunShip.alive) {
 				gunShip.damaged(gunShip.hp, null);
 			}
 		}

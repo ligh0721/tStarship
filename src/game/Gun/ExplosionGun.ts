@@ -2,7 +2,7 @@ class ExplosionGun extends Gun {
 	explosionRadius: number = 100;
 
 	public fire(): void {
-		if (this.ship == null || !this.ship.isAlive()) {
+		if (this.ship == null || !this.ship.alive) {
 			return;
 		}
 		this.playFireSound();

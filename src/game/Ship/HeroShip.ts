@@ -3,8 +3,7 @@ class HeroShip extends Ship {
     private hitRect: egret.Rectangle;
     power: number = 0;
     maxPower: number = 100;
-    heroHpBar: ShapeProgress = null;
-    heroPowerBar: ShapeProgress = null;
+    heroHUD: IHeroHUD = null;
     skill: Skill = null;
 
     public constructor(model: string, scale?: number) {
@@ -15,8 +14,8 @@ class HeroShip extends Ship {
 
     public damaged(value: number, src: HpUnit): void {
 		super.damaged(value, src);
-        if (this.heroHpBar) {
-            this.heroHpBar.percent = this.hp / this.maxHp;
+        if (this.heroHUD) {
+            this.heroHUD.updateHpBar(this.hp * 100 / this.maxHp);
         }
 	}
 
@@ -25,15 +24,15 @@ class HeroShip extends Ship {
         if (this.power > this.maxPower) {
             this.power = this.maxPower;
         }
-        if (this.heroPowerBar) {
-            this.heroPowerBar.percent = this.power / this.maxPower;
+        if (this.heroHUD) {
+            this.heroHUD.updatePowerBar(this.power * 100 / this.maxPower);
         }
     }
 
     public clearPower(): void {
         this.power = 0;
-        if (this.heroPowerBar) {
-            this.heroPowerBar.percent = this.power / this.maxPower;
+        if (this.heroHUD) {
+            this.heroHUD.updatePowerBar(this.power * 100 / this.maxPower);
         }
     }
 
@@ -57,7 +56,7 @@ class HeroShip extends Ship {
     }
 
     public move(x: number, y: number): void {
-		if (!this.isAlive()) {
+		if (!this.alive) {
 			return;
 		}
 		this.moveTo(x, y, this.speed.value, true);

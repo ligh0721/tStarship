@@ -68,7 +68,7 @@ class Ship extends HpUnit {
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 		this.ai.stop();
-		this.world.onShipDying(this, <Ship>src);
+		this.world.onShipDying(this, src as Ship);
 		let tw: egret.Tween;
 		let g: egret.Graphics = null;
 		let from = 20;

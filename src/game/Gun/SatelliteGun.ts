@@ -27,7 +27,7 @@ class SatelliteGun extends Gun {
 		for (let i=0; i<this.bullets.length; i++) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
-			if (bullet != null && bullet.isAlive()) {
+			if (bullet != null && bullet.alive) {
 				continue;
 			}
 
@@ -45,7 +45,7 @@ class SatelliteGun extends Gun {
 		for (let i=0; i<this.bullets.length; i++) {
 			let bulletId = this.bullets[i];
 			let bullet = this.ship.world.getBullet(bulletId);
-			if (bullet == null || !bullet.isAlive()) {
+			if (bullet == null || !bullet.alive) {
 				continue;
 			}
 			this.updatePosition(bullet, i, periodPer);
@@ -71,7 +71,7 @@ class SatelliteGun extends Gun {
 			for (let i=0; i<this.bullets.length; i++) {
 				let bulletId = this.bullets[i];
 				let bullet = this.ship.world.getBullet(bulletId);
-				if (bullet == null || !bullet.isAlive()) {
+				if (bullet == null || !bullet.alive) {
 					continue;
 				}
 				bullet.damaged(bullet.hp, null);
