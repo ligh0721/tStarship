@@ -34,7 +34,7 @@ class HeroShipsPanel extends eui.Component {
         this.height = egret.MainContext.instance.stage.stageHeight;
         this.fitHeightScroller.height = this.height - this.shipDetail.height - 135;
         this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
-        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnGo, this);
+        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
 	}
 
     public updateList(): void {
@@ -140,23 +140,23 @@ class HeroShipsPanel extends eui.Component {
         egret.Tween.removeTweens(this.progExp);
         
         let tw = egret.Tween.get(this.progHp)
-        tw.to({percentWidth: Math.min(100, shipData.maxHp * 100 / GlobalMaxHp)}, 200, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, shipData.maxHp * 100 / GlobalMaxHp)}, 100, egret.Ease.getPowOut(2));
         
         tw = egret.Tween.get(this.progPower)
-        tw.to({percentWidth: Math.min(100, shipData.bulletPower * shipData.bulletNum * 100 / GlobalMaxPower)}, 200, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, shipData.bulletPower * shipData.bulletNum * 100 / GlobalMaxPower)}, 100, egret.Ease.getPowOut(2));
         
         tw = egret.Tween.get(this.progFireRate)
-        tw.to({percentWidth: Math.min(100, 100000 / shipData.fireCD / GlobalMaxFireRate)}, 200, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, 100000 / shipData.fireCD / GlobalMaxFireRate)}, 100, egret.Ease.getPowOut(2));
         
         tw = egret.Tween.get(this.progExp)
-        tw.to({percentWidth: expPerWidth}, 200, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
         // this.progHp.percentWidth = Math.min(100, shipData.maxHp * 100 / GlobalMaxHp);
         // this.progPower.percentWidth = Math.min(100, shipData.bulletPower * shipData.bulletNum * 100 / GlobalMaxPower);
         // this.progFireRate.percentWidth = Math.min(100, 100000 / shipData.fireCD / GlobalMaxFireRate);
         // this.progExp.percentWidth = expPerWidth;
     }
 
-    private onBtnGo(event:egret.TouchEvent): void {
+    private onBtnStart(event:egret.TouchEvent): void {
         GameController.instance.setBattleShips([this.curShipId]);
         GameController.instance.replaceRootLayerNextFrame(BattleLayer);
     }

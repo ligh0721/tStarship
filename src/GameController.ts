@@ -39,10 +39,11 @@ class GameController {
 			this.timer.stop();
 		}
 		this.timer.setOnTimerListener((dt: number):void=>{
-			if (this.curRootLayer) {
-				this.curRootLayer.cleanup();
-			}
+			let curRootLayer = this.curRootLayer;
 			this.createRootLayer(t);
+			if (curRootLayer) {
+				curRootLayer.cleanup();
+			}
 		}, this);
 		this.timer.start(0, false, 1);
 	}
