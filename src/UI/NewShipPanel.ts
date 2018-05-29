@@ -17,6 +17,7 @@ class NewShipPanel extends eui.Component {
     }
 
     private onUIComplete(): void {
+        this.height = egret.MainContext.instance.stage.stageHeight;
         let shipData = GameController.instance.getShipDataById(this.data.shipId);
         this.imgShip.source = shipData.model;
         this.lblShipName.text = shipData.name;

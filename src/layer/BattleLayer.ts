@@ -14,7 +14,7 @@ class BattleLayer extends tutils.Layer {
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private heroHpBar: ShapeProgress;
     private heroPowerBar: ShapeProgress;
-    private bgCtrl: BackgroundController;
+    private bgCtrl: tutils.BackgroundController;
     // private bgCtrl2: BackgroundController;
     private bgMusic: egret.SoundChannel;
 
@@ -58,7 +58,7 @@ class BattleLayer extends tutils.Layer {
         // 背景滚动器
         // let bg = tutils.createLayer(this.worldLayer, 0x191231, 1);
         
-        this.bgCtrl = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
+        this.bgCtrl = new tutils.BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
         this.bgCtrl.start(20);
         this.worldLayer.addChild(this.bgCtrl.gameObject);
 
@@ -222,7 +222,7 @@ class BattleLayer extends tutils.Layer {
         }
     }
 
-    public turbo(bgCtrl: BackgroundController, speed: number, orgSpeed: number, dur: number): void {
+    public turbo(bgCtrl: tutils.BackgroundController, speed: number, orgSpeed: number, dur: number): void {
         this.heroPowerBar.gameObject.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
         if (dur < 1500) {
             dur = 1500;
