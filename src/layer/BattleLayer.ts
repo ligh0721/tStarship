@@ -182,7 +182,7 @@ class BattleLayer extends tutils.Layer {
         testSupplyTimer.setOnTimerListener((dt: number): void=>{
             this.createTestSupply();
         });
-        testSupplyTimer.start(3000, true, 0);
+        testSupplyTimer.start(8000, true, 0);
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -618,7 +618,7 @@ class BattleLayer extends tutils.Layer {
         let i = Math.floor(Math.random()*4);
         switch (i) {
             case 0:
-            if (Math.random()*100 > 30) {
+            if (Math.random()*100 > 40) {
                 return;
             }
             buff = new GunLevelUpBuff(1);

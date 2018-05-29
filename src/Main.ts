@@ -141,7 +141,7 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        egret.localStorage.clear();
+        // egret.localStorage.clear();
         GameController.instance.init(this);
         GameController.instance.createRootLayer(HeroShipsLayer);
         // GameController.instance.createRootLayer(TestLayer);
