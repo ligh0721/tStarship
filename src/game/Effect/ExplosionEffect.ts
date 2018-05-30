@@ -8,15 +8,12 @@ class ExplosionEffect extends Effect {
 		this.model = model;
 		if (this.gameObject === undefined) {
 			this.gameObject = tutils.createBitmapByName(model);
-			this.gameObject.width = maximum * 2;
-			this.gameObject.height = maximum * 2;
-			this.gameObject.anchorOffsetX = this.gameObject.width * 0.5;
-			this.gameObject.anchorOffsetY = this.gameObject.height * 0.5;
-		} else {
-			this.gameObject.scaleX = 1;
-			this.gameObject.scaleY = 1;
-			this.gameObject.alpha = 1;
 		}
+		this.gameObject.width = maximum * 2;
+		this.gameObject.height = maximum * 2;
+		this.gameObject.anchorOffsetX = this.gameObject.width * 0.5;
+		this.gameObject.anchorOffsetY = this.gameObject.height * 0.5;
+		this.onStep(this);
 		this.setOnChanged(this.onStep, this);
 	}
 

@@ -188,6 +188,7 @@ class World {
 	}
 
 	public removeEffect(effect: Effect): void {
+		effect.cleanup();
 		this.gameObject.removeChild(effect.gameObject);
 	}
 

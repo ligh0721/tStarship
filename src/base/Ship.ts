@@ -76,6 +76,7 @@ class Ship extends HpUnit {
 			g = this.gameObject.graphics;
 		} else if (this.gameObject instanceof egret.Bitmap) {
 			let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
+			//let effect = new ExplosionEffect(20, to, "Explosion_png", this.gameObject);
 			this.world.addEffect(effect);
 			tw = egret.Tween.get(effect);
 			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));

@@ -36,4 +36,12 @@ class Effect {
 		this.onChanged = onChanged;
 		this.onChangedThis = thisObject;
 	}
+
+	public cleanup(): void {
+		this.onCleanup();
+	}
+
+	// override
+	protected onCleanup(): void {
+	}
 }
