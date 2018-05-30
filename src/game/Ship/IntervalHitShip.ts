@@ -1,11 +1,10 @@
 class IntervalHitShip extends Ship {
 	ship: Ship;
 	hitShipInterval: number = 1000;
-	private readonly effectedShips: { [id: string]: number };
+	private readonly effectedShips: { [id: string]: number } = {};
 
 	public constructor(model: string, scale?: number) {
 		super(model, scale);
-		this.effectedShips===undefined ? this.effectedShips={} : this.effectedShips.constructor();
 	}
 
 	// override

@@ -1,5 +1,7 @@
 class ExplosionGun extends Gun {
 	explosionRadius: number = 100;
+	explosionPowerEveryPer: number = 0.3;
+	explosionPowerLossInterval: number = 10000;
 
 	public fire(): void {
 		if (this.ship == null || !this.ship.alive) {
@@ -10,6 +12,8 @@ class ExplosionGun extends Gun {
 		let bullet = this.createBullet();
 		if (bullet instanceof ExplosionBullet) {
 			bullet.explosionRadius = this.explosionRadius;
+			bullet.explosionPowerEveryPer = this.explosionPowerEveryPer;
+			bullet.explosionPowerLossInterval = this.explosionPowerLossInterval;
 		}
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;

@@ -205,6 +205,7 @@ class BattleLayer extends tutils.Layer {
             this.layer.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
             // 创建敌军小队
             this.createTestEnemyRushes();
+            // this.createTestEnemyShip(50);
             
             // let boss = this.enemyCtrl.createBoss2();
             // this.createBossUI(boss);
@@ -417,6 +418,7 @@ class BattleLayer extends tutils.Layer {
         // egret.Tween.removeTweens(this.tickerEffect);
         // let tw = egret.Tween.get(this.tickerEffect);
         // tw.to({value: this.tickerEffect.maximum}, (this.tickerEffect.maximum-this.tickerEffect.value)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
+        egret.Ticker.getInstance().setTimeScale(0.5);
 
         if (evt.target != this.layer || !this.hero.alive) {
             this.beginDelta.x = -1;
@@ -493,13 +495,16 @@ class BattleLayer extends tutils.Layer {
 
 	// FIXME: test
 	private createTestEnemyShip(n: number) {
-		for (let i=0; i<n; i++) {
-			let ship = new MotherShip("BossShip1_png", 2);
+		for (let i=0; i<10; i++) {
+			let ship = new EnemyShip("RedEnemyShip_png", 0.5);
 			this.world.addShip(ship);
 			ship.force.force = tutils.EnemyForce;
-            ship.resetHp(Math.floor(Math.random()*10)+1);
-            ship.x = this.stage.stageWidth*(0.1+Math.random()*0.8);
-            ship.y = this.stage.stageHeight*(0.1+Math.random()*0.7);
+            ship.resetHp(20);
+            if (i == 5) {
+                ship.resetHp(2000);
+            }
+            ship.x = 60*i;
+            ship.y = 500;
 		}
 	}
 

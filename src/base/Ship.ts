@@ -6,15 +6,15 @@ class Ship extends HpUnit {
 	
 	force: Force;
 	mainGun: Gun = null;
-	readonly guns: { [id: string]: Gun };
+	readonly guns: { [id: string]: Gun } = {};
 	readonly speed: Value;
 	hero: boolean = false;  // can use supply
 
 	private readonly timer: tutils.Timer;
-	readonly buffs: { [id: string]: Buff };
+	readonly buffs: { [id: string]: Buff } = {};
 	buffsNum: number = 0;
 
-	readonly onDamagedTriggers: { [id: string]: Buff };
+	readonly onDamagedTriggers: { [id: string]: Buff } = {};
 
 	ai: tutils.StateManager;
 
@@ -31,11 +31,8 @@ class Ship extends HpUnit {
 		this.model = model;
 		this.scale = scale===undefined ? 1.0 : scale;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
-		this.guns===undefined ? this.guns={} : this.guns.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
-		this.buffs===undefined ? this.buffs={} : this.buffs.constructor();
-		this.onDamagedTriggers===undefined ? this.onDamagedTriggers={} : this.onDamagedTriggers.constructor();
 		this.ai===undefined ? this.ai=new tutils.StateManager() : this.ai.constructor();
 	}
 
