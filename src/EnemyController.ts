@@ -1,6 +1,6 @@
 class EnemyController {
 	readonly world: World;
-	private rushes: RushItem[] = [];
+	private rushes: Rush[] = [];
 	private tick: number = 0;
 	private timer: tutils.Timer = new tutils.Timer();
 	private hero: Ship = null;
@@ -11,83 +11,21 @@ class EnemyController {
 
 	public createEnemyShip(model: string): EnemyShip {
 		let enemyShip = new EnemyShip(model, 0.3);
-
-		enemyShip.speed.baseValue = 50;
 		enemyShip.force.force = tutils.EnemyForce;
-
 		return enemyShip;
 	}
 
-	public rushStraight(ships: EnemyShip[], startX: number, interval: number) {
-		if (ships.length == 0) {
-			return;
-		}
-
-		let t = new tutils.Timer();
-		t.setOnTimerListener((dt: number)=>{
-			let ship = ships.pop();
-			this.world.addShip(ship);
-			ship.x = startX;
-			let dis = this.world.height + ship.height;
-			let dur = dis * tutils.SpeedFactor / ship.speed.value;
-			let tw = egret.Tween.get(ship);
-			tw.to({y: this.world.height+ship.height}, dur);
-			tw.call(()=>{
-				ship.status = UnitStatus.Dead;
-			}, this);
-		}, this);
-
-		t.start(interval, true, ships.length);
-	}
-
-	public rushBezier(ships: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number},  point2: {x: number, y: number}, interval: number, duration: number, fixedRotation: boolean=false) {
-		if (ships.length == 0) {
-			return;
-		}
-
-		let t = new tutils.Timer();
-		t.setOnTimerListener((dt: number)=>{
-			let ship = ships.pop();
-			this.world.addShip(ship);
-			let bezier = new BezierCurve(ship, point0, point1, point2, fixedRotation);
-			bezier.startMove(duration, ()=>{
-				ship.status = UnitStatus.Dead;
-			});
-		}, this);
-
-		t.start(interval, true, ships.length);
-	}
-
-	public rushSin(ships: EnemyShip[], point0: {x: number, y: number},  point1: {x: number, y: number}, interval: number, duration: number, period: number, amplitude: number) {
-		if (ships.length == 0) {
-			return;
-		}
-
-		let t = new tutils.Timer();
-		t.setOnTimerListener((dt: number)=>{
-			let ship = ships.pop();
-			this.world.addShip(ship);
-			let sin = new SinCurve(ship, point0, point1, period, amplitude);
-			sin.startMove(duration, ()=>{
-			ship.status = UnitStatus.Dead;
-		});
-		
-		}, this);
-
-		t.start(interval, true, ships.length);
-	}
-
 	public clearRushes() {
-		this.rushes = [];
+		this.rushes.length = 0;
 	}
 
-	public addRush(rushItem: RushItem) {
-		this.rushes.push(rushItem);
+	public addRush(rush: Rush) {
+		this.rushes.push(rush);
 	}
 
 	public startRush(frameRate: number): void {
 		if (!this.timer.hasOnTimerListener()) {
-			this.timer.setOnTimerListener(this.rushStep, this);
+			this.timer.setOnTimerListener(this.onRushStep, this);
 		}
 		this.tick = 0;
 		this.timer.start(1000/frameRate, true, 0);
@@ -97,58 +35,20 @@ class EnemyController {
 		this.timer.stop();
 	}
 
-	public rushStep(dt: number): void {
+	private onRushStep(dt: number): void {
 		if(this.rushes.length <= 0) {
 			this.timer.stop();
 			this.tick = 0;
 			return;
 		}
 
-		let topItem = this.rushes[0];
+		let topRush = this.rushes[0];
 		this.tick += dt;
 
-		if(this.tick >= topItem.delay) {
-			this.rush(topItem);
+		if(this.tick >= topRush.delay) {
+			topRush.start(this.world);
 			this.tick = 0;
 			this.rushes.splice(0, 1);
-		}
-	}
-
-	private rush(rushItem: RushItem): void {
-		// 设置组信息
-		if (rushItem.ships && rushItem.ships.length > 1) {
-			let group = new EnemyGroup();
-			group.incMember(rushItem.ships.length);
-			rushItem.ships.forEach((ship, i, arr)=>{
-				ship.setGroup(group);
-			});
-		}
-
-		switch(rushItem.type) {
-		case "bezier":
-			if(rushItem.path.length < 3) {
-				break;
-			}
-			this.rushBezier(rushItem.ships, rushItem.path[0], rushItem.path[1], rushItem.path[2], rushItem.interval, rushItem.duration, false);
-			break;
-
-		case "straight":
-			if(rushItem.path.length < 1) {
-				break;
-			}
-			this.rushStraight(rushItem.ships, (rushItem.path[0]).x, rushItem.interval);
-			break;
-
-		case "sin":
-			if(rushItem.path.length < 2) {
-				break;
-			}
-			this.rushSin(rushItem.ships, rushItem.path[0], rushItem.path[1], rushItem.interval, rushItem.duration, rushItem.period, rushItem.amplitude);
-			break;
-		}
-
-		if (rushItem.callback != null) {
-			rushItem.callback.call(rushItem.callbackThisObject);
 		}
 	}
 
@@ -465,30 +365,133 @@ class EnemyController {
 	}
 }
 
-class RushItem {
-	readonly interval: number=200;
-	readonly ships: EnemyShip[];
-	readonly delay: number=2000;
-	readonly path: any[];
-	readonly duration: number=2000;
-	readonly drop: any;
-	readonly type: string;
-	readonly period: number;
-	readonly amplitude: number = 100;
-	readonly callback: Function;
-	readonly callbackThisObject: any;
+class Rush {
+	delay: number;
+	protected ships: Ship[];
+	protected interval: number;
+	protected duration: number;
+	protected fixedRotation: boolean = true;
 
-	public constructor(ships: EnemyShip[], type: string, delay: number, duration: number, interval: number, path:any[], drop:any, period?: number, amplitude?: number, callback?: Function, thisObject?: any) {
-		this.ships = ships;
-		this.type = type;
-		this.duration = duration;
-		this.interval = interval;
+	protected callback: Function;
+	protected callbackThisObj: any;
+
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, fixedRotaion?: boolean, callback?: Function, callbackThisObj?: any) {
 		this.delay = delay;
-		this.path = path;
-		this.drop = drop;
-		this.period = period==undefined ? 1000 : period;
-		this.amplitude = amplitude==undefined ? 100 : amplitude;
-		this.callback = callback==undefined ? null : callback;
-		this.callbackThisObject = thisObject==undefined ? null : thisObject;
+		this.ships = ships;
+		this.interval = interval;
+		this.duration = duration;
+		this.fixedRotation = fixedRotaion===undefined ? false : fixedRotaion;
+		this.callback = callback;
+		this.callbackThisObj = callbackThisObj;
+	}
+
+	public start(world: World): void {
+		if (this.ships && this.ships.length > 0) {
+			if ((this.ships.length>2) && (this.ships[0] instanceof EnemyShip)) {
+				let group = new EnemyGroup();
+				group.incMember(this.ships.length);
+				this.ships.forEach((ship, i, arr)=>{
+					(<EnemyShip>ship).setGroup(group);
+				});
+			}
+			
+			let t = new tutils.Timer();
+			t.setOnTimerListener((dt: number):void=>{
+				let ship = this.ships.pop();
+				world.addShip(ship);
+				this.rushOne(ship);
+			}, this);
+			t.start(this.interval, true, this.ships.length);
+		}
+
+		if (this.callback) {
+			this.callback.call(this.callbackThisObj);
+		}
+	}
+
+	// override
+	protected rushOne(ship: Ship): void {
+		ship.status = UnitStatus.Dead;
+	}
+}
+
+class StraightRush extends Rush {
+	protected from: {x: number, y: number};
+	protected to: {x: number, y: number};
+
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}) {
+		super(delay, ships, interval, duration);
+		this.from = from;
+		this.to = to;
+	}
+
+	// override
+	protected rushOne(ship: Ship): void {
+		ship.x = this.from.x;
+		ship.y = this.from.y;
+		let dis = ship.getDistance(this.to.x, this.to.y);
+		let speed = dis / this.duration * tutils.SpeedFactor;
+		ship.moveTo(this.to.x, this.to.y, speed, this.fixedRotation, null, ():void=>{
+			ship.status = UnitStatus.Dead;
+		}, this);
+	}
+}
+
+class BezierRush extends Rush {
+	protected from: {x: number, y: number};
+	protected to: {x: number, y: number};
+	protected k: {x: number, y: number};
+
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, k: {x: number, y: number}) {
+		super(delay, ships, interval, duration);
+		this.from = from;
+		this.to = to;
+		this.k = k;
+	}
+
+	// override
+	protected rushOne(ship: Ship): void {
+		let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
+		bezier.startMove(this.duration, ()=>{
+			ship.status = UnitStatus.Dead;
+		});
+	}
+}
+
+class SineRush extends Rush {
+	protected from: {x: number, y: number};
+	protected to: {x: number, y: number};
+	protected period: number;
+	protected amplitude: number;
+
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, period: number, amplitude: number) {
+		super(delay, ships, interval, duration, true);
+		this.from = from;
+		this.to = to;
+		this.period = period;
+		this.amplitude = amplitude;
+	}
+
+	// override
+	protected rushOne(ship: Ship): void {
+		let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
+		sin.startMove(this.duration, ()=>{
+			ship.status = UnitStatus.Dead;
+		});
+	}
+}
+
+class PathRush extends Rush {
+	protected pts: {x: number, y: number}[];
+
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, pts: {x: number, y: number}[]) {
+		super(delay, ships, interval, duration);
+		this.pts = pts;
+	}
+}
+
+class CallbackRush extends Rush {
+	public constructor(delay: number, callback: Function, callbackThisObj?: any) {
+		super(delay, null, 0, 0, true, callback, callbackThisObj);
 	}
 }

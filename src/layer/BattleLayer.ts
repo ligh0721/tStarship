@@ -542,42 +542,37 @@ class BattleLayer extends tutils.Layer {
         // this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, 200, 2000, false);
         // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
 
-        let rushItem = new RushItem(en0, 'bezier', 2000, 2000, 200, [{x: this.world.width*0.3, y: 0}, {x: this.world.width*0.3, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}], null);
+
+        let rushItem: Rush = new BezierRush(2000, en0, 200, 2000, {x: this.world.width*0.3, y: 0}, {x: this.world.width, y: this.world.height*0.5}, {x: this.world.width*0.3, y: this.world.height*0.5});
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new RushItem(en1, 'bezier', 0, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.5}], null);
+        rushItem = new BezierRush(0, en1, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: 0, y: this.world.height*0.5}, {x: this.world.width*0.7, y: this.world.height*0.5});
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new RushItem(en2, 'straight', 4000, 2000, 200, [{x: this.world.width*0.7, y: this.world.height}], null);
+        rushItem = new StraightRush(4000, en2, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height});
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new RushItem(en3, 'sin', 5000, 4000, 200, [{x: 200, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
-        this.enemyCtrl.addRush(rushItem);
-        
-        rushItem = new RushItem([enemy0], 'bezier', 5000, 2000, 200, [{x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height*0.5}, {x: 0, y: this.world.height*0.8}], null);
-        this.enemyCtrl.addRush(rushItem);
-        
-        rushItem = new RushItem([enemy1], 'sin', 5000, 4000, 200, [{x: 800, y: 0}, {x: 200, y: this.world.height}], null, 2000, 100);
+        rushItem = new SineRush(5000, en3, 200, 4000, {x: 200, y: 0}, {x: 200, y: this.world.height}, 2000, 100);
         this.enemyCtrl.addRush(rushItem);
 
-        rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
+        rushItem = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
             let boss = this.enemyCtrl.createBoss1();
             this.showBossUI(boss);
         }, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=1; i<=30*2; i++) {
-            if (i == 30) {
-                let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
+        for (let i=1; i<=20*2; i++) {
+            if (i == 20) {
+                let rushItem = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss2();
                     this.showBossUI(boss);
                 }, this);
                 this.enemyCtrl.addRush(rushItem);
                 continue;
-            } else if (i == 60) {
-                let rushItem = new RushItem(null, "", 5000, 0, 0, null, null, 0, 0, ()=>{
+            } else if (i == 40) {
+                let rushItem = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
                     this.showBossUI(boss);
@@ -599,7 +594,7 @@ class BattleLayer extends tutils.Layer {
             let a = Math.random() * 200 + 80
             let x = Math.random() * (this.stage.stageWidth - a * 2) + a;
             let t = Math.random() * 1000 + 2000;
-            let rushItem = new RushItem(es, 'sin', delay, dur, interval, [{x: x, y: 0}, {x: x, y: this.world.height+100}], null, t, a);
+            let rushItem = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: this.world.height+100}, t, a);
             this.enemyCtrl.addRush(rushItem);
         }
         this.enemyCtrl.startRush(30);

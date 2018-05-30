@@ -44,6 +44,7 @@ module tutils {
 					return false;
 				}
 			}
+
 			if (this.times > 0 && this.$left == 0) {
 				this.stop();
 				return false;
@@ -52,7 +53,7 @@ module tutils {
 			do {
 				this.$wantTick += this.$interval;
 			} while (this.autoSkip && start > this.$wantTick);
-			
+
 			return false;
 		}
 

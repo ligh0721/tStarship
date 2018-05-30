@@ -57,6 +57,7 @@ class Ship extends HpUnit {
 		if (this.timer.running) {
 			this.timer.stop();
 		}
+		this.ai.stop();
 		super.onCleanup();
 	}
 

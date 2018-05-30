@@ -4,7 +4,7 @@ class PathEditorLayer extends tutils.Layer {
     pressLayer: boolean = false;
     cur: egret.DisplayObject = null;
     private pts: egret.DisplayObject[] = [];
-    private static typeTxts = ["straight", "bezier", "sin", "path"];
+    private static typeTxts = ["straight", "bezier", "sine", "path"];
     private sldType: eui.HSlider;
     private txtType: egret.TextField;
     private sldDur: eui.HSlider;
@@ -154,8 +154,30 @@ class PathEditorLayer extends tutils.Layer {
             let ship = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
             ships.push(ship);
         }
-        let item = new RushItem(ships, PathEditorLayer.typeTxts[this.sldType.value], 0, this.sldDur.value, this.sldItv.value, pts, null, this.sldSinT.value, this.sldSinA.value);
-        this.enemyCtrl.addRush(item);
+        let rush: Rush;
+        switch (PathEditorLayer.typeTxts[this.sldType.value]) {
+        case "straight":
+            for (let i=pts.length; i<2; i++) {
+                pts.push({x: 0, y: 0});
+            }
+            rush = new StraightRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1]);
+            break;
+        case "bezier":
+            for (let i=pts.length; i<3; i++) {
+                pts.push({x: 0, y: 0});
+            }
+            rush = new BezierRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], pts[2]);
+            break;
+        case "sine":
+            for (let i=pts.length; i<2; i++) {
+                pts.push({x: 0, y: 0});
+            }
+            rush = new SineRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], this.sldSinT.value, this.sldSinA.value);
+            break;
+        case "path":
+            break;
+        }
+        this.enemyCtrl.addRush(rush);
         this.enemyCtrl.startRush(30);
     }
 

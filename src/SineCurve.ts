@@ -1,4 +1,4 @@
-class SinCurve {
+class SineCurve {
 	private point0: {x: number, y: number} = {x: 0, y: 0};
 	private point1: {x: number, y: number} = {x: 0, y: 0};
 	private period: number;
