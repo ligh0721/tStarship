@@ -1,11 +1,9 @@
 class StormGun extends Gun {
-	private timer: tutils.Timer;
 	period: number = 500;
 	antiClockWise: boolean = false;
 
 	public constructor() {
 		super();
-		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
 	}
 
 	public fire(): void {

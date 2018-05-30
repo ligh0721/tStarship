@@ -127,6 +127,7 @@ class Gun {
 
 	public cleanup(): void {
 		this.autoFireTimer.stop();
+		egret.Tween.removeTweens(this);
 		this.onCleanup();
 	}
 
@@ -139,7 +140,6 @@ class Gun {
 
 	// override
 	protected onCleanup(): void {
-		egret.Tween.removeTweens(this);
 	}
 
 	public getFirePosition(): {x: number, y: number} {

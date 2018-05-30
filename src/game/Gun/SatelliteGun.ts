@@ -62,9 +62,7 @@ class SatelliteGun extends Gun {
 
 	protected onCleanup(): void {
 		super.onCleanup();
-		if (this.timer != null) {
-			this.timer.stop();
-		}
+		this.timer.stop();
 
 		if (this.bullets != null) {
 			// 所有剩余子弹死亡

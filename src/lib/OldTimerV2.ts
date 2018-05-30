@@ -1,5 +1,5 @@
 module tutils {
-	export class Timer {
+	export class OldTimerV2 {
 		private $interval: number;
 		public times: number = 1;
 		public autoSkip: boolean = true;
@@ -10,8 +10,14 @@ module tutils {
 		private $left: number;
 		private $wantTick: number;
 		private static MinInterval: number = 1000/60;
+		private timer: egret.DisplayObject;
 
 		public constructor() {
+			if (this.timer===undefined) {
+				this.timer=new egret.DisplayObject();
+			} else {
+				this.timer.removeEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
+			}
 		}
 
 		public get interval(): number {
@@ -19,19 +25,19 @@ module tutils {
 		}
 
 		public set interval(value: number) {
-			if (value < Timer.MinInterval) {
-				value = Timer.MinInterval;
+			if (value < OldTimerV2.MinInterval) {
+				value = OldTimerV2.MinInterval;
 			}
 			this.$interval = value;
 		}
 
-		public onTimer(ts: number): boolean {
+		public onTimer(evt: egret.TimerEvent) {
 			if (!this.$running) {
-				return false;
+				return;
 			}
-			let start = ts;
-			if (this.$interval > Timer.MinInterval && start < this.$wantTick) {
-				return false;
+			let start = egret.getTimer();
+			if (this.$interval > OldTimerV2.MinInterval && start < this.$wantTick) {
+				return;
 			}
 			let last = this.$tick;
 			this.$tick = start;
@@ -41,19 +47,17 @@ module tutils {
 			if (this.onTimerListener != null) {
 				this.onTimerListener.call(this.onTimerThisObject, start-last);
 				if (!this.$running) {
-					return false;
+					return;
 				}
 			}
 			if (this.times > 0 && this.$left == 0) {
 				this.stop();
-				return false;
+				return;
 			}
 
 			do {
 				this.$wantTick += this.$interval;
 			} while (this.autoSkip && start > this.$wantTick);
-			
-			return false;
 		}
 
 		public setOnTimerListener(listener: (dt: number)=>void, thisObject?: any) {
@@ -73,7 +77,7 @@ module tutils {
 			}
 			this.$tick = start;
 			this.$wantTick = start;
-			egret.startTick(this.onTimer, this);
+			this.timer.addEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
 			this.$running = true;
 			this.interval = interval;
 			this.times = times===undefined ? 0 : times;
@@ -87,7 +91,7 @@ module tutils {
 		}
 
 		public stop(): void {
-			egret.stopTick(this.onTimer, this);
+			this.timer.removeEventListener(egret.TimerEvent.ENTER_FRAME, this.onTimer, this);
 			this.$running = false;
 		}
 

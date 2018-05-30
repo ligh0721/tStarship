@@ -2,7 +2,7 @@ class EnemyController {
 	readonly world: World;
 	private rushes: RushItem[] = [];
 	private tick: number = 0;
-	private timer: tutils.Timer = new tutils.Timer();;
+	private timer: tutils.Timer = new tutils.Timer();
 	private hero: Ship = null;
 
 	public constructor(world: World) {

@@ -55,11 +55,9 @@ class GhostShipSkill extends Skill {
 
 		this.timer.start(0, true, 0);
 
-		let timer = new tutils.Timer();
-		timer.setOnTimerListener((dt: number):void=>{
+		egret.setTimeout(():void=>{
 			this.cleanup();
-		}, this);
-		timer.start(this.duration, false, 1);
+		}, this, this.duration);
 	}
 
 	private onTimer(dt: number): void {

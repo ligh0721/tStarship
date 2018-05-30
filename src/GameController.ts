@@ -1,7 +1,7 @@
 class GameController {
 	private static $inst: GameController;
 	root: Main;
-	timer: tutils.Timer;
+	timer: tutils.Timer = new tutils.Timer();
 	curRootLayer: tutils.Layer;
 
 	private readonly allShipsData: ShipsData;
@@ -14,7 +14,6 @@ class GameController {
 	battleShips: string[];
 
 	public constructor() {
-		this.timer = new tutils.Timer();
 		this.allShipsData = this.fixShipsData(GlobalShipsData);
 		this.allShips = this.checkAllShips(GlobalAllShips);
 		this.expTable = GlobalExpTable;
