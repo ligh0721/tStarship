@@ -1,6 +1,6 @@
 class ExplosionGun extends Gun {
 	explosionRadius: number = 100;
-	explosionPowerEveryPer: number = 0.3;
+	explosionPowerEveryPer: number = 0.2;
 	explosionPowerLossInterval: number = 10000;
 
 	public fire(): void {
@@ -31,6 +31,6 @@ class ExplosionGun extends Gun {
 	// override
 	protected onLevelUp(): void {
 		this.explosionRadius *= 1.2;
-		this.bulletPower.baseValue += 5;
+		this.bulletPower.baseValue += 3;
 	}
 }

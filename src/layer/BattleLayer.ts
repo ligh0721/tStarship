@@ -562,7 +562,7 @@ class BattleLayer extends tutils.Layer {
         }, this);
         this.enemyCtrl.addRush(rushItem);
 
-        for (let i=1; i<=20*2; i++) {
+        for (let i=1; i<=20*10; i++) {
             if (i == 20) {
                 let rushItem = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
@@ -584,7 +584,7 @@ class BattleLayer extends tutils.Layer {
             let n = Math.floor(Math.random()*8+5);
             for (let j=0; j<n; j++) {
                 let e = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-                e.resetHp(10+Math.floor(i/5 * 1));
+                e.resetHp(10+Math.floor(i/4 * 1));
                 es.push(e);
             }
             

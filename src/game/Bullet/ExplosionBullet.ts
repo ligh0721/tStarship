@@ -1,7 +1,7 @@
 class ExplosionBullet extends Bullet {
 	radius: number = 30;
 	explosionRadius: number = 100;
-	explosionPowerEveryPer: number = 0.3;
+	explosionPowerEveryPer: number = 0.2;
 	explosionPowerLossInterval: number = 10000;
 
 	public constructor(gun: Gun) {

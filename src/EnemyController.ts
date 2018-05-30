@@ -105,7 +105,7 @@ class EnemyController {
         ship.x = this.world.width * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(2000);
+        ship.resetHp(500);
 
         let gunShip = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip, -100, 100);
@@ -172,7 +172,7 @@ class EnemyController {
 		gun.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(2000);
+		boss.resetHp(1000);
 		gunShip.resetHp(500);
 		gun.fireCooldown.baseValue = 100;
 		gun.bulletSpeed.baseValue = 40;
@@ -258,10 +258,10 @@ class EnemyController {
 		gunR.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(2000);
-		gunShip.resetHp(600);
-		gunShipL.resetHp(800);
-		gunShipR.resetHp(600);
+		boss.resetHp(4000);
+		gunShip.resetHp(1600);
+		gunShipL.resetHp(1800);
+		gunShipR.resetHp(1600);
 		gun.bulletSpeed.baseValue = 150;
 		gunL.bulletSpeed.baseValue = 100;
 		gunR.bulletSpeed.baseValue = 100;
