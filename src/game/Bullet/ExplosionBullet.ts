@@ -32,6 +32,7 @@ class ExplosionBullet extends Bullet {
 		this.world.addBullet(bullet);
 		bullet.gameObject.x = this.gameObject.x;
 		bullet.gameObject.y = this.gameObject.y;
+		bullet.factor = 0;
 
 		let tw = egret.Tween.get(bullet);
 		tw.to({factor: 1}, 400, egret.Ease.getPowOut(3));
