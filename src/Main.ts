@@ -63,6 +63,8 @@ class Main extends eui.UILayer {
     }
 
     private async runGame() {
+        // this.clearPlayerData();
+        // return;
         switch (this.mode) {
         case "web":
             await this.runGameAsWeb();
@@ -141,11 +143,22 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        // egret.localStorage.clear();
         GameController.instance.init(this);
         GameController.instance.createRootLayer(HeroShipsLayer);
         // GameController.instance.createRootLayer(TestLayer);
         // GameController.instance.createRootLayer(PathEditorLayer);
+    }
+
+    private clearPlayerData(): void {
+        egret.localStorage.clear();
+        let label = new eui.Label();
+        label.text = "存档已清除";
+        label.size = 50;
+        label.bold = true;
+        label.stroke = 3;
+        this.addChild(label);
+        label.x = (this.stage.stageWidth - label.width) / 2;
+        label.y = (this.stage.stageHeight - label.height) / 2;
     }
 
     private baseinfo() {
