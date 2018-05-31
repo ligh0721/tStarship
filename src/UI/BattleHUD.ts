@@ -1,4 +1,4 @@
-class BattleHUD extends eui.Component implements IHeroHUD, IScoreHUD {
+class BattleHUD extends eui.Component implements IHeroHUD {
     private grpBossHpBar: eui.Group;
     private grpScore: eui.Group;
     private grpHighScore: eui.Group;
@@ -131,8 +131,4 @@ class BattleHUD extends eui.Component implements IHeroHUD, IScoreHUD {
 interface IHeroHUD {
     updateHpBar(hpPer: number): void;
     updatePowerBar(powerPer: number): void;
-}
-
-interface IScoreHUD {
-    updateScore(score: number): void;
 }

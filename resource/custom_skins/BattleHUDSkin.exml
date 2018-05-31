@@ -30,7 +30,7 @@
 	<e:Group id="grpBuff" width="550" height="50" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" bottom="10"/>
 	<e:Group id="grpScore" width="220" height="60" anchorOffsetX="0" anchorOffsetY="0" right="20" top="20">
 		<e:Image source="coin2_png" right="0" verticalCenter="0" width="70" height="70"/>
-		<e:Label id="lblScore" text="500" size="60" textColor="0xffb959" strokeColor="0x000000" stroke="3" right="83" width="200" bold="true" textAlign="right" bottom="0" italic="true"/>
+		<e:Label id="lblScore" text="500" size="60" textColor="0xffb959" strokeColor="0x000000" stroke="3" right="83" width="200" textAlign="right" bottom="0" italic="true" bold="true"/>
 	</e:Group>
 	<e:Group id="grpHighScore" width="220" anchorOffsetX="0" anchorOffsetY="0" top="20" left="20" height="80">
 		<e:Label id="lblHighScore" text="1000" size="60" italic="true" bold="true" textColor="0xFFB959" strokeColor="0x000000" stroke="3" textAlign="left" width="200" bottom="0" left="0"/>
