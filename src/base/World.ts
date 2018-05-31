@@ -37,7 +37,7 @@ class World {
 
 		// 创建观察者飞船，用于保持持续碰撞检测
         this.obShip = new Ship("");
-		this.obShip.hero = true;
+		this.obShip.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;
         this.obShip.force.force = tutils.EnemyForce;
         this.addShip(this.obShip);
         this.obShip.x = -200;
@@ -228,7 +228,7 @@ class World {
 					bullet.status = UnitStatus.Dead;
 					continue;
 				}
-				if (bullet.gun.ship.force.isMyEnemy(ship.force) && bullet.onHitEnemyShipTest(ship)) {
+				if (bullet.gun.ship.force.isMyEnemy(ship.force) && ship.canHit && bullet.onHitEnemyShipTest(ship)) {
 					//console.log("bullet hit!");
 					let dt = Math.min(bullet.hp, Math.floor(bullet.maxHp*bullet.powerLossPer));
 					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
@@ -243,7 +243,7 @@ class World {
 				}
 			}
 
-			if (ship.hero) {
+			if (ship.hitTestFlags & ShipHitTestType.Ship) {
 				// 子弹碰撞检测后，再次验活
 				if (!ship.alive) {
 					continue;
@@ -255,7 +255,7 @@ class World {
 					if (!ship2.alive) {
 						continue;
 					}
-					if (ship.force.isMyEnemy(ship2.force) && ship.onHitEnemyShipTest(ship2)) {
+					if (ship.force.isMyEnemy(ship2.force) && ship.canHit && ship2.canHit && ship.onHitEnemyShipTest(ship2)) {
 						//console.log("ship hit!");
 						ship.damaged(ship2.maxHp, ship2);
 						ship2.damaged(ship.maxHp, ship);
@@ -265,7 +265,9 @@ class World {
 						}
 					}
 				}
-				
+			}
+
+			if (ship.hitTestFlags & ShipHitTestType.Supply) {
 				// 撞机检测后，再次验活
 				if (!ship.alive) {
 					continue;

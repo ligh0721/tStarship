@@ -11,6 +11,11 @@ class BattleHUD extends eui.Component implements IHeroHUD {
     private progHpBar: eui.Rect;
     private progPowerBar: eui.Rect;
     private progBossHpBar: eui.Rect;
+    private lblPowerMax: eui.BitmapLabel;
+    private lblPowerPress: eui.BitmapLabel;
+    private btnPower: eui.Button;
+    private onUsePowerListener: Function;
+    private onUsePowerThisObj: any;
     
     private orgGrpTipRight: number = 0;
     private tipQueue: {icon: string, num: string, desc: string}[] = [];
@@ -34,6 +39,7 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         this.lblHighScore.text = playerData.highscore.score.toString();
         this.lblScore.text = "0";
         this.grpBossHpBar.visible = false;
+        this.btnPower.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnPower, this);
 	}
 
     public updateScore(score: number): void {
@@ -92,6 +98,44 @@ class BattleHUD extends eui.Component implements IHeroHUD {
 
     public updatePowerBar(powerPer: number): void {
         this.progPowerBar.percentHeight = powerPer;
+        if (powerPer===100 && this.lblPowerMax.visible===false) {
+            this.lblPowerMax.alpha = 0;
+            this.lblPowerMax.visible = true
+            this.lblPowerPress.alpha = 0;
+            this.lblPowerPress.visible = true
+            let repeat = ()=>{
+                let tw = egret.Tween.get(this.lblPowerMax);
+                tw.to({alpha: 1}, 1000);
+                tw.wait(1000);
+                tw.to({alpha: 0}, 1000);
+                tw.call(()=>{
+                    let tw = egret.Tween.get(this.lblPowerPress);
+                    tw.to({alpha: 1}, 1000);
+                    tw.wait(1000);
+                    tw.to({alpha: 0}, 1000);
+                    tw.call(repeat, this);
+                });
+            };
+            repeat();
+            this.btnPower.visible = true;
+        } else if (powerPer!==100 && this.lblPowerMax.visible===true) {
+            egret.Tween.removeTweens(this.lblPowerMax);
+            egret.Tween.removeTweens(this.lblPowerPress);
+            this.lblPowerMax.visible = false;
+            this.lblPowerPress.visible = false;
+            this.btnPower.visible = false;
+        }
+    }
+
+    private onBtnPower(evt: egret.TouchEvent): void {
+        if (this.onUsePowerListener) {
+            this.onUsePowerListener.call(this.onUsePowerThisObj);
+        }
+    }
+
+    public setOnUsePowerListener(listener: Function, thisObj: any): void {
+        this.onUsePowerListener = listener;
+        this.onUsePowerThisObj = thisObj;
     }
 
     public showBossHpBar(callback?: ()=>void, thisObj?: any): void {

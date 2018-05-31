@@ -5,6 +5,7 @@ class IntervalHitShip extends Ship {
 
 	public constructor(model: string, scale?: number) {
 		super(model, scale);
+		this.hitTestFlags = ShipHitTestType.Ship;
 	}
 
 	// override
@@ -12,9 +13,10 @@ class IntervalHitShip extends Ship {
 		let now = egret.getTimer();
 		if (this.effectedShips.hasOwnProperty(ship.id)) {
 			// 有击中记录
-			if (now - this.effectedShips[ship.id] > this.hitShipInterval) {
+			if (now-this.effectedShips[ship.id] > this.hitShipInterval) {
 				// 已过击中保护时间
-				if (ship.hitTest(this)) {
+				//if (ship.hitTest(this)) {
+				if (super.onHitEnemyShipTest(ship)) {
 					// 击中
 					this.effectedShips[ship.id] = now;
 					return true;
@@ -22,7 +24,8 @@ class IntervalHitShip extends Ship {
 			}
 		} else {
 			// 无击中记录
-			if (ship.hitTest(this)) {
+			//if (ship.hitTest(this)) {
+			if (super.onHitEnemyShipTest(ship)) {
 				// 击中
 				this.effectedShips[ship.id] = now;
 				return true;

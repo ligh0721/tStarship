@@ -2,7 +2,7 @@ class HeroShip extends Ship {
     hitRadius: number = 5;
     private hitRect: egret.Rectangle;
     power: number = 0;
-    maxPower: number = 100;
+    maxPower: number = 1000;
     heroHUD: IHeroHUD = null;
     skill: Skill = null;
 
@@ -10,12 +10,13 @@ class HeroShip extends Ship {
 		super(model, scale);
         this.hero = true;
         this.hitRect===undefined ? this.hitRect=new egret.Rectangle() : this.hitRect.constructor();
+        this.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;
 	}
 
     public damaged(value: number, src: HpUnit): void {
 		super.damaged(value, src);
         if (this.heroHUD) {
-            this.heroHUD.updateHpBar(this.hp * 100 / this.maxHp);
+            this.heroHUD.updateHpBar(this.hp*100/this.maxHp);
         }
 	}
 
@@ -25,14 +26,14 @@ class HeroShip extends Ship {
             this.power = this.maxPower;
         }
         if (this.heroHUD) {
-            this.heroHUD.updatePowerBar(this.power * 100 / this.maxPower);
+            this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
         }
     }
 
     public clearPower(): void {
         this.power = 0;
         if (this.heroHUD) {
-            this.heroHUD.updatePowerBar(this.power * 100 / this.maxPower);
+            this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
         }
     }
 
@@ -62,6 +63,13 @@ class HeroShip extends Ship {
 		this.moveTo(x, y, this.speed.value, true);
 	}
 
+    // override
+    protected onCreate(): egret.DisplayObject {
+        this.hitRect.width = this.hitRadius * 2;
+        this.hitRect.height = this.hitRadius * 2;
+        return super.onCreate();
+    }
+
     // protected onCreate(): egret.DisplayObject {
 	// 	let gameObject = new egret.Shape();
 	// 	gameObject.graphics.lineStyle(10, 0x9cdcfe);
@@ -80,6 +88,7 @@ class HeroShip extends Ship {
 	// 	return gameObject;
 	// }
 
+    // override
     public hitTest(other: Unit): boolean {
         this.hitRect.x = this.gameObject.x - this.hitRadius;
         this.hitRect.y = this.gameObject.y - this.hitRadius;

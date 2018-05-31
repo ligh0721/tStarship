@@ -47,6 +47,7 @@ module tutils {
 		public cleanup(): void {
 			this.onCleanUp();
 			this.root.removeChild(this.layer);
+			egret.Tween.removeAllTweens();
 			// this.layer = null;
 		}
 

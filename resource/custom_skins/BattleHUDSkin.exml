@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="BattleHUDSkin" width="720" height="1280" currentState="init" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing" states="final,init" >
 	<e:Group id="grpBossHpBar" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" width="670" horizontalCenter="0" top="20" height="40" width.init="95%" visible.init="false">
-		<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" fillColor="0xFFFFFF" strokeWeight="0"/>
+		<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" fillColor="0xFFFFFF" strokeWeight="0" enabled="false"/>
 		<e:Group width="100%" height="100%" scaleX="1" scaleY="1" horizontalCenter="0">
-		<e:Rect id="progBossHpBar" width="50%" height="100%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0xff3d3d"/>
+		<e:Rect id="progBossHpBar" width="50%" height="100%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0xff3d3d" enabled="false"/>
 		<e:layout>
 			<e:HorizontalLayout horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"/>
 		</e:layout>
 		</e:Group>
 	</e:Group>
     <e:Group height="100" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" left="10" width="60" bottom="10">
-    <e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0x331b16"/>
+    <e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0x331b16" enabled="false"/>
 			<e:Group width="100%" height="100%" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0">
-				<e:Rect id="progHpBar" width="100%" height="75%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0xf48771"/>
+				<e:Rect id="progHpBar" width="100%" height="75%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0xf48771" enabled="false"/>
 				<e:layout>
 					<e:VerticalLayout verticalAlign="bottom" paddingRight="5" paddingTop="5" paddingBottom="5" paddingLeft="5"/>
 				</e:layout>
 			</e:Group>
     </e:Group>
-	<e:Group height="100" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" right="10" width="60" bottom="10">
-		<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0x26373f"/>
+	<e:Group height="100" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" right="10" width="60" bottom="10" touchEnabled="false">
+		<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" ellipseWidth="15" ellipseHeight="15" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0x26373f" enabled="false"/>
 		<e:Group width="100%" height="100%" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0">
-		<e:Rect id="progPowerBar" width="100%" height="75%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0x9cdcfe"/>
+		<e:Rect id="progPowerBar" width="100%" height="75%" ellipseWidth="10" ellipseHeight="10" scaleX="1" scaleY="1" fillColor="0x9cdcfe" enabled="false"/>
 		<e:layout>
 			<e:VerticalLayout verticalAlign="bottom" paddingRight="5" paddingTop="5" paddingBottom="5" paddingLeft="5"/>
 		</e:layout>
 		</e:Group>
+		<e:BitmapLabel id="lblPowerPress" text="PRESS" font="Arial40_fnt" scaleX="0.3" scaleY="0.5" verticalCenter="0" horizontalCenter="0" visible="false"/>
+		<e:BitmapLabel id="lblPowerMax" scaleX="0.5" scaleY="0.5" font="Arial40_fnt" text="MAX" verticalCenter="0" horizontalCenter="0" visible="false"/>
 	</e:Group>
 	<e:Group id="grpBuff" width="550" height="50" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" bottom="10"/>
 	<e:Group id="grpScore" width="220" height="60" anchorOffsetX="0" anchorOffsetY="0" right="20" top="20">
@@ -37,11 +39,12 @@
 		<e:BitmapLabel top="-6" left="1" text="Last High Score" scaleX="0.5" scaleY="0.5" font="Arial40_fnt"/>
 	</e:Group>
 	<e:Group id="grpTip" width="220" height="100" right="-20" top="300" top.init="300" right.init="-220">
-		<e:Rect width="100%" height="100%" fillAlpha="0.5" ellipseWidth="20" ellipseHeight="20" x.final="0" y.final="0" scaleX.final="1" scaleY.final="1"/>
+		<e:Rect width="100%" height="100%" fillAlpha="0.5" ellipseWidth="20" ellipseHeight="20" x.final="0" y.final="0" scaleX.final="1" scaleY.final="1" enabled="false"/>
 		<e:Group width="200" height="100%" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1">
 			<e:Image id="imgTipIcon" width="38" height="38" horizontalCenter="-23" top="17" source="coin2_png"/>
 			<e:BitmapLabel id="lblTipNum" top="11" horizontalCenter="29" text="+1" scaleX="0.6" scaleY="0.6" font="ComicSansMS60_fnt"/>
 			<e:BitmapLabel id="lblTipDesc" top="60" horizontalCenter="0" text="Wave Clear!" scaleX="0.65" scaleY="0.65" font="Arial40_fnt"/>
 		</e:Group>
 	</e:Group>
+	<e:Button id="btnPower" label="Button" anchorOffsetX="0" width="100" anchorOffsetY="0" height="150" bottom="0" right="0" alpha="0"/>
 </e:Skin>

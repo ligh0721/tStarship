@@ -18,6 +18,9 @@ class Ship extends HpUnit {
 
 	ai: tutils.StateManager;
 
+	hitTestFlags: ShipHitTestFlags = 0;  // Bullet only
+	canHit: boolean = true;
+
 	// from unit
 	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onAddBuffThisObject: any = null;
@@ -248,3 +251,9 @@ enum ShipTrigger {
 	OnDamaged = 1 << 1
 }
 type ShipTriggerFlags = number;
+
+enum ShipHitTestType {
+	Ship = 1 << 0,
+	Supply = 1 << 1
+}
+type ShipHitTestFlags = number;

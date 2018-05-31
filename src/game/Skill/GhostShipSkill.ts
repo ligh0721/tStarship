@@ -2,7 +2,8 @@ class GhostShipSkill extends Skill {
 	// power: number = 10;
 	hitShipInterval: number = 100;
 	shipsNum: number = 3;
-	duration: number = 20000;
+	powerPer: number = 0.2;
+	duration: number = 10000;
 
 	private readonly ships: Ship[] = [];
 	private readonly buffIds: string[] = [];
@@ -38,11 +39,11 @@ class GhostShipSkill extends Skill {
 			gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 			gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
 			gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
-			gun.bulletPower.baseValue = this.ship.mainGun.bulletPower.baseValue;
+			gun.bulletPower.baseValue = Math.max(1, Math.floor(this.ship.mainGun.bulletPower.baseValue * this.powerPer));
 			gun.bulletNum = shipInfo.bulletNum;
 			ghost.addGun(gun, true).autoFire = true;
 
-			let buff = new ShieldBuff(-1, 10000000);
+			let buff = new UnhitBuff(-1);
 			ghost.addBuff(buff);
 
 			ghost.x = this.ship.x;

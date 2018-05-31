@@ -1,6 +1,6 @@
 class ShieldBallSkill extends Skill {
-	power: number = 10;
-	hitShipInterval: number = 100;
+	power: number = 1;
+	hitShipInterval: number = 200;
 
 	public constructor() {
 		super();

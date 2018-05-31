@@ -10,12 +10,9 @@ class BattleLayer extends tutils.Layer {
     private hero: HeroShip;
     private heroShipData: PlayerShipData;
 
-	// private score: Score;
     private enemyCtrl: EnemyController;
     private readonly buffuis: BuffProgress[] = [];
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
-    private heroHpBar: ShapeProgress;
-    private heroPowerBar: ShapeProgress;
     private bgCtrl: tutils.BackgroundController;
     // private bgCtrl2: BackgroundController;
     private bgMusic: egret.SoundChannel;
@@ -28,6 +25,8 @@ class BattleLayer extends tutils.Layer {
     private tickerEffect = new Effect(1, 10);
 
     $pathPercent: number = 0;
+
+    lastTouchBeginTick: number = 0;
 
     // 统计项
     private score: number = 0;
@@ -161,16 +160,17 @@ class BattleLayer extends tutils.Layer {
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
 
         hero.heroHUD = this.hud;
+        this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
 
         // let buff = new GunBuff(5000, -0.80, 0, +1.00);
         // let buff2 = new ShipBuff(5000, -0.80);
         // let skill = new AddBuffSkill([buff, buff2]);
         // let skill = new ShieldBallSkill();
         let skill = new GhostShipSkill();
-        hero.power = 100;
+        hero.power = hero.maxPower;
         hero.setSkill(skill);
 
-        hero.addBuff(new ShieldBuff(-1, 10));
+        // hero.addBuff(new ShieldBuff(-1, 10));
 
 
         // 创建玩家飞船血条、能量条
@@ -214,8 +214,8 @@ class BattleLayer extends tutils.Layer {
         });
     }
 
-    protected onTouchTapHeroPower(evt: egret.TouchEvent): void {
-        if (evt.target != this.heroPowerBar.gameObject || !this.hero.isPowerFull()) {
+    private onHeroUsePower(): void {
+        if (!this.hero.isPowerFull()) {
             return;
         }
         if (this.hero.alive && this.hero.castSkill()) {
@@ -226,7 +226,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     public turbo(bgCtrl: tutils.BackgroundController, speed: number, orgSpeed: number, dur: number): void {
-        this.heroPowerBar.gameObject.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
+        this.hud.setOnUsePowerListener(null, null);
         if (dur < 1500) {
             dur = 1500;
         }
@@ -235,7 +235,7 @@ class BattleLayer extends tutils.Layer {
         tw.wait(dur-1500);
         tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
         tw.call(() => {
-            this.heroPowerBar.gameObject.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapHeroPower, this);
+            this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
         });
     }
 
@@ -277,7 +277,7 @@ class BattleLayer extends tutils.Layer {
                 this.addScore(1);
             }
 
-            let power = Math.max(ship.maxHp/10, 1);
+            let power = 10;  // Math.max(ship.maxHp/10, 1);
             this.hero.addPower(power);
 
             // 更新统计
@@ -420,26 +420,26 @@ class BattleLayer extends tutils.Layer {
         // tw.to({value: this.tickerEffect.maximum}, (this.tickerEffect.maximum-this.tickerEffect.value)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
         egret.Ticker.getInstance().setTimeScale(0.5);
 
-        if (evt.target != this.layer || !this.hero.alive) {
-            this.beginDelta.x = -1;
+        if (evt.target!=this.layer || !this.hero.alive) {
+            this.beginDelta.x = undefined;
             return;
         }
-        this.beginDelta.x = evt.localX - this.hero.gameObject.x;
-        this.beginDelta.y = evt.localY - this.hero.gameObject.y;
+        this.beginDelta.x = evt.stageX - this.hero.gameObject.x;
+        this.beginDelta.y = evt.stageY - this.hero.gameObject.y;
         //this.hero.move(evt.localX, evt.localY-100);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
-        if (evt.target != this.layer || this.beginDelta.x == -1 || !this.hero.alive) {
+        if (this.beginDelta.x===undefined || !this.hero.alive) {
             return;
         }
-        let toX = evt.localX-this.beginDelta.x;
+        let toX = evt.stageX - this.beginDelta.x;
         if (toX < 0) {
             toX = 0;
         } else if (toX > this.stage.stageWidth) {
             toX = this.stage.stageWidth;
         }
-        let toY = evt.localY-this.beginDelta.y;
+        let toY = evt.stageY - this.beginDelta.y;
         if (toY < 0) {
             toY = 0;
         } else if (toY > this.stage.stageHeight) {
