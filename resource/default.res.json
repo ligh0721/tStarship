@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,egret_icon_png,description_json,font_fnt,font_png,grid100_png,coin_png,Hit_mp3,Powerup_mp3,Explosion2_mp3,Explosion0_mp3,Explosion1_mp3,Bgmusic_mp3,RowGunShoot_mp3,ExplosionGunShoot_mp3,PickPower_mp3,SoundWaveGunShoot_mp3,GunShoot_mp3,ShotGunShoot_mp3,EaseGunShoot_mp3,ExplosionBullet_mp3,GuideGunShoot_mp3,GunPowerup_mp3,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,Test_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,score_title_png,score_png,score_fnt,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png,FarSpace_png,NearSpace_png,bgGrey_png,bg_jpg,bgGrey_jpg,GunPower_png,SatelliteGun_png,GunCDR_png,GunLevelUp_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,egret_icon_png,description_json,grid100_png,coin_png,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,Test_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,score_title_png,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png,FarSpace_png,NearSpace_png,bgGrey_png,bg_jpg,bgGrey_jpg,GunPower_png,SatelliteGun_png,GunCDR_png,GunLevelUp_png,ComicSansMS60_0_png,ComicSansMS60_fnt,Bgmusic_mp3,EaseGunShoot_mp3,Explosion0_mp3,Explosion1_mp3,Explosion2_mp3,ExplosionBullet_mp3,ExplosionGunShoot_mp3,GuideGunShoot_mp3,GunPowerup_mp3,GunShoot_mp3,Hit_mp3,PickPower_mp3,Powerup_mp3,RowGunShoot_mp3,ShotGunShoot_mp3,SoundWaveGunShoot_mp3,font_png,score_png,font_fnt,score_fnt,Arial40_0_png,Arial40_fnt",
 			"name": "preload"
 		}
 	],
@@ -132,16 +132,6 @@
 			"name": "description_json"
 		},
 		{
-			"url": "assets/font.fnt",
-			"type": "font",
-			"name": "font_fnt"
-		},
-		{
-			"url": "assets/font.png",
-			"type": "image",
-			"name": "font_png"
-		},
-		{
 			"url": "assets/grid100.png",
 			"type": "image",
 			"name": "grid100_png"
@@ -150,86 +140,6 @@
 			"url": "assets/coin.png",
 			"type": "image",
 			"name": "coin_png"
-		},
-		{
-			"name": "Hit_mp3",
-			"type": "sound",
-			"url": "assets/sounds/Hit.mp3"
-		},
-		{
-			"name": "Powerup_mp3",
-			"type": "sound",
-			"url": "assets/sounds/Powerup.mp3"
-		},
-		{
-			"name": "Explosion2_mp3",
-			"type": "sound",
-			"url": "assets/sounds/Explosion2.mp3"
-		},
-		{
-			"name": "Explosion0_mp3",
-			"type": "sound",
-			"url": "assets/sounds/Explosion0.mp3"
-		},
-		{
-			"name": "Explosion1_mp3",
-			"type": "sound",
-			"url": "assets/sounds/Explosion1.mp3"
-		},
-		{
-			"name": "Bgmusic_mp3",
-			"type": "sound",
-			"url": "assets/sounds/Bgmusic.mp3"
-		},
-		{
-			"name": "RowGunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/RowGunShoot.mp3"
-		},
-		{
-			"name": "ExplosionGunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/ExplosionGunShoot.mp3"
-		},
-		{
-			"name": "PickPower_mp3",
-			"type": "sound",
-			"url": "assets/sounds/PickPower.mp3"
-		},
-		{
-			"name": "SoundWaveGunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/SoundWaveGunShoot.mp3"
-		},
-		{
-			"name": "GunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/GunShoot.mp3"
-		},
-		{
-			"name": "ShotGunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/ShotGunShoot.mp3"
-		},
-		{
-			"name": "EaseGunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/EaseGunShoot.mp3"
-		},
-		{
-			"name": "ExplosionBullet_mp3",
-			"type": "sound",
-			"url": "assets/sounds/ExplosionBullet.mp3"
-		},
-		{
-			"name": "GuideGunShoot_mp3",
-			"type": "sound",
-			"url": "assets/sounds/GuideGunShoot.mp3"
-		},
-		{
-			"name": "GunPowerup_mp3",
-			"type": "sound",
-			"url": "assets/sounds/GunPowerup.mp3"
 		},
 		{
 			"name": "Hero_png",
@@ -362,16 +272,6 @@
 			"url": "assets/score_title.png"
 		},
 		{
-			"name": "score_png",
-			"type": "image",
-			"url": "assets/score.png"
-		},
-		{
-			"name": "score_fnt",
-			"type": "font",
-			"url": "assets/score.fnt"
-		},
-		{
 			"name": "GunShip1_png",
 			"type": "image",
 			"url": "assets/Ships/GunShip1.png"
@@ -490,6 +390,126 @@
 			"name": "GunLevelUp_png",
 			"type": "image",
 			"url": "assets/Buffs/GunLevelUp.png"
+		},
+		{
+			"name": "ComicSansMS60_0_png",
+			"type": "image",
+			"url": "assets/Fonts/ComicSansMS60_0.png"
+		},
+		{
+			"name": "ComicSansMS60_fnt",
+			"type": "font",
+			"url": "assets/Fonts/ComicSansMS60.fnt"
+		},
+		{
+			"name": "Bgmusic_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/Bgmusic.mp3"
+		},
+		{
+			"name": "EaseGunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/EaseGunShoot.mp3"
+		},
+		{
+			"name": "Explosion0_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/Explosion0.mp3"
+		},
+		{
+			"name": "Explosion1_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/Explosion1.mp3"
+		},
+		{
+			"name": "Explosion2_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/Explosion2.mp3"
+		},
+		{
+			"name": "ExplosionBullet_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/ExplosionBullet.mp3"
+		},
+		{
+			"name": "ExplosionGunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/ExplosionGunShoot.mp3"
+		},
+		{
+			"name": "GuideGunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/GuideGunShoot.mp3"
+		},
+		{
+			"name": "GunPowerup_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/GunPowerup.mp3"
+		},
+		{
+			"name": "GunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/GunShoot.mp3"
+		},
+		{
+			"name": "Hit_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/Hit.mp3"
+		},
+		{
+			"name": "PickPower_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/PickPower.mp3"
+		},
+		{
+			"name": "Powerup_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/Powerup.mp3"
+		},
+		{
+			"name": "RowGunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/RowGunShoot.mp3"
+		},
+		{
+			"name": "ShotGunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/ShotGunShoot.mp3"
+		},
+		{
+			"name": "SoundWaveGunShoot_mp3",
+			"type": "sound",
+			"url": "assets/Sounds/SoundWaveGunShoot.mp3"
+		},
+		{
+			"name": "font_png",
+			"type": "image",
+			"url": "assets/Fonts/font.png"
+		},
+		{
+			"name": "score_png",
+			"type": "image",
+			"url": "assets/Fonts/score.png"
+		},
+		{
+			"name": "font_fnt",
+			"type": "font",
+			"url": "assets/Fonts/font.fnt"
+		},
+		{
+			"name": "score_fnt",
+			"type": "font",
+			"url": "assets/Fonts/score.fnt"
+		},
+		{
+			"name": "Arial40_0_png",
+			"type": "image",
+			"url": "assets/Fonts/Arial40_0.png"
+		},
+		{
+			"name": "Arial40_fnt",
+			"type": "font",
+			"url": "assets/Fonts/Arial40.fnt"
 		}
 	]
 }

@@ -2,8 +2,8 @@ class BattleHUD extends eui.Component implements IHeroHUD {
     private grpBossHpBar: eui.Group;
     private grpScore: eui.Group;
     private grpHighScore: eui.Group;
-    private lblScore: eui.Label;
-    private lblHighScore: eui.Label;
+    private lblScore: eui.BitmapLabel;
+    private lblHighScore: eui.BitmapLabel;
     private grpTip: eui.Group;
     private imgTipIcon: eui.Image;
     private lblTipNum: eui.Label;
