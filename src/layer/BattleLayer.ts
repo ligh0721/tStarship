@@ -27,6 +27,8 @@ class BattleLayer extends tutils.Layer {
     $pathPercent: number = 0;
 
     lastTouchBeginTick: number = 0;
+    lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
+    touchBeginCount: number = 0;
 
     // 统计项
     private score: number = 0;
@@ -278,7 +280,7 @@ class BattleLayer extends tutils.Layer {
             }
 
             let power = 10;  // Math.max(ship.maxHp/10, 1);
-            this.hero.addPower(power);
+            
 
             // 更新统计
             this.heroShipData.exp += ship.maxHp;
@@ -290,7 +292,11 @@ class BattleLayer extends tutils.Layer {
                 this.destroyBosses++;
                 this.reachStage++;
                 GameController.instance.savePlayerData();
+                power *= 80;
+            } else if (ship instanceof MotherGunShip) {
+                power *= 40;
             }
+            this.hero.addPower(power);
         }
     }
 
@@ -418,15 +424,33 @@ class BattleLayer extends tutils.Layer {
         // egret.Tween.removeTweens(this.tickerEffect);
         // let tw = egret.Tween.get(this.tickerEffect);
         // tw.to({value: this.tickerEffect.maximum}, (this.tickerEffect.maximum-this.tickerEffect.value)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
-        egret.Ticker.getInstance().setTimeScale(0.5);
-
+        // egret.Ticker.getInstance().setTimeScale(0.5);
         if (evt.target!=this.layer || !this.hero.alive) {
             this.beginDelta.x = undefined;
             return;
         }
+
+        let now = egret.getTimer();
+        if (this.touchBeginCount > 0) {
+            let dis = tutils.getDistance(this.lastTouchBeginPos.x, this.lastTouchBeginPos.y, evt.stageX, evt.stageY);
+            if (now-this.lastTouchBeginTick>300 || dis>50) {
+                this.touchBeginCount = 1;
+            } else {
+                this.touchBeginCount++;
+                if (this.touchBeginCount === 2) {
+                    this.onHeroUsePower();
+                    this.touchBeginCount = 0;
+                }
+            }
+        } else {
+            this.touchBeginCount = 1;
+        }
+        this.lastTouchBeginTick = now;
+        this.lastTouchBeginPos.x = evt.stageX;
+        this.lastTouchBeginPos.y = evt.stageY;
+
         this.beginDelta.x = evt.stageX - this.hero.gameObject.x;
         this.beginDelta.y = evt.stageY - this.hero.gameObject.y;
-        //this.hero.move(evt.localX, evt.localY-100);
     }
 
     private onTouchMove(evt: egret.TouchEvent) {
