@@ -573,10 +573,11 @@ class BattleLayer extends tutils.Layer {
         rushItem = new BezierRush(0, en1, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: 0, y: this.world.height*0.5}, {x: this.world.width*0.7, y: this.world.height*0.5});
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new StraightRush(4000, en2, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height});
+        // rushItem = new StraightRush(4000, en2, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height});
+        rushItem = new GradientRush(4000, en2, 200, 4000, 100, this.world.width-100);
         this.enemyCtrl.addRush(rushItem);
         
-        rushItem = new SineRush(5000, en3, 200, 4000, {x: 200, y: 0}, {x: 200, y: this.world.height}, 2000, 100);
+        rushItem = new SineRush(5000, en3, 200, 5000, {x: 200, y: 0}, {x: 200, y: this.world.height}, 2000, 100);
         this.enemyCtrl.addRush(rushItem);
 
         rushItem = new CallbackRush(5000, ():void=>{
