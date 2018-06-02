@@ -46,6 +46,12 @@ class Rush {
 	protected rushOne(ship: Ship): void {
 		ship.status = UnitStatus.Dead;
 	}
+
+	protected convertPointToWorldPer(world: World, point: {x: number, y: number}): {x: number, y: number} {
+		point.x *= world.width/100;
+		point.y *= world.height/100;
+		return point;
+	}
 }
 
 class StraightRush extends Rush {
@@ -56,6 +62,12 @@ class StraightRush extends Rush {
 		super(delay, ships, interval, duration);
 		this.from = from;
 		this.to = to;
+	}
+
+	public start(world: World): void {
+		this.convertPointToWorldPer(world, this.from);
+		this.convertPointToWorldPer(world, this.to);
+		super.start(world);
 	}
 
 	// override
@@ -82,6 +94,13 @@ class BezierRush extends Rush {
 		this.k = k;
 	}
 
+	public start(world: World): void {
+		this.convertPointToWorldPer(world, this.from);
+		this.convertPointToWorldPer(world, this.to);
+		this.convertPointToWorldPer(world, this.k);
+		super.start(world);
+	}
+
 	// override
 	protected rushOne(ship: Ship): void {
 		let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
@@ -105,6 +124,12 @@ class SineRush extends Rush {
 		this.amplitude = amplitude;
 	}
 
+	public start(world: World): void {
+		this.convertPointToWorldPer(world, this.from);
+		this.convertPointToWorldPer(world, this.to);
+		super.start(world);
+	}
+
 	// override
 	protected rushOne(ship: Ship): void {
 		let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
@@ -124,21 +149,27 @@ class PathRush extends Rush {
 }
 
 class GradientRush extends Rush {
-	fromX: number;
-	toX: number;
+	protected from: {x: number, y: number};
+	protected to: {x: number, y: number};
 	private total: number;
 
-	public constructor(delay: number, ships: Ship[], interval: number, duration: number, fromX: number, toX: number) {
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}) {
 		super(delay, ships, interval, duration);
-		this.fromX = fromX;
-		this.toX = toX;
+		this.from = from;
+		this.to = to;
 		this.total = this.ships.length;
+	}
+
+	public start(world: World): void {
+		this.convertPointToWorldPer(world, this.from);
+		this.convertPointToWorldPer(world, this.to);
+		super.start(world);
 	}
 
 	// override
 	protected rushOne(ship: Ship): void {
-		ship.x = this.total===1 ? this.fromX : this.fromX+(this.toX-this.fromX) * (this.total-this.ships.length-1)/(this.total-1);
-		ship.y = -ship.height;
+		ship.x = this.total===1 ? this.from.x : this.from.x+(this.to.x-this.from.x) * (this.total-this.ships.length-1)/(this.total-1);
+		ship.y = this.total===1 ? this.from.y : this.from.y+(this.to.y-this.from.y) * (this.total-this.ships.length-1)/(this.total-1);
 		let toY = ship.world.height+ship.height;
 		let dis = toY - ship.y;
 		let speed = dis / this.duration * tutils.SpeedFactor;

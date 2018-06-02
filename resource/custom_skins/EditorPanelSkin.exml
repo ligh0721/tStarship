@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="EditorPanelSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group id="grpWorld" width="100%" height="100%">
+		<e:Group width="100%" height="100%">
+			<e:Group id="grpGridV" width="100%" height="100%" scaleX="1" scaleY="1" alpha="0.5">
+				<e:Image width="3" height="100%" x="718" y="34" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="728" y="44" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="738" y="54" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="748" y="64" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="758" y="74" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="768" y="84" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="778" y="94" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="788" y="104" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="798" y="114" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="808" y="124" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="3" height="100%" x="818" y="134" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="center" gap="69" paddingLeft="-1"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="grpGridH" width="100%" height="100%" scaleX="1" scaleY="1" alpha="0.5">
+				<e:Image width="100%" height="3" x="818" y="134" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="828" y="144" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="838" y="154" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="848" y="164" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="858" y="174" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="868" y="184" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="878" y="194" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="888" y="204" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="898" y="214" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="908" y="224" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:Image width="100%" height="3" x="918" y="234" scaleX="1" scaleY="1" source="WhitePixel_png"/>
+				<e:layout>
+					<e:VerticalLayout verticalAlign="middle" gap="125" paddingTop="-1"/>
+				</e:layout>
+			</e:Group>
+		</e:Group>
+		<e:Group id="grpCtrl" width="100%" height="100%" horizontalCenter="0" x="0" y="0" scaleX="1" scaleY="1">
+			<e:Group id="grpEditorTab" width="100%" top="0" horizontalCenter="0" x="0" y="0" scaleX="1" scaleY="1">
+			<e:RadioButton id="btnTabPath" label="Path" x="26" y="-1" value="0" selected="true">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="greenbutton_down_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:RadioButton>
+			<e:RadioButton label="Ship" x="36" y="9" value="1">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="greenbutton_down_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:RadioButton>
+			<e:RadioButton label="Other" x="46" y="19" value="2">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="greenbutton_down_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:RadioButton>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="center" gap="20"/>
+			</e:layout>
+			</e:Group>
+			<e:ViewStack id="vsEditors" width="100%" height="100%" x="207" y="375" selectedIndex="0">
+			<e:Group width="100%" height="100%" name="视图">
+				<e:Label id="txtPos" text="(x, y): 11%, 91%" verticalAlign="bottom" bottom="0" left="0"/>
+				<e:Group id="grpPathCtrl" width="200" scaleX="1" scaleY="1" left="0" top="0">
+				<e:Group width="100%" height="50" top="0">
+					<e:Button id="btnRun" label="Run" x="43" y="23"/>
+					<e:Button id="btnClear" label="Clear" x="166" y="42"/>
+					<e:layout>
+					<e:HorizontalLayout gap="5" horizontalAlign="center"/>
+					</e:layout>
+				</e:Group>
+				<e:Group x="68" y="276" width="100%">
+					<e:Label id="txtType" text="Type: bezier" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldType" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" minimum="0" maximum="3" value="1"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:Group x="78" y="286" width="100%">
+					<e:Label id="txtNum" text="Num: 5" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldNum" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" value="5" maximum="10" minimum="0"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:Group x="88" y="296" width="100%">
+					<e:Label id="txtItv" text="Itv: 200" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldItv" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" minimum="0" maximum="2000" value="200"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:Group x="118" y="326" width="100%">
+					<e:Label id="txtDur" text="Dur: 2000" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldDur" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" maximum="10000" minimum="0" value="2000"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:Group id="grpSinA" x="98" y="306" width="100%">
+					<e:Label id="txtSinA" text="SinA: 100" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldSinA" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" minimum="-1000" maximum="1000" value="100"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:Group id="grpSinT" x="108" y="316" width="100%">
+					<e:Label id="txtSinT" text="SinT: 2000" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldSinT" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" value="2000" maximum="5000" minimum="0"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:Group x="118" y="326" width="100%">
+					<e:Label id="txtCode" text="Code:" x="0" y="-60" scaleX="1" scaleY="1"/>
+					<e:EditableText id="iptCode" width="100%" height="200" text="" x="64" y="126" multiline="true"/>
+					<e:layout>
+					<e:VerticalLayout horizontalAlign="left"/>
+					</e:layout>
+				</e:Group>
+				<e:layout>
+					<e:VerticalLayout gap="40" paddingTop="30"/>
+				</e:layout>
+				</e:Group>
+				<e:Group width="200" height="100%" right="0" top="0">
+					<e:List width="100%" height="200"/>
+				</e:Group>
+			</e:Group>
+			<e:Group width="100%" height="100%" name="视图">
+				<e:Label text="Ship Editor" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0"/>
+			</e:Group>
+			<e:Group width="100%" height="100%" name="视图">
+				<e:Label text="Other Editor" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0"/>
+			</e:Group>
+			</e:ViewStack>
+			<e:layout>
+			<e:VerticalLayout/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

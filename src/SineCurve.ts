@@ -39,10 +39,11 @@ class SineCurve {
 			egret.Tween.removeTweens(this);
 			return;
 		}
-	    let dis = this.point1.y - this.point0.y;
+		let disX = this.point1.x - this.point0.x;
+	    let disY = this.point1.y - this.point0.y;
 		let temp = Math.sin(this.duration * value / this.period  * 2 * Math.PI) * this.amplitude;
 
-		this.obj.x = this.point0.x + temp;
-		this.obj.y = dis * value;
+		this.obj.x = this.point0.x + disX * value + temp;
+		this.obj.y = this.point0.y + disY * value;
 	}
 }
