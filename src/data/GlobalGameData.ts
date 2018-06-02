@@ -23,7 +23,7 @@ const GlobalShipsData: ShipsData = {
 		gunName: "单束粒子炮",
 		gun: Gun,
 		bullet: Bullet,
-		bulletSpeed: 100,
+		bulletSpeed: 300,
         fireCD: 150,
 		bulletPower: 10,
 		bulletNum: 1,

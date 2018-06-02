@@ -222,7 +222,7 @@ class BattleLayer extends tutils.Layer {
         }
         if (this.hero.alive && this.hero.castSkill()) {
             tutils.playSound("Powerup_mp3");
-            this.turbo(this.bgCtrl, 100, 10, 5000);
+            this.turbo(this.bgCtrl, 100, 20, 5000);
             // this.turbo(this.bgCtrl2, 200, 20, 5000);
         }
     }
@@ -533,94 +533,51 @@ class BattleLayer extends tutils.Layer {
 	}
 
     private createTestEnemyRushes() {
-        let en0: EnemyShip[] = [];
-        let en1: EnemyShip[] = [];
-        let en2: EnemyShip[] = [];
-        let en3: EnemyShip[] = [];
-        let n = 10;
-        for (let i=0; i<n; i++) {
-            let enemy0 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-            enemy0.resetHp(5);
-            en0.push(enemy0);
+        let rush: Rush;
 
-            let enemy1 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-            enemy1.resetHp(5);
-            en1.push(enemy1);
+        this.enemyCtrl.addRushes1(2000, 5);
+        this.enemyCtrl.addRushes2(5000, 5);
+        this.enemyCtrl.addRushes3(5000, 5);
+        this.enemyCtrl.addRushes4(5000, 5);
 
-            let enemy2 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-            enemy2.resetHp(5);
-            en2.push(enemy2);
-
-            let enemy3 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-            enemy3.resetHp(5);
-            en3.push(enemy3);
-        }
-
-        let enemy0 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-        enemy0.resetHp(5);
-
-        let enemy1 = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-        enemy0.resetHp(5);
-
-        // this.enemyCtrl.enemyShipMoveInStraightLine(enemyShip, enemyShip.width*0.5);
-        // this.enemyCtrl.rushBezier(enemies, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.5}, 200, 2000, false);
-        // this.enemyCtrl.enemyShipMoveInBezierCurve(enemyShip1, {x: this.world.width*0.5, y: 0}, {x: this.world.width*0.5, y: this.world.height*0.5}, {x: this.world.width, y: this.world.height*0.8});
-
-
-        let rushItem: Rush = new BezierRush(2000, en0, 200, 2000, {x: this.world.width*0.3, y: 0}, {x: this.world.width, y: this.world.height*0.5}, {x: this.world.width*0.3, y: this.world.height*0.5});
-        this.enemyCtrl.addRush(rushItem);
-        
-        rushItem = new BezierRush(0, en1, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: 0, y: this.world.height*0.5}, {x: this.world.width*0.7, y: this.world.height*0.5});
-        this.enemyCtrl.addRush(rushItem);
-        
-        rushItem = new StraightRush(4000, en2, 200, 2000, {x: this.world.width*0.7, y: 0}, {x: this.world.width*0.7, y: this.world.height});
-        // rushItem = new GradientRush(4000, en2, 200, 4000, 100, this.world.width-100);
-        this.enemyCtrl.addRush(rushItem);
-        
-        rushItem = new SineRush(5000, en3, 200, 5000, {x: 200, y: 0}, {x: 200, y: this.world.height}, 2000, 100);
-        this.enemyCtrl.addRush(rushItem);
-
-        rushItem = new CallbackRush(5000, ():void=>{
+        rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
             let boss = this.enemyCtrl.createBoss1();
             this.showBossUI(boss);
         }, this);
-        this.enemyCtrl.addRush(rushItem);
+        this.enemyCtrl.addRush(rush);
 
         for (let i=1; i<=20*10; i++) {
             if (i == 20) {
-                let rushItem = new CallbackRush(5000, ():void=>{
+                let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss2();
                     this.showBossUI(boss);
                 }, this);
-                this.enemyCtrl.addRush(rushItem);
+                this.enemyCtrl.addRush(rush);
                 continue;
             } else if (i == 40) {
-                let rushItem = new CallbackRush(5000, ():void=>{
+                let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
                     this.showBossUI(boss);
                 }, this);
-                this.enemyCtrl.addRush(rushItem);
+                this.enemyCtrl.addRush(rush);
                 continue;
             }
-            let es = [];
             let n = Math.floor(Math.random()*8+5);
-            for (let j=0; j<n; j++) {
-                let e = this.enemyCtrl.createEnemyShip("RedEnemyShip_png");
-                e.resetHp(10+Math.floor(i/4 * 1));
-                es.push(e);
-            }
+            let hp = 10+Math.floor(i/4 * 1);
+            let es = this.enemyCtrl.createEnemyShips("RedEnemyShip_png", n, hp);
+            this.enemyCtrl.putEnemyShipsIntoGroup(es);
             
             let delay = Math.random() * 5000 + 2000;
             let dur = Math.random() * 3000 + 3000;
             let interval = Math.random() * 200 + 100;
             let a = Math.random() * 200 + 80
-            let x = Math.random() * (this.stage.stageWidth - a * 2) + a;
+            let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
             let t = Math.random() * 1000 + 2000;
-            let rushItem = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: this.world.height+100}, t, a);
-            this.enemyCtrl.addRush(rushItem);
+            let rush = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
+            this.enemyCtrl.addRush(rush);
         }
         this.enemyCtrl.startRush(30);
     }

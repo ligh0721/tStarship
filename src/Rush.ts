@@ -20,19 +20,10 @@ class Rush {
 
 	public start(world: World): void {
 		this.onStart(world);
+		if (this.callback) {
+			this.callback.call(this.callbackThisObj);
+		}
 		if (this.ships && this.ships.length > 0) {
-			if ((this.interval<1000) && (this.ships.length>2) && (this.ships[0] instanceof EnemyShip)) {
-				let group = new EnemyGroup();
-				group.incMember(this.ships.length);
-				this.ships.forEach((ship, i, arr)=>{
-					(<EnemyShip>ship).setGroup(group);
-				});
-			}
-
-			if (this.callback) {
-				this.callback.call(this.callbackThisObj);
-			}
-			
 			if (this.interval === 0) {
 				this.ships.forEach((ship, i, arr):void=>{
 					world.addShip(ship);

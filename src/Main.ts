@@ -144,9 +144,9 @@ class Main extends eui.UILayer {
      */
     protected createGameScene(): void {
         GameController.instance.init(this);
-        // GameController.instance.createRootLayer(HeroShipsLayer);
+        GameController.instance.createRootLayer(HeroShipsLayer);
         // GameController.instance.createRootLayer(TestLayer);
-        GameController.instance.createRootLayer(PathEditorLayer);
+        // GameController.instance.createRootLayer(PathEditorLayer);
     }
 
     private clearPlayerData(): void {

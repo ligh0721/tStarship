@@ -363,4 +363,81 @@ class EnemyController {
 
 		return boss;
 	}
+
+	public createEnemyShips(model: string, num: number, hp: number): EnemyShip[] {
+		let ships: EnemyShip[] = [];
+		for (let i=0; i<num; i++) {
+			let ship = this.createEnemyShip("RedEnemyShip_png");
+			ship.resetHp(hp);
+			ships.push(ship);
+		}
+		return ships;
+	}
+
+	public putEnemyShipsIntoGroup(...shipsArrs: EnemyShip[][]): EnemyGroup {
+		let group = new EnemyGroup();
+		for (let i=0, len=shipsArrs.length; i<len; i++) {
+			let ships = shipsArrs[i];
+			group.incMember(ships.length);
+			for (let j=0, len=ships.length; j<len; j++) {
+				let ship = ships[j];
+				ship.setGroup(group);
+			}
+		}
+		return group;
+	}
+
+	public addRushes1(delay: number, hp: number, speedFactor: number=1): void {
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		this.putEnemyShipsIntoGroup(ships);
+		rush = new StraightRush(delay, ships, 300/speedFactor, 4000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100});
+		this.addRush(rush);
+	}
+
+	public addRushes2(delay: number, hp: number, speedFactor: number=1): void {
+		// 先后左右两列
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		this.putEnemyShipsIntoGroup(ships);
+		rush = new StraightRush(delay, ships, 200/speedFactor, 3000/speedFactor, {x: 30, y: 0}, {x: 30, y: 100});
+		this.addRush(rush);
+
+		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		this.putEnemyShipsIntoGroup(ships);
+		rush = new StraightRush(5000, ships, 200/speedFactor, 3000/speedFactor, {x: 70, y: 0}, {x: 70, y: 100});
+		this.addRush(rush);
+	}
+
+	public addRushes3(delay: number, hp: number, speedFactor: number=1): void {
+		// V字形
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips("RedEnemyShip_png", 3, 5);
+		rush = new GradientRush(delay, ships, 300/speedFactor, 5000/speedFactor, {x: 40, y: 0}, {x: 10, y: 0});
+		this.addRush(rush);
+		let ships2 = this.createEnemyShips("RedEnemyShip_png", 3, 5);
+		rush = new GradientRush(0, ships2, 300/speedFactor, 5000/speedFactor, {x: 60, y: 0}, {x: 90, y: 0});
+		this.addRush(rush);
+		this.putEnemyShipsIntoGroup(ships, ships2);
+	}
+
+	public addRushes4(delay: number, hp: number, speedFactor: number=1): void {
+		// 交叉曲线
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		rush = new BezierRush(delay, ships, 200/speedFactor, 2000/speedFactor, {x: 30, y: 0}, {x: 100, y: 50}, {x: 30, y: 50});
+        this.addRush(rush);
+		let ships2 = this.createEnemyShips("RedEnemyShip_png", 3, 5);
+        rush = new BezierRush(0, ships2, 200/speedFactor, 2000/speedFactor, {x: 70, y: 0}, {x: 0, y: 50}, {x: 70, y: 50});
+        this.addRush(rush);
+		this.putEnemyShipsIntoGroup(ships, ships2);
+	}
 }
