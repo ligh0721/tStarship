@@ -4,7 +4,7 @@ class EditorPanel extends eui.Component {
     pressLayer: boolean = false;
     cur: egret.DisplayObject = null;
     private pts: egret.DisplayObject[] = [];
-    private static typeTxts = ["straight", "bezier", "sine", "gradient"];
+    private static typeTxts = ["straight", "bezier", "sine", "gradient", "path"];
 
     private grpWorld: eui.Group;
     private grpPathCtrl: eui.Group;
@@ -126,6 +126,13 @@ class EditorPanel extends eui.Component {
             }
             rush = new GradientRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1]);
             this.iptCode.text = "rush = new GradientRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});";
+            break;
+        case "path":
+            for (let i=pts.length; i<1; i++) {
+                pts.push({x: 0, y: 0});
+            }
+            rush = new PathRush(0, ships, this.sldItv.value, this.sldDur.value, pts);
+            this.iptCode.text = "rush = new PathRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", pts);";
             break;
         }
         this.enemyCtrl.addRush(rush);

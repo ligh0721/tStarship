@@ -19,31 +19,45 @@ class Rush {
 	}
 
 	public start(world: World): void {
+		this.onStart(world);
 		if (this.ships && this.ships.length > 0) {
-			if ((this.ships.length>2) && (this.ships[0] instanceof EnemyShip)) {
+			if ((this.interval<1000) && (this.ships.length>2) && (this.ships[0] instanceof EnemyShip)) {
 				let group = new EnemyGroup();
 				group.incMember(this.ships.length);
 				this.ships.forEach((ship, i, arr)=>{
 					(<EnemyShip>ship).setGroup(group);
 				});
 			}
-			
-			let t = new tutils.Timer();
-			t.setOnTimerListener((dt: number):void=>{
-				let ship = this.ships.pop();
-				world.addShip(ship);
-				this.rushOne(ship);
-			}, this);
-			t.start(this.interval, true, this.ships.length);
-		}
 
-		if (this.callback) {
-			this.callback.call(this.callbackThisObj);
+			if (this.callback) {
+				this.callback.call(this.callbackThisObj);
+			}
+			
+			if (this.interval === 0) {
+				this.ships.forEach((ship, i, arr):void=>{
+					world.addShip(ship);
+					this.onRushOne(i, ship);
+				}, this);
+			} else {
+				let t = new tutils.Timer();
+				let i = 0;
+				t.setOnTimerListener((dt: number):void=>{
+					let ship = this.ships[i];
+					world.addShip(ship);
+					this.onRushOne(i, ship);
+					i++;
+				}, this);
+				t.start(this.interval, true, this.ships.length);
+			}
 		}
 	}
 
 	// override
-	protected rushOne(ship: Ship): void {
+	protected onStart(world: World): void {
+	}
+
+	// override
+	protected onRushOne(index: number, ship: Ship): void {
 		ship.status = UnitStatus.Dead;
 	}
 
@@ -64,14 +78,14 @@ class StraightRush extends Rush {
 		this.to = to;
 	}
 
-	public start(world: World): void {
+	// override
+	protected onStart(world: World): void {
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
-		super.start(world);
 	}
 
 	// override
-	protected rushOne(ship: Ship): void {
+	protected onRushOne(index: number, ship: Ship): void {
 		ship.x = this.from.x;
 		ship.y = this.from.y;
 		let dis = ship.getDistance(this.to.x, this.to.y);
@@ -94,15 +108,15 @@ class BezierRush extends Rush {
 		this.k = k;
 	}
 
-	public start(world: World): void {
+	// override
+	protected onStart(world: World): void {
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
 		this.convertPointToWorldPer(world, this.k);
-		super.start(world);
 	}
 
 	// override
-	protected rushOne(ship: Ship): void {
+	protected onRushOne(index: number, ship: Ship): void {
 		let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
 		bezier.startMove(this.duration, ()=>{
 			ship.status = UnitStatus.Dead;
@@ -124,14 +138,14 @@ class SineRush extends Rush {
 		this.amplitude = amplitude;
 	}
 
-	public start(world: World): void {
+	// override
+	protected onStart(world: World): void {
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
-		super.start(world);
 	}
 
 	// override
-	protected rushOne(ship: Ship): void {
+	protected onRushOne(index: number, ship: Ship): void {
 		let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
 		sin.startMove(this.duration, ()=>{
 			ship.status = UnitStatus.Dead;
@@ -141,35 +155,70 @@ class SineRush extends Rush {
 
 class PathRush extends Rush {
 	protected pts: {x: number, y: number}[];
+	protected durs: number[] = [];
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, pts: {x: number, y: number}[]) {
 		super(delay, ships, interval, duration);
 		this.pts = pts;
+	}
+
+	// override
+	protected onStart(world: World): void {
+		let totalDis = 0;
+		this.pts.forEach((pt, i, arr):void=>{
+			this.convertPointToWorldPer(world, pt);
+			if (i > 0) {
+				let dis = tutils.getDistance(pt.x, pt.y, arr[i-1].x, arr[i-1].y);
+				totalDis += dis;
+				this.durs.push(dis);
+			}
+		}, this);
+		this.durs.forEach((dur, i, arr):void=>{
+			arr[i] = arr[i] / totalDis * this.duration;
+		}, this);
+	}
+
+	// override
+	protected onRushOne(index: number, ship: Ship): void {
+		if (this.pts.length === 0) {
+			ship.status = UnitStatus.Dead;
+			return;
+		}
+		let tw = egret.Tween.get(ship);
+		this.pts.forEach((pt, i, arr):void=>{
+			if (i === 0) {
+				ship.x = pt.x;
+				ship.y = pt.y;
+				return;
+			}
+			tw.to({x: pt.x, y: pt.y}, this.durs[i-1], egret.Ease.getPowInOut(2));
+		}, this);
+		tw.call(():void=>{
+			ship.status = UnitStatus.Dead;
+		}, this);
 	}
 }
 
 class GradientRush extends Rush {
 	protected from: {x: number, y: number};
 	protected to: {x: number, y: number};
-	private total: number;
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}) {
 		super(delay, ships, interval, duration);
 		this.from = from;
 		this.to = to;
-		this.total = this.ships.length;
-	}
-
-	public start(world: World): void {
-		this.convertPointToWorldPer(world, this.from);
-		this.convertPointToWorldPer(world, this.to);
-		super.start(world);
 	}
 
 	// override
-	protected rushOne(ship: Ship): void {
-		ship.x = this.total===1 ? this.from.x : this.from.x+(this.to.x-this.from.x) * (this.total-this.ships.length-1)/(this.total-1);
-		ship.y = this.total===1 ? this.from.y : this.from.y+(this.to.y-this.from.y) * (this.total-this.ships.length-1)/(this.total-1);
+	protected onStart(world: World): void {
+		this.convertPointToWorldPer(world, this.from);
+		this.convertPointToWorldPer(world, this.to);
+	}
+
+	// override
+	protected onRushOne(index: number, ship: Ship): void {
+		ship.x = index===0 ? this.from.x : this.from.x+(this.to.x-this.from.x)*index/(this.ships.length-1);
+		ship.y = index===0 ? this.from.y : this.from.y+(this.to.y-this.from.y)*index/(this.ships.length-1);
 		let toY = ship.world.height+ship.height;
 		let dis = toY - ship.y;
 		let speed = dis / this.duration * tutils.SpeedFactor;
