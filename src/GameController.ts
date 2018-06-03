@@ -145,7 +145,7 @@ class GameController {
 		if (shipInfo === undefined) {
 			return null;
 		}
-		let hero = new HeroShip(shipInfo.model, 1.3, id);
+		let hero = new HeroShip(shipInfo.model, 1.2, id);
 		world.addShip(hero);
 		hero.resetHp(shipInfo.maxHp);
 		hero.speed.baseValue = shipInfo.speed;

@@ -21,8 +21,8 @@ class Supply extends Unit {
 			gameObject = this.gameObject as egret.Bitmap;
 			gameObject.texture = RES.getRes(this.model);
 		}
-		gameObject.width = 60;
-		gameObject.height = 60;
+		gameObject.width = 70;
+		gameObject.height = 70;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
     	gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;

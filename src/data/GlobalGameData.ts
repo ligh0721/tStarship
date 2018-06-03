@@ -142,7 +142,7 @@ const GlobalShipsData: ShipsData = {
     },
     ship_shot: {
 		name: "游荡者",
-		model: "Solar2_png",
+		model: "Solar_png",
 		maxHp: 15,
 		speed: 200,
 		gunName: "发散粒子炮",

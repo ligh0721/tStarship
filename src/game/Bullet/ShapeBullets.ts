@@ -25,13 +25,13 @@ class SoundWaveBullet extends Bullet {
 
 class ShakeWaveBullet extends Bullet {
 	public constructor(gun: Gun) {
-		super(gun, "ShakeWaveBullet_png", 1.3);
+		super(gun, "ShakeWaveBullet_png", 1.2);
 	}
 }
 
 class ShakeWave2Bullet extends Bullet {
 	public constructor(gun: Gun) {
-		super(gun, "ShakeWaveBullet2_png", 1.3);
+		super(gun, "ShakeWaveBullet2_png", 1.2);
 	}
 }
 

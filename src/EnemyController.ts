@@ -367,7 +367,7 @@ class EnemyController {
 		return boss;
 	}
 
-	public createEnemyShips(num: number, hp: number, model: string, scale: number=0.5): EnemyShip[] {
+	public createEnemyShips(num: number, hp: number, model: string, scale: number=0.4): EnemyShip[] {
 		let ships: EnemyShip[] = [];
 		for (let i=0; i<num; i++) {
 			let ship = this.createEnemyShip(model, scale);
@@ -394,7 +394,7 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips(1, hp, "Meteorite_png", 0.3);
+		ships = this.createEnemyShips(1, hp, "Meteorite_png", 0.25);
 		rush = new StraightRush(delay/speedFactor, ships, 300/speedFactor, 4000/speedFactor, {x: x, y: 0}, {x: x, y: 100});
 		this.addRush(rush);
 		return rush as StraightRush;
