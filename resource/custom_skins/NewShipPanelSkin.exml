@@ -106,21 +106,9 @@
 	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillColor="0x155f9b" strokeColor="0xff0000"/>
 	<e:Label id="lblTitle" text="解锁新飞船!" horizontalCenter="0" verticalCenter="-334" size="80" fontFamily="Microsoft YaHei" strokeColor="0x000000" stroke="3" textColor="0xff7a59" bold="true" width.init="1280" textAlign.init="center" text.init="解锁新飞船!"/>
 	<e:Label id="lblShipName" text="英雄号" horizontalCenter="0" verticalCenter="174" size="70" fontFamily="Microsoft JhengHei" textColor="0xffba23" strokeColor="0x000000" stroke="5" textAlign="center" verticalAlign="middle" width="1280" bold="true"/>
-	<e:Button id="btnReturn" label="返回" anchorOffsetY="0" height="68.18" anchorOffsetX="0" width="236.36" horizontalCenter="-150" verticalCenter="331">
-		<e:skinName>
-			<e:Skin states="up,down,disabled">
-			<e:Image width="100%" height="100%" source="bluebutton_normal_png" source.down="bluebutton_down_png"/>
-			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-			</e:Skin>
-		</e:skinName>
+	<e:Button id="btnReturn" label="返回" anchorOffsetY="0" height="68.18" anchorOffsetX="0" width="236.36" horizontalCenter="-150" verticalCenter="331" skinName="BlueButtonSkin">
 	</e:Button>
-	<e:Button id="btnShare" label="分享" anchorOffsetY="0" height="68.18" anchorOffsetX="0" width="236.36" horizontalCenter="150" verticalCenter="331">
-		<e:skinName>
-			<e:Skin states="up,down,disabled">
-			<e:Image width="100%" height="100%" source="greenbutton_normal_png" source.down="greenbutton_down_png"/>
-			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-			</e:Skin>
-		</e:skinName>
+	<e:Button id="btnShare" label="分享" anchorOffsetY="0" height="68.18" anchorOffsetX="0" width="236.36" horizontalCenter="150" verticalCenter="331" skinName="GreenButtonSkin">
 	</e:Button>
 	<e:Rect id="rctShipBg" width="300" height="300" enabled="false" strokeAlpha="1" strokeWeight="20" ellipseWidth="50" ellipseHeight="50" fillColor="0x143054" strokeColor="0xffffff" verticalCenter="-38" horizontalCenter="0"/>
 	<e:Image id="imgShip" source="Hero_png" scaleX="1" scaleY="1" width="300" height="300" anchorOffsetX="150" anchorOffsetY="150" horizontalCenter="0" verticalCenter="-38"/>

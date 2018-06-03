@@ -52,4 +52,15 @@ module tutils {
 		let sound: egret.Sound = RES.getRes(name);
 		return sound.play(0, loop);
 	}
+
+	export function greyFilter(): egret.Filter {
+		const colorMatrix = [
+			0.3, 0.6, 0.0, 0.0, 0.0,
+			0.3, 0.6, 0.0, 0.0, 0.0,
+			0.3, 0.6, 0.0, 0.0, 0.0,
+			0.0, 0.0 ,0.0, 1.0, 0.0
+		];
+		let filter = new egret.ColorMatrixFilter(colorMatrix);
+		return filter;
+	}
 }

@@ -1,33 +1,53 @@
 class Supply extends Unit {
+	readonly model: string;
 	text: string = "";
 	color: number = 0xffffff;
 	status: UnitStatus = UnitStatus.Alive;
-	speed: number = 20;
-	pickDist: number = 250;
-	pickSpeed: number = 100;
+	speed: number = 10;
+	pickDist: number = 300;
+	pickSpeed: number = 150;
+
+	public constructor(model?: string) {
+		super();
+		this.model = model;
+	}
 
 	// override
 	protected onCreate(): egret.DisplayObject {
-		if (this.gameObject != null) {
-			return this.gameObject;
+		let gameObject: egret.Bitmap;
+		if (!this.gameObject) {
+			gameObject = tutils.createBitmapByName(this.model);
+		} else {
+			gameObject = this.gameObject as egret.Bitmap;
+			gameObject.texture = RES.getRes(this.model);
 		}
-
-		let gameObject = this.gameObject!=null ? <egret.Sprite>this.gameObject : new egret.Sprite();
-		let txt = new egret.TextField();
-		gameObject.addChild(txt);
-		txt.x = 8;
-		txt.y = 8;
-		txt.textColor = this.color;
-		txt.text = this.text;
-		let width = txt.textWidth + txt.x * 2;
-		let height = txt.textHeight + txt.y * 2;
-		gameObject.graphics.clear();
-		gameObject.graphics.lineStyle(5, this.color);
-		gameObject.graphics.drawRect(0, 0, width, height);
-        gameObject.anchorOffsetX = width * 0.5;
-        gameObject.anchorOffsetY = height * 0.5;
+		gameObject.width = 60;
+		gameObject.height = 60;
+		gameObject.anchorOffsetX = gameObject.width * 0.5;
+    	gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;
 	}
+	// protected onCreate(): egret.DisplayObject {
+	// 	if (this.gameObject != null) {
+	// 		return this.gameObject;
+	// 	}
+
+	// 	let gameObject = this.gameObject!=null ? <egret.Sprite>this.gameObject : new egret.Sprite();
+	// 	let txt = new egret.TextField();
+	// 	gameObject.addChild(txt);
+	// 	txt.x = 8;
+	// 	txt.y = 8;
+	// 	txt.textColor = this.color;
+	// 	txt.text = this.text;
+	// 	let width = txt.textWidth + txt.x * 2;
+	// 	let height = txt.textHeight + txt.y * 2;
+	// 	gameObject.graphics.clear();
+	// 	gameObject.graphics.lineStyle(5, this.color);
+	// 	gameObject.graphics.drawRect(0, 0, width, height);
+    //     gameObject.anchorOffsetX = width * 0.5;
+    //     gameObject.anchorOffsetY = height * 0.5;
+	// 	return gameObject;
+	// }
 
 	public get alive(): boolean {
 		return this.status == UnitStatus.Alive;
@@ -37,10 +57,10 @@ class Supply extends Unit {
 	public onHitShip(ship: Ship): void {
 	}
 
-	public drop(x: number, y: number) {
+	public drop(x: number, y: number, ease?: Function) {
 		this.x = x;
 		this.y = y;
-		this.moveStraight(180, this.speed, true);
+		this.moveStraight(180, this.speed, true, ease);
 		if (this.pickDist > 0) {
 			this.moveToShip(null);
 		}

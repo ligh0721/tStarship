@@ -9,8 +9,8 @@ class EnemyController {
 		this.world = world;
 	}
 
-	public createEnemyShip(model: string): EnemyShip {
-		let enemyShip = new EnemyShip(model, 0.5);
+	public createEnemyShip(model: string, scale: number=0.5): EnemyShip {
+		let enemyShip = new EnemyShip(model, scale);
 		enemyShip.force.force = tutils.EnemyForce;
 		return enemyShip;
 	}
@@ -105,22 +105,24 @@ class EnemyController {
         ship.x = this.world.width * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
-        ship.resetHp(500);
 
         let gunShip = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip, -100, 100);
-        gunShip.resetHp(300);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, RedEllipseBullet);
         gunShip.addGun(gun);
         
         let gunShip2 = new MotherGunShip("GunShip2_png", 1.5);
         ship.addGunShip(gunShip2, 100, 100);
-        gunShip2.resetHp(250);
         gunShip2.angle = 180;
         let gun2 = Gun.createGun(ShotGun, RedEllipseBullet);
+		gun2.bulletAngleDelta = 10;
         gun2.fireCooldown.baseValue = 1000;
         gunShip2.addGun(gun2);
+
+		ship.resetHp(2000);
+        gunShip.resetHp(1500);
+		gunShip2.resetHp(1000);
 
         let moveMotherShip = (ship: MotherShip)=>{
             let tw = egret.Tween.get(ship);
@@ -167,13 +169,14 @@ class EnemyController {
         boss.addGunShip(gunShip, 0, 100);
         gunShip.angle = 180;
         let gun = Gun.createGun(ShotGun, RedEllipseBullet);
+		gun.bulletAngleDelta = 10;
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(1000);
-		gunShip.resetHp(500);
+		boss.resetHp(4000);
+		gunShip.resetHp(2000);
 		gun.fireCooldown.baseValue = 100;
 		gun.bulletSpeed.baseValue = 40;
 		let angleSpeed = 20/1000;
@@ -258,7 +261,7 @@ class EnemyController {
 		gunR.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(4000);
+		boss.resetHp(20000);
 		gunShip.resetHp(1600);
 		gunShipL.resetHp(1800);
 		gunShipR.resetHp(1600);
@@ -364,10 +367,10 @@ class EnemyController {
 		return boss;
 	}
 
-	public createEnemyShips(model: string, num: number, hp: number): EnemyShip[] {
+	public createEnemyShips(num: number, hp: number, model: string, scale: number=0.5): EnemyShip[] {
 		let ships: EnemyShip[] = [];
 		for (let i=0; i<num; i++) {
-			let ship = this.createEnemyShip("RedEnemyShip_png");
+			let ship = this.createEnemyShip(model, scale);
 			ship.resetHp(hp);
 			ships.push(ship);
 		}
@@ -387,11 +390,21 @@ class EnemyController {
 		return group;
 	}
 
+	public addRushMeteorite(delay: number, hp: number, x: number, speedFactor: number=1): StraightRush {
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips(1, hp, "Meteorite_png", 0.3);
+		rush = new StraightRush(delay/speedFactor, ships, 300/speedFactor, 4000/speedFactor, {x: x, y: 0}, {x: x, y: 100});
+		this.addRush(rush);
+		return rush as StraightRush;
+	}
+
 	public addRushes1(delay: number, hp: number, speedFactor: number=1): void {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		this.putEnemyShipsIntoGroup(ships);
 		rush = new StraightRush(delay/speedFactor, ships, 300/speedFactor, 4000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100});
 		this.addRush(rush);
@@ -402,12 +415,12 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		this.putEnemyShipsIntoGroup(ships);
 		rush = new StraightRush(delay/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 30, y: 0}, {x: 30, y: 100});
 		this.addRush(rush);
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		this.putEnemyShipsIntoGroup(ships);
 		rush = new StraightRush(5000/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 70, y: 0}, {x: 70, y: 100});
 		this.addRush(rush);
@@ -418,10 +431,10 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 3, 5);
+		ships = this.createEnemyShips(3, hp, "RedEnemyShip_png");
 		rush = new GradientRush(delay/speedFactor, ships, 300/speedFactor, 5000/speedFactor, {x: 40, y: 0}, {x: 10, y: 0});
 		this.addRush(rush);
-		let ships2 = this.createEnemyShips("RedEnemyShip_png", 3, 5);
+		let ships2 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
 		rush = new GradientRush(0/speedFactor, ships2, 300/speedFactor, 5000/speedFactor, {x: 60, y: 0}, {x: 90, y: 0});
 		this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2);
@@ -432,10 +445,10 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		rush = new BezierRush(delay/speedFactor, ships, 200/speedFactor, 2000/speedFactor, {x: 30, y: 0}, {x: 100, y: 50}, {x: 30, y: 50});
         this.addRush(rush);
-		let ships2 = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		let ships2 = this.createEnemyShips(5, hp, "RedEnemyShip_png");
         rush = new BezierRush(0/speedFactor, ships2, 200/speedFactor, 2000/speedFactor, {x: 70, y: 0}, {x: 0, y: 50}, {x: 70, y: 50});
         this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2);
@@ -446,10 +459,10 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		rush = new SineRush(delay/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100}, 3000/speedFactor, 20);
         this.addRush(rush);
-		let ships2 = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		let ships2 = this.createEnemyShips(5, hp, "RedEnemyShip_png");
         rush = new SineRush(0/speedFactor, ships2, 200/speedFactor, 3000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100}, 3000/speedFactor, -20);
         this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2);
@@ -458,36 +471,35 @@ class EnemyController {
 	public addRushes6(delay: number, hp: number, speedFactor: number=1): void {
 		let ships: EnemyShip[];
 		let rush: Rush;
-		ships = this.createEnemyShips("RedEnemyShip_png", 5, hp);
+		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		rush = new BezierRush(delay/speedFactor, ships, 400/speedFactor, 4000/speedFactor, {x: 20, y: 0}, {x: 100, y: 70}, {x: 20, y: 70});
 		this.addRush(rush);
-		let ships2 = this.createEnemyShips("RedEnemyShip_png", 5, hp);
+		let ships2 = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		rush = new BezierRush(3000/speedFactor, ships2, 400/speedFactor, 4000/speedFactor, {x: 80, y: 0}, {x: 0, y: 70}, {x: 80, y: 70});
 		this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2);
 
-		ships = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(3000/speedFactor, ships, 400/speedFactor, 4000/speedFactor, {x: 10, y: 0}, {x: 10, y: 100});
+		ships = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(3000/speedFactor, ships, 400/speedFactor, 4000/speedFactor, {x: 20, y: 0}, {x: 20, y: 100});
 		this.addRush(rush);
-		ships2 = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(400*3/speedFactor, ships2, 400/speedFactor, 4000/speedFactor, {x: 30, y: 0}, {x: 30, y: 100});
+		ships2 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(400*3/speedFactor, ships2, 400/speedFactor, 4000/speedFactor, {x: 40, y: 0}, {x: 40, y: 100});
 		this.addRush(rush);
-		let ships3 = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(400*3/speedFactor, ships3, 400/speedFactor, 4000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100});
+		let ships3 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(400*3/speedFactor, ships3, 400/speedFactor, 4000/speedFactor, {x: 60, y: 0}, {x: 60, y: 100});
 		this.addRush(rush);
-		let ships4 = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(400*3/speedFactor, ships4, 400/speedFactor, 4000/speedFactor, {x: 70, y: 0}, {x: 70, y: 100});
+		let ships4 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(400*3/speedFactor, ships4, 400/speedFactor, 4000/speedFactor, {x: 80, y: 0}, {x: 80, y: 100});
 		this.addRush(rush);
-		let ships5 = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(400*3/speedFactor, ships5, 400/speedFactor, 4000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100});
+		let ships5 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(400*3/speedFactor, ships5, 400/speedFactor, 4000/speedFactor, {x: 60, y: 0}, {x: 60, y: 100});
 		this.addRush(rush);
-		let ships6 = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(400*3/speedFactor, ships6, 400/speedFactor, 4000/speedFactor, {x: 30, y: 0}, {x: 30, y: 100});
+		let ships6 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(400*3/speedFactor, ships6, 400/speedFactor, 4000/speedFactor, {x: 40, y: 0}, {x: 40, y: 100});
 		this.addRush(rush);
-		let ships7 = this.createEnemyShips("RedEnemyShip_png", 3, hp);
-		rush = new StraightRush(3000/speedFactor, ships7, 400/speedFactor, 4000/speedFactor, {x: 10, y: 0}, {x: 10, y: 100});
+		let ships7 = this.createEnemyShips(3, hp, "RedEnemyShip_png");
+		rush = new StraightRush(400*3/speedFactor, ships7, 400/speedFactor, 4000/speedFactor, {x: 20, y: 0}, {x: 20, y: 100});
 		this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2, ships3, ships4, ships5, ships6, ships7);
-		
 	}
 }

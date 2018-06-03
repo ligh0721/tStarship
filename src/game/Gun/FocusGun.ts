@@ -1,6 +1,6 @@
 class FocusGun extends Gun {
 	bulletNum: number = 2;
-	bulletAngleDelta: number = 20;
+	bulletAngleDelta: number = 10;
 	turnBefore: number = 400;
 	turnAfter: number = 300;
 	

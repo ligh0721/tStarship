@@ -155,6 +155,7 @@ class GameController {
 		gun.fireCooldown.baseValue = shipInfo.fireCD;
 		gun.bulletPowerLossPer = 1 / shipInfo.bulletHitTimes;
 		gun.bulletPower.baseValue = shipInfo.bulletPower * shipInfo.bulletHitTimes;
+		gun.bulletPowerLossInterval.baseValue = shipInfo.bulletHitInterval;
 		gun.bulletNum = shipInfo.bulletNum;
 		hero.addGun(gun, true);
 		return hero;
@@ -208,7 +209,7 @@ class GameController {
 		case "satellite_ball":
 			let gun = Gun.createGun(SatelliteGun, ExplosionBullet);
             gun.fireCooldown.baseValue = 1000;
-            gun.bulletPower.baseValue = 5;
+            gun.bulletPower.baseValue = 50;
             gun.bulletNum = 5;
             gun.bulletPowerLossPer = 1.0;
             gun.bulletPowerLossInterval.baseValue = 1000;
@@ -253,7 +254,6 @@ type ShipDataItem = {
 	
 	name: string,
 	model: string,
-	skillId: string,
 	maxHp: number,
 	speed: number,
 	gunName: string,
@@ -264,7 +264,9 @@ type ShipDataItem = {
 	bulletPower: number,
 	bulletNum: number,
 	bulletHitTimes: number,
-	bulletHitInterval: number
+	bulletHitInterval: number,
+	skillId: string,
+	coins: number
 }
 
 type ShipsData = {

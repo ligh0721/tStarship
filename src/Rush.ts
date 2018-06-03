@@ -43,6 +43,11 @@ class Rush {
 		}
 	}
 
+	public setCallback(callback: Function, thisObj: any): void {
+		this.callback = callback;
+		this.callbackThisObj = thisObj;
+	}
+
 	// override
 	protected onStart(world: World): void {
 	}
@@ -60,8 +65,8 @@ class Rush {
 }
 
 class StraightRush extends Rush {
-	protected from: {x: number, y: number};
-	protected to: {x: number, y: number};
+	from: {x: number, y: number};
+	to: {x: number, y: number};
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}) {
 		super(delay, ships, interval, duration);
@@ -71,6 +76,9 @@ class StraightRush extends Rush {
 
 	// override
 	protected onStart(world: World): void {
+		if (this.to.y == 100) {
+			this.to.y = 120;
+		}
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
 	}

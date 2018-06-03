@@ -105,7 +105,11 @@ class Unit {
 		}
 		let tw = egret.Tween.get(this.gameObject);
 		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
-		tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+		if (this.x === toPos.x) {
+			tw.to({y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+		} else {
+			tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+		}
 	}
 
 	// fixedRotation=false

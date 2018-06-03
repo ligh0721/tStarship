@@ -2,7 +2,7 @@ class ScoreSupply extends Supply {
 	score: number;
 
 	public constructor(score: number) {
-		super();
+		super("coin2_png");
 		this.score = score;
 	}
 
@@ -11,7 +11,9 @@ class ScoreSupply extends Supply {
 		if (this.gameObject != null) {
 			return this.gameObject;
 		}
-		let gameObject = tutils.createBitmapByName("coin_png");
+		let gameObject = tutils.createBitmapByName(this.model);
+		gameObject.width = 50;
+		gameObject.height = 50;
         gameObject.anchorOffsetX = gameObject.width * 0.5;
         gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;

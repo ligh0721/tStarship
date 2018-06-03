@@ -1,6 +1,6 @@
 class ExplosionGun extends Gun {
 	explosionRadius: number = 100;
-	explosionPowerEveryPer: number = 0.2;
+	explosionPowerEveryPer: number = 0.3;
 	explosionPowerLossInterval: number = 10000;
 
 	public fire(): void {

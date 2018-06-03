@@ -1,12 +1,12 @@
 class GhostShipBuff extends Buff {
 	shipsNum: number = 3;
-	powerPer: number = 0.2;
+	powerPer: number = 0.3;
 
 	private readonly ships: Ship[] = [];
 	private readonly buffIds: string[] = [];
 	private timer: tutils.Timer;
 
-	public constructor(duration: number, num: number=3, powerPer: number=0.2) {
+	public constructor(duration: number, num: number=3, powerPer: number=0.3) {
 		super(duration);
 		this.shipsNum = num;
 		this.powerPer = powerPer;
@@ -38,7 +38,7 @@ class GhostShipBuff extends Buff {
 			gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
 			gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
 			gun.bulletPower.baseValue = Math.max(1, Math.floor(this.ship.mainGun.bulletPower.baseValue * this.powerPer));
-			gun.bulletNum = shipInfo.bulletNum;
+			gun.bulletNum = this.ship.mainGun.bulletNum;
 			ghost.addGun(gun, true).autoFire = true;
 
 			let buff = new UnhitBuff(-1);

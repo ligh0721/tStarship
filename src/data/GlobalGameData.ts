@@ -18,7 +18,8 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 3,
 		bulletHitTimes: 10,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 10
 	},
     ship_hero: {
 		name: "英雄号",
@@ -30,11 +31,12 @@ const GlobalShipsData: ShipsData = {
 		bullet: Bullet,
 		bulletSpeed: 200,
         fireCD: 100,
-		bulletPower: 3,
+		bulletPower: 10,
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 0
 	},
     ship_soundwave: {
 		name: "音波使者",
@@ -44,13 +46,14 @@ const GlobalShipsData: ShipsData = {
 		gunName: "多重音波炮(低穿透)",
 		gun: SoundWaveGun,
 		bullet: SoundWaveBullet,
-		bulletSpeed: 60,
-        fireCD: 800,
-		bulletPower: 5,
+		bulletSpeed: 100,
+        fireCD: 300,
+		bulletPower: 4,
 		bulletNum: 5,
 		bulletHitTimes: 2,
-		bulletHitInterval: 200,
-		skillId: "turbo"
+		bulletHitInterval: 500,
+		skillId: "turbo",
+		coins: 2500
     },
     ship_energy: {
 		name: "超能之翼",
@@ -61,103 +64,109 @@ const GlobalShipsData: ShipsData = {
 		gun: EaseGun,
 		bullet: ShakeWaveBullet,
 		bulletSpeed: 100,
-        fireCD: 1000,
-		bulletPower: 13,
+        fireCD: 600,
+		bulletPower: 25,
 		bulletNum: 1,
-		bulletHitTimes: 10,
-		bulletHitInterval: 500,
-		skillId: "turbo"
+		bulletHitTimes: 20,
+		bulletHitInterval: 200,
+		skillId: "turbo",
+		coins: 2000
     },
     ship_hunter: {
 		name: "赏金猎人",
-		model: "Energy_png",
+		model: "Energy3_png",
 		maxHp: 16,
 		speed: 200,
 		gunName: "制导能量弹(制导)",
 		gun: GuideGun,
 		bullet: ShakeWave2Bullet,
-		bulletSpeed: 80,
-        fireCD: 300,
-		bulletPower: 8,
+		bulletSpeed: 150,
+        fireCD: 200,
+		bulletPower: 18,
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 1000
     },
     ship_explosion: {
 		name: "爆破者",
-		model: "Energy_png",
+		model: "Energy4_png",
 		maxHp: 20,
 		speed: 200,
 		gunName: "离子炸弹(溅射)",
 		gun: ExplosionGun,
 		bullet: ExplosionBullet,
-		bulletSpeed: 60,
-        fireCD: 500,
-		bulletPower: 13,
+		bulletSpeed: 160,
+        fireCD: 300,
+		bulletPower: 15,
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 3000
     },
     ship_focus: {
 		name: "和谐号",
-		model: "Energy_png",
+		model: "Energy2_png",
 		maxHp: 12,
 		speed: 200,
 		gunName: "聚焦粒子束(中穿透)",
 		gun: FocusGun,
 		bullet: Bullet,
-		bulletSpeed: 80,
+		bulletSpeed: 180,
         fireCD: 200,
-		bulletPower: 3,
+		bulletPower: 5,
 		bulletNum: 2,
 		bulletHitTimes: 5,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 2800
     },
     ship_row: {
 		name: "开拓者",
-		model: "Solar_png",
+		model: "Solar2_png",
 		maxHp: 14,
 		speed: 200,
 		gunName: "多重粒子炮",
 		gun: RowGun,
 		bullet: Bullet,
-		bulletSpeed: 60,
-        fireCD: 400,
-		bulletPower: 8,
+		bulletSpeed: 160,
+        fireCD: 200,
+		bulletPower: 9,
 		bulletNum: 2,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 500
     },
     ship_shot: {
 		name: "游荡者",
-		model: "Solar_png",
+		model: "Solar2_png",
 		maxHp: 15,
 		speed: 200,
 		gunName: "发散粒子炮",
 		gun: ShotGun,
 		bullet: Bullet,
-		bulletSpeed: 60,
-        fireCD: 600,
+		bulletSpeed: 160,
+        fireCD: 300,
 		bulletPower: 10,
 		bulletNum: 5,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo"
+		skillId: "turbo",
+		coins: 1200
     }
 };
 
 const GlobalAllShips: string[] = [
-	"ship_test",
+	//"ship_test",
 	"ship_hero",
-	"ship_soundwave",
-	"ship_energy",
 	"ship_row",
 	"ship_shot",
 	"ship_hunter",
+	"ship_soundwave",
+	"ship_energy",
 	"ship_explosion",
 	"ship_focus"
 ];
@@ -175,7 +184,7 @@ const GlobalPlayerInitData: PlayPrefsData = {
     ships: {},
 };
 
-const GlobalExpTable = [100, 200, 300, 500, 800, 1300, 2100, 3400, 5500, 8900, 14400, 23300, 37700, 61000, 98700, 159700, 258400, 418100, 676500, 1094600];
+const GlobalExpTable = [300, 600, 900, 1500, 2400, 3900, 6300, 10200, 16500, 26700, 43200, 69900, 113100, 183000, 296100, 479100, 775200, 1254300, 2029500, 3283800];
 
 const GlobalMaxHp = 50;
 const GlobalMaxPower = 100;

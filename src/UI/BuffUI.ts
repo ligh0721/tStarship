@@ -33,8 +33,10 @@ class BuffUI extends eui.Component {
 		this.addEventListener(eui.UIEvent.REMOVED, this.onRemoved, this);
 
 		this.updateProgress();
-		this.timer.setOnTimerListener(this.onTimer, this);
-		this.timer.start(1000/20, false, 0);
+		if (this.buff.left > 0) {
+			this.timer.setOnTimerListener(this.onTimer, this);
+			this.timer.start(1000/20, false, 0);
+		}
 	}
 
 	protected onRemoved(evt: eui.UIEvent): void {
@@ -43,7 +45,7 @@ class BuffUI extends eui.Component {
 	}
 
 	protected updateProgress(): void {
-		this.imgBuff.mask.height = this.imgBuff.height * this.buff.left / this.buff.duration;
+		this.imgBuff.mask.height = this.imgBuff.height * (this.buff.left===-1 ? 1.0 : (this.buff.left/this.buff.duration));
 		this.imgBuff.mask.y = this.imgBuff.height - this.imgBuff.mask.height;
 	}
 

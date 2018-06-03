@@ -1,9 +1,11 @@
 class HeroShipsPanel extends eui.Component {
     private shipDetail: eui.ViewStack;
     private lstShips: eui.List;
-    private btnGo: eui.Button;
+    private btnStart: eui.Button;
     private lblName: eui.Label;
     private lblGunDesc: eui.Label;
+    private lblName2: eui.Label;
+    private lblGunDesc2: eui.Label;
 
     private lblHpV: eui.Label;
     private lblPowerV: eui.Label;
@@ -16,6 +18,8 @@ class HeroShipsPanel extends eui.Component {
     private progExp: eui.Rect;
 
     private lblCoins: eui.BitmapLabel;
+    private btnUnlock: eui.Button;
+    private btnBack: eui.Button;
 
     private curShipId: string = null;
 
@@ -35,7 +39,11 @@ class HeroShipsPanel extends eui.Component {
         this.updateList();
         this.height = egret.MainContext.instance.stage.stageHeight;
         this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
-        this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
+        this.btnStart.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
+        this.btnBack.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnBack, this);
+        this.btnUnlock.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnUnlock, this);
+
+        this.btnUnlock.icon = "coin2_png";
     }
 
     private formatCoins(coins: number): string {
@@ -43,13 +51,14 @@ class HeroShipsPanel extends eui.Component {
     }
 
     public updateList(): void {
+        let unlockedSelectedIndex = -1;
         let firstUnlockedIndex = -1;
         let items: HeroShipsPanelListItem[] = [];
         let lockedItems: HeroShipsPanelListItem[] = [];
         for (let i in GameController.instance.allShips) {
             let shipId = GameController.instance.allShips[i];
             let shipData = GameController.instance.getShipDataById(shipId);
-            let item: HeroShipsPanelListItem = {id: shipId, icon: shipData.model, level: "Locked", selected: null};
+            let item: HeroShipsPanelListItem = {id: shipId, icon: shipData.model, level: "Locked", selected: 0};
 
             let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
             if (playerShipData) {
@@ -59,9 +68,13 @@ class HeroShipsPanel extends eui.Component {
                 if (firstUnlockedIndex < 0) {
                     firstUnlockedIndex = items.length;
                 }
+                if (shipId == this.curShipId) {
+                    unlockedSelectedIndex = items.length;
+                }
                 items.push(item);
             } else {
-                // other ships
+                // locked ships
+                item.filter = [tutils.greyFilter()];
                 lockedItems.push(item);
             }
         }
@@ -75,11 +88,14 @@ class HeroShipsPanel extends eui.Component {
         if (this.lstShips.selectedIndex < 0) {
             this.setListItemSelected(0);
         } else {
+            // let playerShipData = GameController.instance.getPlayerShipDataById(this.curShipId);
             this.curShipId = null;
-            if (firstUnlockedIndex >= 0) {
-                this.setListItemSelected(firstUnlockedIndex);
-            } else {
+            if (unlockedSelectedIndex >= 0) {
+                this.setListItemSelected(unlockedSelectedIndex);
+            } else if (firstUnlockedIndex < 0) {
                 this.setListItemSelected(this.lstShips.selectedIndex);
+            } else {
+                this.setListItemSelected(firstUnlockedIndex);
             }
         }
     }
@@ -87,7 +103,7 @@ class HeroShipsPanel extends eui.Component {
     private onTapListItem(e: eui.PropertyEvent): void {
         for (let i=0; i<this.lstShips.dataProvider.length; i++) {
             let item: HeroShipsPanelListItem = this.lstShips.dataProvider.getItemAt(i);
-            item.selected = this.lstShips.selectedIndex===i ? true : null;
+            item.selected = this.lstShips.selectedIndex===i ? 1 : 0;
         }
         this.updateDetail(this.lstShips.selectedItem.id);
     }
@@ -102,7 +118,7 @@ class HeroShipsPanel extends eui.Component {
             return;
         }
         this.curShipId = shipId;
-
+        let shipData = GameController.instance.getShipDataById(shipId);
         let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
         if (!playerShipData) {
             this.shipDetail.selectedIndex = 1;
@@ -116,13 +132,18 @@ class HeroShipsPanel extends eui.Component {
             this.progPower.percentWidth = 0;
             this.progFireRate.percentWidth = 0;
             this.progExp.percentWidth = 0;
-            this.btnGo.visible = false;
+            this.btnStart.visible = false;
+
+            this.lblName2.text = shipData.name;
+            this.lblGunDesc2.text = shipData.gunName;
+            let playerData = GameController.instance.playerData;
+            this.btnUnlock.label = shipData.coins.toString();
+            this.btnUnlock.enabled = playerData.coins>=shipData.coins;
             return;
         }
         
         this.shipDetail.selectedIndex = 0;
-        let shipData = GameController.instance.getShipDataById(shipId);
-        this.btnGo.visible = true;
+        this.btnStart.visible = true;
         this.lblName.text = shipData.name;
         this.lblGunDesc.text = shipData.gunName;
         this.lblHpV.text = shipData.maxHp.toString();
@@ -161,10 +182,31 @@ class HeroShipsPanel extends eui.Component {
         // this.progExp.percentWidth = expPerWidth;
     }
 
-    private onBtnStart(event:egret.TouchEvent): void {
+    private onBtnStart(event: egret.TouchEvent): void {
         GameController.instance.setBattleShips([this.curShipId]);
         GameController.instance.replaceRootLayerNextFrame(BattleLayer);
     }
+
+    private onBtnUnlock(event: egret.TouchEvent): void {
+        let shipData = GameController.instance.getShipDataById(this.curShipId);
+        let coins = shipData.coins;
+        let playerData = GameController.instance.playerData;
+        let dt = playerData.coins - coins;
+        if (dt >= 0) {
+            playerData.coins = dt;
+            this.lblCoins.text = this.formatCoins(playerData.coins);
+            GameController.instance.addNewHeroShip(this.curShipId);
+            this.updateList();
+            GameController.instance.showNewShipPanel(this.parent, {shipId: this.curShipId});
+            GameController.instance.savePlayerData();
+        } else {
+            // 钱不够
+        }
+    }
+
+    private onBtnBack(event: egret.TouchEvent): void {
+        egret.localStorage.clear();
+    }
 }
 
-type HeroShipsPanelListItem = {id: string, icon: string, level: string, selected: boolean};
+type HeroShipsPanelListItem = {id: string, icon: string, level: string, selected: number, filter?: egret.Filter[]};

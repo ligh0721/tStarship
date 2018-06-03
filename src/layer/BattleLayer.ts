@@ -267,39 +267,45 @@ class BattleLayer extends tutils.Layer {
     private onShipDying(ship: Ship, killer: Ship): void {
         const sounds = ["Explosion0_mp3", "Explosion2_mp3"];
         tutils.playSound(sounds[Math.floor(Math.random()*sounds.length)]);
+        if (this.hero.force.isMyEnemy(ship.force) && ship instanceof MotherShip) {
+            this.hideBossUI();
+            this.enemyCtrl.startRush(30);
+            this.destroyBosses++;
+            this.reachStage++;
+            GameController.instance.savePlayerData();
+        }
+
         if (this.hero == ship) {
             this.gameOver();
             return;
         } else if (this.hero.force.isMyEnemy(ship.force) && ((killer == this.hero) || (killer instanceof IntervalHitShip && killer.ship == this.hero))) {
             // 击败敌军
-            let score = 1;
-            let supply = this.world.pools.newObject(ScoreSupply, score);
-            this.world.addSupply(supply);
-            supply.drop(ship.gameObject.x, ship.gameObject.y);
-
             if (ship instanceof EnemyShip && ship.isLastGroupMember()) {
-                this.hud.showTip("coin2_png", "+1", "Wave Clear!");
-                this.addScore(1);
+                let score = Math.floor(ship.group.max/4*(1+this.reachStage/2));
+                this.hud.showTip("coin2_png", "+"+score, "Wave Clear!");
+                this.addScore(score);
             }
 
             let power = 10;  // Math.max(ship.maxHp/10, 1);
-            
-
-            // 更新统计
-            this.heroShipData.exp += ship.maxHp;
-            this.heroShipData.enemy++;
-            this.destroyEnemies++;
+            let score = Math.max(1, Math.floor(1*this.reachStage/5));
             if (ship instanceof MotherShip) {
-                this.hideBossUI();
-                this.enemyCtrl.startRush(30);
-                this.destroyBosses++;
-                this.reachStage++;
-                GameController.instance.savePlayerData();
                 power *= 80;
+                score *= 10;
             } else if (ship instanceof MotherGunShip) {
                 power *= 40;
+                score *= 5;
             }
+
             this.hero.addPower(power);
+            let supply = this.world.pools.newObject(ScoreSupply, score);
+            supply.speed = 100;
+            this.world.addSupply(supply);
+            supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
+
+            // 更新统计
+            this.heroShipData.exp += score*2;
+            this.heroShipData.enemy++;
+            this.destroyEnemies++;
         }
     }
 
@@ -480,12 +486,12 @@ class BattleLayer extends tutils.Layer {
     private createTestEnemyRushes() {
         let rush: Rush;
 
-        this.enemyCtrl.addRushes1(2000, 15);
-        this.enemyCtrl.addRushes2(4000, 15);
-        this.enemyCtrl.addRushes3(4000, 15);
-        this.enemyCtrl.addRushes4(4000, 15);
-        this.enemyCtrl.addRushes5(4000, 15);
-        this.enemyCtrl.addRushes6(2000, 15);
+        this.enemyCtrl.addRushes1(2000, 40);
+        this.enemyCtrl.addRushes2(4000, 40);
+        this.enemyCtrl.addRushes3(4000, 40);
+        this.enemyCtrl.addRushes4(4000, 40);
+        this.enemyCtrl.addRushes5(4000, 40);
+        this.enemyCtrl.addRushes6(2000, 40);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
@@ -494,8 +500,16 @@ class BattleLayer extends tutils.Layer {
         }, this);
         this.enemyCtrl.addRush(rush);
 
-        for (let i=1; i<=20*10; i++) {
-            if (i == 20) {
+        const num = 15;
+        for (let i=1; i<=num*10; i++) {
+            let hp = 40+Math.floor(i/4 * 2);
+            if (i == num) {
+                this.enemyCtrl.addRushes1(2000, hp, 1.5);
+                this.enemyCtrl.addRushes2(4000, hp, 1.5);
+                this.enemyCtrl.addRushes3(4000, hp, 1.5);
+                this.enemyCtrl.addRushes4(4000, hp, 1.5);
+                this.enemyCtrl.addRushes5(4000, hp, 1.5);
+                this.enemyCtrl.addRushes6(2000, hp, 1.5);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss2();
@@ -503,7 +517,55 @@ class BattleLayer extends tutils.Layer {
                 }, this);
                 this.enemyCtrl.addRush(rush);
                 continue;
-            } else if (i == 40) {
+            } else if (i == num*2) {
+                this.enemyCtrl.addRushes1(2000, hp, 2.0);
+                this.enemyCtrl.addRushes2(4000, hp, 2.0);
+                this.enemyCtrl.addRushes3(4000, hp, 2.0);
+                this.enemyCtrl.addRushes4(4000, hp, 2.0);
+                this.enemyCtrl.addRushes5(4000, hp, 2.0);
+                this.enemyCtrl.addRushes6(2000, hp, 2.0);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == num*3) {
+                this.enemyCtrl.addRushes1(2000, hp, 2.5);
+                this.enemyCtrl.addRushes2(4000, hp, 2.5);
+                this.enemyCtrl.addRushes3(4000, hp, 2.5);
+                this.enemyCtrl.addRushes4(4000, hp, 2.5);
+                this.enemyCtrl.addRushes5(4000, hp, 2.5);
+                this.enemyCtrl.addRushes6(2000, hp, 2.5);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == num*4) {
+                this.enemyCtrl.addRushes1(2000, hp, 3.0);
+                this.enemyCtrl.addRushes2(4000, hp, 3.0);
+                this.enemyCtrl.addRushes3(4000, hp, 3.0);
+                this.enemyCtrl.addRushes4(4000, hp, 3.0);
+                this.enemyCtrl.addRushes5(4000, hp, 3.0);
+                this.enemyCtrl.addRushes6(2000, hp, 3.0);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == num*5) {
+                this.enemyCtrl.addRushes1(2000, hp, 3.5);
+                this.enemyCtrl.addRushes2(4000, hp, 3.5);
+                this.enemyCtrl.addRushes3(4000, hp, 3.5);
+                this.enemyCtrl.addRushes4(4000, hp, 3.5);
+                this.enemyCtrl.addRushes5(4000, hp, 3.5);
+                this.enemyCtrl.addRushes6(2000, hp, 3.5);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
@@ -512,9 +574,15 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRush(rush);
                 continue;
             }
+            if (Math.random() < 0.3) {
+                let rush = this.enemyCtrl.addRushMeteorite(0, hp*5, 0, Math.min(3, 1+i/num));
+                rush.setCallback(():void=>{
+                    rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
+                    rush.to.x = rush.from.x;
+                }, this);
+            }
             let n = Math.floor(Math.random()*8+5);
-            let hp = 10+Math.floor(i/4 * 1);
-            let es = this.enemyCtrl.createEnemyShips("RedEnemyShip_png", n, hp);
+            let es = this.enemyCtrl.createEnemyShips(n, hp, "RedEnemyShip_png");
             this.enemyCtrl.putEnemyShipsIntoGroup(es);
             
             let delay = Math.random() * 5000 + 2000;
@@ -552,128 +620,31 @@ class BattleLayer extends tutils.Layer {
                 return;
             }
             buff = GameController.instance.createBuff("gun_level_up");
-            supply = new BuffSupply([buff]);
-            supply.text = "GunLevelUp";
-            supply.color = 0xdcdcaa;
+            supply = new BuffSupply(buff.model, [buff]);
+            // supply.text = "GunLevelUp";
+            // supply.color = 0xdcdcaa;
             break;
 
             case 1:
             buff = GameController.instance.createBuff("gun_power_up");
             buff.name = "GunPower";
-            supply = new BuffSupply([buff]);
-            supply.text = "GunPower";
-            supply.color = 0xf48771;
+            supply = new BuffSupply(buff.model, [buff]);
+            // supply.text = "GunPower";
+            // supply.color = 0xf48771;
             break;
 
             case 2:
             buff = GameController.instance.createBuff("gun_cdr_up");
-            supply = new BuffSupply([buff]);
-            supply.text = "GunCDR";
-            supply.color = 0x4f86ff;
+            supply = new BuffSupply(buff.model, [buff]);
+            // supply.text = "GunCDR";
+            // supply.color = 0x4f86ff;
             break;
 
             case 3:
             buff = GameController.instance.createBuff("satellite_ball");
-            supply = new BuffSupply([buff]);
-            supply.text = "SatelliteGun";
-            supply.color = 0x49bba4;
-            break;
-
-            case 4:
-            gun = Gun.createGun(SoundWaveGun, SoundWaveBullet);
-            gun.fireCooldown.baseValue = 800;
-            (<SoundWaveGun>gun).bulletNum = 5;
-            gun.bulletSpeed.baseValue = 60;
-            gun.bulletPower.baseValue = 4;
-            gun.bulletPowerLossPer = 0.5;
-            gun.bulletPowerLossInterval.baseValue = 200;
-            supply = new GunSupply(gun);
-            supply.text = "SoundWaveGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
-            break;
-
-            case 5:
-            gun = Gun.createGun(EaseGun, ShakeWaveBullet);
-            (<EaseGun>gun).ease = egret.Ease.getPowIn(2);
-            gun.fireCooldown.baseValue = 1000;
-            gun.bulletSpeed.baseValue = 100;
-            gun.bulletPower.baseValue = 1000;
-            gun.bulletPowerLossPer = 0.005;
-            gun.bulletPowerLossInterval.baseValue = 100;
-            supply = new GunSupply(gun);
-            supply.text = "ShakeWaveGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
-            break;
-
-            case 6:
-            gun = Gun.createGun(ShotGun, Bullet);
-            (<ShotGun>gun).bulletAngleDelta = 10;
-            (<ShotGun>gun).bulletNum = 5;
-            gun.fireCooldown.baseValue = 600;
-            gun.bulletSpeed.baseValue = 60;
-            gun.bulletPower.baseValue = 4;
-            gun.bulletPowerLossPer = 1;
-            gun.bulletPowerLossInterval.baseValue = 1000;
-            supply = new GunSupply(gun);
-            supply.text = "ShotGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
-            break;
-
-            case 7:
-            gun = Gun.createGun(RowGun, Bullet);
-            (<RowGun>gun).bulletNum = 3;
-            gun.fireCooldown.baseValue = 400;
-            gun.bulletSpeed.baseValue = 60;
-            gun.bulletPower.baseValue = 3;
-            gun.bulletPowerLossPer = 1;
-            gun.bulletPowerLossInterval.baseValue = 100;
-            supply = new GunSupply(gun);
-            supply.text = "RowGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
-            break;
-
-            case 8:
-            gun = Gun.createGun(ExplosionGun, ExplosionBullet);
-            gun.fireCooldown.baseValue = 500;
-            gun.bulletSpeed.baseValue = 60;
-            gun.bulletPower.baseValue = 5;
-            gun.bulletPowerLossPer = 1;
-            gun.bulletPowerLossInterval.baseValue = 100;
-            supply = new GunSupply(gun);
-            supply.text = "ExplosionGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
-            break;
-
-            case 9:
-            gun = Gun.createGun(GuideGun, ShakeWaveBullet);
-            gun.fireCooldown.baseValue = 300;
-            gun.bulletSpeed.baseValue = 80;
-            gun.bulletPower.baseValue = 3;
-            gun.bulletPowerLossPer = 1;
-            gun.bulletPowerLossInterval.baseValue = 1000;
-            supply = new GunSupply(gun);
-            supply.text = "GuideGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
-            break;
-
-            case 10:
-            gun = Gun.createGun(FocusGun, Bullet);
-            gun.fireCooldown.baseValue = 200;
-            gun.bulletSpeed.baseValue = 80;
-            gun.bulletPower.baseValue = 5;
-            gun.bulletPowerLossPer = 1/5;
-            gun.bulletNum = 2;
-            gun.bulletPowerLossInterval.baseValue = 100;
-            supply = new GunSupply(gun);
-            supply.text = "FocusGun";
-            supply.color = 0xc586c0;
-            supply.pickDist = 0;
+            supply = new BuffSupply(buff.model, [buff]);
+            // supply.text = "SatelliteGun";
+            // supply.color = 0x49bba4;
             break;
         }
 

@@ -1,7 +1,7 @@
 class EnemyShip extends Ship {
 	private hpBar: ShipHpBar = null;
 
-	private group: EnemyGroup = null;
+	group: EnemyGroup = null;
 
 	public constructor(model: string, scale?: number) {
 		super(model, scale);
@@ -89,9 +89,11 @@ class EnemyShip extends Ship {
 
 class EnemyGroup {
 	num: number = 0;
+	max: number = 0;
 
 	public incMember(count: number=1): void {
 		this.num += count;
+		this.max = Math.max(this.max, this.num);
 	}
 
 	public decMember(): void {
