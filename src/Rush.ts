@@ -133,6 +133,7 @@ class SineRush extends Rush {
 	protected onStart(world: World): void {
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
+		this.amplitude *= world.width/100;
 	}
 
 	// override

@@ -203,14 +203,14 @@ class EditorPanel extends eui.Component {
     }
 
     protected onSinAChanged(evt: eui.UIEvent) {
-        const align = 50;
+        const align = 1;
         let value = evt.target.value;
-        let dt = (value/align) - Math.floor(value/align);
-        if (dt < 0.5) {
-            value = Math.floor(value/align) * align;
-        } else {
-            value = Math.floor(value/align) * align + align;
-        }
+        // let dt = (value/align) - Math.floor(value/align);
+        // if (dt < 0.5) {
+        //     value = Math.floor(value/align) * align;
+        // } else {
+        //     value = Math.floor(value/align) * align + align;
+        // }
         evt.target.value = value;
         this.txtSinA.text = "SinA: " + this.sldSinA.value;
     }

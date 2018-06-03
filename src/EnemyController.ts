@@ -440,4 +440,18 @@ class EnemyController {
         this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2);
 	}
+
+	public addRushes5(delay: number, hp: number, speedFactor: number=1): void {
+		// 交叉正弦
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips("RedEnemyShip_png", 5, 5);
+		rush = new BezierRush(delay, ships, 200/speedFactor, 2000/speedFactor, {x: 30, y: 0}, {x: 100, y: 50}, {x: 30, y: 50});
+        this.addRush(rush);
+		let ships2 = this.createEnemyShips("RedEnemyShip_png", 3, 5);
+        rush = new BezierRush(0, ships2, 200/speedFactor, 2000/speedFactor, {x: 70, y: 0}, {x: 0, y: 50}, {x: 70, y: 50});
+        this.addRush(rush);
+		this.putEnemyShipsIntoGroup(ships, ships2);
+	}
 }

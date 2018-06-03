@@ -575,6 +575,7 @@ class BattleLayer extends tutils.Layer {
             let interval = Math.random() * 200 + 100;
             let a = Math.random() * 200 + 80
             let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
+            a *= 100/this.stage.stageWidth;
             let t = Math.random() * 1000 + 2000;
             let rush = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
             this.enemyCtrl.addRush(rush);
