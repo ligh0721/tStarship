@@ -32,9 +32,10 @@ class EditorPanel extends eui.Component {
     private iptCode: eui.EditableText;
     private txtPos: eui.Label;
 
-	constructor() {
-        super();
-        this.addEventListener(eui.UIEvent.COMPLETE, this.onUIComplete, this);
+    // override
+    protected createChildren(): void {
+        super.createChildren();
+
         this.skinName = "resource/custom_skins/EditorPanelSkin.exml";
         this.width = egret.MainContext.instance.stage.stageWidth;
 
@@ -54,6 +55,7 @@ class EditorPanel extends eui.Component {
         this.sldDur.addEventListener(eui.UIEvent.CHANGE, this.onDurChanged, this);
         this.sldSinA.addEventListener(eui.UIEvent.CHANGE, this.onSinAChanged, this);
         this.sldSinT.addEventListener(eui.UIEvent.CHANGE, this.onSinTChanged, this);
+        this.iptCode.addEventListener(eui.UIEvent.FOCUS_IN, this.onCodeFocus, this);
 
         this.grpSinA.visible = false;
         this.grpSinT.visible = false;
@@ -76,10 +78,6 @@ class EditorPanel extends eui.Component {
 
         this.enemyCtrl = new EnemyController(this.world);
     }
-
-    private onUIComplete(): void {
-        
-	}
 
     private onEditorTabChange(e: eui.UIEvent){
         let radioGroup: eui.RadioButtonGroup = e.target;
@@ -104,42 +102,45 @@ class EditorPanel extends eui.Component {
                 pts.push({x: 0, y: 0});
             }
             rush = new StraightRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1]);
-            this.iptCode.text = "rush = new StraightRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new StraightRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
             break;
         case "bezier":
             for (let i=pts.length; i<3; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new BezierRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], pts[2]);
-            this.iptCode.text = "rush = new BezierRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, {x: "+pts[2].x+", y: "+pts[2].y+"});";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new BezierRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, {x: "+pts[2].x+", y: "+pts[2].y+"});this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
             break;
         case "sine":
             for (let i=pts.length; i<2; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new SineRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], this.sldSinT.value, this.sldSinA.value);
-            this.iptCode.text = "rush = new SineRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, "+this.sldSinT.value+", "+this.sldSinA.value+");";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new SineRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, "+this.sldSinT.value+"/speedFactor, "+this.sldSinA.value+");this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
             break;
         case "gradient":
             for (let i=pts.length; i<2; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new GradientRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1]);
-            this.iptCode.text = "rush = new GradientRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new GradientRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
             break;
         case "path":
             for (let i=pts.length; i<1; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new PathRush(0, ships, this.sldItv.value, this.sldDur.value, pts);
-            this.iptCode.text = "rush = new PathRush(0, ships, "+this.sldItv.value+", "+this.sldDur.value+", pts);";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new PathRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, pts);this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
             break;
         }
         this.enemyCtrl.addRush(rush);
         this.enemyCtrl.startRush(30);
     }
 
-    protected onBtnClear(evt: egret.TouchEvent) {
+    protected onCodeFocus(evt: eui.UIEvent): void {
+    }
+
+    protected onBtnClear(evt: egret.TouchEvent): void {
         for (let i in this.pts) {
             let pt = this.pts[i];
             this.grpWorld.removeChild(pt);
@@ -147,7 +148,7 @@ class EditorPanel extends eui.Component {
         this.pts = [];
     }
 
-    protected onTypeChanged(evt: eui.UIEvent) {
+    protected onTypeChanged(evt: eui.UIEvent): void {
         const align = 1;
         let value = evt.target.value;
         // let dt = (value/align) - Math.floor(value/align);
@@ -163,7 +164,7 @@ class EditorPanel extends eui.Component {
         this.txtType.text = "Type: " + txt;
     }
 
-    protected onDurChanged(evt: eui.UIEvent) {
+    protected onDurChanged(evt: eui.UIEvent): void {
         const align = 500;
         let value = evt.target.value;
         let dt = (value/align) - Math.floor(value/align);
@@ -176,7 +177,7 @@ class EditorPanel extends eui.Component {
         this.txtDur.text = "Dur: " + this.sldDur.value;
     }
 
-    protected onNumChanged(evt: eui.UIEvent) {
+    protected onNumChanged(evt: eui.UIEvent): void {
         const align = 1;
         let value = evt.target.value;
         // let dt = (value/align) - Math.floor(value/align);
@@ -189,7 +190,7 @@ class EditorPanel extends eui.Component {
         this.txtNum.text = "Num: " + this.sldNum.value;
     }
 
-    protected onItvChanged(evt: eui.UIEvent) {
+    protected onItvChanged(evt: eui.UIEvent): void {
         const align = 100;
         let value = evt.target.value;
         let dt = (value/align) - Math.floor(value/align);
@@ -202,7 +203,7 @@ class EditorPanel extends eui.Component {
         this.txtItv.text = "Itv: " + this.sldItv.value;
     }
 
-    protected onSinAChanged(evt: eui.UIEvent) {
+    protected onSinAChanged(evt: eui.UIEvent): void {
         const align = 1;
         let value = evt.target.value;
         // let dt = (value/align) - Math.floor(value/align);
@@ -215,7 +216,7 @@ class EditorPanel extends eui.Component {
         this.txtSinA.text = "SinA: " + this.sldSinA.value;
     }
 
-    protected onSinTChanged(evt: eui.UIEvent) {
+    protected onSinTChanged(evt: eui.UIEvent): void {
         const align = 500;
         let value = evt.target.value;
         let dt = (value/align) - Math.floor(value/align);

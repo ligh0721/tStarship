@@ -8,17 +8,11 @@ class HeroShipsLayer extends tutils.Layer {
     }
 
     protected onInit() {
-        let initPlayerData = false;
-        if (GameController.instance.loadPlayerData() === null) {
-            // 初始化玩家存档
-            GameController.instance.resetPlayerData();
-            initPlayerData = true;
-        }
-
         this.panel = new HeroShipsPanel();
         this.layer.addChild(this.panel);
         
-        if (initPlayerData) {
+        let playerData = GameController.instance.loadPlayerData();
+        if (playerData.shipsNum === 0) {
             this.addShips();
         }
     }

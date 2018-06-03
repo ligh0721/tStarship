@@ -14,8 +14,10 @@ class BattleHUD extends eui.Component implements IHeroHUD {
     private lblPowerMax: eui.BitmapLabel;
     private lblPowerPress: eui.BitmapLabel;
     private btnPower: eui.Button;
-    private onUsePowerListener: Function;
-    private onUsePowerThisObj: any;
+    private grpBuffs: eui.Group;
+
+    private onUsePowerListener: Function = null;
+    private onUsePowerThisObj: any = null;
     
     private orgGrpTipRight: number = 0;
     private tipQueue: {icon: string, num: string, desc: string}[] = [];
@@ -23,24 +25,21 @@ class BattleHUD extends eui.Component implements IHeroHUD {
 
     private bossHpBarShowing: boolean = false;
 
-	constructor() {
-        super();
+    // override
+    protected createChildren(): void {
+        super.createChildren();
 
-        this.addEventListener(eui.UIEvent.COMPLETE, this.onUIComplete, this);
         this.skinName = "resource/custom_skins/BattleHUDSkin.exml";
         this.currentState = "init";
 
-        this.orgGrpTipRight = this.grpTip.right;
-    }
-
-    private onUIComplete(): void {
         this.width = egret.MainContext.instance.stage.stageWidth;
+        this.orgGrpTipRight = this.grpTip.right;
         let playerData = GameController.instance.playerData;
         this.lblHighScore.text = playerData.highscore.score.toString();
         this.lblScore.text = "0";
         this.grpBossHpBar.visible = false;
         this.btnPower.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnPower, this);
-	}
+    }
 
     public updateScore(score: number): void {
         this.lblScore.text = score.toString();
@@ -166,6 +165,24 @@ class BattleHUD extends eui.Component implements IHeroHUD {
             return;
         }
         this.progBossHpBar.percentWidth = hpPer;
+    }
+
+    public addBuffUI(buff: Buff): void {
+        let buffui = new BuffUI(buff);
+        this.grpBuffs.addChild(buffui);
+    }
+
+    public updateBuffUI(buff: Buff): void {
+    }
+
+    public removeBuffUI(buff: Buff): void {
+        for (let i=0, len=this.grpBuffs.numChildren; i<len; i++) {
+            let child = this.grpBuffs.getChildAt(i) as BuffUI;
+            if (child && child.buff==buff) {
+                this.grpBuffs.removeChildAt(i);
+                return;
+            }
+        }
     }
 
     private onTweenGroupComplete(evt: egret.Event): void {

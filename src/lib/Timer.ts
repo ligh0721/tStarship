@@ -67,7 +67,7 @@ module tutils {
 		}
 
 		// instantly=false, times=0, autoSkip=true
-		public start(interval: number, instantly?: boolean, times?: number, autoSkip?: boolean): number {
+		public start(interval: number, instantly: boolean=false, times: number=0, autoSkip: boolean=true): number {
 			let start = egret.getTimer();
 			if (this.$running) {
 				this.stop();
@@ -77,11 +77,11 @@ module tutils {
 			egret.startTick(this.onTimer, this);
 			this.$running = true;
 			this.interval = interval;
-			this.times = times===undefined ? 0 : times;
-			this.autoSkip = autoSkip!=false;
+			this.times = times;
+			this.autoSkip = autoSkip;
 			this.$left = this.times;
 
-			if (instantly != true) {
+			if (!instantly) {
 				this.$wantTick += this.$interval;
 			}
 			return this.$tick;

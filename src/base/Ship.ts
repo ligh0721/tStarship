@@ -1,8 +1,9 @@
 class Ship extends HpUnit {
 	width: number;
 	height: number;
-	private model: string;
-	private scale: number;
+	readonly model: string;
+	readonly scale: number;
+	readonly key: string = null;
 	
 	force: Force;
 	mainGun: Gun = null;
@@ -29,10 +30,15 @@ class Ship extends HpUnit {
 	private onRemoveBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onRemoveBuffThisObject: any = null;
 
-	public constructor(model: string, scale?: number) {
+	// from unit
+	private onUpdateBuffListener: (ship: Ship, buff: Buff)=>void = null;
+	private onUpdateBuffThisObject: any = null;
+
+	public constructor(model: string, scale?: number, key?: string) {
 		super();
 		this.model = model;
 		this.scale = scale===undefined ? 1.0 : scale;
+		this.key = key;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
@@ -56,6 +62,10 @@ class Ship extends HpUnit {
 		for (let i in this.guns) {
 			let gun = this.guns[i];
 			gun.cleanup();
+		}
+		for (let i in this.buffs) {
+			let buff = this.buffs[i];
+			buff.cleanup();
 		}
 		if (this.timer.running) {
 			this.timer.stop();
@@ -188,6 +198,20 @@ class Ship extends HpUnit {
 	}
 
 	public addBuff(buff: Buff): Buff {
+		if (buff.key) {
+			// 如果buff存在名称，则处理覆盖逻辑
+			for (let buffId in this.buffs) {
+				let b = this.buffs[buffId];
+				if (b.key == buff.key) {
+					if (b.left < buff.duration) {
+						b.left = Math.min(b.duration, buff.duration);
+					}
+					this.onUpdateBuff(b);
+					return;
+				}
+			}
+		}
+		
 		buff.id = this.world.nextId();
 		buff.ship = this;
 		buff.onAddBuff();
@@ -243,6 +267,17 @@ class Ship extends HpUnit {
 	public setOnRemoveBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
 		this.onRemoveBuffListener = listener;
 		this.onRemoveBuffThisObject = thisObject;
+	}
+
+	public onUpdateBuff(buff: Buff) {
+		if (this.onUpdateBuffListener != null) {
+			this.onUpdateBuffListener.call(this.onUpdateBuffThisObject, this, buff);
+		}
+	}
+
+	public setOnUpdateBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
+		this.onUpdateBuffListener = listener;
+		this.onUpdateBuffThisObject = thisObject;
 	}
 }
 

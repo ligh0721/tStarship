@@ -6,8 +6,8 @@ class HeroShip extends Ship {
     heroHUD: IHeroHUD = null;
     skill: Skill = null;
 
-    public constructor(model: string, scale?: number) {
-		super(model, scale);
+    public constructor(model: string, scale?: number, key?: string) {
+		super(model, scale, key);
         this.hero = true;
         this.hitRect===undefined ? this.hitRect=new egret.Rectangle() : this.hitRect.constructor();
         this.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;

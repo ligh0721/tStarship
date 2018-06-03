@@ -1,3 +1,8 @@
+const GlobalConfig = {
+	ver: 0,
+	reset: true
+}
+
 const GlobalShipsData: ShipsData = {
 	ship_test: {
 		name: "测试号",
@@ -13,7 +18,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 3,
 		bulletHitTimes: 10,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
 	},
     ship_hero: {
 		name: "英雄号",
@@ -23,13 +28,13 @@ const GlobalShipsData: ShipsData = {
 		gunName: "单束粒子炮",
 		gun: Gun,
 		bullet: Bullet,
-		bulletSpeed: 300,
-        fireCD: 150,
-		bulletPower: 10,
+		bulletSpeed: 200,
+        fireCD: 100,
+		bulletPower: 3,
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
 	},
     ship_soundwave: {
 		name: "音波使者",
@@ -45,7 +50,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 5,
 		bulletHitTimes: 2,
 		bulletHitInterval: 200,
-		skillName: "turbo"
+		skillId: "turbo"
     },
     ship_energy: {
 		name: "超能之翼",
@@ -61,7 +66,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 10,
 		bulletHitInterval: 500,
-		skillName: "turbo"
+		skillId: "turbo"
     },
     ship_hunter: {
 		name: "赏金猎人",
@@ -77,7 +82,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
     },
     ship_explosion: {
 		name: "爆破者",
@@ -93,7 +98,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
     },
     ship_focus: {
 		name: "和谐号",
@@ -109,7 +114,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 2,
 		bulletHitTimes: 5,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
     },
     ship_row: {
 		name: "开拓者",
@@ -125,7 +130,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 2,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
     },
     ship_shot: {
 		name: "游荡者",
@@ -141,7 +146,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 5,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillName: "turbo"
+		skillId: "turbo"
     }
 };
 
@@ -158,6 +163,7 @@ const GlobalAllShips: string[] = [
 ];
 
 const GlobalPlayerInitData: PlayPrefsData = {
+	ver: GlobalConfig.ver,
     highscore: {
         score: 0,
         stage: 0,
@@ -165,6 +171,7 @@ const GlobalPlayerInitData: PlayPrefsData = {
     },
     maxStage: 0,
     coins: 0,
+	shipsNum: 0,
     ships: {},
 };
 

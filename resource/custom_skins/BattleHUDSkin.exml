@@ -29,7 +29,6 @@
 		<e:BitmapLabel id="lblPowerPress" text="PRESS" font="Arial40_fnt" scaleX="0.3" scaleY="0.5" verticalCenter="0" horizontalCenter="0" visible="false"/>
 		<e:BitmapLabel id="lblPowerMax" scaleX="0.5" scaleY="0.5" font="Arial40_fnt" text="MAX" verticalCenter="0" horizontalCenter="0" visible="false"/>
 	</e:Group>
-	<e:Group id="grpBuff" width="550" height="50" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" bottom="10"/>
 	<e:Group id="grpScore" width="220" height="60" anchorOffsetX="0" anchorOffsetY="0" right="20" top="20">
 		<e:Image source="coin2_png" right="0" verticalCenter="0" width="70" height="70"/>
 		<e:BitmapLabel id="lblScore" text="500" anchorOffsetX="0" anchorOffsetY="0" bottom="2" right="83" font="ComicSansMS60_fnt"/>
@@ -47,4 +46,9 @@
 		</e:Group>
 	</e:Group>
 	<e:Button id="btnPower" label="Button" anchorOffsetX="0" width="100" anchorOffsetY="0" height="150" bottom="0" right="0" alpha="0"/>
+	<e:Group id="grpBuffs" width="50" height="600" right="10" top="450">
+		<e:layout>
+			<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
+		</e:layout>
+	</e:Group>
 </e:Skin>

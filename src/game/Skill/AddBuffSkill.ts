@@ -11,7 +11,9 @@ class AddBuffSkill extends Skill {
 		for (let i in this.buffs) {
 			let buff = this.buffs[i];
 			buff.reset();
-			this.ship.addBuff(buff);
+			if (!buff.ship) {
+				this.ship.addBuff(buff);
+			}
 		}
 	}
 }

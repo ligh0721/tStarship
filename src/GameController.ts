@@ -50,6 +50,11 @@ class GameController {
 		this.battleShips = battleShips;
 	}
 
+	public deletePlayerData(): void {
+		egret.localStorage.clear();
+		this.playerData = null;
+	}
+
 	public resetPlayerData(): PlayPrefsData {
 		this.playerData = GlobalPlayerInitData;
 		egret.localStorage.clear();
@@ -91,12 +96,13 @@ class GameController {
 		console.assert(GameController.instance.getShipDataById(id) != null);
 		let playerShipData = this.playerData.ships[id];
 		console.assert(playerShipData===undefined, "ship("+id+") is already exists");
+		this.playerData.shipsNum++;
 		this.playerData.ships[id] = {
 			exp: 0,
 			use: 0,
 			enemy: 0,
 		};
-		this.savePlayerData();
+		// this.savePlayerData();
 	}
 
 	public showGameOverPanel(parent: egret.DisplayObjectContainer, data: any): void {
@@ -139,7 +145,7 @@ class GameController {
 		if (shipInfo === undefined) {
 			return null;
 		}
-		let hero = new HeroShip(shipInfo.model);
+		let hero = new HeroShip(shipInfo.model, 1.3, id);
 		world.addShip(hero);
 		hero.resetHp(shipInfo.maxHp);
 		hero.speed.baseValue = shipInfo.speed;
@@ -178,6 +184,49 @@ class GameController {
 		}
 		return item;
 	}
+
+	public createBuff(key: string): Buff {
+		let buff: Buff;
+		switch (key) {
+		case "gun_power_up":
+			buff = new GunBuff(8000, 0, +0.50, 0);
+			buff.model = "GunPower_png";
+			buff.name = "Power Up!";
+			buff.key = key;
+			break;
+		case "gun_cdr_up":
+			buff = new GunBuff(8000, -0.30, 0, 0);
+			buff.model = "GunCDR_png";
+			buff.name = "Fire Rate Up!";
+			buff.key = key;
+			break;
+		case "gun_level_up":
+			buff = new GunLevelUpBuff(1);
+			buff.model = "GunLevelUp_png";
+            buff.name = "Level Up!";
+			break;
+		case "satellite_ball":
+			let gun = Gun.createGun(SatelliteGun, ExplosionBullet);
+            gun.fireCooldown.baseValue = 1000;
+            gun.bulletPower.baseValue = 5;
+            gun.bulletNum = 5;
+            gun.bulletPowerLossPer = 1.0;
+            gun.bulletPowerLossInterval.baseValue = 1000;
+            buff = new AddGunBuff(10000, [gun]);
+			buff.model = "SatelliteGun_png";
+            buff.name = "Satellite Ball!";
+			buff.key = key;
+			break;
+		case "ghost_ships":
+			buff = new GhostShipBuff(10000, 3, 0.2);
+			buff.name = "Ghost Ships!";
+			buff.key = key;
+			break;
+		default:
+			console.assert(false, "invalid buff key("+key+")");
+		}
+		return buff;
+	}
 }
 
 type PlayerShipData = {
@@ -187,6 +236,7 @@ type PlayerShipData = {
 }
 
 type PlayPrefsData = {
+	ver: number,
     highscore: {
         score: number,
         stage: number,
@@ -194,6 +244,7 @@ type PlayPrefsData = {
     },
     maxStage: number,
     coins: number,
+	shipsNum: number,
     ships: {[id: string]: PlayerShipData},
 };
 
@@ -202,7 +253,7 @@ type ShipDataItem = {
 	
 	name: string,
 	model: string,
-	skillName: string,
+	skillId: string,
 	maxHp: number,
 	speed: number,
 	gunName: string,

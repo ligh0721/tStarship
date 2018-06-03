@@ -4,7 +4,7 @@ class Bullet extends HpUnit {
 	powerLossInterval: number = 500;  // 子弹能量下降时间间隔
 	removeOutOfWorld: boolean = true;
 	private readonly effectedShips: { [id: string]: number } = {};
-	model: string;
+	readonly model: string;
 
 	public constructor(gun: Gun, model?: string) {
 		super();

@@ -11,12 +11,14 @@ class NewShipPanel extends eui.Component {
         super();
         this.data = data;
         this.onClose = onClose;
-        this.addEventListener(eui.UIEvent.COMPLETE, this.onUIComplete, this);
+    }
+    
+    // override
+    protected createChildren(): void {
+        super.createChildren();
+
         this.skinName = "resource/custom_skins/NewShipPanelSkin.exml";
         this.currentState = "init";
-    }
-
-    private onUIComplete(): void {
         this.height = egret.MainContext.instance.stage.stageHeight;
         let shipData = GameController.instance.getShipDataById(this.data.shipId);
         this.imgShip.source = shipData.model;
@@ -25,7 +27,7 @@ class NewShipPanel extends eui.Component {
         this.btnShare.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnShare, this);
         this.open.addEventListener("complete", this.onTweenGroupComplete, this);
         this.open.play();
-	}
+    }
 
     private onBtnReturn(evt: egret.TouchEvent): void {
         this.parent.removeChild(this);

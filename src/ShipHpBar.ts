@@ -52,9 +52,9 @@ class ShipHpBar {
 			fill = gameObject.getChildAt(1) as egret.Bitmap;
 		}
 		bg.width = this.target.gameObject.width;
-		bg.height = 5;
-		fill.width = this.target.gameObject.width*this.target.hp/this.target.maxHp;
-		fill.height = 5;
+		bg.height = 10;
+		fill.width = this.target.gameObject.width * this.target.hp / this.target.maxHp;
+		fill.height = 10;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
 		gameObject.anchorOffsetY = gameObject.height * 0.5;
 		this.fill = fill;

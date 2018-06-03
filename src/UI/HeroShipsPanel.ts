@@ -1,5 +1,4 @@
 class HeroShipsPanel extends eui.Component {
-    private fitHeightScroller: eui.Group;
     private shipDetail: eui.ViewStack;
     private lstShips: eui.List;
     private btnGo: eui.Button;
@@ -16,26 +15,32 @@ class HeroShipsPanel extends eui.Component {
     private progFireRate: eui.Rect;
     private progExp: eui.Rect;
 
-    private curShipId: string;
+    private lblCoins: eui.BitmapLabel;
 
-	constructor() {
-        super();
-        this.addEventListener(eui.UIEvent.COMPLETE, this.onUIComplete, this);
+    private curShipId: string = null;
+
+    // override
+    protected createChildren(): void {
+        super.createChildren();
+
         this.skinName = "resource/custom_skins/HeroShipsPanelSkin.exml";
-    }
-
-    private onUIComplete(): void {
         this.progHp.percentWidth = 0;
         this.progPower.percentWidth = 0;
         this.progFireRate.percentWidth = 0;
         this.progExp.percentWidth = 0;
 
+        let playerData = GameController.instance.playerData;
+        this.lblCoins.text = this.formatCoins(playerData.coins);
+
         this.updateList();
         this.height = egret.MainContext.instance.stage.stageHeight;
-        this.fitHeightScroller.height = this.height - this.shipDetail.height - 135;
         this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
         this.btnGo.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
-	}
+    }
+
+    private formatCoins(coins: number): string {
+        return coins.toString();
+    }
 
     public updateList(): void {
         let firstUnlockedIndex = -1;

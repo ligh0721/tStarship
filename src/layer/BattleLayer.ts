@@ -160,6 +160,7 @@ class BattleLayer extends tutils.Layer {
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
+        hero.setOnUpdateBuffListener(this.onShipUpdateBuff, this);
 
         hero.heroHUD = this.hud;
         this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
@@ -168,7 +169,9 @@ class BattleLayer extends tutils.Layer {
         // let buff2 = new ShipBuff(5000, -0.80);
         // let skill = new AddBuffSkill([buff, buff2]);
         // let skill = new ShieldBallSkill();
-        let skill = new GhostShipSkill();
+        // let skill = new GhostShipSkill();
+        let buff = GameController.instance.createBuff("ghost_ships");
+        let skill = new AddBuffSkill([buff]);
         hero.power = hero.maxPower;
         hero.setSkill(skill);
 
@@ -318,6 +321,7 @@ class BattleLayer extends tutils.Layer {
 
         // 玩家数据
         let playerData = GameController.instance.playerData;
+        playerData.coins += this.score;
         if (this.score > playerData.highscore.score) {
             // new high score!
             playerData.highscore.score = this.score;
@@ -340,79 +344,31 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onShipAddBuff(ship: Ship, buff: Buff): void {
-        const baseX = 200;
-        const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
-        const dt = 10;
-        let color: number = 0xffffff;
-        switch (buff.name) {
-            case "GunCDR":
-            color = 0x4f86ff;
-            this.hud.showTip("GunCDR_png", Math.floor(buff.duration/1000).toString() + "s", "Fire CDR Up!")
-            break;
-            
-            case "GunPower":
-            color = 0xf48771;
-            this.hud.showTip("GunPower_png", Math.floor(buff.duration/1000).toString() + "s", "Power Up!");
-            break;
-
-            case "GunLevelUp":
-            color = 0xdcdcaa;
-            this.hud.showTip("GunLevelUp_png", "+1", "Level Up!")
-            break;
-
-            case "SatelliteGun":
-            color = 0x49bba4;
-            this.hud.showTip("SatelliteGun_png", Math.floor(buff.duration/1000).toString() + "s", "Satellite Gun!");
-            break;
-
-            default:
-            return;
-        }
-        tutils.playSound("Powerup_mp3");
-
-        let buffui = new BuffProgress(this.hudLayer, buff, color);
-        buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * this.buffuis.length;
-        buffui.gameObject.y = baseY;
-        buffui.percent = 1;
-        this.buffuis.push(buffui);
-        let tw = egret.Tween.get(buffui);
-        tw.to({percent: 0}, buff.duration);
-        tw.call(()=>{
-            let i = this.buffuis.indexOf(buffui);
-            if (i >= 0) {
-                this.buffuis.splice(i, 1);
-                buffui.cleanup();
-                this.hudLayer.removeChild(buffui.gameObject);
-                this.updateBuffUIPosition();
+        if (buff.model && buff.name) {
+            if (buff instanceof GunLevelUpBuff) {
+                this.hud.showTip(buff.model, "+"+buff.levelChange, buff.name);
+            } else {
+                this.hud.showTip(buff.model, Math.floor(buff.duration/1000).toString()+"s", buff.name);
+                this.hud.addBuffUI(buff);
             }
-        }, this);
-    }
-
-    private onShipRemoveBuff(ship: Ship, buff: Buff) {
-        let index: number = -1;
-        for (let i in this.buffuis) {
-            let buffui = this.buffuis[i];
-            if (buffui.buff == buff) {
-                index = parseInt(i);
-                break;
-            }
-        }
-        if (index >= 0) {
-            let buffui = this.buffuis.splice(index, 1)[0];
-            buffui.cleanup();
-            this.hudLayer.removeChild(buffui.gameObject);
-            this.updateBuffUIPosition();
+            tutils.playSound("Powerup_mp3");
         }
     }
 
-    private updateBuffUIPosition() {
-        const baseX = 200;
-        const baseY = this.stage.stageHeight - BuffProgress.Height - 10;
-        const dt = 10;
-        for (let i=0; i<this.buffuis.length; i++) {
-            let buffui = this.buffuis[i];
-            buffui.gameObject.x = baseX + (BuffProgress.Width + dt) * i;
-            buffui.gameObject.y = baseY;
+    private onShipRemoveBuff(ship: Ship, buff: Buff): void {
+        if (buff.model && buff.name) {
+            if (!(buff instanceof GunLevelUpBuff)) {
+                this.hud.removeBuffUI(buff);
+            }
+        }
+    }
+
+    private onShipUpdateBuff(ship: Ship, buff: Buff): void {
+        if (buff.model && buff.name) {
+            tutils.playSound("Powerup_mp3");
+            if (!(buff instanceof GunLevelUpBuff)) {
+                this.hud.updateBuffUI(buff);
+            }
         }
     }
 
@@ -421,10 +377,6 @@ class BattleLayer extends tutils.Layer {
     }
 
 	private onTouchBegin(evt: egret.TouchEvent) {
-        // egret.Tween.removeTweens(this.tickerEffect);
-        // let tw = egret.Tween.get(this.tickerEffect);
-        // tw.to({value: this.tickerEffect.maximum}, (this.tickerEffect.maximum-this.tickerEffect.value)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
-        // egret.Ticker.getInstance().setTimeScale(0.5);
         if (evt.target!=this.layer || !this.hero.alive) {
             this.beginDelta.x = undefined;
             return;
@@ -473,13 +425,6 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onTouchEnd(evt: egret.TouchEvent) {
-        // this.tickerEffect.setOnChanged((effect: Effect)=>{
-        //     egret.Ticker.getInstance().setTimeScale(effect.value/10);
-        // }, this);
-
-        // egret.Tween.removeTweens(this.tickerEffect);
-        // let tw = egret.Tween.get(this.tickerEffect);
-        // tw.to({value: this.tickerEffect.minimum}, (this.tickerEffect.value-this.tickerEffect.minimum)/(this.tickerEffect.maximum-this.tickerEffect.minimum)*1000, egret.Ease.getPowOut(2));
     }
 
     private createDebugPanel() {
@@ -535,10 +480,12 @@ class BattleLayer extends tutils.Layer {
     private createTestEnemyRushes() {
         let rush: Rush;
 
-        this.enemyCtrl.addRushes1(2000, 5);
-        this.enemyCtrl.addRushes2(5000, 5);
-        this.enemyCtrl.addRushes3(5000, 5);
-        this.enemyCtrl.addRushes4(5000, 5);
+        this.enemyCtrl.addRushes1(2000, 15);
+        this.enemyCtrl.addRushes2(4000, 15);
+        this.enemyCtrl.addRushes3(4000, 15);
+        this.enemyCtrl.addRushes4(4000, 15);
+        this.enemyCtrl.addRushes5(4000, 15);
+        this.enemyCtrl.addRushes6(2000, 15);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
@@ -604,42 +551,29 @@ class BattleLayer extends tutils.Layer {
             if (Math.random()*100 > 40) {
                 return;
             }
-            buff = new GunLevelUpBuff(1);
-            buff.name = "GunLevelUp";
-            buff.uniq = "GunLevelUp";
+            buff = GameController.instance.createBuff("gun_level_up");
             supply = new BuffSupply([buff]);
             supply.text = "GunLevelUp";
             supply.color = 0xdcdcaa;
             break;
 
             case 1:
-            buff = new GunBuff(8000, 0, +0.50, 0);
+            buff = GameController.instance.createBuff("gun_power_up");
             buff.name = "GunPower";
-            buff.uniq = "GunPower";
             supply = new BuffSupply([buff]);
             supply.text = "GunPower";
             supply.color = 0xf48771;
             break;
 
             case 2:
-            buff = new GunBuff(8000, -0.30, 0, 0);
-            buff.name = "GunCDR";
-            buff.uniq = "GunCDR";
+            buff = GameController.instance.createBuff("gun_cdr_up");
             supply = new BuffSupply([buff]);
             supply.text = "GunCDR";
             supply.color = 0x4f86ff;
             break;
 
             case 3:
-            gun = Gun.createGun(SatelliteGun, ExplosionBullet);
-            gun.fireCooldown.baseValue = 1000;
-            gun.bulletPower.baseValue = 5;
-            gun.bulletNum = 5;
-            gun.bulletPowerLossPer = 1.0;
-            gun.bulletPowerLossInterval.baseValue = 1000;
-            buff = new AddGunBuff(8000, [gun]);
-            buff.name = "SatelliteGun";
-            buff.uniq = "SatelliteGun";
+            buff = GameController.instance.createBuff("satellite_ball");
             supply = new BuffSupply([buff]);
             supply.text = "SatelliteGun";
             supply.color = 0x49bba4;

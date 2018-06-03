@@ -1,36 +1,34 @@
-class GhostShipSkill extends Skill {
-	// power: number = 10;
-	hitShipInterval: number = 100;
+class GhostShipBuff extends Buff {
 	shipsNum: number = 3;
 	powerPer: number = 0.2;
-	duration: number = 10000;
 
 	private readonly ships: Ship[] = [];
 	private readonly buffIds: string[] = [];
 	private timer: tutils.Timer;
 
-	public constructor() {
-		super();
+	public constructor(duration: number, num: number=3, powerPer: number=0.2) {
+		super(duration);
+		this.shipsNum = num;
+		this.powerPer = powerPer;
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
 		this.timer.setOnTimerListener(this.onTimer, this);
 	}
 
 	// override
-	protected onCast(): void {
+	public onAddBuff(): void {
 		if (this.ships.length > 0) {
 			return;
 		}
 
-		let shipInfo = GameController.instance.getShipDataById(GameController.instance.battleShips[0]);
+		let shipInfo = GameController.instance.getShipDataById(this.ship.key);
 		if (shipInfo === undefined) {
 			return null;
 		}
 
 		for (let i=0; i<this.shipsNum; i++) {
-			let ghost = new IntervalHitShip(shipInfo.model);
+			let ghost = new IntervalHitShip(shipInfo.model, this.ship.scale);
 			this.ship.world.addShip(ghost);
 			ghost.ship = this.ship;
-			ghost.hitShipInterval = this.hitShipInterval;
 			ghost.resetHp(this.ship.maxHp);
 			ghost.force = this.ship.force;
 			ghost.speed.baseValue = shipInfo.speed;
@@ -55,10 +53,11 @@ class GhostShipSkill extends Skill {
 		}
 
 		this.timer.start(0, true, 0);
+	}
 
-		egret.setTimeout(():void=>{
-			this.cleanup();
-		}, this, this.duration);
+	// override
+	public onRemoveBuff(): void {
+		this.cleanup();
 	}
 
 	private onTimer(dt: number): void {
@@ -86,7 +85,8 @@ class GhostShipSkill extends Skill {
         return v;
     }
 
-	private cleanup(): void {
+	// override
+	protected onCleanup(): void {
 		if (!this.timer.running) {
 			return;
 		}
@@ -95,7 +95,7 @@ class GhostShipSkill extends Skill {
 			let ship = this.ships[i];
 			let buffId = this.buffIds[i];
 			ship.removeBuff(buffId);
-			ship.damaged(ship.hp, null);
+			ship.status = UnitStatus.Dead;
 		}
 		this.ships.length = 0;
 		this.buffIds.length = 0;

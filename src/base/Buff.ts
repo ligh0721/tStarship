@@ -1,20 +1,21 @@
 class Buff {
-	public id: string;
-	public ship: Ship;
-	public triggerFlags: ShipTriggerFlags = 0;
-	public readonly duration: number;
-	public name: string = "";
-	private $left: number;
-	public uniq: string = "";
+	id: string;
+	ship: Ship;
+	triggerFlags: ShipTriggerFlags = 0;
+	readonly duration: number;
+	name: string = null;
+	model: string = null;
+	key: string = null;
+	left: number;
 
 	public constructor(duration: number, triggerFlags?: ShipTriggerFlags) {
 		this.duration = duration;
 		this.triggerFlags = triggerFlags===undefined ? 0 : triggerFlags;
-		this.$left = duration;
+		this.left = duration;
 	}
 
 	public reset(): void {
-		this.$left = this.duration;
+		this.left = this.duration;
 	}
 
 	// override
@@ -31,10 +32,21 @@ class Buff {
 	}
 
 	public step(dt: number): boolean {
-		if (this.$left === -1) {
+		if (this.left === -1) {
 			return true;
 		}
-		this.$left -= dt;
-		return this.$left > 0;
+		this.left -= dt;
+		if (this.left < 0) {
+			this.left = 0;
+		}
+		return this.left > 0;
+	}
+
+	public cleanup(): void {
+		this.onCleanup();
+	}
+
+	// override
+	protected onCleanup(): void {
 	}
 }

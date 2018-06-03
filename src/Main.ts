@@ -63,6 +63,11 @@ class Main extends eui.UILayer {
     }
 
     private async runGame() {
+        GameController.instance.init(this);
+        let playerData = GameController.instance.loadPlayerData();
+        if (!playerData || (playerData.ver!=GlobalConfig.ver && GlobalConfig.reset)) {
+            GameController.instance.resetPlayerData();
+        }
         // this.clearPlayerData();
         // return;
         switch (this.mode) {
@@ -143,7 +148,6 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        GameController.instance.init(this);
         GameController.instance.createRootLayer(HeroShipsLayer);
         // GameController.instance.createRootLayer(TestLayer);
         // GameController.instance.createRootLayer(EditorLayer);
