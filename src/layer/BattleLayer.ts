@@ -37,6 +37,7 @@ class BattleLayer extends tutils.Layer {
     private destroyBosses: number = 0;
     private reachStage: number = 1;
     private lastSaveTick: number = 0;
+    private unsaveScore: number = 0;
 	
     // override
     protected onCfgStage(): void {
@@ -314,7 +315,8 @@ class BattleLayer extends tutils.Layer {
                 this.lastSaveTick = now;
                 // AutoSave
                 let playerData = GameController.instance.playerData;
-                playerData.coins += this.score;
+                playerData.coins += this.unsaveScore;
+                this.unsaveScore = 0;
                 if (this.score > playerData.highscore.score) {
                     // new high score!
                     playerData.highscore.score = this.score;
@@ -331,6 +333,7 @@ class BattleLayer extends tutils.Layer {
 
     private addScore(score: number): void {
         this.score += score;
+        this.unsaveScore += score;
         this.hud.updateScore(this.score);
         if (this.score > this.highScore) {
             this.highScore = this.score;
@@ -347,7 +350,8 @@ class BattleLayer extends tutils.Layer {
 
         // 玩家数据
         let playerData = GameController.instance.playerData;
-        playerData.coins += this.score;
+        playerData.coins += this.unsaveScore;
+        this.unsaveScore = 0;
         if (this.score > playerData.highscore.score) {
             // new high score!
             playerData.highscore.score = this.score;
