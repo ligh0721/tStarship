@@ -478,7 +478,7 @@ class BattleLayer extends tutils.Layer {
             if (i == 5) {
                 ship.resetHp(2000);
             }
-            ship.x = 60*i;
+            ship.x = 60 * i;
             ship.y = 500;
 		}
 	}
@@ -577,6 +577,7 @@ class BattleLayer extends tutils.Layer {
             if (Math.random() < 0.3) {
                 let rush = this.enemyCtrl.addRushMeteorite(0, hp*5, 0, Math.min(3, 1+i/num));
                 rush.setCallback(():void=>{
+                    tutils.playSound("Meteorolite_mp3");
                     rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
                     rush.to.x = rush.from.x;
                 }, this);
@@ -614,6 +615,11 @@ class BattleLayer extends tutils.Layer {
         let supply: Supply;
         let gun: Gun;
         let i = Math.floor(Math.random()*4);
+        if (GameController.instance.getPlayerShipDataById(GameController.instance.battleShips[0]).use<=3 && this.hero.mainGun.level===1) {
+            buff = GameController.instance.createBuff("gun_level_up");
+            supply = new BuffSupply(buff.model, [buff]);
+            i = -1;
+        }
         switch (i) {
             case 0:
             if (Math.random()*100 > 40) {
@@ -621,30 +627,22 @@ class BattleLayer extends tutils.Layer {
             }
             buff = GameController.instance.createBuff("gun_level_up");
             supply = new BuffSupply(buff.model, [buff]);
-            // supply.text = "GunLevelUp";
-            // supply.color = 0xdcdcaa;
             break;
 
             case 1:
             buff = GameController.instance.createBuff("gun_power_up");
             buff.name = "GunPower";
             supply = new BuffSupply(buff.model, [buff]);
-            // supply.text = "GunPower";
-            // supply.color = 0xf48771;
             break;
 
             case 2:
             buff = GameController.instance.createBuff("gun_cdr_up");
             supply = new BuffSupply(buff.model, [buff]);
-            // supply.text = "GunCDR";
-            // supply.color = 0x4f86ff;
             break;
 
             case 3:
             buff = GameController.instance.createBuff("satellite_ball");
             supply = new BuffSupply(buff.model, [buff]);
-            // supply.text = "SatelliteGun";
-            // supply.color = 0x49bba4;
             break;
         }
 
