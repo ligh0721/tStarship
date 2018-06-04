@@ -36,6 +36,7 @@ class BattleLayer extends tutils.Layer {
     private destroyEnemies: number = 0;
     private destroyBosses: number = 0;
     private reachStage: number = 1;
+    private lastSaveTick: number = 0;
 	
     // override
     protected onCfgStage(): void {
@@ -216,6 +217,7 @@ class BattleLayer extends tutils.Layer {
             // this.createBossUI(boss);
             // 绘制测试路径
             //this.drawTestPath();
+            this.lastSaveTick = egret.getTimer();
         });
     }
 
@@ -306,6 +308,24 @@ class BattleLayer extends tutils.Layer {
             this.heroShipData.exp += score*2;
             this.heroShipData.enemy++;
             this.destroyEnemies++;
+
+            let now = egret.getTimer();
+            if (now-this.lastSaveTick > 5000) {
+                this.lastSaveTick = now;
+                // AutoSave
+                let playerData = GameController.instance.playerData;
+                playerData.coins += this.score;
+                if (this.score > playerData.highscore.score) {
+                    // new high score!
+                    playerData.highscore.score = this.score;
+                    playerData.highscore.stage = this.reachStage;
+                    playerData.highscore.shipId = GameController.instance.battleShips[0];
+                }
+                if (this.reachStage > playerData.maxStage) {
+                    playerData.maxStage = this.reachStage;
+                }
+                GameController.instance.savePlayerData();
+            }
         }
     }
 
