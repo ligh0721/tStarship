@@ -11,7 +11,7 @@ class ShotGun extends Gun {
 			let bullet = this.createBullet();
 			this.addBulletToWorld(bullet)
 			let angle = (i - (n - 1) / 2) * this.bulletAngleDelta + this.ship.angle;
-			let firePos = Bullet.getDirectionPoint(this.ship.x, this.ship.y, angle, r);
+			let firePos = this.ship.getDirectionPoint(r, angle);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y;
 			this.fireBulletStraight(bullet, angle);

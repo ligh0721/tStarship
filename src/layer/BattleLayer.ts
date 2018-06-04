@@ -167,15 +167,7 @@ class BattleLayer extends tutils.Layer {
         hero.heroHUD = this.hud;
         this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
 
-        // let buff = new GunBuff(5000, -0.80, 0, +1.00);
-        // let buff2 = new ShipBuff(5000, -0.80);
-        // let skill = new AddBuffSkill([buff, buff2]);
-        // let skill = new ShieldBallSkill();
-        // let skill = new GhostShipSkill();
-        let buff = GameController.instance.createBuff("ghost_ships");
-        let skill = new AddBuffSkill([buff]);
         hero.power = hero.maxPower;
-        hero.setSkill(skill);
 
         // hero.addBuff(new ShieldBuff(-1, 10));
 

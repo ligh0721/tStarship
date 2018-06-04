@@ -80,22 +80,7 @@ class EnemyController {
 		} else {
 			pos = {x: x, y: y};
 		}
-		let orgAngle = ship.angle;
-		let angle = ship.getAngle(pos.x, pos.y);
-		let dtAngle = dt * angleSpeed;
-		if (angle > orgAngle) {
-			if (orgAngle + dtAngle > angle) {
-				ship.angle = angle;
-			} else {
-				ship.angle += dtAngle;
-			}
-		} else if (angle < orgAngle) {
-			if (orgAngle - dtAngle < angle) {
-				ship.angle = angle;
-			} else {
-				ship.angle -= dtAngle;
-			}
-		}
+		ship.adjustAngle(dt, angleSpeed, pos.x, pos.y);
 	}
 
 	public createBoss1(): MotherShip {

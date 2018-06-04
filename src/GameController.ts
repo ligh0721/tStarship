@@ -141,23 +141,26 @@ class GameController {
 	}
 
 	public createHeroShip(id: string, world: World): HeroShip {
-		let shipInfo = this.allShipsData[id];
-		if (shipInfo === undefined) {
+		let shipData = this.allShipsData[id];
+		if (shipData === undefined) {
 			return null;
 		}
-		let hero = new HeroShip(shipInfo.model, 1.2, id);
+		let hero = new HeroShip(shipData.model, 1.2, id);
 		world.addShip(hero);
-		hero.resetHp(shipInfo.maxHp);
-		hero.speed.baseValue = shipInfo.speed;
+		hero.resetHp(shipData.maxHp);
+		hero.speed.baseValue = shipData.speed;
 
-		let gun = Gun.createGun(shipInfo.gun, shipInfo.bullet);
-		gun.bulletSpeed.baseValue = shipInfo.bulletSpeed;
-		gun.fireCooldown.baseValue = shipInfo.fireCD;
-		gun.bulletPowerLossPer = 1 / shipInfo.bulletHitTimes;
-		gun.bulletPower.baseValue = shipInfo.bulletPower * shipInfo.bulletHitTimes;
-		gun.bulletPowerLossInterval.baseValue = shipInfo.bulletHitInterval;
-		gun.bulletNum = shipInfo.bulletNum;
+		let gun = Gun.createGun(shipData.gun, shipData.bullet);
+		gun.bulletSpeed.baseValue = shipData.bulletSpeed;
+		gun.fireCooldown.baseValue = shipData.fireCD;
+		gun.bulletPowerLossPer = 1 / shipData.bulletHitTimes;
+		gun.bulletPower.baseValue = shipData.bulletPower * shipData.bulletHitTimes;
+		gun.bulletPowerLossInterval.baseValue = shipData.bulletHitInterval;
+		gun.bulletNum = shipData.bulletNum;
 		hero.addGun(gun, true);
+
+		let skill = this.createSkill(shipData.skill);
+		hero.setSkill(skill);
 		return hero;
 	}
 
@@ -223,10 +226,38 @@ class GameController {
 			buff.name = "Ghost Ships!";
 			buff.key = key;
 			break;
+		case "turbo_fire_gun":
+			buff = new GunBuff(5000, -0.80, 0, +1.00);
+			buff.name = "Turbo Fire!";
+			buff.key = key;
+			break;
+		case "turbo_fire_ship":
+			buff = new ShipBuff(5000, -0.80);
+			buff.name = "Turbo Fire!";
+			buff.key = key;
+			break;
 		default:
 			console.assert(false, "invalid buff key("+key+")");
 		}
 		return buff;
+	}
+
+	public createSkill(key: string): Skill {
+		let skill: Skill;
+		switch (key) {
+		case "turbo_fire":
+			skill = new AddBuffSkill([this.createBuff("turbo_fire_gun"), this.createBuff("turbo_fire_ship")]);
+			break;
+		case "shield_ball":
+			skill = new ShieldBallSkill();
+			break;
+		case "ghost_ships":
+        	skill = new AddBuffSkill([this.createBuff("ghost_ships")]);
+			break;
+		default:
+			console.assert(false, "invalid skill key("+key+")");
+		}
+		return skill;
 	}
 }
 
@@ -265,7 +296,7 @@ type ShipDataItem = {
 	bulletNum: number,
 	bulletHitTimes: number,
 	bulletHitInterval: number,
-	skillId: string,
+	skill: string,
 	coins: number
 }
 

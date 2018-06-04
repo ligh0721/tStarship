@@ -20,20 +20,20 @@ class GhostShipBuff extends Buff {
 			return;
 		}
 
-		let shipInfo = GameController.instance.getShipDataById(this.ship.key);
-		if (shipInfo === undefined) {
+		let shipData = GameController.instance.getShipDataById(this.ship.key);
+		if (shipData === undefined) {
 			return null;
 		}
 
 		for (let i=0; i<this.shipsNum; i++) {
-			let ghost = new IntervalHitShip(shipInfo.model, this.ship.scale);
+			let ghost = new IntervalHitShip(shipData.model, this.ship.scale);
 			this.ship.world.addShip(ghost);
 			ghost.ship = this.ship;
 			ghost.resetHp(this.ship.maxHp);
 			ghost.force = this.ship.force;
-			ghost.speed.baseValue = shipInfo.speed;
+			ghost.speed.baseValue = shipData.speed;
 
-			let gun = Gun.createGun(shipInfo.gun, shipInfo.bullet);
+			let gun = Gun.createGun(shipData.gun, shipData.bullet);
 			gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 			gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
 			gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;

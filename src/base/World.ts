@@ -140,7 +140,8 @@ class World {
 		this.bullets[bullet.id] = bullet;
 		this.bulletsNum++;
 		bullet.onAddToWorld();
-		this.gameObject.addChild(bullet.gameObject);
+		let index = this.gameObject.getChildIndex(bullet.gun.ship.gameObject);
+		this.gameObject.addChildAt(bullet.gameObject, index-1);
 		return bullet;
 	}
 

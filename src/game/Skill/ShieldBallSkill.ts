@@ -1,5 +1,5 @@
 class ShieldBallSkill extends Skill {
-	power: number = 1;
+	power: number = 20;
 	hitShipInterval: number = 200;
 
 	public constructor() {
@@ -18,7 +18,7 @@ class ShieldBallSkill extends Skill {
 
 		let gun = Gun.createGun(StormGun, Bullet);
 		gun.fireCooldown.baseValue = 0;
-		gun.bulletPower.baseValue = 2;
+		gun.bulletPower.baseValue = this.power/2;
 		gun.bulletSpeed.baseValue = 50;
 		gun.period = 500;
 

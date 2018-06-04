@@ -18,7 +18,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 3,
 		bulletHitTimes: 10,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "shield_ball",
 		coins: 10
 	},
     ship_hero: {
@@ -35,7 +35,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "ghost_ships",
 		coins: 0
 	},
     ship_soundwave: {
@@ -52,7 +52,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 5,
 		bulletHitTimes: 2,
 		bulletHitInterval: 500,
-		skillId: "turbo",
+		skill: "turbo_fire",
 		coins: 2500
     },
     ship_energy: {
@@ -69,7 +69,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 20,
 		bulletHitInterval: 200,
-		skillId: "turbo",
+		skill: "shield_ball",
 		coins: 2000
     },
     ship_hunter: {
@@ -80,13 +80,13 @@ const GlobalShipsData: ShipsData = {
 		gunName: "制导能量弹(制导)",
 		gun: GuideGun,
 		bullet: ShakeWave2Bullet,
-		bulletSpeed: 150,
-        fireCD: 200,
+		bulletSpeed: 100,
+        fireCD: 150,
 		bulletPower: 18,
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "turbo_fire",
 		coins: 1000
     },
     ship_explosion: {
@@ -103,7 +103,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "turbo_fire",
 		coins: 3000
     },
     ship_focus: {
@@ -120,7 +120,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 2,
 		bulletHitTimes: 5,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "shield_ball",
 		coins: 2800
     },
     ship_row: {
@@ -137,7 +137,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 2,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "ghost_ships",
 		coins: 500
     },
     ship_shot: {
@@ -154,9 +154,26 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 5,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skillId: "turbo",
+		skill: "shield_ball",
 		coins: 1200
-    }
+    },
+	ship_missile: {
+		name: "导弹天使",
+		model: "Energy_png",
+		maxHp: 20,
+		speed: 200,
+		gunName: "制导导弹(制导爆炸)",
+		gun: MissileGun,
+		bullet: MissileBullet,
+		bulletSpeed: 200,
+        fireCD: 1000,
+		bulletPower: 25,
+		bulletNum: 3,
+		bulletHitTimes: 1,
+		bulletHitInterval: 1000,
+		skill: "turbo_fire",
+		coins: 5000
+    },
 };
 
 const GlobalAllShips: string[] = [
@@ -168,7 +185,8 @@ const GlobalAllShips: string[] = [
 	"ship_soundwave",
 	"ship_energy",
 	"ship_explosion",
-	"ship_focus"
+	"ship_focus",
+	"ship_missile",
 ];
 
 const GlobalPlayerInitData: PlayPrefsData = {

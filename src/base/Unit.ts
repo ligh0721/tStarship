@@ -72,13 +72,22 @@ class Unit {
 		return this.getBounds().intersects(other.getBounds());
 	}
 
-	public static getDirectionPoint(x: number, y: number, angle: number, dis: number) {
+	public static getDirectionPoint(x: number, y: number, angle: number, dis: number): {x: number, y: number} {
 		return tutils.getDirectionPoint(x, y, (angle-90)/tutils.DegPerRad, dis);
 	}
 
 	public static getForwardPoint(x0: number, y0: number, x1: number, y1: number, dis: number): {x: number, y: number} {
 		let a = Math.atan2(y1-y0, x1-x0)
 		return tutils.getDirectionPoint(x0, y0, a, dis);
+	}
+
+	public getDirectionPoint(dis: number, angle?: number): {x: number, y: number} {
+		return tutils.getDirectionPoint(this.gameObject.x, this.gameObject.y, ((angle===undefined ? this.angle : angle)-90)/tutils.DegPerRad, dis);
+	}
+
+	public getForwardPoint(x: number, y: number, dis: number): {x: number, y: number} {
+		let a = Math.atan2(y-this.gameObject.y, x-this.gameObject.x);
+		return tutils.getDirectionPoint(this.gameObject.x, this.gameObject.y, a, dis);
 	}
 
 	public getDistance(x: number, y: number) {
@@ -88,13 +97,12 @@ class Unit {
 	}
 
 	public getAngle(x: number, y: number) {
-		let angle = Math.atan2(y - this.gameObject.y, x - this.gameObject.x) * tutils.DegPerRad + 90;
+		let angle = Math.atan2(y-this.gameObject.y, x-this.gameObject.x) * tutils.DegPerRad + 90;
 		let dt = angle - this.angle;
-		// console.log(this.angle+' <to> '+angle);
 		if (dt > 180) {
-			angle = angle - 360;
+			angle -= 360;
 		} else if (dt < -180) {
-			angle = angle + 360;
+			angle += 360;
 		}
 		return angle;
 	}
@@ -125,8 +133,27 @@ class Unit {
         egret.Tween.removeTweens(this);
         let tw = egret.Tween.get(this);
         tw.to({x: x, y: y}, dur, ease);
-		if (onMoveEnd != null) {
+		if (onMoveEnd) {
 			tw.call(onMoveEnd, thisObject, [this]);
+		}
+	}
+
+	public adjustAngle(dt: number, angleSpeed: number, x: number, y: number): void {
+		let orgAngle = this.angle;
+		let angle = this.getAngle(x, y);
+		let dtAngle = dt * angleSpeed;
+		if (angle > orgAngle) {
+			if (orgAngle+dtAngle > angle) {
+				this.angle = angle;
+			} else {
+				this.angle += dtAngle;
+			}
+		} else if (angle < orgAngle) {
+			if (orgAngle-dtAngle < angle) {
+				this.angle = angle;
+			} else {
+				this.angle -= dtAngle;
+			}
 		}
 	}
 }
