@@ -23,9 +23,6 @@ class SuperHeroBuff extends Buff {
 		ship.force = this.ship.force;
 		ship.speed.baseValue = 50;
 
-		let buff = GameController.instance.createBuff("super_hero_ghost_ships");
-		ship.addBuff(buff);
-
 		let gun = Gun.createGun(RowGun, Bullet);
 		gun.bulletSpeed.baseValue = 200;
 		gun.fireCooldown.baseValue = 150;
@@ -64,7 +61,7 @@ class SuperHeroBuff extends Buff {
 		gun3.explosionPowerEveryPer = 0.5;
 		ship.addGun(gun3);
 
-		buff = GameController.instance.createBuff("shield_ball");
+		let buff = GameController.instance.createBuff("shield_ball");
 		ship.addBuff(buff);
 
 		let ai = new tutils.StateManager();
@@ -132,6 +129,9 @@ class SuperHeroBuff extends Buff {
 				ship.guns[i].cleanup();
 			}
 			ship.moveTo(world.width*0.5, ship.y+50, ship.speed.value*0.5, true, egret.Ease.getPowOut(2), ():void=>{
+				ship.canHit = false;
+				let buff = GameController.instance.createBuff("super_hero_ghost_ships");
+				ship.addBuff(buff);
 				ship.moveTo(ship.x, -300, ship.speed.value*3, true, egret.Ease.getPowIn(2), ():void=>{
 					ship.status = UnitStatus.Dead;
 				}, this);
