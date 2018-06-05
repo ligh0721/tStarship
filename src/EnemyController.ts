@@ -111,9 +111,9 @@ class EnemyController {
 
         let moveMotherShip = (ship: MotherShip)=>{
             let tw = egret.Tween.get(ship);
-            tw.to({x: this.world.width * 0.4}, 2000);
-            tw.to({x: this.world.width * 0.6}, 4000);
-            tw.to({x: this.world.width * 0.5}, 2000);
+            tw.to({x: this.world.width*0.4}, 2000);
+            tw.to({x: this.world.width*0.6}, 4000);
+            tw.to({x: this.world.width*0.5}, 2000);
             tw.call(moveMotherShip, this, [ship]);
         };
 
@@ -180,7 +180,7 @@ class EnemyController {
             }, this);
         }, (dt: number)=>{
 			this.adjustAngle(gunShip, dt, angleSpeed);
-        }, this);
+        }, this, 100);
 
         moveToLeft.setListener(()=>{
             boss.moveTo(boss.width*0.5+20, boss.height*0.5+70, boss.speed.value, true, null, ()=>{
@@ -188,7 +188,7 @@ class EnemyController {
             }, this);
         }, (dt: number)=>{
 			this.adjustAngle(gunShip, dt, angleSpeed);
-        }, this);
+        }, this, 100);
 
         ajustAngle.setListener(()=>{
 			gunShip.mainGun.bulletLeft = bulletLeft;
@@ -197,7 +197,7 @@ class EnemyController {
             if (gunShip.mainGun.bulletLeft == 0) {
                 smgr.change(ajustAngle.args[0]);
             }
-        }, this);
+        }, this, 100);
 
 		moveToBottom.setListener(()=>{
 			boss.moveTo(boss.x, h+boss.height+100, boss.speed.value*0.5, true, null, ()=>{
@@ -205,7 +205,7 @@ class EnemyController {
 			})
 		}, null, this);
 
-        smgr.start(10, moveToLeft);
+        smgr.change(moveToLeft);
 
 		return boss;
 	}
@@ -299,7 +299,7 @@ class EnemyController {
 					this.adjustAngle(gunShipR, dt, angleSpeedLR);
 				}
 			}
-		}, this);
+		}, this, 0);
 
 		adjustAngle.setListener(()=>{
 			tick = 0;
@@ -314,7 +314,7 @@ class EnemyController {
 			} else {
 				smgr.change(wait, 100, fire, adjustAngle.args[0])
 			}
-		}, this);
+		}, this, 0);
 
 		wait.setListener(()=>{
 			tick = 0;
@@ -331,7 +331,7 @@ class EnemyController {
 					smgr.change(moveTo, wait.args[1]);
 				}
 			}
-		}, this);
+		}, this, 0);
 
 		fire.setListener(()=>{
 			tick = 0;
@@ -340,14 +340,14 @@ class EnemyController {
 			if (gun.bulletLeft == 0 || !gunShip.alive) {
 				smgr.change(wait, 1000, fire.args[0]);
 			}
-		}, this);
+		}, this, 0);
 
 		moveToBottom.setListener(()=>{
 			boss.moveTo(boss.x, h-boss.height*0.5, boss.speed.value*0.5, true, null, ()=>{
 				boss.damaged(boss.hp, null);
 			})
 		}, null, this);
-		smgr.start(60, moveTo, {x: w*0.3, y: boss.height*0.5+70});
+		smgr.change(moveTo, {x: w*0.3, y: boss.height*0.5+70});
 
 		return boss;
 	}

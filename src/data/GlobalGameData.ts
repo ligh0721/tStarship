@@ -35,7 +35,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "ghost_ships",
+		skill: "super_hero",
 		coins: 0
 	},
     ship_soundwave: {

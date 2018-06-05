@@ -3,8 +3,9 @@ class IntervalHitShip extends Ship {
 	hitShipInterval: number = 1000;
 	private readonly effectedShips: { [id: string]: number } = {};
 
-	public constructor(model: string, scale?: number) {
+	public constructor(model: string, scale?: number, owner?: Ship) {
 		super(model, scale);
+		this.ship = owner;
 		this.hitTestFlags = ShipHitTestType.Ship;
 	}
 

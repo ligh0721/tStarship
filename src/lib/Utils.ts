@@ -5,6 +5,7 @@ module tutils {
 	export const LongDistance = 1500;
 	export const Player1Force = 1;
 	export const Player2Force = 2;
+	export const AllyForce = 10;
 	export const EnemyForce = 11;
 	export const LargeNumber = 1000000;
 	export const ShipTimerInterval = 100;

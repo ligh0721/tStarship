@@ -76,7 +76,7 @@ class MissileBullet extends Bullet {
 
 class ExplosionEffectBullet extends Bullet {
 	radius: number = 30;
-	explosionRadius: number = 200;
+	explosionRadius: number = 100;
 	private $factor: number = 0;
 	private orgWidth: number;
 	private orgHeight: number;

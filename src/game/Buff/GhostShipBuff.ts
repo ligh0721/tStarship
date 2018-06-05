@@ -21,25 +21,22 @@ class GhostShipBuff extends Buff {
 		}
 
 		let shipData = GameController.instance.getShipDataById(this.ship.key);
-		if (shipData === undefined) {
-			return null;
-		}
-
 		for (let i=0; i<this.shipsNum; i++) {
-			let ghost = new IntervalHitShip(shipData.model, this.ship.scale);
+			let ghost = new IntervalHitShip(this.ship.model, this.ship.scale, this.ship);
 			this.ship.world.addShip(ghost);
-			ghost.ship = this.ship;
 			ghost.resetHp(this.ship.maxHp);
 			ghost.force = this.ship.force;
-			ghost.speed.baseValue = shipData.speed;
 
-			let gun = Gun.createGun(shipData.gun, shipData.bullet);
-			gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
-			gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
-			gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
-			gun.bulletPower.baseValue = Math.max(1, Math.floor(this.ship.mainGun.bulletPower.baseValue * this.powerPer));
-			gun.bulletNum = this.ship.mainGun.bulletNum;
-			ghost.addGun(gun, true).autoFire = true;
+			if (shipData) {
+				ghost.speed.baseValue = shipData.speed;
+				let gun = Gun.createGun(shipData.gun, shipData.bullet);
+				gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
+				gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
+				gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
+				gun.bulletPower.baseValue = Math.max(1, Math.floor(this.ship.mainGun.bulletPower.baseValue * this.powerPer));
+				gun.bulletNum = this.ship.mainGun.bulletNum;
+				ghost.addGun(gun, true).autoFire = true;
+			}
 
 			let buff = new UnhitBuff(-1);
 			ghost.addBuff(buff);

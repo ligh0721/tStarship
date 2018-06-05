@@ -8,8 +8,7 @@ class ShieldBallSkill extends Skill {
 
 	// override
 	protected onCast(): void {
-		let ship = new IntervalHitShip("BlueBallBullet_png", 2);
-		ship.ship = this.ship;
+		let ship = new IntervalHitShip("BlueBallBullet_png", 2, this.ship);
 		this.ship.world.addShip(ship);
 		ship.resetHp(this.power);
 		ship.hitShipInterval = this.hitShipInterval;
@@ -24,7 +23,7 @@ class ShieldBallSkill extends Skill {
 
 		ship.addGun(gun, true).autoFire = true;
 
-		let buff = new ShieldBuff(-1, 10000000);
+		let buff = GameController.instance.createBuff("shield_ball");
 		ship.addBuff(buff);
 
 		ship.x = this.ship.x;

@@ -148,6 +148,8 @@ class GameController {
 		let hero = new HeroShip(shipData.model, 1.2, id);
 		world.addShip(hero);
 		hero.resetHp(shipData.maxHp);
+		hero.force.force = tutils.Player1Force;
+		hero.force.ally(tutils.AllyForce);
 		hero.speed.baseValue = shipData.speed;
 
 		let gun = Gun.createGun(shipData.gun, shipData.bullet);
@@ -216,6 +218,7 @@ class GameController {
             gun.bulletNum = 5;
             gun.bulletPowerLossPer = 1.0;
             gun.bulletPowerLossInterval.baseValue = 1000;
+			gun.period = 1000;
             buff = new AddGunBuff(10000, [gun]);
 			buff.model = "SatelliteGun_png";
             buff.name = "Satellite Ball!";
@@ -236,6 +239,19 @@ class GameController {
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;
+		case "shield_ball":
+			buff = new ShieldBuff(-1, tutils.LargeNumber);
+			break;
+		case "super_hero_ghost_ships":
+			buff = new GhostShipBuff(-1, 3, 0.2);
+			buff.name = "Ghost Ships!";
+			buff.key = key;
+			break;
+		case "super_hero":
+			buff = new SuperHeroBuff(30000);
+			buff.name = "Super Hero!";
+			buff.key = key;
+			break;
 		default:
 			console.assert(false, "invalid buff key("+key+")");
 		}
@@ -253,6 +269,9 @@ class GameController {
 			break;
 		case "ghost_ships":
         	skill = new AddBuffSkill([this.createBuff("ghost_ships")]);
+			break;
+		case "super_hero":
+			skill = new AddBuffSkill([this.createBuff("super_hero")]);
 			break;
 		default:
 			console.assert(false, "invalid skill key("+key+")");

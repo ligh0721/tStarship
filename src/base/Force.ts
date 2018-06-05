@@ -1,20 +1,20 @@
-enum ForceEffective {
-    kSelf = 1 << 0,
-    kOwn = 1 << 1,
-    kAlly = 1 << 2,
-    kEnemy = 1 << 3
-}
-
 class Force {
-	forceFlag: number = 0;
-	allyMaskFlag: number = 0;
+	private forceFlag: number = 0;
+	private allyMaskFlag: number = 0;
 
-	public get force(): number {
+	public get force(): ForceIndex {
 		return this.forceFlag!=0 ? Math.log(this.forceFlag)/Math.LN2 : -1;
 	}
 
-    public set force(value: number) {
+    public set force(value: ForceIndex) {
         this.forceFlag = 1 << value;
+    }
+
+    public ally(...forceIndexes: ForceIndex[]): void {
+        for (let i in forceIndexes) {
+            let forceIndex = forceIndexes[i];
+            this.allyMaskFlag |= 1 << forceIndex;
+        }
     }
 
     // it ONLY means that force is my ally
@@ -34,4 +34,13 @@ class Force {
            ((this != force) && (this.isMyAlly(force) && (effectiveTypeFlags & ForceEffective.kAlly) != 0)) ||
            (this.isMyEnemy(force) && (effectiveTypeFlags & ForceEffective.kEnemy) != 0);
     }
+}
+
+type ForceIndex = number;
+
+enum ForceEffective {
+    kSelf = 1 << 0,
+    kOwn = 1 << 1,
+    kAlly = 1 << 2,
+    kEnemy = 1 << 3
 }

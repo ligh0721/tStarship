@@ -116,7 +116,15 @@ class World {
 		this.ships[ship.id] = ship;
 		this.shipsNum++;
 		ship.onAddToWorld();
-		this.gameObject.addChild(ship.gameObject);
+		if (ship.hero) {
+			this.gameObject.addChild(ship.gameObject);
+		} else if (ship instanceof IntervalHitShip && ship.ship) {
+			let index = this.gameObject.getChildIndex(ship.ship.gameObject);
+			this.gameObject.addChildAt(ship.gameObject, index);
+		} else {
+			this.gameObject.addChildAt(ship.gameObject, this.gameObject.numChildren-1);
+		}
+		
 		return ship;
 	}
 
@@ -141,7 +149,7 @@ class World {
 		this.bulletsNum++;
 		bullet.onAddToWorld();
 		let index = this.gameObject.getChildIndex(bullet.gun.ship.gameObject);
-		this.gameObject.addChildAt(bullet.gameObject, index-1);
+		this.gameObject.addChildAt(bullet.gameObject, index);
 		return bullet;
 	}
 
@@ -165,7 +173,7 @@ class World {
 		this.supplies[supply.id] = supply;
 		this.suppliesNum++;
 		supply.onAddToWorld();
-		this.gameObject.addChild(supply.gameObject);
+		this.gameObject.addChildAt(supply.gameObject, this.gameObject.numChildren-1);
 		return supply;
 	}
 
@@ -184,7 +192,7 @@ class World {
 	}
 
 	public addEffect(effect: Effect): Effect {
-		this.gameObject.addChild(effect.gameObject);
+		this.gameObject.addChildAt(effect.gameObject, this.gameObject.numChildren-1);
 		return effect;
 	}
 

@@ -69,7 +69,8 @@ class BattleLayer extends tutils.Layer {
         
         this.bgCtrl = new tutils.BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
         this.bgCtrl.start(20);
-        this.worldLayer.addChild(this.bgCtrl.gameObject);
+        this.worldLayer.addChildAt(this.bgCtrl.gameObject, 0);
+        this.bgCtrl.gameObject.alpha = 0.8;
 
         // this.bgCtrl2 = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "NearSpace_png").create();
         // this.bgCtrl2.start(20);
@@ -156,7 +157,6 @@ class BattleLayer extends tutils.Layer {
         let hero = GameController.instance.createHeroShip(heroShipId, this.world);
         this.hero = hero;
         this.heroShipData = GameController.instance.getPlayerShipDataById(heroShipId);
-        hero.force.force = tutils.Player1Force;
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
 
@@ -273,7 +273,7 @@ class BattleLayer extends tutils.Layer {
         if (this.hero == ship) {
             this.gameOver();
             return;
-        } else if (this.hero.force.isMyEnemy(ship.force) && ((killer == this.hero) || (killer instanceof IntervalHitShip && killer.ship == this.hero))) {
+        } else if (this.hero.force.isMyEnemy(ship.force) && killer && (killer.force.isMyAlly(this.hero.force))) {
             // 击败敌军
             if (ship instanceof EnemyShip && ship.isLastGroupMember()) {
                 let score = Math.floor(ship.group.max/4*(1+this.reachStage/2));
@@ -503,11 +503,11 @@ class BattleLayer extends tutils.Layer {
         let rush: Rush;
 
         this.enemyCtrl.addRushes1(2000, 40);
-        this.enemyCtrl.addRushes2(4000, 40);
-        this.enemyCtrl.addRushes3(4000, 40);
-        this.enemyCtrl.addRushes4(4000, 40);
-        this.enemyCtrl.addRushes5(4000, 40);
-        this.enemyCtrl.addRushes6(2000, 40);
+        // this.enemyCtrl.addRushes2(4000, 40);
+        // this.enemyCtrl.addRushes3(4000, 40);
+        // this.enemyCtrl.addRushes4(4000, 40);
+        // this.enemyCtrl.addRushes5(4000, 40);
+        // this.enemyCtrl.addRushes6(2000, 40);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
@@ -631,7 +631,7 @@ class BattleLayer extends tutils.Layer {
         let supply: Supply;
         let gun: Gun;
         let i = Math.floor(Math.random()*4);
-        if (GameController.instance.getPlayerShipDataById(GameController.instance.battleShips[0]).use<=3 && this.hero.mainGun.level===1) {
+        if (this.heroShipData.use<=3 && this.hero.mainGun.level===1) {
             buff = GameController.instance.createBuff("gun_level_up");
             supply = new BuffSupply(buff.model, [buff]);
             i = -1;
