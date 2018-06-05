@@ -116,7 +116,7 @@ class World {
 		this.ships[ship.id] = ship;
 		this.shipsNum++;
 		ship.onAddToWorld();
-		if (ship.hero) {
+		if (ship instanceof HeroShip) {
 			this.gameObject.addChild(ship.gameObject);
 		} else if (ship instanceof IntervalHitShip && ship.ship) {
 			let index = this.gameObject.getChildIndex(ship.ship.gameObject);

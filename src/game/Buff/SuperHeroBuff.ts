@@ -17,6 +17,7 @@ class SuperHeroBuff extends Buff {
 		let world = this.ship.world;
 		let ship = new Ship("Energy_png", 1.2);
 		world.addShip(ship);
+		ship.hero = true;
 		ship.x = world.width * 0.5;
 		ship.y = world.height + 200;
 		ship.resetHp(100);
