@@ -110,6 +110,26 @@ class World {
 		return target;
 	}
 
+	public findNearestSupplyShip(x: number, y: number, maxDist?: number): Ship {
+		let min = -1;
+		let target: Ship = null;
+		if (maxDist === undefined) {
+			maxDist = tutils.LongDistance;
+		}
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			if (ship==this.obShip || !(ship.hitTestFlags&ShipHitTestType.Supply) || !ship.alive) {
+				continue;
+			}
+			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
+			if (dis <= maxDist && (target==null || min>dis)) {
+				min = dis;
+				target = ship;
+			}
+		}
+		return target;
+	}
+
 	public addShip(ship: Ship): Ship {
 		ship.world = this;
 		ship.id = this.nextId();

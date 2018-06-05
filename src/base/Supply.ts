@@ -77,7 +77,7 @@ class Supply extends Unit {
 				return;
 			}
 			if (target == null) {
-				target = this.world.findNearestHeroShip(this.gameObject.x, this.gameObject.y, this.pickDist);
+				target = this.world.findNearestSupplyShip(this.gameObject.x, this.gameObject.y, this.pickDist);
 				if (target == null) {
 					return;
 				} else {
