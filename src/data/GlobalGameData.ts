@@ -103,7 +103,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "turbo_fire",
+		skill: "meteorolite_rush",
 		coins: 3000
     },
     ship_focus: {

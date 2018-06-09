@@ -1,17 +1,19 @@
-class ShieldBallSkill extends Skill {
-	power: number = 20;
-	hitShipInterval: number = 200;
+class ShieldBallBuff extends Buff {
+	power: number;
+	hitInterval: number;
 
-	public constructor() {
-		super();
+	public constructor(power: number=20, hitInterval: number=200) {
+		super(0);
+		this.power = power;
+		this.hitInterval = hitInterval;
 	}
 
 	// override
-	protected onCast(): void {
+	public onAddBuff(): void {
 		let ship = new IntervalHitShip("BlueBallBullet_png", 2, this.ship);
 		this.ship.world.addShip(ship);
 		ship.resetHp(this.power);
-		ship.hitShipInterval = this.hitShipInterval;
+		ship.hitShipInterval = this.hitInterval;
 		ship.speed.baseValue = 10;
 		ship.force = this.ship.force;
 
@@ -23,7 +25,7 @@ class ShieldBallSkill extends Skill {
 
 		ship.addGun(gun, true).autoFire = true;
 
-		let buff = GameController.instance.createBuff("shield_ball");
+		let buff = GameController.instance.createBuff("shield_ball_shield");
 		ship.addBuff(buff);
 
 		ship.x = this.ship.x;

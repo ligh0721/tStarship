@@ -84,30 +84,30 @@ class EnemyController {
 	}
 
 	public createBoss1(): MotherShip {
-		let ship = new MotherShip("BossShip1_png", 1.5);
+		let ship = new MotherShip("TwoGunBOSSBody_png", 0.5);
         this.world.addShip(ship);
         ship.angle = 180;
         ship.x = this.world.width * 0.5;
         ship.y = -ship.height;
         ship.force.force = tutils.EnemyForce;
 
-        let gunShip = new MotherGunShip("GunShip2_png", 1.5);
-        ship.addGunShip(gunShip, -100, 100);
+        let gunShip = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
+        ship.addGunShip(gunShip, -110, 20);
         gunShip.angle = 180;
-        let gun = Gun.createGun(Gun, RedEllipseBullet);
+        let gun = Gun.createGun(Gun, RedWaveBullet);
         gunShip.addGun(gun);
         
-        let gunShip2 = new MotherGunShip("GunShip2_png", 1.5);
-        ship.addGunShip(gunShip2, 100, 100);
+        let gunShip2 = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
+        ship.addGunShip(gunShip2, 110, 20);
         gunShip2.angle = 180;
-        let gun2 = Gun.createGun(ShotGun, RedEllipseBullet);
+        let gun2 = Gun.createGun(ShotGun, RedWaveBullet);
 		gun2.bulletAngleDelta = 10;
         gun2.fireCooldown.baseValue = 1000;
         gunShip2.addGun(gun2);
 
 		ship.resetHp(2000);
-        gunShip.resetHp(1500);
-		gunShip2.resetHp(1000);
+        gunShip.resetHp(500);
+		gunShip2.resetHp(100);
 
         let moveMotherShip = (ship: MotherShip)=>{
             let tw = egret.Tween.get(ship);
@@ -153,7 +153,7 @@ class EnemyController {
 		let gunShip = new MotherGunShip("GunShip2_png", 2.0);
         boss.addGunShip(gunShip, 0, 100);
         gunShip.angle = 180;
-        let gun = Gun.createGun(ShotGun, RedEllipseBullet);
+        let gun = Gun.createGun(ShotGun, RedStarBullet);
 		gun.bulletAngleDelta = 10;
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
@@ -214,14 +214,14 @@ class EnemyController {
 		let w = this.world.width;
         let h = this.world.height;
 
-		let boss = new MotherShip("BossShip1_png", 2.0);
+		let boss = new MotherShip("TwoGunBOSSBody_png", 0.5);
         this.world.addShip(boss);
         boss.angle = 180;
         boss.x = this.world.width * 0.5;
         boss.y = -boss.height;
         boss.force.force = tutils.EnemyForce;
 
-		let gunShip = new MotherGunShip("GunShip2_png", 2.0);
+		let gunShip = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
         boss.addGunShip(gunShip, 0, 100);
         gunShip.angle = 180;
         let gun = Gun.createGun(Gun, ShakeWave2Bullet);
@@ -229,24 +229,24 @@ class EnemyController {
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
 
-		let gunShipL = new MotherGunShip("GunShip2_png", 2.0);
-        boss.addGunShip(gunShipL, -80, 60);
+		let gunShipL = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
+        boss.addGunShip(gunShipL, -110, 20);
         gunShipL.angle = 180;
-        let gunL = Gun.createGun(Gun, RedEllipseBullet);
+        let gunL = Gun.createGun(Gun, RedStarBullet);
 		gunShipL.addGun(gunL, true);
 		gunL.bulletLeft = 0;
 		gunL.autoFire = true;
 
 		let gunShipR = new MotherGunShip("GunShip2_png", 2.0);
-        boss.addGunShip(gunShipR, 80, 60);
+        boss.addGunShip(gunShipR, -110, 20);
         gunShipR.angle = 180;
-        let gunR = Gun.createGun(Gun, RedEllipseBullet);
+        let gunR = Gun.createGun(Gun, RedStarBullet);
 		gunShipR.addGun(gunR, true);
 		gunR.bulletLeft = 0;
 		gunR.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(20000);
+		boss.resetHp(10000);
 		gunShip.resetHp(1600);
 		gunShipL.resetHp(1800);
 		gunShipR.resetHp(1600);

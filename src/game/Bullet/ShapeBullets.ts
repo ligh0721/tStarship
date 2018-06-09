@@ -40,3 +40,21 @@ class RedEllipseBullet extends Bullet {
 		super(gun, "RedBullet1_png");
 	}
 }
+
+class RedWaveBullet extends Bullet {
+	public constructor(gun: Gun) {
+		super(gun, "RedBullet2_png");
+	}
+}
+
+class RedStarBullet extends Bullet {
+	public constructor(gun: Gun) {
+		super(gun, "RedBullet3_png");
+	}
+}
+
+class RedDiamondBullet extends Bullet {
+	public constructor(gun: Gun) {
+		super(gun, "RedBullet4_png");
+	}
+}

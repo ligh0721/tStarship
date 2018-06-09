@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,egret_icon_png,description_json,grid100_png,coin_png,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,score_title_png,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png,FarSpace_png,NearSpace_png,bgGrey_png,bg_jpg,bgGrey_jpg,GunPower_png,SatelliteGun_png,GunCDR_png,GunLevelUp_png,ComicSansMS60_0_png,ComicSansMS60_fnt,Bgmusic_mp3,EaseGunShoot_mp3,Explosion0_mp3,Explosion1_mp3,Explosion2_mp3,ExplosionBullet_mp3,ExplosionGunShoot_mp3,GuideGunShoot_mp3,GunPowerup_mp3,GunShoot_mp3,Hit_mp3,PickPower_mp3,Powerup_mp3,RowGunShoot_mp3,ShotGunShoot_mp3,SoundWaveGunShoot_mp3,font_png,score_png,font_fnt,score_fnt,Arial40_0_png,Arial40_fnt,WhitePixel_png,bluebutton_disable_png,greenbutton_disable_png,Energy3_png,Energy4_png,Meteorite_png,Meteorolite_mp3,Missile_png,MissileGunShoot_mp3",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,egret_icon_png,description_json,grid100_png,coin_png,Hero_png,Bullet_png,ShipIRBg_png,ShipIRSel_png,Solar_png,BigBlueEllipseBullet_png,BigRedEllipseBullet_png,BlueEllipseBullet_png,DripBullet_png,RedBullet_png,SoundWaveBullet_png,coin2_png,BGMeteorite1_png,BGMeteorite2_png,BGMeteorite3_png,BGMeteorite4_png,BlueEnemyShip_png,RedEnemyShip_png,BigRedEllipseBullet1_png,BigBlueEllipseBullet1_png,RedBullet1_png,Energy_png,SoundWave_png,score_title_png,GunShip1_png,BossShip1_png,Explosion_png,GunShip2_png,loading2_png,toast-bg_png,BlueBallBullet_png,ShakeWaveBullet_png,ShakeWaveBullet2_png,RedPixel_png,GreyPixel_png,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png,FarSpace_png,NearSpace_png,bgGrey_png,bg_jpg,bgGrey_jpg,GunPower_png,SatelliteGun_png,GunCDR_png,GunLevelUp_png,ComicSansMS60_0_png,ComicSansMS60_fnt,Bgmusic_mp3,EaseGunShoot_mp3,Explosion0_mp3,Explosion1_mp3,Explosion2_mp3,ExplosionBullet_mp3,ExplosionGunShoot_mp3,GuideGunShoot_mp3,GunPowerup_mp3,GunShoot_mp3,Hit_mp3,PickPower_mp3,Powerup_mp3,RowGunShoot_mp3,ShotGunShoot_mp3,SoundWaveGunShoot_mp3,font_png,score_png,font_fnt,score_fnt,Arial40_0_png,Arial40_fnt,WhitePixel_png,bluebutton_disable_png,greenbutton_disable_png,Energy3_png,Energy4_png,Meteorite_png,Meteorolite_mp3,Missile_png,MissileGunShoot_mp3,WhiteFatHeroShip_png,BlackFatHeroShip_png,BlueFatHeroShip_png,DeepOrangeFatHeroShip_png,GreenEnemyShip_png,GreenFatHeroShip_png,GreenHeroShip_png,OrangeFatHeroShip_png,PurpleEnemyShip_png,PurpleEnemyShip2_png,PurpleFatHeroShip_png,RedFatHeroShip_png,RedHeroShip_png,TwoGunBOSSBody_png,TwoGunBOSSGun_png,RedBullet2_png,RedBullet3_png,RedBullet4_png,RedBullet5_png",
 			"name": "preload"
 		}
 	],
@@ -555,6 +555,101 @@
 			"name": "MissileGunShoot_mp3",
 			"type": "sound",
 			"url": "assets/Sounds/MissileGunShoot.mp3"
+		},
+		{
+			"name": "WhiteFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/WhiteFatHeroShip.png"
+		},
+		{
+			"name": "BlackFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/BlackFatHeroShip.png"
+		},
+		{
+			"name": "BlueFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/BlueFatHeroShip.png"
+		},
+		{
+			"name": "DeepOrangeFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/DeepOrangeFatHeroShip.png"
+		},
+		{
+			"name": "GreenEnemyShip_png",
+			"type": "image",
+			"url": "assets/Ships/GreenEnemyShip.png"
+		},
+		{
+			"name": "GreenFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/GreenFatHeroShip.png"
+		},
+		{
+			"name": "GreenHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/GreenHeroShip.png"
+		},
+		{
+			"name": "OrangeFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/OrangeFatHeroShip.png"
+		},
+		{
+			"name": "PurpleEnemyShip_png",
+			"type": "image",
+			"url": "assets/Ships/PurpleEnemyShip.png"
+		},
+		{
+			"name": "PurpleEnemyShip2_png",
+			"type": "image",
+			"url": "assets/Ships/PurpleEnemyShip2.png"
+		},
+		{
+			"name": "PurpleFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/PurpleFatHeroShip.png"
+		},
+		{
+			"name": "RedFatHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/RedFatHeroShip.png"
+		},
+		{
+			"name": "RedHeroShip_png",
+			"type": "image",
+			"url": "assets/Ships/RedHeroShip.png"
+		},
+		{
+			"name": "TwoGunBOSSBody_png",
+			"type": "image",
+			"url": "assets/Ships/TwoGunBOSSBody.png"
+		},
+		{
+			"name": "TwoGunBOSSGun_png",
+			"type": "image",
+			"url": "assets/Ships/TwoGunBOSSGun.png"
+		},
+		{
+			"name": "RedBullet2_png",
+			"type": "image",
+			"url": "assets/Bullets/RedBullet2.png"
+		},
+		{
+			"name": "RedBullet3_png",
+			"type": "image",
+			"url": "assets/Bullets/RedBullet3.png"
+		},
+		{
+			"name": "RedBullet4_png",
+			"type": "image",
+			"url": "assets/Bullets/RedBullet4.png"
+		},
+		{
+			"name": "RedBullet5_png",
+			"type": "image",
+			"url": "assets/Bullets/RedBullet5.png"
 		}
 	]
 }

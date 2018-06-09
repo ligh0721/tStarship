@@ -62,7 +62,7 @@ class SuperHeroBuff extends Buff {
 		gun3.explosionPowerEveryPer = 0.5;
 		ship.addGun(gun3);
 
-		let buff = GameController.instance.createBuff("shield_ball");
+		let buff = GameController.instance.createBuff("shield_ball_shield");
 		ship.addBuff(buff);
 
 		let ai = new tutils.StateManager();

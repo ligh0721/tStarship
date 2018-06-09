@@ -239,7 +239,7 @@ class GameController {
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;
-		case "shield_ball":
+		case "shield_ball_shield":
 			buff = new ShieldBuff(-1, tutils.LargeNumber);
 			break;
 		case "super_hero_ghost_ships":
@@ -251,6 +251,14 @@ class GameController {
 			buff = new SuperHeroBuff(30000);
 			buff.name = "Super Hero!";
 			buff.key = key;
+			break;
+		case "shield_ball":
+			buff = new ShieldBallBuff();
+			buff.name = "Shield Ball";
+			break;
+		case "meteorolite_rush":
+			buff = new MeteoroliteRushBuff();
+			buff.name = "Meteorolite Rush";
 			break;
 		default:
 			console.assert(false, "invalid buff key("+key+")");
@@ -265,13 +273,16 @@ class GameController {
 			skill = new AddBuffSkill([this.createBuff("turbo_fire_gun"), this.createBuff("turbo_fire_ship")]);
 			break;
 		case "shield_ball":
-			skill = new ShieldBallSkill();
+			skill = new AddBuffSkill([this.createBuff("shield_ball")]);
 			break;
 		case "ghost_ships":
         	skill = new AddBuffSkill([this.createBuff("ghost_ships")]);
 			break;
 		case "super_hero":
 			skill = new AddBuffSkill([this.createBuff("super_hero")]);
+			break;
+		case "meteorolite_rush":
+			skill = new AddBuffSkill([this.createBuff("meteorolite_rush")]);
 			break;
 		default:
 			console.assert(false, "invalid skill key("+key+")");

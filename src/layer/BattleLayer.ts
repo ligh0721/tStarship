@@ -502,12 +502,12 @@ class BattleLayer extends tutils.Layer {
     private createTestEnemyRushes() {
         let rush: Rush;
 
-        this.enemyCtrl.addRushes1(2000, 40);
-        this.enemyCtrl.addRushes2(4000, 40);
-        this.enemyCtrl.addRushes3(4000, 40);
-        this.enemyCtrl.addRushes4(4000, 40);
-        this.enemyCtrl.addRushes5(4000, 40);
-        this.enemyCtrl.addRushes6(2000, 40);
+        // this.enemyCtrl.addRushes1(2000, 40);
+        // this.enemyCtrl.addRushes2(4000, 40);
+        // this.enemyCtrl.addRushes3(4000, 40);
+        // this.enemyCtrl.addRushes4(4000, 40);
+        // this.enemyCtrl.addRushes5(4000, 40);
+        // this.enemyCtrl.addRushes6(2000, 40);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
