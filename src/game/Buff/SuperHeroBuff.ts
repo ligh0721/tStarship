@@ -1,5 +1,5 @@
 class SuperHeroBuff extends Buff {
-	private bye: tutils.State;
+	private bye: tutils.CustomState;
 	private superHero: Ship;
 	private setTimeoutKeys: number[] = [];
 
@@ -66,10 +66,10 @@ class SuperHeroBuff extends Buff {
 		ship.addBuff(buff);
 
 		let ai = new tutils.StateManager();
-		let hello = new tutils.State();
-		let randMove = new tutils.State();
-		let randWait = new tutils.State();
-		this.bye = new tutils.State();
+		let hello = new tutils.CustomState();
+		let randMove = new tutils.CustomState();
+		let randWait = new tutils.CustomState();
+		this.bye = new tutils.CustomState();
 		let startTick: number = 0;
 		hello.setListener(():void=>{
 			gun1.autoFire = true;

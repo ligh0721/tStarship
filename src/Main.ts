@@ -98,16 +98,16 @@ class Main extends eui.UILayer {
 
     private async runGameAsFb() {
         await FBInstant.initializeAsync();
-        egret.log("getLocale:", FBInstant.getLocale());
-        egret.log("getPlatform:", FBInstant.getPlatform());
-        egret.log("getSDKVersion", FBInstant.getSDKVersion());
-        egret.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
-        egret.log("getEntryPointData", FBInstant.getEntryPointData());
+        console.log("getLocale:", FBInstant.getLocale());
+        console.log("getPlatform:", FBInstant.getPlatform());
+        console.log("getSDKVersion", FBInstant.getSDKVersion());
+        console.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
+        console.log("getEntryPointData", FBInstant.getEntryPointData());
 
         let reporter = new FBInstantLoadingReporter();
         await this.loadResource(reporter);
         await FBInstant.startGameAsync();
-        egret.log("start game");
+        console.log("start game");
         this.fbContextInfo();
         this.fbPlayerInfo();
 
@@ -166,26 +166,26 @@ class Main extends eui.UILayer {
     }
 
     private baseinfo() {
-        egret.log("baseinfo");
-        egret.log("getLocale:", FBInstant.getLocale());
-        egret.log("getPlatform:", FBInstant.getPlatform());
-        egret.log("getSDKVersion", FBInstant.getSDKVersion());
-        egret.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
-        egret.log("getEntryPointData", FBInstant.getEntryPointData());
+        console.log("baseinfo");
+        console.log("getLocale:", FBInstant.getLocale());
+        console.log("getPlatform:", FBInstant.getPlatform());
+        console.log("getSDKVersion", FBInstant.getSDKVersion());
+        console.log("getSupportedAPIs", FBInstant.getSupportedAPIs());
+        console.log("getEntryPointData", FBInstant.getEntryPointData());
     }
 
     private quit(): void {
-        egret.log("quit");
+        console.log("quit");
         FBInstant.quit();
     }
 
     private logEvent(): void {
-        egret.log("logEvent");
+        console.log("logEvent");
         FBInstant.logEvent("test", 2, { "test": "ta" });
     }
 
     private shareAsync(): void {
-        egret.log("shareAsync");
+        console.log("shareAsync");
         let data: FBInstant.SharePayload = {
             intent: "",
             text: "",
@@ -195,30 +195,30 @@ class Main extends eui.UILayer {
     }
 
     private fbPlayerInfo() {
-        egret.log("player");
-        egret.log("player.getID", FBInstant.player.getID());
-        egret.log("player.getName", FBInstant.player.getName());
-        egret.log("player.getPhoto", FBInstant.player.getPhoto());
+        console.log("player");
+        console.log("player.getID", FBInstant.player.getID());
+        console.log("player.getName", FBInstant.player.getName());
+        console.log("player.getPhoto", FBInstant.player.getPhoto());
     }
 
     private async getEgretConnectedPlayersAsync() {
-        egret.log("frends info:::");
+        console.log("frends info:::");
         let datas: FBInstant.ConnectedPlayer[] = await FBInstant.player.getConnectedPlayersAsync();
-        egret.log(datas);
+        console.log(datas);
         datas.forEach(element => {
-            egret.log("player.getID", element.getID());
-            egret.log("player.getName", element.getName());
-            egret.log("player.getPhoto", element.getPhoto());
+            console.log("player.getID", element.getID());
+            console.log("player.getName", element.getName());
+            console.log("player.getPhoto", element.getPhoto());
         });
     }
 
     private fbContextInfo(): void {
-        egret.log("Context.getID", FBInstant.context.getID());
-        egret.log("Context.getType", FBInstant.context.getType());
+        console.log("Context.getID", FBInstant.context.getID());
+        console.log("Context.getType", FBInstant.context.getType());
     }
 
     private share(): void {
-        egret.log("share");
+        console.log("share");
         let data: FBInstant.SharePayload = {
             intent: "",
             text: "",

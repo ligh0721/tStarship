@@ -28,13 +28,13 @@ class Value {
 	}
 
 	public setRange(prop: {minValue?: number, maxValue?: number, maxA?: number}) {
-		if (prop.minValue != undefined) {
+		if (prop.minValue !== undefined) {
 			this.minValue = prop.minValue;
 		}
-		if (prop.maxValue != undefined) {
+		if (prop.maxValue !== undefined) {
 			this.maxValue = prop.maxValue;
 		}
-		if (prop.maxA != undefined) {
+		if (prop.maxA !== undefined) {
 			this.maxA = prop.maxA;
 		}
 	}

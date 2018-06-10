@@ -61,6 +61,10 @@ class Unit {
 		this.pools = this.world.pools;
 	}
 
+	public get inWorld(): boolean {
+		return this.world != null;
+	}
+
 	// override
 	protected onCleanup(): void {
 		egret.Tween.removeTweens(this);

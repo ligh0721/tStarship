@@ -91,6 +91,9 @@ class EnemyGroup {
 	num: number = 0;
 	max: number = 0;
 
+	onEmptyListener: ()=>void;
+	thisObj: any;
+
 	public incMember(count: number=1): void {
 		this.num += count;
 		this.max = Math.max(this.max, this.num);
@@ -98,5 +101,13 @@ class EnemyGroup {
 
 	public decMember(): void {
 		this.num--;
+		if (this.num===0 && this.onEmptyListener) {
+			this.onEmptyListener.call(this.thisObj);
+		}
+	}
+
+	public setOnEmptyListener(listener: ()=>void, thisObj: any): void {
+		this.onEmptyListener = listener;
+		this.thisObj = thisObj;
 	}
 }

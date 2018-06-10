@@ -65,9 +65,27 @@ class HeroShip extends Ship {
 
     // override
     protected onCreate(): egret.DisplayObject {
-        this.hitRect.width = this.hitRadius * 2;
-        this.hitRect.height = this.hitRadius * 2;
-        return super.onCreate();
+        let ship = super.onCreate();
+        
+        let gameObject = new egret.DisplayObjectContainer();
+        gameObject.width = ship.width;
+        gameObject.height = ship.height;
+        gameObject.anchorOffsetX = ship.anchorOffsetX;
+        gameObject.anchorOffsetY = ship.anchorOffsetY;
+        gameObject.addChild(ship);
+        ship.x = ship.anchorOffsetX;
+        ship.y = ship.anchorOffsetY;
+
+        let hitRect = tutils.createBitmapByName("RedPixel_png");
+        hitRect.width = this.hitRadius * 2;
+        hitRect.height = hitRect.width;
+        gameObject.addChild(hitRect);
+        hitRect.x = ship.x-this.hitRadius;
+        hitRect.y = ship.y-this.hitRadius;
+
+        this.hitRect.width = hitRect.width;
+        this.hitRect.height = hitRect.height;
+        return gameObject;
     }
 
     // protected onCreate(): egret.DisplayObject {

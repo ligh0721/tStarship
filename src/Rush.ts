@@ -2,17 +2,14 @@ class Rush {
 	delay: number;
 	protected ships: Ship[];
 	protected interval: number;
-	protected duration: number;
 	protected fixedRotation: boolean = true;
-
 	protected callback: Function;
 	protected callbackThisObj: any;
 
-	public constructor(delay: number, ships: Ship[], interval: number, duration: number, fixedRotaion?: boolean, callback?: Function, callbackThisObj?: any) {
+	public constructor(delay: number, ships: Ship[], interval: number, fixedRotaion?: boolean, callback?: Function, callbackThisObj?: any) {
 		this.delay = delay;
 		this.ships = ships;
 		this.interval = interval;
-		this.duration = duration;
 		this.fixedRotation = fixedRotaion===undefined ? false : fixedRotaion;
 		this.callback = callback;
 		this.callbackThisObj = callbackThisObj;
@@ -65,11 +62,13 @@ class Rush {
 }
 
 class StraightRush extends Rush {
+	protected duration: number;
 	from: {x: number, y: number};
 	to: {x: number, y: number};
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}) {
-		super(delay, ships, interval, duration);
+		super(delay, ships, interval);
+		this.duration = duration;
 		this.from = from;
 		this.to = to;
 	}
@@ -96,12 +95,14 @@ class StraightRush extends Rush {
 }
 
 class BezierRush extends Rush {
+	protected duration: number;
 	protected from: {x: number, y: number};
 	protected to: {x: number, y: number};
 	protected k: {x: number, y: number};
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, k: {x: number, y: number}) {
-		super(delay, ships, interval, duration);
+		super(delay, ships, interval);
+		this.duration = duration;
 		this.from = from;
 		this.to = to;
 		this.k = k;
@@ -124,13 +125,15 @@ class BezierRush extends Rush {
 }
 
 class SineRush extends Rush {
+	protected duration: number;
 	protected from: {x: number, y: number};
 	protected to: {x: number, y: number};
 	protected period: number;
 	protected amplitude: number;
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, period: number, amplitude: number) {
-		super(delay, ships, interval, duration, true);
+		super(delay, ships, interval, true);
+		this.duration = duration;
 		this.from = from;
 		this.to = to;
 		this.period = period;
@@ -154,11 +157,13 @@ class SineRush extends Rush {
 }
 
 class PathRush extends Rush {
+	protected duration: number;
 	protected pts: {x: number, y: number}[];
 	protected durs: number[] = [];
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, pts: {x: number, y: number}[]) {
-		super(delay, ships, interval, duration);
+		super(delay, ships, interval);
+		this.duration = duration;
 		this.pts = pts;
 	}
 
@@ -200,11 +205,13 @@ class PathRush extends Rush {
 }
 
 class GradientRush extends Rush {
+	protected duration: number;
 	protected from: {x: number, y: number};
 	protected to: {x: number, y: number};
 
 	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}) {
-		super(delay, ships, interval, duration);
+		super(delay, ships, interval);
+		this.duration = duration;
 		this.from = from;
 		this.to = to;
 	}
@@ -230,6 +237,33 @@ class GradientRush extends Rush {
 
 class CallbackRush extends Rush {
 	public constructor(delay: number, callback: Function, callbackThisObj?: any) {
-		super(delay, null, 0, 0, true, callback, callbackThisObj);
+		super(delay, null, 0, true, callback, callbackThisObj);
+	}
+}
+
+class CustomRush extends Rush {
+	protected onStartListener: (world: World)=>void;
+	protected onRushOneListener: (index: number, ship: Ship)=>void;
+	protected thisObj: any;
+
+	public constructor(delay: number, ships: Ship[], interval: number, onStart: (world: World)=>void, onRushOne: (index: number, ship: Ship)=>void, thisObj: any) {
+		super(delay, ships, interval);
+		this.onStartListener = onStart;
+		this.onRushOneListener = onRushOne;
+		this.thisObj = thisObj;
+	}
+
+	// override
+	protected onStart(world: World): void {
+		if (this.onStartListener) {
+			this.onStartListener.call(this.thisObj, world);
+		}
+	}
+
+	// override
+	protected onRushOne(index: number, ship: Ship): void {
+		if (this.onRushOneListener) {
+			this.onRushOneListener.call(this.thisObj, index, ship);
+		}
 	}
 }

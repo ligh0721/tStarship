@@ -3,6 +3,11 @@ class SoundWaveGun extends Gun {
 	bulletHeight: number = 10;
 	bulletNum: number = 4;
 
+	public constructor() {
+		super();
+		this.fireCooldown.setRange({minValue: 100});
+	}
+
 	public fire(): void {
 		this.playFireSound();
 		let firePos = this.getFirePosition();

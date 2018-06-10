@@ -12,7 +12,7 @@ class World {
 	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
 
-	private readonly obShip: Ship;
+	// private readonly obShip: Ship;
 
 	// 部分监听器可以从world广播优化成ship单播 
 	// from unit
@@ -33,15 +33,15 @@ class World {
 		this.gameObject = gameObject;
 		this.width = width;
 		this.height = height;
-		this.rect = new egret.Rectangle(0, 0, width, height);
+		this.rect = new egret.Rectangle(-200, -100, width+400, height+200);
 
 		// 创建观察者飞船，用于保持持续碰撞检测
-        this.obShip = new Ship("");
-		this.obShip.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;
-        this.obShip.force.force = tutils.EnemyForce;
-        this.addShip(this.obShip);
-        this.obShip.x = -200;
-        this.obShip.y = -200;
+        // this.obShip = new Ship("");
+		// this.obShip.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;
+        // this.obShip.force.force = tutils.EnemyForce;
+        // this.addShip(this.obShip);
+        // this.obShip.x = -200;
+        // this.obShip.y = -200;
 	}
 
 	public start(frameRate: number): void {
@@ -78,7 +78,7 @@ class World {
 		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
-			if (!ship.alive || !ship.force.isMyEnemy(force) || ship.gameObject.y>y || ship==this.obShip) {
+			if (!ship.alive || !ship.force.isMyEnemy(force) || ship.gameObject.y>y/* || ship==this.obShip*/) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
@@ -98,7 +98,7 @@ class World {
 		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
-			if (ship==this.obShip || !ship.hero || !ship.alive) {
+			if (/*ship==this.obShip || */!ship.hero || !ship.alive) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
@@ -118,7 +118,7 @@ class World {
 		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
-			if (ship==this.obShip || !(ship.hitTestFlags&ShipHitTestType.Supply) || !ship.alive) {
+			if (/*ship==this.obShip || */!(ship.hitTestFlags&ShipHitTestType.Supply) || !ship.alive) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
@@ -136,13 +136,16 @@ class World {
 		this.ships[ship.id] = ship;
 		this.shipsNum++;
 		ship.onAddToWorld();
-		if (ship instanceof HeroShip) {
-			this.gameObject.addChild(ship.gameObject);
-		} else if (ship instanceof IntervalHitShip && ship.ship) {
+		if (ship instanceof IntervalHitShip && ship.ship) {
 			let index = this.gameObject.getChildIndex(ship.ship.gameObject);
 			this.gameObject.addChildAt(ship.gameObject, index);
+		} else if (ship instanceof MotherShip) {
+			this.gameObject.addChildAt(ship.gameObject, 0);
+		} else if (ship instanceof MotherGunShip) {
+			let index = this.gameObject.getChildIndex(ship.ship.gameObject);
+			this.gameObject.addChildAt(ship.gameObject, index+1);
 		} else {
-			this.gameObject.addChildAt(ship.gameObject, this.gameObject.numChildren-1);
+			this.gameObject.addChild(ship.gameObject);
 		}
 		
 		return ship;
@@ -168,8 +171,12 @@ class World {
 		this.bullets[bullet.id] = bullet;
 		this.bulletsNum++;
 		bullet.onAddToWorld();
-		let index = this.gameObject.getChildIndex(bullet.gun.ship.gameObject);
-		this.gameObject.addChildAt(bullet.gameObject, index);
+		if (bullet instanceof MissileBullet) {
+			let index = this.gameObject.getChildIndex(bullet.gun.ship.gameObject);
+			this.gameObject.addChildAt(bullet.gameObject, index);
+		} else {
+			this.gameObject.addChild(bullet.gameObject);
+		}
 		return bullet;
 	}
 

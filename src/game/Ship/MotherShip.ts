@@ -6,10 +6,10 @@ class MotherShip extends Ship {
 	}
 
 	public addGunShip(gunShip: MotherGunShip, offsetX: number, offsetY: number): MotherGunShip {
+		gunShip.ship = this;
 		this.world.addShip(gunShip);
 		gunShip.x = this.x + offsetX;
 		gunShip.y = this.y + offsetY;
-		gunShip.ship = this;
 		gunShip.force = this.force;
 		this.gunShips[gunShip.id] = {gunShip: gunShip, offsetX: offsetX, offsetY: offsetY};
 		return gunShip;

@@ -7,6 +7,11 @@ class MissileGun extends Gun {
 	explosionPowerEveryPer: number = 0.5;
 	explosionPowerLossInterval: number = 10000;
 
+	public constructor() {
+		super();
+		this.fireCooldown.setRange({minValue: 100});
+	}
+
 	public fire() {
 		this.playFireSound();
 

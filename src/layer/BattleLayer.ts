@@ -51,6 +51,18 @@ class BattleLayer extends tutils.Layer {
         let stageH = this.stage.stageHeight;
 
         this.layer.touchEnabled = true;
+
+        // 背景滚动器
+        // let bg = tutils.createLayer(this.worldLayer, 0x191231, 1);
+        
+        this.bgCtrl = new tutils.BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
+        this.bgCtrl.start(20);
+        this.layer.addChildAt(this.bgCtrl.gameObject, 0);
+        this.bgCtrl.gameObject.alpha = 0.8;
+
+        // this.bgCtrl2 = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "NearSpace_png").create();
+        // this.bgCtrl2.start(20);
+        // this.layer.addChildAt(this.bgCtrl2.gameObject, 1);
         
         this.worldLayer = new egret.Sprite();
         this.layer.addChild(this.worldLayer);
@@ -63,18 +75,6 @@ class BattleLayer extends tutils.Layer {
 
         this.msgLayer = new egret.Sprite();
         this.layer.addChild(this.msgLayer);
-
-        // 背景滚动器
-        // let bg = tutils.createLayer(this.worldLayer, 0x191231, 1);
-        
-        this.bgCtrl = new tutils.BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "bgGrey_jpg").create();
-        this.bgCtrl.start(20);
-        this.worldLayer.addChildAt(this.bgCtrl.gameObject, 0);
-        this.bgCtrl.gameObject.alpha = 0.8;
-
-        // this.bgCtrl2 = new BackgroundController(this.stage.stageWidth, this.stage.stageHeight, "NearSpace_png").create();
-        // this.bgCtrl2.start(20);
-        // this.worldLayer.addChild(this.bgCtrl2.gameObject);
 		
         // 创建世界
         this.world = new World(this.worldLayer, stageW, stageH);
@@ -264,7 +264,7 @@ class BattleLayer extends tutils.Layer {
         tutils.playSound(sounds[Math.floor(Math.random()*sounds.length)]);
         if (this.hero.force.isMyEnemy(ship.force) && ship instanceof MotherShip) {
             this.hideBossUI();
-            this.enemyCtrl.startRush(30);
+            this.enemyCtrl.startRush();
             this.destroyBosses++;
             this.reachStage++;
             GameController.instance.savePlayerData();
@@ -508,6 +508,8 @@ class BattleLayer extends tutils.Layer {
         // this.enemyCtrl.addRushes4(4000, 40);
         // this.enemyCtrl.addRushes5(4000, 40);
         // this.enemyCtrl.addRushes6(2000, 40);
+        this.enemyCtrl.addRushes7(2000, 500, 3);
+        //this.enemyCtrl.addRushes8(5000, 500, 2);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
@@ -516,10 +518,10 @@ class BattleLayer extends tutils.Layer {
         }, this);
         this.enemyCtrl.addRush(rush);
 
-        const num = 15;
-        for (let i=1; i<=num*10; i++) {
+        const WAVE_NUM = 10;
+        for (let i=1; i<=WAVE_NUM*10; i++) {
             let hp = 40+Math.floor(i/4 * 2);
-            if (i == num) {
+            if (i == WAVE_NUM) {
                 this.enemyCtrl.addRushes1(2000, hp, 1.5);
                 this.enemyCtrl.addRushes2(4000, hp, 1.5);
                 this.enemyCtrl.addRushes3(4000, hp, 1.5);
@@ -533,7 +535,7 @@ class BattleLayer extends tutils.Layer {
                 }, this);
                 this.enemyCtrl.addRush(rush);
                 continue;
-            } else if (i == num*2) {
+            } else if (i == WAVE_NUM*2) {
                 this.enemyCtrl.addRushes1(2000, hp, 2.0);
                 this.enemyCtrl.addRushes2(4000, hp, 2.0);
                 this.enemyCtrl.addRushes3(4000, hp, 2.0);
@@ -547,7 +549,7 @@ class BattleLayer extends tutils.Layer {
                 }, this);
                 this.enemyCtrl.addRush(rush);
                 continue;
-            } else if (i == num*3) {
+            } else if (i == WAVE_NUM*3) {
                 this.enemyCtrl.addRushes1(2000, hp, 2.5);
                 this.enemyCtrl.addRushes2(4000, hp, 2.5);
                 this.enemyCtrl.addRushes3(4000, hp, 2.5);
@@ -561,7 +563,7 @@ class BattleLayer extends tutils.Layer {
                 }, this);
                 this.enemyCtrl.addRush(rush);
                 continue;
-            } else if (i == num*4) {
+            } else if (i == WAVE_NUM*4) {
                 this.enemyCtrl.addRushes1(2000, hp, 3.0);
                 this.enemyCtrl.addRushes2(4000, hp, 3.0);
                 this.enemyCtrl.addRushes3(4000, hp, 3.0);
@@ -575,7 +577,7 @@ class BattleLayer extends tutils.Layer {
                 }, this);
                 this.enemyCtrl.addRush(rush);
                 continue;
-            } else if (i == num*5) {
+            } else if (i == WAVE_NUM*5) {
                 this.enemyCtrl.addRushes1(2000, hp, 3.5);
                 this.enemyCtrl.addRushes2(4000, hp, 3.5);
                 this.enemyCtrl.addRushes3(4000, hp, 3.5);
@@ -591,12 +593,21 @@ class BattleLayer extends tutils.Layer {
                 continue;
             }
             if (Math.random() < 0.3) {
-                let rush = this.enemyCtrl.addRushMeteorite(0, hp*5, 0, Math.min(3, 1+i/num));
+                let rush = this.enemyCtrl.addRushMeteorite(0, hp*5, 0, Math.min(3, 1+i/WAVE_NUM));
                 rush.setCallback(():void=>{
                     tutils.playSound("Meteorolite_mp3");
                     rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
                     rush.to.x = rush.from.x;
                 }, this);
+            }
+
+            if (Math.random() < 0.3) {
+                let num = Math.floor((Math.random()*(i/WAVE_NUM+1))/2) + 1;
+                if (Math.random() < 0.5) {
+                    this.enemyCtrl.addRushes7(2000, hp*10, num, (i/WAVE_NUM+2)*0.5);
+                } else {
+                    this.enemyCtrl.addRushes8(2000, hp*10, num, (i/WAVE_NUM+2)*0.5);
+                }
             }
             let n = Math.floor(Math.random()*8+5);
             let es = this.enemyCtrl.createEnemyShips(n, hp, "RedEnemyShip_png");
@@ -612,7 +623,7 @@ class BattleLayer extends tutils.Layer {
             let rush = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
             this.enemyCtrl.addRush(rush);
         }
-        this.enemyCtrl.startRush(30);
+        this.enemyCtrl.startRush();
     }
 
     private showBossUI(boss: Ship) {

@@ -1,10 +1,10 @@
 module tutils {
-	export interface State {
+	export interface IState {
 		onEnter(...args: any[]): void;
 		onExit();
 	}
 
-	export class State implements State {
+	export class CustomState implements IState {
 		protected onEnterListener: ()=>void = null;
 		protected onTimerListener: (dt: number)=>void = null;
 		protected thisObject: any = null;
@@ -47,19 +47,19 @@ module tutils {
 	}
 
 	export class StateManager {
-		private $curState: State = null;
-		private timer: tutils.Timer;
+		private $curState: IState = null;
 
 		public constructor() {
-			this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
 		}
 
 		public stop(): void {
-			this.timer.stop();
+			if (this.$curState) {
+				this.$curState.onExit();
+			}
 			this.$curState = null;
 		}
 
-		public change(state: State, ...args: any[]): void {
+		public change(state: IState, ...args: any[]): void {
 			if (this.$curState) {
 				this.$curState.onExit();
 			}

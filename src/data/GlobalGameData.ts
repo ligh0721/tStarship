@@ -197,7 +197,7 @@ const GlobalPlayerInitData: PlayPrefsData = {
         shipId: "",
     },
     maxStage: 0,
-    coins: 0,
+    coins: 10000,
 	shipsNum: 0,
     ships: {},
 };
