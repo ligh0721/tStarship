@@ -49,7 +49,7 @@ class MissileBullet extends Bullet {
 	explosionPowerLossInterval: number = 10000;
 
 	public constructor(gun: Gun) {
-		super(gun, "Missile_png", 1.5);
+		super(gun, "MissileBullet_png", 1.5);
 	}
 
 	protected onDying(src: HpUnit) {

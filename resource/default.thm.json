@@ -16,15 +16,6 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
-		"resource/custom_skins/BattleHUDSkin.exml",
-		"resource/custom_skins/BlueButtonSkin.exml",
-		"resource/custom_skins/EditorPanelSkin.exml",
-		"resource/custom_skins/GreenButtonSkin.exml",
-		"resource/custom_skins/GameOverPanelSkin.exml",
-		"resource/custom_skins/GreenCoinsButtonSkin.exml",
-		"resource/custom_skins/HeroShipIRSkin.exml",
-		"resource/custom_skins/HeroShipsPanelSkin.exml",
-		"resource/custom_skins/NewShipPanelSkin.exml",
 		"resource/eui_skins/ButtonSkin.exml",
 		"resource/eui_skins/CheckBoxSkin.exml",
 		"resource/eui_skins/HScrollBarSkin.exml",
@@ -37,7 +28,16 @@
 		"resource/eui_skins/TextInputSkin.exml",
 		"resource/eui_skins/ToggleSwitchSkin.exml",
 		"resource/eui_skins/VScrollBarSkin.exml",
-		"resource/eui_skins/VSliderSkin.exml"
+		"resource/eui_skins/VSliderSkin.exml",
+		"resource/custom_skins/BattleHUDSkin.exml",
+		"resource/custom_skins/BlueButtonSkin.exml",
+		"resource/custom_skins/EditorPanelSkin.exml",
+		"resource/custom_skins/GameOverPanelSkin.exml",
+		"resource/custom_skins/GreenButtonSkin.exml",
+		"resource/custom_skins/GreenCoinsButtonSkin.exml",
+		"resource/custom_skins/HeroShipIRSkin.exml",
+		"resource/custom_skins/HeroShipsPanelSkin.exml",
+		"resource/custom_skins/NewShipPanelSkin.exml"
 	],
 	"path": "resource/default.thm.json"
 }

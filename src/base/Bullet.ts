@@ -10,7 +10,7 @@ class Bullet extends HpUnit {
 	public constructor(gun: Gun, model?: string, scale?: number) {
 		super();
 		this.gun = gun;
-		this.model = model===undefined ? "Bullet_png" : model;
+		this.model = model===undefined ? "BlueBullet2_png" : model;
 		this.scale = scale===undefined ? 1.0 : scale;
 		this.resetHp(gun.bulletPower.value);
 		this.powerLossPer = gun.bulletPowerLossPer;

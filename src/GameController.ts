@@ -145,7 +145,7 @@ class GameController {
 		if (shipData === undefined) {
 			return null;
 		}
-		let hero = new HeroShip(shipData.model, 1.2, id);
+		let hero = new HeroShip(shipData.model, shipData.scale, id);
 		world.addShip(hero);
 		hero.resetHp(shipData.maxHp);
 		hero.force.force = tutils.Player1Force;
@@ -315,6 +315,7 @@ type ShipDataItem = {
 	
 	name: string,
 	model: string,
+	scale: number,
 	maxHp: number,
 	speed: number,
 	gunName: string,

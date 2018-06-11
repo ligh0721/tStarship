@@ -10,7 +10,7 @@ class ShieldBallBuff extends Buff {
 
 	// override
 	public onAddBuff(): void {
-		let ship = new IntervalHitShip("BlueBallBullet_png", 2, this.ship);
+		let ship = new IntervalHitShip("GearBullet_png", 2, this.ship);
 		this.ship.world.addShip(ship);
 		ship.resetHp(this.power);
 		ship.hitShipInterval = this.hitInterval;
@@ -34,5 +34,7 @@ class ShieldBallBuff extends Buff {
 			ship.removeBuff(buff.id);
 			ship.damaged(ship.hp, null);
 		}, this);
+		let tw = egret.Tween.get(ship.gameObject, {loop: true});
+		tw.to({rotation: 360}, 400);
 	}
 }
