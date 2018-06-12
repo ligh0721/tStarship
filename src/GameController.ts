@@ -5,8 +5,11 @@ class GameController {
 	curRootLayer: tutils.Layer;
 
 	private readonly allShipsData: ShipsData;
-	readonly allShips: string[];
+	private readonly allPartsData: PartsData;
 	readonly expTable: number[];
+
+	readonly allShips: string[];
+	readonly allParts: string[];
 
 	playerData: PlayPrefsData = null;
 	private static KeyData: string = "PlayPrefsData";
@@ -15,9 +18,14 @@ class GameController {
 
 	public constructor() {
 		this.allShipsData = this.fixShipsData(GlobalShipsData);
-		this.allShips = this.checkAllShips(GlobalAllShips);
+		this.allPartsData = this.fixPartsData(GlobalPartsData);
 		this.expTable = GlobalExpTable;
+
+		this.allShips = this.checkAllShips(GlobalAllShips);
+		this.allParts = this.checkAllParts(GlobalAllParts);
+		
 		console.log("load ships data", this.allShipsData);
+		console.log("load parts data", this.allPartsData);
 	}
 
 	public static get instance(): GameController {
@@ -93,7 +101,7 @@ class GameController {
 
 	public addNewHeroShip(id: string): void {
 		console.assert(this.playerData != null);
-		console.assert(GameController.instance.getShipDataById(id) != null);
+		console.assert(GameController.instance.getShipDataByKey(id) != null);
 		let playerShipData = this.playerData.ships[id];
 		console.assert(playerShipData===undefined, "ship("+id+") is already exists");
 		this.playerData.shipsNum++;
@@ -102,20 +110,20 @@ class GameController {
 			use: 0,
 			enemy: 0,
 		};
-		// this.savePlayerData();
 	}
 
-	public showGameOverPanel(parent: egret.DisplayObjectContainer, data: any): void {
+	public showGameOverPanel(parent: egret.DisplayObjectContainer, data: any): GameOverPanel {
 		let panel = new GameOverPanel(data);
         parent.addChild(panel);
 		let stage = egret.MainContext.instance.stage;
         panel.x = (stage.stageWidth - panel.width) / 2;
         panel.y = (stage.stageHeight - panel.height) / 2;
+		return panel;
 	}
 
 	public async showNewShipPanel(parent: egret.DisplayObjectContainer, data: any): Promise<any> {
 		let p = new Promise<any>((resolve, reject)=>{
-			let panel = new NewShipPanel(data, (res: any): void=>{
+			let panel = new NewShipPanel(data, (res: any):void=>{
 				resolve(res);
 			});
 			parent.addChild(panel);
@@ -125,36 +133,53 @@ class GameController {
 		});
 		return p;
 	}
-	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): void {
+	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): PartsPanel {
 		let panel = new PartsPanel(data);
         parent.addChild(panel);
 		let stage = egret.MainContext.instance.stage;
         panel.x = (stage.stageWidth - panel.width) / 2;
         panel.y = (stage.stageHeight - panel.height) / 2;
+		return panel;
 	}
 
 	private fixShipsData(data: ShipsData): ShipsData {
-		for (let id in data) {
-			let shipInfo = data[id];
-			shipInfo.id = id;
+		for (let key in data) {
+			let shipInfo = data[key];
+			shipInfo.key = key;
 		}
 		return data;
 	}
 
 	private checkAllShips(ships: string[]): string[] {
 		for (let i in ships) {
-			let shipId = ships[i];
-			console.assert(this.getShipDataById(shipId)!==null);
+			let shipKey = ships[i];
+			console.assert(this.getShipDataByKey(shipKey)!==null);
 		}
 		return ships;
 	}
 
-	public createHeroShip(id: string, world: World): HeroShip {
-		let shipData = this.allShipsData[id];
+	private fixPartsData(data: PartsData): PartsData {
+		for (let key in data) {
+			let partInfo = data[key];
+			partInfo.key = key;
+		}
+		return data;
+	}
+
+	private checkAllParts(parts: string[]): string[] {
+		for (let i in parts) {
+			let partKey = parts[i];
+			console.assert(this.getPartDataByKey(partKey)!==null);
+		}
+		return parts;
+	}
+
+	public createHeroShip(key: string, world: World): HeroShip {
+		let shipData = this.allShipsData[key];
 		if (shipData === undefined) {
 			return null;
 		}
-		let hero = new HeroShip(shipData.model, shipData.scale, id);
+		let hero = new HeroShip(shipData.model, shipData.scale, key);
 		world.addShip(hero);
 		hero.resetHp(shipData.maxHp);
 		hero.force.force = tutils.Player1Force;
@@ -175,8 +200,16 @@ class GameController {
 		return hero;
 	}
 
-	public getShipDataById(id: string): ShipDataItem {
-		let item = this.allShipsData[id];
+	public getShipDataByKey(key: string): ShipDataItem {
+		let item = this.allShipsData[key];
+		if (item === undefined) {
+			return null;
+		}
+		return item;
+	}
+
+	public getPartDataByKey(key: string): PartDataItem {
+		let item = this.allPartsData[key];
 		if (item === undefined) {
 			return null;
 		}
@@ -192,8 +225,8 @@ class GameController {
 		return this.expTable.length;
 	}
 
-	public getPlayerShipDataById(id: string): PlayerShipData {
-		let item = this.playerData.ships[id];
+	public getPlayerShipDataByKey(key: string): PlayerShipData {
+		let item = this.playerData.ships[key];
 		if (item === undefined) {
 			return null;
 		}
@@ -269,6 +302,19 @@ class GameController {
 			buff = new MeteoroliteRushBuff();
 			buff.name = "Meteorolite Rush";
 			break;
+
+		case "part_test1":
+			buff = new GunBuff(-1, -0.30, 0, +0.50);
+			buff.name = "Test Part1";
+			buff.key = key;
+			buff.model = "GunCDR_png";
+			break;
+		case "part_test2":
+			buff = new GunBuff(-1, 0.00, +0.50, 0.00);
+			buff.name = "Test Part2";
+			buff.key = key;
+			buff.model = "GunPower_png";
+			break;
 		default:
 			console.assert(false, "invalid buff key("+key+")");
 		}
@@ -298,6 +344,33 @@ class GameController {
 		}
 		return skill;
 	}
+
+	public createPart(key: string): Part {
+		if (this.allParts.indexOf(key) < 0) {
+			console.assert(false, "invalid part key("+key+")");
+			return null;
+		}
+
+		let partInfo = this.getPartDataByKey(key);
+		if (!partInfo) {
+			return null;
+		}
+
+		let buffs: Buff[] = [];
+		for (let i in partInfo.buffs) {
+			let buff = this.createBuff(partInfo.buffs[i]);
+			if (buff) {
+				buffs.push(buff);
+			}
+		}
+
+		let part = new Part(buffs);
+		part.key = key;
+		part.name = partInfo.name;
+		part.model = partInfo.model;
+		part.desc = partInfo.desc;
+		return part;
+	}
 }
 
 type PlayerShipData = {
@@ -311,16 +384,16 @@ type PlayPrefsData = {
     highscore: {
         score: number,
         stage: number,
-        shipId: string,
+        shipKey: string,
     },
     maxStage: number,
     coins: number,
 	shipsNum: number,
-    ships: {[id: string]: PlayerShipData},
+    ships: {[key: string]: PlayerShipData},
 };
 
 type ShipDataItem = {
-	id?: string,
+	key?: string,
 	
 	name: string,
 	model: string,
@@ -341,5 +414,19 @@ type ShipDataItem = {
 }
 
 type ShipsData = {
-	[id: string]: ShipDataItem
+	[key: string]: ShipDataItem
+};
+
+
+type PartDataItem = {
+	key?: string,
+
+	name: string,
+	model: string,
+	desc: string,
+	buffs: string[]
+}
+
+type PartsData = {
+	[key: string]: PartDataItem
 };

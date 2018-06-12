@@ -7,7 +7,7 @@ class NewShipPanel extends eui.Component {
     private data: {shipId: string};
     private onClose: (res: any)=>void;
 
-	constructor(data: {shipId: string}, onClose?: (res: any)=>void) {
+	public constructor(data: {shipId: string}, onClose?: (res: any)=>void) {
         super();
         this.data = data;
         this.onClose = onClose;
@@ -20,7 +20,7 @@ class NewShipPanel extends eui.Component {
         this.skinName = "resource/custom_skins/NewShipPanelSkin.exml";
         this.currentState = "init";
         this.height = egret.MainContext.instance.stage.stageHeight;
-        let shipData = GameController.instance.getShipDataById(this.data.shipId);
+        let shipData = GameController.instance.getShipDataByKey(this.data.shipId);
         this.imgShip.source = shipData.model;
         this.lblShipName.text = shipData.name;
         this.btnReturn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnReturn, this);

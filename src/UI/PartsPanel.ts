@@ -30,6 +30,9 @@ class PartsPanel extends eui.Component {
 
     private data: {parts: Part[]};
 
+    private onRemovePartListener: (part: Part)=> void = null;
+    private onRemovePartThisObj: any = null;
+
 	public constructor(data: {parts: Part[]}) {
         super();
         this.data = data;
@@ -96,6 +99,9 @@ class PartsPanel extends eui.Component {
             let part = this.parts[index];
             this.lblPartName.text = part.name;
             this.lblPartDesc.text = part.desc;
+        } else {
+            this.lblPartName.text = "";
+            this.lblPartDesc.text = "";
         }
     }
 
@@ -119,16 +125,18 @@ class PartsPanel extends eui.Component {
         this.draggingIconFake.source = imgIcon.source;
         this.draggingIconFake.alpha = 1;
         this.draggingIndex = index;
-        this.grpOutsideUp.alpha = 0.3;
-        this.grpOutsideDown.alpha = 0.3;
+        this.grpOutsideUp.alpha = 0.5;
+        this.grpOutsideDown.alpha = 0.5;
 
         this.draggingIconFake.x = x;
         this.draggingIconFake.y = y;
     }
 
     private endDrag(): void {
-        let imgIcon = this.imgIcon[this.draggingIndex];
-        imgIcon.alpha = 1;
+        if (this.draggingIndex >= 0) {
+            let imgIcon = this.imgIcon[this.draggingIndex];
+            imgIcon.alpha = 1;
+        }
         this.draggingIconFake.alpha = 0;
         this.draggingIcon = null;
         this.draggingIndex = -1;
@@ -151,8 +159,13 @@ class PartsPanel extends eui.Component {
             // 拖动中
             this.draggingIconFake.x = evt.stageX;
             this.draggingIconFake.y = evt.stageY;
-            this.grpOutsideUp.alpha = 0.3;
-            this.grpOutsideDown.alpha = 0.3;
+            if (this.grpInside.hitTestPoint(evt.stageX, evt.stageY)) {
+                this.grpOutsideUp.alpha = 0.5;
+                this.grpOutsideDown.alpha = 0.5;
+            } else {
+                this.grpOutsideUp.alpha = 1;
+                this.grpOutsideDown.alpha = 1;
+            }
         } else if (this.draggingIcon) {
             // 预拖动中
             let dis = tutils.getDistance(this.draggingIconPos.x, this.draggingIconPos.y, evt.stageX, evt.stageY);
@@ -164,21 +177,42 @@ class PartsPanel extends eui.Component {
     }
 
     private onDragPartEnd(evt: egret.TouchEvent): void {
-        if (this.draggingIndex >= 0) {
-            this.endDrag();
-        }
+        this.endDrag();
     }
 
     private onDragPartOutside(evt: egret.TouchEvent): void {
         if (this.draggingIndex >= 0) {
-            this.endDrag();
+            this.onRemovePart(this.parts[this.draggingIndex]);
+            this.parts[this.draggingIndex] = null;
+            this.imgIcon[this.draggingIndex].source = null;
+            let index = -1;
+            for (let i in this.parts) {
+                let part = this.parts[i];
+                if (part) {
+                    index = parseInt(i);
+                    break;
+                }
+            }
+            this.selectPart(index);
         }
+        this.endDrag();
     }
 
     private onTapPart(evt: egret.TouchEvent): void {
         let index = this.getTouchPartIndex(evt.target);
         if (index >= 0) {
             this.selectPart(index);
+        }
+    }
+
+    public setOnRemovePartListener(listener: (part: Part)=>void, thisObj?: any): void {
+		this.onRemovePartListener = listener;
+		this.onRemovePartThisObj = thisObj;
+	}
+
+    private onRemovePart(part: Part): void {
+        if (this.onRemovePartListener) {
+            this.onRemovePartListener.call(this.onRemovePartThisObj, part);
         }
     }
 

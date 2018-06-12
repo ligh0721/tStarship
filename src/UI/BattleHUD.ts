@@ -26,6 +26,14 @@ class BattleHUD extends eui.Component implements IHeroHUD {
 
     private bossHpBarShowing: boolean = false;
 
+    private data: {};
+    private hero: HeroShip;
+
+    public constructor(data: {}) {
+        super();
+        this.data = data;
+    }
+
     // override
     protected createChildren(): void {
         super.createChildren();
@@ -41,6 +49,12 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         this.grpBossHpBar.visible = false;
         this.btnPower.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnPower, this);
         this.grpParts.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapGrpParts, this);
+    }
+
+    public setHero(hero: HeroShip): void {
+        this.hero = hero;
+        this.updateHpBar(hero.hp*100/hero.maxHp);
+        this.updatePowerBar(hero.power*100/hero.maxPower);
     }
 
     public updateScore(score: number): void {
@@ -187,25 +201,48 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         }
     }
 
+    public addPartUI(part: Part): void {
+        let partui = new PartUI(part);
+        this.grpParts.addChild(partui);
+    }
+
+    public removePartUI(part: Part): void {
+        for (let i=0, len=this.grpParts.numChildren; i<len; i++) {
+            let child = this.grpParts.getChildAt(i) as PartUI;
+            if (child && child.part==part) {
+                this.grpParts.removeChildAt(i);
+                return;
+            }
+        }
+    }
+
     private onTweenGroupComplete(evt: egret.Event): void {
     }
 
     private onTapGrpParts(evt: egret.TouchEvent): void {
-        if (this.alpha != 1) {
+        if (this.alpha!=1 || !this.hero || !this.hero.alive) {
             return;
         }
+
         let parts: Part[] = [];
-        let part = new Part([]);
-        part.model = "GunPower_png";
-        part.name = "陨石零件";
-        part.desc = "击败敌人后有10%几率召唤陨石";
-        parts.push(part);
-        part = new Part([]);
-        part.model = "GunCDR_png";
-        part.name = "暴击零件";
-        part.desc = "很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害的零件";
-        parts.push(part);
-        GameController.instance.showPartsPanel(this, {parts: parts});
+        for (let id in this.hero.parts) {
+            let part = this.hero.parts[id];
+            parts.push(part);
+        }
+        // let part = new Part([]);
+        // part.model = "GunPower_png";
+        // part.name = "陨石零件";
+        // part.desc = "击败敌人后有10%几率召唤陨石";
+        // parts.push(part);
+        // part = new Part([]);
+        // part.model = "GunCDR_png";
+        // part.name = "暴击零件";
+        // part.desc = "很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害的零件";
+        // parts.push(part);
+        let panel = GameController.instance.showPartsPanel(this, {parts: parts});
+        panel.setOnRemovePartListener((part: Part):void=>{
+            this.hero.removePart(part.id);
+        }, this);
     }
 }
 

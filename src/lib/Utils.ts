@@ -10,7 +10,7 @@ module tutils {
 	export const LargeNumber = 1000000;
 	export const ShipTimerInterval = 100;
 	let bgMusic: egret.SoundChannel;
-	let bgMusicPosition: number = 0;
+	let bgMusicPosition: number = null;
 	let bgMusicName: string = null;
 
     export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.Sprite {
@@ -64,6 +64,7 @@ module tutils {
 		}
 		let sound: egret.Sound = RES.getRes(name);
 		bgMusic = sound.play(0, 0);
+		bgMusicName = name;
 	}
 
 	export function stopBgMusic(): void {
@@ -71,23 +72,23 @@ module tutils {
 			bgMusic.stop();
 			bgMusic = null;
 			bgMusicName = null;
-			bgMusicPosition = 0;
+			bgMusicPosition = null;
 		}
 	}
 
 	export function pauseBgMusic(): void {
 		if (bgMusic) {
 			bgMusicPosition = bgMusic.position;
-			bgMusicName = name;
 			bgMusic.stop();
 			bgMusic = null;
 		}
 	}
 
 	export function resumeBgMusic(): void {
-		if (!bgMusic && bgMusicName) {
+		if (!bgMusic && bgMusicPosition) {
 			let sound: egret.Sound = RES.getRes(bgMusicName);
 			bgMusic = sound.play(bgMusicPosition, 0);
+			bgMusicPosition = null;
 		}
 	}
 

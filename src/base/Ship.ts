@@ -17,6 +17,7 @@ class Ship extends HpUnit {
 
 	readonly parts: { [id: string]: Part } = {};
 	partsNum: number = 0;
+	partsMax: number = 4;
 
 	readonly onDamagedTriggers: { [id: string]: Buff } = {};
 
@@ -36,6 +37,14 @@ class Ship extends HpUnit {
 	// from unit
 	private onUpdateBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onUpdateBuffThisObject: any = null;
+
+	// from unit
+	private onAddPartListener: (ship: Ship, part: Part)=>void = null;
+	private onAddPartThisObject: any = null;
+
+	// from unit
+	private onRemovePartListener: (ship: Ship, part: Part)=>void = null;
+	private onRemovePartThisObject: any = null;
 
 	public constructor(model: string, scale?: number, key?: string) {
 		super();
@@ -289,11 +298,15 @@ class Ship extends HpUnit {
 		if (part.key) {
 			// 如果buff存在名称，则处理覆盖逻辑
 			for (let partId in this.parts) {
-				let b = this.parts[partId];
-				if (b.key == part.key) {
-					return false;
+				let p = this.parts[partId];
+				if (p.key == part.key) {
+					this.removePart(p.id);
+					break;
 				}
 			}
+		}
+		if (this.partsNum == this.partsMax) {
+			return false;
 		}
 		
 		part.id = this.world.nextId();
@@ -301,6 +314,7 @@ class Ship extends HpUnit {
 		part.onAddPart();
 		this.parts[part.id] = part;
 		this.partsNum++;
+		this.onAddPart(part);
 		return true;
 	}
 
@@ -315,6 +329,29 @@ class Ship extends HpUnit {
 		part.ship = null;
 		delete this.parts[id];
 		this.partsNum--;
+		this.onRemovePart(part);
+	}
+
+	public onAddPart(part: Part) {
+		if (this.onAddPartListener != null) {
+			this.onAddPartListener.call(this.onAddPartThisObject, this, part);
+		}
+	}
+
+	public setOnAddPartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
+		this.onAddPartListener = listener;
+		this.onAddPartThisObject = thisObject;
+	}
+
+	public onRemovePart(part: Part) {
+		if (this.onRemovePartListener != null) {
+			this.onRemovePartListener.call(this.onRemovePartThisObject, this, part);
+		}
+	}
+
+	public setOnRemovePartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
+		this.onRemovePartListener = listener;
+		this.onRemovePartThisObject = thisObject;
 	}
 }
 

@@ -17,6 +17,7 @@ class BattleLayer extends tutils.Layer {
     // private bgCtrl2: BackgroundController;
 
     private txtPushStart: egret.TextField;
+    private txtPushStartDesc: egret.TextField;
 
     private sldHeroScale: eui.HSlider;
     private txtHeroScale: egret.TextField;
@@ -93,7 +94,8 @@ class BattleLayer extends tutils.Layer {
         this.createPushStart();
 
         // 初始化HUD
-        this.hud = new BattleHUD();
+        let data = {};
+        this.hud = new BattleHUD(data);
         this.hudLayer.addChild(this.hud);
         this.hud.alpha = 0;
         let playerData = GameController.instance.playerData;
@@ -122,6 +124,14 @@ class BattleLayer extends tutils.Layer {
         this.txtPushStart.x = (this.stage.stageWidth - this.txtPushStart.textWidth) * 0.5;
         this.txtPushStart.y = (this.stage.stageHeight - this.txtPushStart.textHeight) * 0.7;
 
+        this.txtPushStartDesc = new egret.TextField();
+        this.txtPushStartDesc.text = "1. 右下角能量满了之后，双击屏幕释放必杀\n2. 点击左侧零件栏可以丢弃不需要的零件";
+
+        this.msgLayer.addChild(this.txtPushStartDesc);
+        this.txtPushStartDesc.x = 0;
+        this.txtPushStartDesc.y = this.stage.stageHeight - this.txtPushStartDesc.height;
+
+
         let change = (txt: egret.TextField) => {
             let tw = egret.Tween.get(txt);
             tw.to({ "alpha": 1 }, 500);
@@ -138,13 +148,16 @@ class BattleLayer extends tutils.Layer {
         egret.Tween.removeTweens(this.txtPushStart);
         this.msgLayer.removeChild(this.txtPushStart);
         this.txtPushStart = null;
+
+        this.msgLayer.removeChild(this.txtPushStartDesc);
+        this.txtPushStartDesc = null;
         this.startGame();
     }
 
     protected startGame(): void {
         for (let i in GameController.instance.battleShips) {
             let shipId = GameController.instance.battleShips[i];
-            let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
+            let playerShipData = GameController.instance.getPlayerShipDataByKey(shipId);
             playerShipData.use++;
         }
         GameController.instance.savePlayerData();
@@ -155,13 +168,16 @@ class BattleLayer extends tutils.Layer {
         let heroShipId = GameController.instance.battleShips[0];
         let hero = GameController.instance.createHeroShip(heroShipId, this.world);
         this.hero = hero;
-        this.heroShipData = GameController.instance.getPlayerShipDataById(heroShipId);
+        this.heroShipData = GameController.instance.getPlayerShipDataByKey(heroShipId);
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
 
         hero.setOnAddBuffListener(this.onShipAddBuff, this);
         hero.setOnRemoveBuffListener(this.onShipRemoveBuff, this);
         hero.setOnUpdateBuffListener(this.onShipUpdateBuff, this);
+
+        hero.setOnAddPartListener(this.onShipAddPart, this);
+        hero.setOnRemovePartListener(this.onShipRemovePart, this);
 
         hero.heroHUD = this.hud;
         this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
@@ -172,8 +188,7 @@ class BattleLayer extends tutils.Layer {
 
 
         // 创建玩家飞船血条、能量条
-        this.hud.updateHpBar(hero.hp*100/hero.maxHp);
-        this.hud.updatePowerBar(hero.power*100/hero.maxPower);
+        this.hud.setHero(this.hero);
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();
@@ -263,19 +278,25 @@ class BattleLayer extends tutils.Layer {
         tutils.playSound(sounds[Math.floor(Math.random()*sounds.length)]);
         if (this.hero.force.isMyEnemy(ship.force) && ship instanceof MotherShip) {
             this.hideBossUI();
-            this.enemyCtrl.startRush();
-            this.destroyBosses++;
-            this.reachStage++;
-            GameController.instance.savePlayerData();
+            if (this.hero && this.hero.alive) {
+                this.enemyCtrl.startRush();
+                this.destroyBosses++;
+                this.reachStage++;
+                GameController.instance.savePlayerData();
+            }
         }
 
-        if (this.hero == ship) {
+        if (ship == this.hero) {
             this.gameOver();
             return;
         } else if (this.hero.force.isMyEnemy(ship.force) && killer && (killer.force.isMyAlly(this.hero.force))) {
             // 击败敌军
+            if (!this.hero || !this.hero.alive) {
+                return;
+            }
+
             if (ship instanceof EnemyShip && ship.isLastGroupMember()) {
-                let score = Math.floor(ship.group.max/4*(1+this.reachStage/2));
+                let score = Math.max(1, Math.floor(ship.group.max/4*(1+this.reachStage/2)));
                 this.hud.showTip("coin2_png", "+"+score, "Wave Clear!");
                 this.addScore(score);
             }
@@ -291,10 +312,26 @@ class BattleLayer extends tutils.Layer {
             }
 
             this.hero.addPower(power);
-            let supply = this.world.pools.newObject(ScoreSupply, score);
-            supply.speed = 100;
-            this.world.addSupply(supply);
-            supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
+            if (Math.random() < 0.005) {
+                let supply: PartSupply;
+                if (Math.random() < 0.5) {
+                    let part = GameController.instance.createPart("part_test1");
+                    supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+                } else {
+                    let part = GameController.instance.createPart("part_test2");
+                    supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+                }
+                
+                supply.speed = 20;
+                this.world.addSupply(supply);
+                supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
+            } else {
+                let supply = this.world.pools.newObject(ScoreSupply, score);
+                supply.speed = 100;
+                this.world.addSupply(supply);
+                supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
+            }
+            
 
             // 更新统计
             this.heroShipData.exp += score*2;
@@ -312,7 +349,7 @@ class BattleLayer extends tutils.Layer {
                     // new high score!
                     playerData.highscore.score = this.score;
                     playerData.highscore.stage = this.reachStage;
-                    playerData.highscore.shipId = GameController.instance.battleShips[0];
+                    playerData.highscore.shipKey = GameController.instance.battleShips[0];
                 }
                 if (this.reachStage > playerData.maxStage) {
                     playerData.maxStage = this.reachStage;
@@ -323,6 +360,10 @@ class BattleLayer extends tutils.Layer {
     }
 
     private addScore(score: number): void {
+        if (!this.hero || !this.hero.alive) {
+            return;
+        }
+
         this.score += score;
         this.unsaveScore += score;
         this.hud.updateScore(this.score);
@@ -347,7 +388,7 @@ class BattleLayer extends tutils.Layer {
             // new high score!
             playerData.highscore.score = this.score;
             playerData.highscore.stage = this.reachStage;
-            playerData.highscore.shipId = GameController.instance.battleShips[0];
+            playerData.highscore.shipKey = GameController.instance.battleShips[0];
         }
         if (this.reachStage > playerData.maxStage) {
             playerData.maxStage = this.reachStage;
@@ -369,7 +410,12 @@ class BattleLayer extends tutils.Layer {
             if (buff instanceof GunLevelUpBuff) {
                 this.hud.showTip(buff.model, "+"+buff.levelChange, buff.name);
             } else {
-                this.hud.showTip(buff.model, Math.floor(buff.duration/1000).toString()+"s", buff.name);
+                let dur = Math.floor(buff.duration/1000);
+                if (dur > 0) {
+                    this.hud.showTip(buff.model, dur.toString()+"s", buff.name);
+                } else if (buff.duration < 0) {
+                    this.hud.showTip(buff.model, "*s", buff.name);
+                }
                 this.hud.addBuffUI(buff);
             }
             tutils.playSound("Powerup_mp3");
@@ -390,6 +436,19 @@ class BattleLayer extends tutils.Layer {
             if (!(buff instanceof GunLevelUpBuff)) {
                 this.hud.updateBuffUI(buff);
             }
+        }
+    }
+
+    private onShipAddPart(ship: Ship, part: Part): void {
+        if (part.model && part.name) {
+            this.hud.addPartUI(part);
+            tutils.playSound("Powerup_mp3");
+        }
+    }
+
+    private onShipRemovePart(ship: Ship, part: Part): void {
+        if (part.model && part.name) {
+            this.hud.removePartUI(part);
         }
     }
 
@@ -642,13 +701,15 @@ class BattleLayer extends tutils.Layer {
         let gun: Gun;
         let i = Math.floor(Math.random()*4);
         if (this.heroShipData.use<=3 && this.hero.mainGun.level===1) {
+            // 飞船使用次数少于3时第一个buff必定是主炮升级
             buff = GameController.instance.createBuff("gun_level_up");
             supply = new BuffSupply(buff.model, [buff]);
             i = -1;
         }
         switch (i) {
             case 0:
-            if (Math.random()*100 > 40) {
+            // 40%
+            if (Math.random() > 0.40) {
                 return;
             }
             buff = GameController.instance.createBuff("gun_level_up");

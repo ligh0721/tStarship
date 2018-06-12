@@ -57,10 +57,10 @@ class HeroShipsPanel extends eui.Component {
         let lockedItems: HeroShipsPanelListItem[] = [];
         for (let i in GameController.instance.allShips) {
             let shipId = GameController.instance.allShips[i];
-            let shipData = GameController.instance.getShipDataById(shipId);
+            let shipData = GameController.instance.getShipDataByKey(shipId);
             let item: HeroShipsPanelListItem = {id: shipId, icon: shipData.model, level: "Locked", selected: 0};
 
-            let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
+            let playerShipData = GameController.instance.getPlayerShipDataByKey(shipId);
             if (playerShipData) {
                 // player ships
                 let exp = playerShipData.exp;
@@ -118,8 +118,8 @@ class HeroShipsPanel extends eui.Component {
             return;
         }
         this.curShipId = shipId;
-        let shipData = GameController.instance.getShipDataById(shipId);
-        let playerShipData = GameController.instance.getPlayerShipDataById(shipId);
+        let shipData = GameController.instance.getShipDataByKey(shipId);
+        let playerShipData = GameController.instance.getPlayerShipDataByKey(shipId);
         if (!playerShipData) {
             this.shipDetail.selectedIndex = 1;
             this.lblName.text = "未知";
@@ -188,7 +188,7 @@ class HeroShipsPanel extends eui.Component {
     }
 
     private onBtnUnlock(event: egret.TouchEvent): void {
-        let shipData = GameController.instance.getShipDataById(this.curShipId);
+        let shipData = GameController.instance.getShipDataByKey(this.curShipId);
         let coins = shipData.coins;
         let playerData = GameController.instance.playerData;
         let dt = playerData.coins - coins;

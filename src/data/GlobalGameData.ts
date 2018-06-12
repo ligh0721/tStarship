@@ -3,6 +3,31 @@ const GlobalConfig = {
 	reset: true
 }
 
+const GlobalMaxHp = 50;  // for UI
+const GlobalMaxPower = 100;  // for UI
+const GlobalMaxFireRate = 10;  // for UI
+
+const GlobalExpTable = [300, 600, 900, 1500, 2400, 3900, 6300, 10200, 16500, 26700, 43200, 69900, 113100, 183000, 296100, 479100, 775200, 1254300, 2029500, 3283800];
+
+const GlobalAllShips: string[] = [
+	//"ship_test",
+	"ship_hero",
+	"ship_row",
+	"ship_shot",
+	"ship_hunter",
+	"ship_soundwave",
+	"ship_energy",
+	"ship_explosion",
+	"ship_focus",
+	"ship_missile",
+];
+
+const GlobalAllParts: string[] = [
+	"part_test1",
+	"part_test2"
+];
+
+// all datas
 const GlobalShipsData: ShipsData = {
 	ship_test: {
 		name: "测试号",
@@ -186,34 +211,31 @@ const GlobalShipsData: ShipsData = {
     },
 };
 
-const GlobalAllShips: string[] = [
-	//"ship_test",
-	"ship_hero",
-	"ship_row",
-	"ship_shot",
-	"ship_hunter",
-	"ship_soundwave",
-	"ship_energy",
-	"ship_explosion",
-	"ship_focus",
-	"ship_missile",
-];
+const GlobalPartsData: PartsData = {
+	part_test1: {
+		name: "测试物品1",
+		model: "GunCDR_png",
+		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击！",
+		buffs: ["part_test1"],
+	},
+
+	part_test2: {
+		name: "测试物品2",
+		model: "GunPower_png",
+		desc: "攻击时有那么点点的几率对地方非常造成成吨的伤害！",
+		buffs: ["part_test2"],
+	}
+}
 
 const GlobalPlayerInitData: PlayPrefsData = {
 	ver: GlobalConfig.ver,
     highscore: {
         score: 0,
         stage: 0,
-        shipId: "",
+        shipKey: "",
     },
     maxStage: 0,
     coins: 10000,
 	shipsNum: 0,
     ships: {},
 };
-
-const GlobalExpTable = [300, 600, 900, 1500, 2400, 3900, 6300, 10200, 16500, 26700, 43200, 69900, 113100, 183000, 296100, 479100, 775200, 1254300, 2029500, 3283800];
-
-const GlobalMaxHp = 50;
-const GlobalMaxPower = 100;
-const GlobalMaxFireRate = 10;

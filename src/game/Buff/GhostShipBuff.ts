@@ -20,7 +20,7 @@ class GhostShipBuff extends Buff {
 			return;
 		}
 
-		let shipData = GameController.instance.getShipDataById(this.ship.key);
+		let shipData = GameController.instance.getShipDataByKey(this.ship.key);
 		for (let i=0; i<this.shipsNum; i++) {
 			let ghost = new IntervalHitShip(this.ship.model, this.ship.scale, this.ship);
 			this.ship.world.addShip(ghost);

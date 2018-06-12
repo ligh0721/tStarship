@@ -108,8 +108,9 @@ class HeroShip extends Ship {
 
     // override
     public hitTest(other: Unit): boolean {
-        this.hitRect.x = this.gameObject.x - this.hitRadius;
-        this.hitRect.y = this.gameObject.y - this.hitRadius;
-		return this.hitRect.intersects(other.getBounds());
+        // this.hitRect.x = this.gameObject.x - this.hitRadius;
+        // this.hitRect.y = this.gameObject.y - this.hitRadius;
+		// return this.hitRect.intersects(other.getBounds());
+        return other.getBounds().contains(this.gameObject.x, this.gameObject.y);
 	}
 }

@@ -51,6 +51,35 @@
 			<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
 		</e:layout>
 	</e:Group>
+	<e:Group height="600" top="450" left="10" width="50" alpha="0.5">
+		<e:Group width="50" height="50" x="220" y="47">
+			<e:Rect width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xffffff" strokeColor="0xffffff" enabled="false"/>
+			<e:Rect id="rctSel0" width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xffba23" strokeColor="0xffba23" enabled="false" alpha="0"/>
+			<e:Rect width="90%" height="90%" fillAlpha="1" ellipseWidth="35" ellipseHeight="35" strokeColor="0x000000" verticalCenter="0" horizontalCenter="0" enabled="false" fillColor="0x00223d"/>
+			<e:Image id="imgIcon0" width="100%" height="100%" top="5" bottom="5" left="5" right="5"/>
+		</e:Group>
+		<e:Group width="50" height="50" x="230" y="57">
+			<e:Rect width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xFFFFFF" strokeColor="0xFFFFFF" enabled="false"/>
+			<e:Rect id="rctSel1" width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xFFBA23" strokeColor="0xFFBA23" enabled="false" alpha="0"/>
+			<e:Rect width="90%" height="90%" fillAlpha="1" ellipseWidth="35" ellipseHeight="35" strokeColor="0x000000" verticalCenter="0" horizontalCenter="0" enabled="false" fillColor="0x00223D"/>
+			<e:Image id="imgIcon1" width="100%" height="100%" top="5" bottom="5" left="5" right="5"/>
+		</e:Group>
+		<e:Group width="50" height="50" x="240" y="67">
+			<e:Rect width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xFFFFFF" strokeColor="0xFFFFFF" enabled="false"/>
+			<e:Rect id="rctSel2" width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xFFBA23" strokeColor="0xFFBA23" enabled="false" alpha="0"/>
+			<e:Rect width="90%" height="90%" fillAlpha="1" ellipseWidth="35" ellipseHeight="35" strokeColor="0x000000" verticalCenter="0" horizontalCenter="0" enabled="false" fillColor="0x00223D"/>
+			<e:Image id="imgIcon2" width="100%" height="100%" top="5" bottom="5" left="5" right="5"/>
+		</e:Group>
+		<e:Group width="50" height="50" x="250" y="77">
+			<e:Rect width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xFFFFFF" strokeColor="0xFFFFFF" enabled="false"/>
+			<e:Rect id="rctSel3" width="100%" height="100%" fillAlpha="1" ellipseWidth="40" ellipseHeight="40" fillColor="0xFFBA23" strokeColor="0xFFBA23" enabled="false" alpha="0"/>
+			<e:Rect width="90%" height="90%" fillAlpha="1" ellipseWidth="35" ellipseHeight="35" strokeColor="0x000000" verticalCenter="0" horizontalCenter="0" enabled="false" fillColor="0x00223D"/>
+			<e:Image id="imgIcon3" width="100%" height="100%" top="5" bottom="5" left="5" right="5"/>
+		</e:Group>
+		<e:layout>
+		<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
+		</e:layout>
+	</e:Group>
 	<e:Group id="grpParts" height="600" top="450" left="10" width="50">
 		<e:layout>
 		<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
