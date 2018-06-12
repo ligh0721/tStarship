@@ -9,6 +9,9 @@ module tutils {
 	export const EnemyForce = 11;
 	export const LargeNumber = 1000000;
 	export const ShipTimerInterval = 100;
+	let bgMusic: egret.SoundChannel;
+	let bgMusicPosition: number = 0;
+	let bgMusicName: string = null;
 
     export function createLayer(parent: egret.DisplayObjectContainer, color: number=0x000000, alpha=0.0): egret.Sprite {
 		let layer = new egret.Sprite();
@@ -49,9 +52,43 @@ module tutils {
         return gameObject;
     }
 
-	export function playSound(name: string, loop: number=1): egret.SoundChannel {
+	export function playSound(name: string): egret.SoundChannel {
 		let sound: egret.Sound = RES.getRes(name);
-		return sound.play(0, loop);
+		return sound.play(0, 1);
+	}
+
+	export function playBgMusic(name: string): void {
+		if (bgMusic) {
+			bgMusic.stop();
+			bgMusic = null;
+		}
+		let sound: egret.Sound = RES.getRes(name);
+		bgMusic = sound.play(0, 0);
+	}
+
+	export function stopBgMusic(): void {
+		if (bgMusic) {
+			bgMusic.stop();
+			bgMusic = null;
+			bgMusicName = null;
+			bgMusicPosition = 0;
+		}
+	}
+
+	export function pauseBgMusic(): void {
+		if (bgMusic) {
+			bgMusicPosition = bgMusic.position;
+			bgMusicName = name;
+			bgMusic.stop();
+			bgMusic = null;
+		}
+	}
+
+	export function resumeBgMusic(): void {
+		if (!bgMusic && bgMusicName) {
+			let sound: egret.Sound = RES.getRes(bgMusicName);
+			bgMusic = sound.play(bgMusicPosition, 0);
+		}
 	}
 
 	export function greyFilter(): egret.Filter {

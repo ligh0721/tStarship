@@ -15,6 +15,7 @@ class BattleHUD extends eui.Component implements IHeroHUD {
     private lblPowerPress: eui.BitmapLabel;
     private btnPower: eui.Button;
     private grpBuffs: eui.Group;
+    private grpParts: eui.Group;
 
     private onUsePowerListener: Function = null;
     private onUsePowerThisObj: any = null;
@@ -39,6 +40,7 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         this.lblScore.text = "0";
         this.grpBossHpBar.visible = false;
         this.btnPower.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnPower, this);
+        this.grpParts.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapGrpParts, this);
     }
 
     public updateScore(score: number): void {
@@ -186,6 +188,24 @@ class BattleHUD extends eui.Component implements IHeroHUD {
     }
 
     private onTweenGroupComplete(evt: egret.Event): void {
+    }
+
+    private onTapGrpParts(evt: egret.TouchEvent): void {
+        if (this.alpha != 1) {
+            return;
+        }
+        let parts: Part[] = [];
+        let part = new Part([]);
+        part.model = "GunPower_png";
+        part.name = "陨石零件";
+        part.desc = "击败敌人后有10%几率召唤陨石";
+        parts.push(part);
+        part = new Part([]);
+        part.model = "GunCDR_png";
+        part.name = "暴击零件";
+        part.desc = "很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害的零件";
+        parts.push(part);
+        GameController.instance.showPartsPanel(this, {parts: parts});
     }
 }
 

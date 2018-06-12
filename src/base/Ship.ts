@@ -15,6 +15,9 @@ class Ship extends HpUnit {
 	readonly buffs: { [id: string]: Buff } = {};
 	buffsNum: number = 0;
 
+	readonly parts: { [id: string]: Part } = {};
+	partsNum: number = 0;
+
 	readonly onDamagedTriggers: { [id: string]: Buff } = {};
 
 	ai: tutils.StateManager;
@@ -184,11 +187,12 @@ class Ship extends HpUnit {
 	}
 
 	public removeGun(id: string): void {
-		if (!this.guns.hasOwnProperty(id)) {
+		let gun = this.guns[id];
+		if (gun === undefined) {
 			console.log('gun('+id+') not found');
 			return;
 		}
-		let gun = this.guns[id];
+		
 		gun.cleanup();
 		//gun.ship = null;
 		delete this.guns[id];
@@ -231,11 +235,12 @@ class Ship extends HpUnit {
 	}
 
 	public removeBuff(id: string): void {
-		if (!this.buffs.hasOwnProperty(id)) {
+		let buff = this.buffs[id];
+		if (buff === undefined) {
 			console.log('buff('+id+') not found');
 			return;
 		}
-		let buff = this.buffs[id];
+		
 		buff.onRemoveBuff();
 		buff.ship = null;
 		delete this.buffs[id];
@@ -278,6 +283,38 @@ class Ship extends HpUnit {
 	public setOnUpdateBuffListener(listener: (ship: Ship, buff: Buff)=>void, thisObject?: any) {
 		this.onUpdateBuffListener = listener;
 		this.onUpdateBuffThisObject = thisObject;
+	}
+
+	public addPart(part: Part): boolean {
+		if (part.key) {
+			// 如果buff存在名称，则处理覆盖逻辑
+			for (let partId in this.parts) {
+				let b = this.parts[partId];
+				if (b.key == part.key) {
+					return false;
+				}
+			}
+		}
+		
+		part.id = this.world.nextId();
+		part.ship = this;
+		part.onAddPart();
+		this.parts[part.id] = part;
+		this.partsNum++;
+		return true;
+	}
+
+	public removePart(id: string): void {
+		let part = this.parts[id];
+		if (part === undefined) {
+			console.log('part('+id+') not found');
+			return;
+		}
+		
+		part.onRemovePart();
+		part.ship = null;
+		delete this.parts[id];
+		this.partsNum--;
 	}
 }
 

@@ -152,11 +152,12 @@ class World {
 	}
 
 	public removeShip(id: string) {
-		if (!(id in this.ships)) {
+		let ship = this.ships[id];
+		if (ship === undefined) {
 			console.log('ship('+id+') not found');
 			return;
 		}
-		let ship: Ship = this.ships[id];
+
 		ship.cleanup();
 		this.gameObject.removeChild(ship.gameObject);
 		ship.world = null;
@@ -181,11 +182,12 @@ class World {
 	}
 
 	public removeBullet(id: string) {
-		if (!(id in this.bullets)) {
+		let bullet = this.bullets[id];
+		if (bullet === undefined) {
 			console.log('bullet('+id+') not found');
 			return;
 		}
-		let bullet: Bullet = this.bullets[id];
+		
 		bullet.cleanup();
 		this.gameObject.removeChild(bullet.gameObject);
 		bullet.world = null;
@@ -205,11 +207,12 @@ class World {
 	}
 
 	public removeSupply(id: string) {
-		if (!(id in this.supplies)) {
+		let supply = this.supplies[id];
+		if (supply === undefined) {
 			console.log('supply('+id+') not found');
 			return;
 		}
-		let supply: Supply = this.supplies[id];
+		
 		supply.cleanup();
 		this.gameObject.removeChild(supply.gameObject);
 		supply.world = null;

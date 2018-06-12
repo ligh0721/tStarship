@@ -15,7 +15,6 @@ class BattleLayer extends tutils.Layer {
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private bgCtrl: tutils.BackgroundController;
     // private bgCtrl2: BackgroundController;
-    private bgMusic: egret.SoundChannel;
 
     private txtPushStart: egret.TextField;
 
@@ -110,7 +109,7 @@ class BattleLayer extends tutils.Layer {
             egret.Tween.removeTweens(buffui);
         }
         this.enemyCtrl.stopRush();
-        this.bgMusic.stop();
+        tutils.stopBgMusic();
         this.world.cleanup();
     }
 
@@ -150,7 +149,7 @@ class BattleLayer extends tutils.Layer {
         }
         GameController.instance.savePlayerData();
         
-        this.bgMusic = tutils.playSound("Bgmusic_mp3", 0);
+        tutils.playBgMusic("Bgmusic_mp3");
 
         // 创建玩家飞船
         let heroShipId = GameController.instance.battleShips[0];

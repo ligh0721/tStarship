@@ -51,4 +51,9 @@
 			<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
 		</e:layout>
 	</e:Group>
+	<e:Group id="grpParts" height="600" top="450" left="10" width="50">
+		<e:layout>
+		<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
+		</e:layout>
+	</e:Group>
 </e:Skin>

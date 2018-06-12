@@ -39,10 +39,12 @@ class Main extends eui.UILayer {
 
         egret.lifecycle.onPause = () => {
             egret.ticker.pause();
+            tutils.pauseBgMusic();
         }
 
         egret.lifecycle.onResume = () => {
             egret.ticker.resume();
+            tutils.resumeBgMusic();
         }
 
         //inject the custom material parser

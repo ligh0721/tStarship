@@ -108,8 +108,9 @@ class GameController {
 	public showGameOverPanel(parent: egret.DisplayObjectContainer, data: any): void {
 		let panel = new GameOverPanel(data);
         parent.addChild(panel);
-        panel.x = (this.root.stage.stageWidth - panel.width) / 2;
-        panel.y = (this.root.stage.stageHeight - panel.height) / 2;
+		let stage = egret.MainContext.instance.stage;
+        panel.x = (stage.stageWidth - panel.width) / 2;
+        panel.y = (stage.stageHeight - panel.height) / 2;
 	}
 
 	public async showNewShipPanel(parent: egret.DisplayObjectContainer, data: any): Promise<any> {
@@ -118,10 +119,18 @@ class GameController {
 				resolve(res);
 			});
 			parent.addChild(panel);
-			panel.x = (this.root.stage.stageWidth - panel.width) / 2;
-			panel.y = (this.root.stage.stageHeight - panel.height) / 2;
+			let stage = egret.MainContext.instance.stage;
+			panel.x = (stage.stageWidth - panel.width) / 2;
+			panel.y = (stage.stageHeight - panel.height) / 2;
 		});
 		return p;
+	}
+	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): void {
+		let panel = new PartsPanel(data);
+        parent.addChild(panel);
+		let stage = egret.MainContext.instance.stage;
+        panel.x = (stage.stageWidth - panel.width) / 2;
+        panel.y = (stage.stageHeight - panel.height) / 2;
 	}
 
 	private fixShipsData(data: ShipsData): ShipsData {
