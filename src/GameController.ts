@@ -272,12 +272,12 @@ class GameController {
 			buff.key = key;
 			break;
 		case "turbo_fire_gun":
-			buff = new GunBuff(3000, -0.50, 0, +1.00);
+			buff = new GunBuff(5000, -0.50, 0, +1.00);
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;
 		case "turbo_fire_ship":
-			buff = new ShipBuff(3000, -0.80);
+			buff = new ShipBuff(5000, -0.80);
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;
@@ -323,13 +323,13 @@ class GameController {
 			// buff.model = "_png";
 			break;
 		case "part_test1":
-			buff = new GunBuff(-1, -0.30, 0, +0.50);
+			buff = new GunBuff(-1, -0.10, 0, +0.10);
 			buff.key = key;
 			// buff.name = "Test Part1";
 			// buff.model = "GunCDR_png";
 			break;
 		case "part_test2":
-			buff = new GunBuff(-1, 0.00, +0.50, 0.00);
+			buff = new GunBuff(-1, 0.00, +0.10, 0.00);
 			buff.key = key;
 			// buff.name = "Test Part2";
 			// buff.model = "GunPower_png";

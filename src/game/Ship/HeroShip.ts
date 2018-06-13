@@ -36,10 +36,7 @@ class HeroShip extends Ship {
 	}
 
     public addPower(value: number): void {
-        for (let id in this.onPowerChangeTriggers) {
-            let buff = this.onPowerChangeTriggers[id];
-            value = buff.onPowerChange(value);
-        }
+        value = this.$triggerOnPowerChange(value);
         this.power += value;
         if (this.power > this.maxPower) {
             this.power = this.maxPower;
@@ -51,10 +48,7 @@ class HeroShip extends Ship {
 
     public clearPower(): void {
         this.power = 0;
-        for (let id in this.onPowerEmptyTriggers) {
-            let buff = this.onPowerEmptyTriggers[id];
-            buff.onPowerEmpty();
-        }
+        this.$triggerOnPowerEmpty();
         if (this.heroHUD) {
             this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
         }
@@ -157,6 +151,21 @@ class HeroShip extends Ship {
 		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
 			delete this.onPowerEmptyTriggers[buff.id];
 		}
+	}
+
+    public $triggerOnPowerChange(change: number): number {
+		for (let id in this.onPowerChangeTriggers) {
+            let buff = this.onPowerChangeTriggers[id];
+            change = buff.onPowerChange(change);
+        }
+        return change;
+	}
+
+    public $triggerOnPowerEmpty(): void {
+		for (let id in this.onPowerEmptyTriggers) {
+            let buff = this.onPowerEmptyTriggers[id];
+            buff.onPowerEmpty();
+        }
 	}
 
 	public addPart(part: Part): boolean {

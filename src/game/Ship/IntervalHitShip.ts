@@ -10,6 +10,14 @@ class IntervalHitShip extends Ship {
 	}
 
 	// override
+	public $triggerOnDestroyTarget(target: Ship): void {
+		super.$triggerOnDestroyTarget(target);
+		if (this.ship && this.ship.alive) {
+			this.ship.$triggerOnDestroyTarget(target);
+		}
+	}
+
+	// override
 	public onHitEnemyShipTest(ship: Ship): boolean {
 		let now = egret.getTimer();
 		if (this.effectedShips.hasOwnProperty(ship.id)) {

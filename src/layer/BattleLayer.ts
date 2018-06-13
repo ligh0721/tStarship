@@ -208,6 +208,12 @@ class BattleLayer extends tutils.Layer {
             this.createTestSupply();
         });
         testSupplyTimer.start(8000, true, 0);
+        
+        let part = GameController.instance.createPart("part_meteoroid");
+        let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+        supply.speed = 20;
+        this.world.addSupply(supply);
+        supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -592,6 +598,7 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRushes4(4000, hp, 1.5);
                 this.enemyCtrl.addRushes5(4000, hp, 1.5);
                 this.enemyCtrl.addRushes6(2000, hp, 1.5);
+                this.enemyCtrl.addRushes7(3000, 200, 3);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss2();
@@ -606,6 +613,7 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRushes4(4000, hp, 2.0);
                 this.enemyCtrl.addRushes5(4000, hp, 2.0);
                 this.enemyCtrl.addRushes6(2000, hp, 2.0);
+                this.enemyCtrl.addRushes8(3000, 200, 3);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
@@ -620,6 +628,7 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRushes4(4000, hp, 2.5);
                 this.enemyCtrl.addRushes5(4000, hp, 2.5);
                 this.enemyCtrl.addRushes6(2000, hp, 2.5);
+                this.enemyCtrl.addRushes7(3000, 200, 3);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
@@ -634,6 +643,7 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRushes4(4000, hp, 3.0);
                 this.enemyCtrl.addRushes5(4000, hp, 3.0);
                 this.enemyCtrl.addRushes6(2000, hp, 3.0);
+                this.enemyCtrl.addRushes8(3000, 200, 3);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();
@@ -648,6 +658,7 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRushes4(4000, hp, 3.5);
                 this.enemyCtrl.addRushes5(4000, hp, 3.5);
                 this.enemyCtrl.addRushes6(2000, hp, 3.5);
+                this.enemyCtrl.addRushes7(3000, 200, 3);
                 let rush = new CallbackRush(5000, ():void=>{
                     this.enemyCtrl.stopRush();
                     let boss = this.enemyCtrl.createBoss3();

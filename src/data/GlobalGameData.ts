@@ -234,15 +234,15 @@ const GlobalPartsData: PartsData = {
 		buffs: ["part_power_battery_2"],
 	},
 	part_test1: {
-		name: "攻速零件(测试)",
-		model: "GunCDR_png",
-		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击，通常来讲可以增加30%射速！",
+		name: "低级攻速零件(测试)",
+		model: "PartCDRUp1_png",
+		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击，通常来讲可以增加10%射速！",
 		buffs: ["part_test1"],
 	},
 	part_test2: {
-		name: "火力零件(测试)",
-		model: "GunPower_png",
-		desc: "增加50%主炮火力",
+		name: "低级火力零件(测试)",
+		model: "PartPowerUp1_png",
+		desc: "增加10%主炮火力",
 		buffs: ["part_test2"],
 	}
 }

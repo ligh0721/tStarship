@@ -3,8 +3,8 @@ class Supply extends Unit {
 	text: string = "";
 	color: number = 0xffffff;
 	status: UnitStatus = UnitStatus.Alive;
-	speed: number = 10;
-	pickDist: number = 300;
+	speed: number = 20;
+	pickDist: number = 150;
 	pickSpeed: number = 150;
 
 	public constructor(model?: string) {

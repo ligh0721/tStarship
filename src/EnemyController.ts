@@ -234,7 +234,7 @@ class EnemyController {
 		let gunShipL = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
         boss.addGunShip(gunShipL, -110, 20);
         gunShipL.angle = 180;
-        let gunL = Gun.createGun(Gun, RedStarBullet);
+        let gunL = Gun.createGun(Gun, RedEllipseBullet);
 		gunShipL.addGun(gunL, true);
 		gunL.bulletLeft = 0;
 		gunL.autoFire = true;
@@ -242,7 +242,7 @@ class EnemyController {
 		let gunShipR = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
         boss.addGunShip(gunShipR, 110, 20);
         gunShipR.angle = 180;
-        let gunR = Gun.createGun(Gun, RedStarBullet);
+        let gunR = Gun.createGun(Gun, RedEllipseBullet);
 		gunShipR.addGun(gunR, true);
 		gunR.bulletLeft = 0;
 		gunR.autoFire = true;
@@ -500,7 +500,7 @@ class EnemyController {
 		rush = new CustomRush(delay, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
-			ship.speed.baseValue = 50;
+			ship.speed.baseValue = 20;
 			ship.angle = 180;
 
 			let gun = Gun.createGun(ShotGun, RedEllipseBullet);
@@ -517,12 +517,12 @@ class EnemyController {
 			let beginFire = new FireState(ai, ship, true);
 			let wait = new WaitState(ai, ship, 10000/speedFactor);
 			let endFire = new FireState(ai, ship, false);
-			let left = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, ship.speed.value*speedFactor, true, egret.Ease.getPowIn(2));
+			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(200, ship.speed.value*speedFactor), true, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
 			let callback = new CallbackState(ai, ():void=>{
 				(ship as EnemyShip).group.decMember();
 			}, this);
-			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(left).setNext(dead).setNext(callback);
+			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead).setNext(callback);
 			ai.change(arrive);
 		}, this);
 		this.addRush(rush);
@@ -540,7 +540,7 @@ class EnemyController {
 		rush = new CustomRush(delay, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
-			ship.speed.baseValue = 50;
+			ship.speed.baseValue = 20;
 			ship.angle = 180;
 
 			let gun = Gun.createGun(RowGun, RedEllipseBullet);
@@ -557,12 +557,12 @@ class EnemyController {
 			let beginFire = new FireState(ai, ship, true);
 			let wait = new WaitState(ai, ship, 10000/speedFactor);
 			let endFire = new FireState(ai, ship, false);
-			let left = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, ship.speed.value*speedFactor, false, egret.Ease.getPowIn(2));
+			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(200, ship.speed.value*speedFactor), false, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
 			let callback = new CallbackState(ai, ():void=>{
 				(ship as EnemyShip).group.decMember();
 			}, this);
-			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(left).setNext(dead).setNext(callback);
+			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead).setNext(callback);
 			ai.change(arrive);
 		}, this);
 		this.addRush(rush);

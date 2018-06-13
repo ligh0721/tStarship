@@ -33,7 +33,7 @@ class SuperHeroBuff extends Buff {
 		gun.bulletSpeed.baseValue = 200;
 		gun.fireCooldown.baseValue = 150;
 		gun.bulletPowerLossPer = 1;
-		gun.bulletPower.baseValue = 5;
+		gun.bulletPower.baseValue = 3;
 		gun.bulletPowerLossInterval.baseValue = 1000;
 		gun.bulletNum = 4;
 		ship.addGun(gun, true);
@@ -51,7 +51,7 @@ class SuperHeroBuff extends Buff {
 		gun2.bulletSpeed.baseValue = 150;
 		gun2.fireCooldown.baseValue = 1400;
 		gun2.bulletPowerLossPer = 0.001;
-		gun2.bulletPower.baseValue = 50/gun2.bulletPowerLossPer;
+		gun2.bulletPower.baseValue = 30/gun2.bulletPowerLossPer;
 		gun2.bulletPowerLossInterval.baseValue = 100;
 		gun2.bulletNum = 1;
 		ship.addGun(gun2);
@@ -60,7 +60,7 @@ class SuperHeroBuff extends Buff {
 		gun3.bulletSpeed.baseValue = 200;
 		gun3.fireCooldown.baseValue = 1000;
 		gun3.bulletPowerLossPer = 1;
-		gun3.bulletPower.baseValue = 30;
+		gun3.bulletPower.baseValue = 20;
 		gun3.bulletPowerLossInterval.baseValue = 500;
 		gun3.bulletNum = 3;
 		gun3.explosionRadius = 150;

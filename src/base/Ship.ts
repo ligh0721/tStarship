@@ -78,10 +78,7 @@ class Ship extends HpUnit {
 	// override
 	protected onDying(src: HpUnit): void {
 		if (src instanceof Ship) {
-			for (let id in src.onDestroyTargetTriggers) {
-				let buff = src.onDestroyTargetTriggers[id];
-				buff.onDestroyTarget(this);
-			}
+			src.$triggerOnDestroyTarget(this);
 		}
 		
 		egret.Tween.removeTweens(this);
@@ -175,12 +172,24 @@ class Ship extends HpUnit {
 		}
 	}
 
+	public $triggerOnDamaged(value: number, src: Ship): number {
+		for (let id in this.onDamagedTriggers) {
+			let buff = this.onDamagedTriggers[id];
+			value = buff.onDamaged(value, src);
+		}
+		return value;
+	}
+
+	public $triggerOnDestroyTarget(target: Ship): void {
+		for (let id in this.onDestroyTargetTriggers) {
+			let buff = this.onDestroyTargetTriggers[id];
+			buff.onDestroyTarget(target);
+		}
+	}
+
 	public damaged(value: number, src: HpUnit): void {
 		if (src instanceof Ship) {
-			for (let id in this.onDamagedTriggers) {
-				let buff = this.onDamagedTriggers[id];
-				value = buff.onDamaged(value, src);
-			}
+			value = this.$triggerOnDamaged(value, src);
 		}
 		super.damaged(value, src);
 	}
