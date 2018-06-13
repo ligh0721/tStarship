@@ -517,7 +517,7 @@ class EnemyController {
 			let beginFire = new FireState(ai, ship, true);
 			let wait = new WaitState(ai, ship, 10000/speedFactor);
 			let endFire = new FireState(ai, ship, false);
-			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(200, ship.speed.value*speedFactor), true, egret.Ease.getPowIn(2));
+			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value*speedFactor), true, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
 			let callback = new CallbackState(ai, ():void=>{
 				(ship as EnemyShip).group.decMember();
@@ -557,7 +557,7 @@ class EnemyController {
 			let beginFire = new FireState(ai, ship, true);
 			let wait = new WaitState(ai, ship, 10000/speedFactor);
 			let endFire = new FireState(ai, ship, false);
-			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(200, ship.speed.value*speedFactor), false, egret.Ease.getPowIn(2));
+			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value*speedFactor), false, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
 			let callback = new CallbackState(ai, ():void=>{
 				(ship as EnemyShip).group.decMember();

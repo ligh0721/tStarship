@@ -598,7 +598,7 @@ class BattleLayer extends tutils.Layer {
 
         const WAVE_NUM = 15;
         for (let i=1; i<=WAVE_NUM*10; i++) {
-            let hp = 20+Math.floor(i/3 * 2);
+            let hp = 20+Math.floor(i);
             if (i == WAVE_NUM) {
                 this.enemyCtrl.addRushes1(2000, hp, 1.5);
                 this.enemyCtrl.addRushes2(4000, hp, 1.5);
