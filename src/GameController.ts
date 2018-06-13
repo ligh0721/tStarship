@@ -305,7 +305,7 @@ class GameController {
 
 		// part's buffs
 		case "part_meteoroid":
-			buff = new MeteoroidBuff(0.3, 200);
+			buff = new MeteoroidBuff(0.20, 200);
 			buff.name = "Meteoroid Rush";
 			buff.key = key;
 			// buff.model = "PartMeteoroid_png";

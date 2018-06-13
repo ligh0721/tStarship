@@ -32,7 +32,7 @@ class BattleLayer extends tutils.Layer {
     private lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
     private touchBeginCount: number = 0;
 
-    private partsDropTable: DropTable<string>;
+    private partsDropTableRare: DropTable<DropTable<string>>;
 
     // 统计项
     private score: number = 0;
@@ -108,12 +108,20 @@ class BattleLayer extends tutils.Layer {
         this.hud.updateHighScore(this.highScore);
 
         // 初始化世界掉落表
-        this.partsDropTable = new DropTable<string>();
-        this.partsDropTable.push("part_test1", 100);
-        this.partsDropTable.push("part_test2", 100);
-        this.partsDropTable.push("part_meteoroid", 100);
-        this.partsDropTable.push("part_power_speed_up_2", 100);
-        this.partsDropTable.push("part_power_battery_2", 100);
+        this.partsDropTableRare = new DropTable<DropTable<string>>();
+        let table = new DropTable<string>();
+        table.push("part_test1", 100);
+        table.push("part_test2", 100);
+        this.partsDropTableRare.push(table, 1000);
+
+        table.push("part_power_speed_up_2", 100);
+        table.push("part_power_battery_2", 100);
+        this.partsDropTableRare.push(table, 1000);
+
+        table = new DropTable<string>();
+        table.push("part_meteoroid", 100);
+        this.partsDropTableRare.push(table, 1000);
+        
 	}
 
     // override
@@ -137,11 +145,11 @@ class BattleLayer extends tutils.Layer {
         this.txtPushStart.y = (this.stage.stageHeight - this.txtPushStart.textHeight) * 0.7;
 
         this.txtPushStartDesc = new egret.TextField();
-        this.txtPushStartDesc.text = "1. 右下角能量满了之后，双击屏幕释放必杀\n2. 点击左侧零件栏可以丢弃不需要的零件";
+        this.txtPushStartDesc.text = "1. 右下角能量满了之后，双击屏幕释放必杀\n2. 击毁整波敌军小队会有额外金币奖励\n3. 金币可以解锁新的飞机\n4. 玩家飞船只有中心红点被击中时才会受到伤害\n5. 点击左侧零件栏可以丢弃不需要的零件";
 
         this.msgLayer.addChild(this.txtPushStartDesc);
         this.txtPushStartDesc.x = 0;
-        this.txtPushStartDesc.y = this.stage.stageHeight - this.txtPushStartDesc.height;
+        this.txtPushStartDesc.y = 0;
 
 
         let change = (txt: egret.TextField) => {
@@ -208,12 +216,12 @@ class BattleLayer extends tutils.Layer {
             this.createTestSupply();
         });
         testSupplyTimer.start(8000, true, 0);
-        
-        let part = GameController.instance.createPart("part_meteoroid");
-        let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-        supply.speed = 20;
-        this.world.addSupply(supply);
-        supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
+
+        // let part = GameController.instance.createPart("part_meteoroid");
+        // let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+        // supply.speed = 20;
+        // this.world.addSupply(supply);
+        // supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -331,7 +339,7 @@ class BattleLayer extends tutils.Layer {
 
             this.hero.addPower(power);
             if (Math.random() < 0.01) {
-                let partKey = this.partsDropTable.random();
+                let partKey = this.partsDropTableRare.random().random();
                 let part = GameController.instance.createPart(partKey);
                 let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
                 supply.speed = 20;

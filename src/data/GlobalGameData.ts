@@ -218,7 +218,7 @@ const GlobalPartsData: PartsData = {
 	part_meteoroid: {
 		name: "流星之怒",
 		model: "PartMeteoroid_png",
-		desc: "击败敌方单位有30%几率召唤一颗流星，流星撞击敌方单位将造成200点伤害",
+		desc: "击败敌方单位有20%几率召唤一颗流星，流星撞击敌方单位将造成200点伤害",
 		buffs: ["part_meteoroid"],
 	},
 	part_power_speed_up_2: {
