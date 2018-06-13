@@ -566,13 +566,13 @@ class BattleLayer extends tutils.Layer {
     private createTestEnemyRushes() {
         let rush: Rush;
 
-        // this.enemyCtrl.addRushes1(2000, 20);
-        // this.enemyCtrl.addRushes2(4000, 20);
-        // this.enemyCtrl.addRushes3(4000, 20);
-        // this.enemyCtrl.addRushes4(4000, 20);
-        // this.enemyCtrl.addRushes5(4000, 20);
-        // this.enemyCtrl.addRushes6(2000, 20);
-        this.enemyCtrl.addRushes7(2000, 500, 3);
+        this.enemyCtrl.addRushes1(2000, 20);
+        this.enemyCtrl.addRushes2(4000, 20);
+        this.enemyCtrl.addRushes3(4000, 20);
+        this.enemyCtrl.addRushes4(4000, 20);
+        this.enemyCtrl.addRushes5(4000, 20);
+        this.enemyCtrl.addRushes6(2000, 20);
+        this.enemyCtrl.addRushes7(3000, 200, 3);
         //this.enemyCtrl.addRushes8(5000, 500, 2);
 
         rush = new CallbackRush(5000, ():void=>{
@@ -582,7 +582,7 @@ class BattleLayer extends tutils.Layer {
         }, this);
         this.enemyCtrl.addRush(rush);
 
-        const WAVE_NUM = 10;
+        const WAVE_NUM = 15;
         for (let i=1; i<=WAVE_NUM*10; i++) {
             let hp = 20+Math.floor(i/3 * 2);
             if (i == WAVE_NUM) {
@@ -678,7 +678,7 @@ class BattleLayer extends tutils.Layer {
             this.enemyCtrl.putEnemyShipsIntoGroup(es);
             
             let delay = Math.random() * 5000 + 2000;
-            let dur = Math.random() * 3000 + 3000;
+            let dur = Math.random() * 2000 + 4000;
             let interval = Math.random() * 200 + 100;
             let a = Math.random() * 200 + 80
             let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
