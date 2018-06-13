@@ -248,16 +248,16 @@ class EnemyController {
 		gunR.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(10000);
-		gunShip.resetHp(1600);
+		boss.resetHp(6000);
+		gunShip.resetHp(2000);
 		gunShipL.resetHp(1800);
 		gunShipR.resetHp(1600);
 		gun.bulletSpeed.baseValue = 150;
 		gunL.bulletSpeed.baseValue = 100;
 		gunR.bulletSpeed.baseValue = 100;
-		gun.fireCooldown.baseValue = 20;
-		gunL.fireCooldown.baseValue = 30;
-		gunR.fireCooldown.baseValue = 30;
+		gun.fireCooldown.baseValue = 50;
+		gunL.fireCooldown.baseValue = 80;
+		gunR.fireCooldown.baseValue = 80;
 		let gunReloadCDLR = 500;
 		let angleSpeed = 50/1000;
 		let angleSpeedLR = 40/1000;
@@ -293,7 +293,7 @@ class EnemyController {
 				tick -= gunReloadCDLR;
 				gunL.bulletLeft = gunReloadLR;
 				gunR.bulletLeft = gunReloadLR;
-			} else if (gunL.bulletLeft == 0 && gunR.bulletLeft == 0) {
+			} else if (gunL.bulletLeft == 0 || gunR.bulletLeft == 0) {
 				if (gunL.bulletLeft == 0) {
 					this.adjustAngle(gunShipL, dt, angleSpeedLR);
 				}

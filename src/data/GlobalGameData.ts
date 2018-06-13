@@ -25,7 +25,9 @@ const GlobalAllShips: string[] = [
 const GlobalAllParts: string[] = [
 	"part_test1",
 	"part_test2",
-	"part_meteoroid"
+	"part_meteoroid",
+	"part_power_speed_up_2",
+	"part_power_battery_2"
 ];
 
 // all datas
@@ -216,8 +218,20 @@ const GlobalPartsData: PartsData = {
 	part_meteoroid: {
 		name: "流星之怒",
 		model: "PartMeteoroid_png",
-		desc: "击败敌方单位有30%几率召唤一颗流星，流星撞击敌方单位将造成100点伤害",
+		desc: "击败敌方单位有30%几率召唤一颗流星，流星撞击敌方单位将造成200点伤害",
 		buffs: ["part_meteoroid"],
+	},
+	part_power_speed_up_2: {
+		name: "聚能回路",
+		model: "PartPowerSpeedUp_png",
+		desc: "收集能量的速度提升30%",
+		buffs: ["part_power_speed_up_2"],
+	},
+	part_power_battery_2: {
+		name: "蓄能器",
+		model: "PartBattery_png",
+		desc: "当能量耗尽时立即补充25%能量",
+		buffs: ["part_power_battery_2"],
 	},
 	part_test1: {
 		name: "攻速零件(测试)",

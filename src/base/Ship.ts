@@ -302,7 +302,7 @@ class Ship extends HpUnit {
 enum ShipTrigger {
 	OnInterval = 1 << 0,
 	OnDamaged = 1 << 1,
-	OnDestroyTarget = 1 << 2
+	OnDestroyTarget = 1 << 2,
 }
 type ShipTriggerFlags = number;
 

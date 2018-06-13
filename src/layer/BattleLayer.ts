@@ -24,11 +24,15 @@ class BattleLayer extends tutils.Layer {
 
     private tickerEffect = new Effect(1, 10);
 
+    // 测试函数曲线
     $pathPercent: number = 0;
 
-    lastTouchBeginTick: number = 0;
-    lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
-    touchBeginCount: number = 0;
+    // 双击释放技能
+    private lastTouchBeginTick: number = 0;
+    private lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
+    private touchBeginCount: number = 0;
+
+    private partsDropTable: DropTable<string>;
 
     // 统计项
     private score: number = 0;
@@ -102,6 +106,14 @@ class BattleLayer extends tutils.Layer {
         this.highScore = playerData.highscore.score;
         this.hud.updateScore(this.score);
         this.hud.updateHighScore(this.highScore);
+
+        // 初始化世界掉落表
+        this.partsDropTable = new DropTable<string>();
+        this.partsDropTable.push("part_test1", 100);
+        this.partsDropTable.push("part_test2", 100);
+        this.partsDropTable.push("part_meteoroid", 100);
+        this.partsDropTable.push("part_power_speed_up_2", 100);
+        this.partsDropTable.push("part_power_battery_2", 100);
 	}
 
     // override
@@ -313,16 +325,7 @@ class BattleLayer extends tutils.Layer {
 
             this.hero.addPower(power);
             if (Math.random() < 0.01) {
-                let rnd = Math.random();
-                let partKey: string;
-                if (rnd < 0.3) {
-                    partKey = "part_meteoroid";
-                } else if (rnd < 0.6) {
-                    partKey = "part_test1";
-                } else {
-                    partKey = "part_test2";
-                }
-                partKey = "part_meteoroid";
+                let partKey = this.partsDropTable.random();
                 let part = GameController.instance.createPart(partKey);
                 let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
                 supply.speed = 20;
@@ -563,12 +566,12 @@ class BattleLayer extends tutils.Layer {
     private createTestEnemyRushes() {
         let rush: Rush;
 
-        // this.enemyCtrl.addRushes1(2000, 40);
-        // this.enemyCtrl.addRushes2(4000, 40);
-        // this.enemyCtrl.addRushes3(4000, 40);
-        // this.enemyCtrl.addRushes4(4000, 40);
-        // this.enemyCtrl.addRushes5(4000, 40);
-        // this.enemyCtrl.addRushes6(2000, 40);
+        // this.enemyCtrl.addRushes1(2000, 20);
+        // this.enemyCtrl.addRushes2(4000, 20);
+        // this.enemyCtrl.addRushes3(4000, 20);
+        // this.enemyCtrl.addRushes4(4000, 20);
+        // this.enemyCtrl.addRushes5(4000, 20);
+        // this.enemyCtrl.addRushes6(2000, 20);
         this.enemyCtrl.addRushes7(2000, 500, 3);
         //this.enemyCtrl.addRushes8(5000, 500, 2);
 
@@ -581,7 +584,7 @@ class BattleLayer extends tutils.Layer {
 
         const WAVE_NUM = 10;
         for (let i=1; i<=WAVE_NUM*10; i++) {
-            let hp = 40+Math.floor(i/4 * 2);
+            let hp = 20+Math.floor(i/3 * 2);
             if (i == WAVE_NUM) {
                 this.enemyCtrl.addRushes1(2000, hp, 1.5);
                 this.enemyCtrl.addRushes2(4000, hp, 1.5);
@@ -681,7 +684,7 @@ class BattleLayer extends tutils.Layer {
             let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
             a *= 100/this.stage.stageWidth;
             let t = Math.random() * 1000 + 2000;
-            let rush = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
+            let rush = new SineRush(delay/(i/WAVE_NUM+2)*3, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
             this.enemyCtrl.addRush(rush);
         }
         this.enemyCtrl.startRush();

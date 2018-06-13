@@ -35,6 +35,15 @@ class Buff {
 	public onDestroyTarget(target: Ship): void {
 	}
 
+	// override
+	public onPowerChange(change: number): number {
+		return change;
+	}
+
+	// override
+	public onPowerEmpty(): void {
+	}
+
 	public step(dt: number): boolean {
 		if (this.left === -1) {
 			return true;

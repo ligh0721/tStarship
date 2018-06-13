@@ -10,6 +10,11 @@ class SuperHeroBuff extends Buff {
 
 	// override
 	public onRemoveBuff(): void {
+		this.cleanup();
+	}
+
+	// override
+	protected onCleanup(): void {
 		this.superHero.ai.change(this.bye);
 	}
 

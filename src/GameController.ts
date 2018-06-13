@@ -272,12 +272,12 @@ class GameController {
 			buff.key = key;
 			break;
 		case "turbo_fire_gun":
-			buff = new GunBuff(5000, -0.80, 0, +1.00);
+			buff = new GunBuff(3000, -0.50, 0, +1.00);
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;
 		case "turbo_fire_ship":
-			buff = new ShipBuff(5000, -0.80);
+			buff = new ShipBuff(3000, -0.80);
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;
@@ -303,23 +303,36 @@ class GameController {
 			buff.name = "Meteoroid Rush";
 			break;
 
+		// part's buffs
 		case "part_meteoroid":
-			buff = new MeteoroidBuff(0.3, 100);
+			buff = new MeteoroidBuff(0.3, 200);
 			buff.name = "Meteoroid Rush";
 			buff.key = key;
 			// buff.model = "PartMeteoroid_png";
 			break;
+		case "part_power_speed_up_2":
+			buff = new PowerSpeedUpBuff(1.25);
+			buff.key = key;
+			// buff.name = "";
+			// buff.model = "_png";
+			break;
+		case "part_power_battery_2":
+			buff = new PowerNeverEmptyBuff(0.30);
+			buff.key = key;
+			// buff.name = "";
+			// buff.model = "_png";
+			break;
 		case "part_test1":
 			buff = new GunBuff(-1, -0.30, 0, +0.50);
-			buff.name = "Test Part1";
 			buff.key = key;
-			buff.model = "GunCDR_png";
+			// buff.name = "Test Part1";
+			// buff.model = "GunCDR_png";
 			break;
 		case "part_test2":
 			buff = new GunBuff(-1, 0.00, +0.50, 0.00);
-			buff.name = "Test Part2";
 			buff.key = key;
-			buff.model = "GunPower_png";
+			// buff.name = "Test Part2";
+			// buff.model = "GunPower_png";
 			break;
 		default:
 			console.assert(false, "invalid buff key("+key+")");

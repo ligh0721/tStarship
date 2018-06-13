@@ -10,6 +10,9 @@ class HeroShip extends Ship {
 	partsNum: number = 0;
 	partsMax: number = 4;
 
+    readonly onPowerChangeTriggers: { [id: string]: Buff } = {};
+    readonly onPowerEmptyTriggers: { [id: string]: Buff } = {};
+
 	// from unit
 	private onAddPartListener: (ship: Ship, part: Part)=>void = null;
 	private onAddPartThisObject: any = null;
@@ -33,6 +36,10 @@ class HeroShip extends Ship {
 	}
 
     public addPower(value: number): void {
+        for (let id in this.onPowerChangeTriggers) {
+            let buff = this.onPowerChangeTriggers[id];
+            value = buff.onPowerChange(value);
+        }
         this.power += value;
         if (this.power > this.maxPower) {
             this.power = this.maxPower;
@@ -44,6 +51,10 @@ class HeroShip extends Ship {
 
     public clearPower(): void {
         this.power = 0;
+        for (let id in this.onPowerEmptyTriggers) {
+            let buff = this.onPowerEmptyTriggers[id];
+            buff.onPowerEmpty();
+        }
         if (this.heroHUD) {
             this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
         }
@@ -126,6 +137,27 @@ class HeroShip extends Ship {
         return other.getBounds().contains(this.gameObject.x, this.gameObject.y);
 	}
 
+    // override
+    protected addTrigger(buff: Buff): void {
+        super.addTrigger(buff);
+		if (buff.triggerFlags & HeroShipTrigger.OnPowerChange) {
+			this.onPowerChangeTriggers[buff.id] = buff;
+		}
+		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
+			this.onPowerEmptyTriggers[buff.id] = buff;
+		}
+	}
+
+    // override
+	protected removeTrigger(buff: Buff): void {
+		super.removeTrigger(buff);
+        if (buff.triggerFlags & HeroShipTrigger.OnPowerChange) {
+			delete this.onPowerChangeTriggers[buff.id];
+		}
+		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
+			delete this.onPowerEmptyTriggers[buff.id];
+		}
+	}
 
 	public addPart(part: Part): boolean {
 		if (part.key) {
@@ -186,4 +218,10 @@ class HeroShip extends Ship {
 		this.onRemovePartListener = listener;
 		this.onRemovePartThisObject = thisObject;
 	}
+}
+
+enum HeroShipTrigger {
+	// ext
+	OnPowerChange = 1 << 20,
+	OnPowerEmpty = 1 << 21
 }
