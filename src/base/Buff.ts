@@ -27,8 +27,12 @@ class Buff {
 	}
 
 	// override
-	public onDamaged(value: number, src: HpUnit): number {
+	public onDamaged(value: number, src: Ship): number {
 		return value;
+	}
+
+	// override
+	public onDestroyTarget(target: Ship): void {
 	}
 
 	public step(dt: number): boolean {

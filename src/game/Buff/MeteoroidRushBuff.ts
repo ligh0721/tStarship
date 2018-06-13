@@ -1,4 +1,4 @@
-class MeteoroliteRushBuff extends Buff {
+class MeteoroidRushBuff extends Buff {
 	private num: number;
 	power: number;
 	hitInterval: number;
@@ -23,11 +23,11 @@ class MeteoroliteRushBuff extends Buff {
 			}
 			tw.call(this.rush, this, [force, world]);
 		}
-		tutils.playSound("Meteorolite_mp3");
+		tutils.playSound("Meteoroid_mp3");
 	}
 
 	private rush(force: Force, world: World): void {
-		let ship = new IntervalHitShip("Meteorite_png", 0.2, this.ship);
+		let ship = new IntervalHitShip("Meteoroid_png", 0.2, this.ship);
 		world.addShip(ship);
 		ship.force = force;
 		ship.x = ship.width * 0.5 + Math.random() * (world.width - ship.width);

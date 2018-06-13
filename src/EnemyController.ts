@@ -377,11 +377,11 @@ class EnemyController {
 		return group;
 	}
 
-	public addRushMeteorite(delay: number, hp: number, x: number, speedFactor: number=1): StraightRush {
+	public addRushMeteoroid(delay: number, hp: number, x: number, speedFactor: number=1): StraightRush {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips(1, hp, "Meteorite_png", 0.25);
+		ships = this.createEnemyShips(1, hp, "Meteoroid_png", 0.25);
 		rush = new StraightRush(delay/speedFactor, ships, 300/speedFactor, 4000/speedFactor, {x: x, y: 0}, {x: x, y: 100});
 		this.addRush(rush);
 		return rush as StraightRush;

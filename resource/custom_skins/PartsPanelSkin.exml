@@ -37,8 +37,8 @@
 				<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="50"/>
 			</e:layout>
 			</e:Group>
-			<e:Label id="lblPartName" text="暴击零件" left="50" top="196" size="30" bold="true" textColor="0xff9e00" stroke="3"/>
-			<e:Label id="lblPartDesc" text="偶尔会发射出强化的子弹，子弹中有1%的概率会对目标造成200%伤害" right="50" left="50" top="241" bottom="94" size="20" italic="true" stroke="2"/>
+			<e:Label id="lblPartName" text="暴击零件" left="50" top="196" size="30" bold="true" textColor="0xff9e00" stroke="3" text.init=""/>
+			<e:Label id="lblPartDesc" text="偶尔会发射出强化的子弹，子弹中有1%的概率会对目标造成200%伤害" right="50" left="50" top="241" bottom="94" size="20" italic="true" stroke="2" text.init="" wordWrap="true"/>
 			<e:Button id="btnResume" label="继续" horizontalCenter="0" bottom="20" skinName="GreenButtonSkin"/>
 		</e:Group>
 		<e:Group id="grpOutsideUp" width="100%" height="440" alpha.final="1" alpha.init="0">

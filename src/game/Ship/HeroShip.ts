@@ -6,6 +6,18 @@ class HeroShip extends Ship {
     heroHUD: IHeroHUD = null;
     skill: Skill = null;
 
+    readonly parts: { [id: string]: Part } = {};
+	partsNum: number = 0;
+	partsMax: number = 4;
+
+	// from unit
+	private onAddPartListener: (ship: Ship, part: Part)=>void = null;
+	private onAddPartThisObject: any = null;
+
+	// from unit
+	private onRemovePartListener: (ship: Ship, part: Part)=>void = null;
+	private onRemovePartThisObject: any = null;
+
     public constructor(model: string, scale?: number, key?: string) {
 		super(model, scale, key);
         this.hero = true;
@@ -112,5 +124,66 @@ class HeroShip extends Ship {
         // this.hitRect.y = this.gameObject.y - this.hitRadius;
 		// return this.hitRect.intersects(other.getBounds());
         return other.getBounds().contains(this.gameObject.x, this.gameObject.y);
+	}
+
+
+	public addPart(part: Part): boolean {
+		if (part.key) {
+			// 如果buff存在名称，则处理覆盖逻辑
+			for (let partId in this.parts) {
+				let p = this.parts[partId];
+				if (p.key == part.key) {
+					this.removePart(p.id);
+					break;
+				}
+			}
+		}
+		if (this.partsNum == this.partsMax) {
+			return false;
+		}
+		
+		part.id = this.world.nextId();
+		part.ship = this;
+		part.onAddPart();
+		this.parts[part.id] = part;
+		this.partsNum++;
+		this.onAddPart(part);
+		return true;
+	}
+
+	public removePart(id: string): void {
+		let part = this.parts[id];
+		if (part === undefined) {
+			console.log('part('+id+') not found');
+			return;
+		}
+		
+		part.onRemovePart();
+		part.ship = null;
+		delete this.parts[id];
+		this.partsNum--;
+		this.onRemovePart(part);
+	}
+
+	public onAddPart(part: Part) {
+		if (this.onAddPartListener != null) {
+			this.onAddPartListener.call(this.onAddPartThisObject, this, part);
+		}
+	}
+
+	public setOnAddPartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
+		this.onAddPartListener = listener;
+		this.onAddPartThisObject = thisObject;
+	}
+
+	public onRemovePart(part: Part) {
+		if (this.onRemovePartListener != null) {
+			this.onRemovePartListener.call(this.onRemovePartThisObject, this, part);
+		}
+	}
+
+	public setOnRemovePartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
+		this.onRemovePartListener = listener;
+		this.onRemovePartThisObject = thisObject;
 	}
 }

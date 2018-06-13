@@ -312,16 +312,19 @@ class BattleLayer extends tutils.Layer {
             }
 
             this.hero.addPower(power);
-            if (Math.random() < 0.005) {
-                let supply: PartSupply;
-                if (Math.random() < 0.5) {
-                    let part = GameController.instance.createPart("part_test1");
-                    supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+            if (Math.random() < 0.01) {
+                let rnd = Math.random();
+                let partKey: string;
+                if (rnd < 0.3) {
+                    partKey = "part_meteoroid";
+                } else if (rnd < 0.6) {
+                    partKey = "part_test1";
                 } else {
-                    let part = GameController.instance.createPart("part_test2");
-                    supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+                    partKey = "part_test2";
                 }
-                
+                partKey = "part_meteoroid";
+                let part = GameController.instance.createPart(partKey);
+                let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
                 supply.speed = 20;
                 this.world.addSupply(supply);
                 supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
@@ -651,9 +654,9 @@ class BattleLayer extends tutils.Layer {
                 continue;
             }
             if (Math.random() < 0.3) {
-                let rush = this.enemyCtrl.addRushMeteorite(0, hp*5, 0, Math.min(3, 1+i/WAVE_NUM));
+                let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, 0, Math.min(3, 1+i/WAVE_NUM));
                 rush.setCallback(():void=>{
-                    tutils.playSound("Meteorolite_mp3");
+                    tutils.playSound("Meteoroid_mp3");
                     rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
                     rush.to.x = rush.from.x;
                 }, this);

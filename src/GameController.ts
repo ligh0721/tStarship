@@ -298,11 +298,17 @@ class GameController {
 			buff = new ShieldBallBuff();
 			buff.name = "Shield Ball";
 			break;
-		case "meteorolite_rush":
-			buff = new MeteoroliteRushBuff();
-			buff.name = "Meteorolite Rush";
+		case "meteoroid_rush":
+			buff = new MeteoroidRushBuff();
+			buff.name = "Meteoroid Rush";
 			break;
 
+		case "part_meteoroid":
+			buff = new MeteoroidBuff(0.3, 100);
+			buff.name = "Meteoroid Rush";
+			buff.key = key;
+			// buff.model = "PartMeteoroid_png";
+			break;
 		case "part_test1":
 			buff = new GunBuff(-1, -0.30, 0, +0.50);
 			buff.name = "Test Part1";
@@ -336,8 +342,8 @@ class GameController {
 		case "super_hero":
 			skill = new AddBuffSkill([this.createBuff("super_hero")]);
 			break;
-		case "meteorolite_rush":
-			skill = new AddBuffSkill([this.createBuff("meteorolite_rush")]);
+		case "meteoroid_rush":
+			skill = new AddBuffSkill([this.createBuff("meteoroid_rush")]);
 			break;
 		default:
 			console.assert(false, "invalid skill key("+key+")");

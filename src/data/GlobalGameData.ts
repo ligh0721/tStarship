@@ -24,7 +24,8 @@ const GlobalAllShips: string[] = [
 
 const GlobalAllParts: string[] = [
 	"part_test1",
-	"part_test2"
+	"part_test2",
+	"part_meteoroid"
 ];
 
 // all datas
@@ -134,7 +135,7 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "meteorolite_rush",
+		skill: "meteoroid_rush",
 		coins: 3000
     },
     ship_focus: {
@@ -212,17 +213,22 @@ const GlobalShipsData: ShipsData = {
 };
 
 const GlobalPartsData: PartsData = {
+	part_meteoroid: {
+		name: "流星之怒",
+		model: "PartMeteoroid_png",
+		desc: "击败敌方单位有30%几率召唤一颗流星，流星撞击敌方单位将造成100点伤害",
+		buffs: ["part_meteoroid"],
+	},
 	part_test1: {
-		name: "测试物品1",
+		name: "攻速零件(测试)",
 		model: "GunCDR_png",
-		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击！",
+		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击，通常来讲可以增加30%射速！",
 		buffs: ["part_test1"],
 	},
-
 	part_test2: {
-		name: "测试物品2",
+		name: "火力零件(测试)",
 		model: "GunPower_png",
-		desc: "攻击时有那么点点的几率对地方非常造成成吨的伤害！",
+		desc: "增加50%主炮火力",
 		buffs: ["part_test2"],
 	}
 }

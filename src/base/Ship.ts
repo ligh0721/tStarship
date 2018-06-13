@@ -15,11 +15,8 @@ class Ship extends HpUnit {
 	readonly buffs: { [id: string]: Buff } = {};
 	buffsNum: number = 0;
 
-	readonly parts: { [id: string]: Part } = {};
-	partsNum: number = 0;
-	partsMax: number = 4;
-
 	readonly onDamagedTriggers: { [id: string]: Buff } = {};
+	readonly onDestroyTargetTriggers: { [id: string]: Buff } = {};
 
 	ai: tutils.StateManager;
 
@@ -37,14 +34,6 @@ class Ship extends HpUnit {
 	// from unit
 	private onUpdateBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onUpdateBuffThisObject: any = null;
-
-	// from unit
-	private onAddPartListener: (ship: Ship, part: Part)=>void = null;
-	private onAddPartThisObject: any = null;
-
-	// from unit
-	private onRemovePartListener: (ship: Ship, part: Part)=>void = null;
-	private onRemovePartThisObject: any = null;
 
 	public constructor(model: string, scale?: number, key?: string) {
 		super();
@@ -88,6 +77,13 @@ class Ship extends HpUnit {
 
 	// override
 	protected onDying(src: HpUnit): void {
+		if (src instanceof Ship) {
+			for (let id in src.onDestroyTargetTriggers) {
+				let buff = src.onDestroyTargetTriggers[id];
+				buff.onDestroyTarget(this);
+			}
+		}
+		
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 		this.ai.stop();
@@ -165,18 +161,26 @@ class Ship extends HpUnit {
 		if (buff.triggerFlags & ShipTrigger.OnDamaged) {
 			this.onDamagedTriggers[buff.id] = buff;
 		}
+		if (buff.triggerFlags & ShipTrigger.OnDestroyTarget) {
+			this.onDestroyTargetTriggers[buff.id] = buff;
+		}
 	}
 
 	protected removeTrigger(buff: Buff): void {
 		if (buff.triggerFlags & ShipTrigger.OnDamaged) {
 			delete this.onDamagedTriggers[buff.id];
 		}
+		if (buff.triggerFlags & ShipTrigger.OnDestroyTarget) {
+			delete this.onDestroyTargetTriggers[buff.id];
+		}
 	}
 
 	public damaged(value: number, src: HpUnit): void {
-		for (let id in this.onDamagedTriggers) {
-			let buff = this.onDamagedTriggers[id];
-			value = buff.onDamaged(value, src);
+		if (src instanceof Ship) {
+			for (let id in this.onDamagedTriggers) {
+				let buff = this.onDamagedTriggers[id];
+				value = buff.onDamaged(value, src);
+			}
 		}
 		super.damaged(value, src);
 	}
@@ -293,71 +297,12 @@ class Ship extends HpUnit {
 		this.onUpdateBuffListener = listener;
 		this.onUpdateBuffThisObject = thisObject;
 	}
-
-	public addPart(part: Part): boolean {
-		if (part.key) {
-			// 如果buff存在名称，则处理覆盖逻辑
-			for (let partId in this.parts) {
-				let p = this.parts[partId];
-				if (p.key == part.key) {
-					this.removePart(p.id);
-					break;
-				}
-			}
-		}
-		if (this.partsNum == this.partsMax) {
-			return false;
-		}
-		
-		part.id = this.world.nextId();
-		part.ship = this;
-		part.onAddPart();
-		this.parts[part.id] = part;
-		this.partsNum++;
-		this.onAddPart(part);
-		return true;
-	}
-
-	public removePart(id: string): void {
-		let part = this.parts[id];
-		if (part === undefined) {
-			console.log('part('+id+') not found');
-			return;
-		}
-		
-		part.onRemovePart();
-		part.ship = null;
-		delete this.parts[id];
-		this.partsNum--;
-		this.onRemovePart(part);
-	}
-
-	public onAddPart(part: Part) {
-		if (this.onAddPartListener != null) {
-			this.onAddPartListener.call(this.onAddPartThisObject, this, part);
-		}
-	}
-
-	public setOnAddPartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
-		this.onAddPartListener = listener;
-		this.onAddPartThisObject = thisObject;
-	}
-
-	public onRemovePart(part: Part) {
-		if (this.onRemovePartListener != null) {
-			this.onRemovePartListener.call(this.onRemovePartThisObject, this, part);
-		}
-	}
-
-	public setOnRemovePartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
-		this.onRemovePartListener = listener;
-		this.onRemovePartThisObject = thisObject;
-	}
 }
 
 enum ShipTrigger {
 	OnInterval = 1 << 0,
-	OnDamaged = 1 << 1
+	OnDamaged = 1 << 1,
+	OnDestroyTarget = 1 << 2
 }
 type ShipTriggerFlags = number;
 
