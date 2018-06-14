@@ -16,7 +16,7 @@ class SineCurve {
 		this.amplitude = amplitude;
 	}
 
-	startMove(dur: number, onMoveEnd?: Function) {
+	public start(dur: number, onMoveEnd?: Function): void {
 		this.duration = dur;
 		this.factor = 0;
 		let tw = egret.Tween.get(this);
@@ -24,6 +24,10 @@ class SineCurve {
 		if (onMoveEnd != undefined) {
 			tw.call(onMoveEnd);
 		}
+	}
+
+	public stop(): void {
+		egret.Tween.removeTweens(this);
 	}
 
 	private get factor() {

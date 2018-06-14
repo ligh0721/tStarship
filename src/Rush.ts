@@ -118,7 +118,7 @@ class BezierRush extends Rush {
 	// override
 	protected onRushOne(index: number, ship: Ship): void {
 		let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
-		bezier.startMove(this.duration, ()=>{
+		bezier.start(this.duration, ()=>{
 			ship.status = UnitStatus.Dead;
 		});
 	}
@@ -150,7 +150,7 @@ class SineRush extends Rush {
 	// override
 	protected onRushOne(index: number, ship: Ship): void {
 		let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
-		sin.startMove(this.duration, ()=>{
+		sin.start(this.duration, ()=>{
 			ship.status = UnitStatus.Dead;
 		});
 	}

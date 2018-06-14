@@ -15,13 +15,17 @@ class BezierCurve {
 		this.fixedRotation = fixedRotation;
 	}
 
-	startMove(dur: number, onMoveEnd?: Function) {
+	public start(dur: number, onMoveEnd?: Function): void {
 		this.factor = 0;
 		let tw = egret.Tween.get(this);
 		tw.to({factor: 1}, dur);
 		if (onMoveEnd != undefined) {
 			tw.call(onMoveEnd);
 		}
+	}
+
+	public stop(): void {
+		egret.Tween.removeTweens(this);
 	}
 
 	private get factor() {

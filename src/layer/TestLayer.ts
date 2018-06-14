@@ -10,7 +10,7 @@ class TestLayer extends tutils.Layer {
         this.world = new World(this.layer, this.stage.stageWidth, this.stage.stageHeight);
         this.world.start(30);
 
-        this.hero = new HeroShip("Test_png");
+        this.hero = new HeroShip("Hero_png");
         this.world.addShip(this.hero);
         let gun = Gun.createGun(Gun, Bullet);
         this.hero.addGun(gun, true);
@@ -23,11 +23,11 @@ class TestLayer extends tutils.Layer {
         
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
-        let data = {high: 15454100, stages: 10, enemies: 212, bosses: 3, score: 5454100};
-        let panel = new GameOverPanel(data);
-        this.addChild(panel);
-        panel.x = (this.stage.stageWidth - panel.width) / 2;
-        panel.y = (this.stage.stageHeight - panel.height) / 2;
+
+        let act = new Sequence(new DelayTime(2000), new CallFunc((n: number):void=>{
+            console.log(n);
+        }, this, 5010));
+        GameController.instance.actionManager.addAction(this.hero.gameObject, act);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

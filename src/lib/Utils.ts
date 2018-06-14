@@ -87,8 +87,8 @@ module tutils {
 	export function resumeBgMusic(): void {
 		if (!bgMusic && bgMusicPosition) {
 			let sound: egret.Sound = RES.getRes(bgMusicName);
-			bgMusic = sound.play(0, 0);
-			bgMusic.position = bgMusicPosition;
+			bgMusic = sound.play(bgMusicPosition, 0);
+			// bgMusic.position = bgMusicPosition;
 			bgMusicPosition = null;
 		}
 	}

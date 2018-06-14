@@ -16,6 +16,8 @@ class GameController {
 
 	battleShips: string[];
 
+	actionManager: ActionManager = new ActionManager();
+
 	public constructor() {
 		this.allShipsData = this.fixShipsData(GlobalShipsData);
 		this.allPartsData = this.fixPartsData(GlobalPartsData);
@@ -34,6 +36,7 @@ class GameController {
 
 	public init(root: Main): void {
 		this.root = root;
+		this.actionManager.start(60);
 	}
 
 	public createRootLayer<LAYER extends tutils.Layer>(t: new(r: Main) => LAYER): tutils.Layer {
