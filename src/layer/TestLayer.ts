@@ -24,9 +24,17 @@ class TestLayer extends tutils.Layer {
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
 
-        let act = new Sequence(new DelayTime(2000), new CallFunc((n: number):void=>{
+        // let act = new Repeat(new Sequence(new DelayTime(2000), new CallFunc((n: number):void=>{
+        //     console.log(n);
+        // }, this, 5010)), 10);
+        let act: tutils.Action = new tutils.Repeat(new tutils.CallFunc((n: number):void=>{
             console.log(n);
-        }, this, 5010));
+        }, this, 5010), 1);
+        GameController.instance.actionManager.addAction(this.hero.gameObject, act);
+
+        act = new tutils.Speed(new tutils.RepeatForever(new tutils.Sequence(new tutils.Bezier(2000, 0, 0, 700, 600, 300, 600, true), new tutils.Bezier(2000, 300, 600, 0, 1200, 0, 1200, true), new tutils.Bezier(2000, 0, 1200, 700, 600, 0, 0, true), new tutils.CallFunc(():void=>{
+            console.log("MoveEnd");
+        }, this))), 2.0);
         GameController.instance.actionManager.addAction(this.hero.gameObject, act);
     }
 

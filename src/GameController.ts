@@ -16,7 +16,7 @@ class GameController {
 
 	battleShips: string[];
 
-	actionManager: ActionManager = new ActionManager();
+	actionManager: tutils.ActionManager = new tutils.ActionManager();
 
 	public constructor() {
 		this.allShipsData = this.fixShipsData(GlobalShipsData);
