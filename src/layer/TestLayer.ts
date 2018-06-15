@@ -52,6 +52,7 @@ class TestLayer extends tutils.Layer {
 			new tutils.MoveTo(2000, this.hero.x, this.hero.y, egret.Ease.getPowInOut(2))
 		));
 		this.hero.runAction(act);
+        this.hero.moveStraight(180, 20, true, egret.Ease.getPowIn(2));
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {
