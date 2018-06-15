@@ -55,7 +55,7 @@ class Gun {
 	}
 
 	protected fireBulletStraight(bullet: Bullet, angle?: number, fixedRotation?: boolean, ease?: Function) {
-		bullet.moveStraight(angle===undefined?this.ship.angle:angle, this.bulletSpeed.value, fixedRotation, ease)
+		bullet.moveStraight(angle===undefined?this.ship.rotation:angle, this.bulletSpeed.value, fixedRotation, ease)
 	}
 
 	public fire(): void {
@@ -143,7 +143,7 @@ class Gun {
 	}
 
 	public getFirePosition(): {x: number, y: number} {
-		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.angle, this.ship.height*0.5);
+		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.rotation, this.ship.height*0.5);
 	}
 
 	public levelUp(): void {

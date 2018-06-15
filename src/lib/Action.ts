@@ -347,6 +347,12 @@ module tutils {
         }
     }
 
+    export interface INode extends egret.IHashObject {
+        x: number;
+        y: number;
+        rotation: number
+    }
+
     export class Action {
         static INVALID_TAG: number = -1;
         protected target: egret.IHashObject = null;
@@ -776,7 +782,7 @@ module tutils {
         }
 
         public update(factor: number): void {
-            let target = this.target as egret.DisplayObject;
+            let target = this.target as INode;
             
             let x = (1-factor)*(1-factor)*this.x0 + 2*factor*(1-factor)*this.x1 + factor*factor*this.x2;
             let y = (1-factor)*(1-factor)*this.y0 + 2*factor*(1-factor)*this.y1 + factor*factor*this.y2;
@@ -814,7 +820,7 @@ module tutils {
         }
 
         public update(factor: number): void { 
-            let target = this.target as egret.DisplayObject;
+            let target = this.target as INode;
             let $x = this.$distance * factor;
             let $y = Math.sin($x*Math.PI*2/this.wavelen)*this.amplitude;
 
@@ -826,6 +832,52 @@ module tutils {
             }
             target.x = x;
             target.y = y;
+        }
+    }
+
+    export class MoveBy extends ActionInterval {
+        protected x0: number;
+        protected y0: number;
+        protected dtx: number;
+        protected dty: number;
+
+        public constructor(duration: number, dtx: number, dty: number) {
+            super(duration);
+            this.dtx = dtx;
+            this.dty = dty;
+        }
+
+        public start(target: egret.IHashObject): void {
+            super.start(target);
+            let target_ = target as INode;
+            this.x0 = target_.x;
+            this.y0 = target_.y;
+        }
+
+        public update(factor: number): void {
+            let target = this.target as INode;
+            target.x = this.x0 + this.dtx * factor;
+            target.y = this.y0 + this.dty * factor;
+        }
+    }
+
+    export class MoveTo extends MoveBy {
+        protected x0: number;
+        protected y0: number
+        protected x1: number;
+        protected y1: number;
+
+        public constructor(duration: number, x: number, y: number) {
+            super(duration, 0, 0);
+            this.x1 = x;
+            this.y1 = y;
+        }
+
+        public start(target: egret.IHashObject): void {
+            super.start(target);
+            let target_ = target as INode;
+            this.dtx = this.x1 - target_.x;
+            this.dty = this.y1 - target_.y;
         }
     }
 }

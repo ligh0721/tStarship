@@ -10,11 +10,11 @@ class GuideGun extends Gun {
 		this.addBulletToWorld(bullet)
 
 		let r = Math.sqrt(this.ship.width*this.ship.width+this.ship.height*this.ship.height) / 2;
-		let angle = (this.$bulletAngleIndex - (this.bulletAngleNum - 1) / 2) * this.bulletAngleDelta + this.ship.angle;
+		let angle = (this.$bulletAngleIndex - (this.bulletAngleNum - 1) / 2) * this.bulletAngleDelta + this.ship.rotation;
 		let firePos = this.ship.getDirectionPoint(r, angle);
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		bullet.angle = angle;
+		bullet.rotation = angle;
 		this.fireBulletGuild(bullet, null);
 
 		this.$bulletAngleIndex++;

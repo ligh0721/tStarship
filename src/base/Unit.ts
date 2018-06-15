@@ -1,4 +1,4 @@
-class Unit extends egret.HashObject {
+class Unit extends egret.HashObject implements tutils.INode {
 	gameObject: egret.DisplayObject;
 	id: string;
 	world: World;
@@ -33,11 +33,11 @@ class Unit extends egret.HashObject {
 		this.gameObject.y = value;
 	}
 
-	public get angle(): number {
+	public get rotation(): number {
 		return this.gameObject.rotation;
 	}
 
-	public set angle(value: number) {
+	public set rotation(value: number) {
 		this.gameObject.rotation = value;
 		this.boundsDirty = true;
 	}
@@ -88,7 +88,7 @@ class Unit extends egret.HashObject {
 	}
 
 	public getDirectionPoint(dis: number, angle?: number): {x: number, y: number} {
-		return tutils.getDirectionPoint(this.gameObject.x, this.gameObject.y, ((angle===undefined ? this.angle : angle)-90)/tutils.DegPerRad, dis);
+		return tutils.getDirectionPoint(this.gameObject.x, this.gameObject.y, ((angle===undefined ? this.rotation : angle)-90)/tutils.DegPerRad, dis);
 	}
 
 	public getForwardPoint(x: number, y: number, dis: number): {x: number, y: number} {
@@ -104,7 +104,7 @@ class Unit extends egret.HashObject {
 
 	public getAngle(x: number, y: number) {
 		let angle = Math.atan2(y-this.gameObject.y, x-this.gameObject.x) * tutils.DegPerRad + 90;
-		let dt = angle - this.angle;
+		let dt = angle - this.rotation;
 		if (dt > 180) {
 			angle -= 360;
 		} else if (dt < -180) {
@@ -119,7 +119,7 @@ class Unit extends egret.HashObject {
 
 	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
 		if (fixedRotation != true) {
-			this.angle = angle;
+			this.rotation = angle;
 		}
 		let tw = egret.Tween.get(this.gameObject);
 		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
@@ -136,7 +136,7 @@ class Unit extends egret.HashObject {
 		let yy = y-this.gameObject.y;
 		if (fixedRotation != true) {
 			let angle = Math.atan2(yy, xx);
-			this.angle = angle * tutils.DegPerRad + 90;
+			this.rotation = angle * tutils.DegPerRad + 90;
 		}
 		let dis = Math.sqrt(xx*xx+yy*yy);
         let dur = dis * tutils.SpeedFactor / speed;
@@ -149,20 +149,20 @@ class Unit extends egret.HashObject {
 	}
 
 	public adjustAngle(dt: number, angleSpeed: number, x: number, y: number): void {
-		let orgAngle = this.angle;
+		let orgAngle = this.rotation;
 		let angle = this.getAngle(x, y);
 		let dtAngle = dt * angleSpeed;
 		if (angle > orgAngle) {
 			if (orgAngle+dtAngle > angle) {
-				this.angle = angle;
+				this.rotation = angle;
 			} else {
-				this.angle += dtAngle;
+				this.rotation += dtAngle;
 			}
 		} else if (angle < orgAngle) {
 			if (orgAngle-dtAngle < angle) {
-				this.angle = angle;
+				this.rotation = angle;
 			} else {
-				this.angle -= dtAngle;
+				this.rotation -= dtAngle;
 			}
 		}
 	}

@@ -57,7 +57,7 @@ class SatelliteGun extends Gun {
 		let pos = Unit.getDirectionPoint(this.ship.x, this.ship.y, angle, this.radius);
 		bullet.x = pos.x;
 		bullet.y = pos.y;
-		bullet.angle = angle;
+		bullet.rotation = angle;
 	}
 
 	protected onCleanup(): void {

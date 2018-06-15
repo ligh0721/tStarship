@@ -23,11 +23,11 @@ class MissileGun extends Gun {
 				bullet.explosionPowerEveryPer = this.explosionPowerEveryPer;
 				bullet.explosionPowerLossInterval = this.explosionPowerLossInterval;
 			}
-			let angle = (i - (this.bulletNum - 1) / 2) * this.bulletAngleDelta + this.ship.angle;
+			let angle = (i - (this.bulletNum - 1) / 2) * this.bulletAngleDelta + this.ship.rotation;
 			let firePos = Unit.getDirectionPoint(this.ship.x, this.ship.y+50, angle, this.ship.height*0.5);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y;
-			bullet.angle = angle;
+			bullet.rotation = angle;
 			this.fireBulletGuild(bullet, null);
 		}
 	}

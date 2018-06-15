@@ -10,8 +10,8 @@ class RowGun extends Gun {
 		for (let i=0; i<n; i++) {
 			let bullet = this.createBullet();
 			this.addBulletToWorld(bullet);
-			let xPos = Unit.getDirectionPoint(firePos.x, firePos.y, this.ship.angle-90, (i-(n-1)/2)*this.bulletXDelta);
-			let yPos = Unit.getDirectionPoint(xPos.x, xPos.y, this.ship.angle, -(Math.abs(i-(n-1)/2))*this.bulletYDelta);
+			let xPos = Unit.getDirectionPoint(firePos.x, firePos.y, this.ship.rotation-90, (i-(n-1)/2)*this.bulletXDelta);
+			let yPos = Unit.getDirectionPoint(xPos.x, xPos.y, this.ship.rotation, -(Math.abs(i-(n-1)/2))*this.bulletYDelta);
 			bullet.x = yPos.x;
 			bullet.y = yPos.y;
 			this.fireBulletStraight(bullet);

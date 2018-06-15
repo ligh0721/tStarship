@@ -51,7 +51,7 @@ class EnemyShip extends Ship {
 	// override
 	public onAddToWorld(): void {
 		super.onAddToWorld();
-		this.angle = 180;
+		this.rotation = 180;
 	}
 
 	protected onCleanup(): void {

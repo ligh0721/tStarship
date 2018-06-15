@@ -53,7 +53,7 @@ class BezierCurve {
 
 			let angle = Math.atan2(y1-y0, x1-x0) * tutils.DegPerRad;
 			//this.ship.gameObject.rotation = angle - 90;
-			this.obj.angle = angle + 90;
+			this.obj.rotation = angle + 90;
 		}
 	}
 }
