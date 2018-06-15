@@ -88,7 +88,7 @@ class StraightRush extends Rush {
 		ship.y = this.from.y;
 		let dis = ship.getDistance(this.to.x, this.to.y);
 		let speed = dis / this.duration * tutils.SpeedFactor;
-		ship.moveTo(this.to.x, this.to.y, speed, this.fixedRotation, null, ():void=>{
+		ship.moveTo(this.to.x, this.to.y, speed, this.fixedRotation, null, false, ():void=>{
 			ship.status = UnitStatus.Dead;
 		}, this);
 	}
@@ -242,7 +242,7 @@ class GradientRush extends Rush {
 		let toY = ship.world.height+ship.height;
 		let dis = toY - ship.y;
 		let speed = dis / this.duration * tutils.SpeedFactor;
-		ship.moveTo(ship.x, toY, speed, this.fixedRotation, null, ():void=>{
+		ship.moveTo(ship.x, toY, speed, this.fixedRotation, null, false, ():void=>{
 			ship.status = UnitStatus.Dead;
 		}, this);
 	}

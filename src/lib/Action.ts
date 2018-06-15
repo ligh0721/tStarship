@@ -420,7 +420,7 @@ module tutils {
 
         public constructor(duration: number, ease?: Function) {
             super(ease);
-            this.duration = duration===0 ? tutils.EPSILON : duration;
+            this.duration = duration===0 ? tutils.Epsilon : duration;
             this.elapsed = 0;
             this.firstStep = true;
             this.ease = ease;
@@ -441,7 +441,7 @@ module tutils {
                 this.elapsed += dt;
             }
 
-            let factor = Math.max(0, Math.min(1, this.elapsed/Math.max(this.duration, tutils.EPSILON)));
+            let factor = Math.max(0, Math.min(1, this.elapsed/Math.max(this.duration, tutils.Epsilon)));
             if (this.ease) {
                 factor = this.ease(factor);
             }
@@ -519,8 +519,8 @@ module tutils {
         }
 
         public start(target: egret.IHashObject): void {
-            if (this.duration > tutils.EPSILON) {
-                this.split = this.one.duration>tutils.EPSILON ? (this.one.duration/this.duration) : 0;
+            if (this.duration > tutils.Epsilon) {
+                this.split = this.one.duration>tutils.Epsilon ? (this.one.duration/this.duration) : 0;
             }
             super.start(target);
             this.last = -1;
@@ -684,7 +684,7 @@ module tutils {
                 }
 
                 // fix for issue #1288, incorrect end value of repeat
-                if (Math.abs(factor-1.0)<tutils.EPSILON && this.total<this.times) {
+                if (Math.abs(factor-1.0)<tutils.Precision && this.total<this.times) {
                     this.total++;
                 }
 
@@ -912,16 +912,71 @@ module tutils {
 
         public update(factor: number): void {
             let target = this.target as INode;
-            if (this.dtx !== 0) {
-                target.x = this.x0 + this.dtx * factor;
-            }
-            if (this.dty !== 0) {
-                target.y = this.y0 + this.dty * factor;
-            }
+            target.x = this.x0 + this.dtx * factor;
+            target.y = this.y0 + this.dty * factor;
         }
     }
 
     export class MoveTo extends MoveBy {
+        protected x0: number;
+        protected y0: number
+        protected x1: number;
+        protected y1: number;
+
+        public constructor(duration: number, x: number, y: number, ease?: Function) {
+            super(duration, 0, 0, ease);
+            this.x1 = x;
+            this.y1 = y;
+        }
+
+        public start(target: egret.IHashObject): void {
+            super.start(target);
+            let target_ = target as INode;
+            this.dtx = this.x1 - target_.x;
+            this.dty = this.y1 - target_.y;
+        }
+    }
+
+    export class MoveBy2 extends ActionInterval {
+        protected x0: number;
+        protected y0: number;
+        protected dtx: number;
+        protected dty: number;
+        protected lastx: number;
+        protected lasty: number;
+
+        public constructor(duration: number, dtx: number, dty: number, ease?: Function) {
+            super(duration, ease);
+            this.dtx = dtx;
+            this.dty = dty;
+        }
+
+        public start(target: egret.IHashObject): void {
+            super.start(target);
+            let target_ = target as INode;
+            this.x0 = target_.x;
+            this.y0 = target_.y;
+            this.lastx = this.x0;
+            this.lasty = this.y0;
+        }
+
+        public update(factor: number): void {
+            // stackable
+            let target = this.target as INode;
+            let x = target.x;
+            let y = target.y;
+            let diffx = x - this.lastx;
+            let diffy = y - this.lasty;
+            this.x0 += diffx;
+            this.y0 += diffy;
+            this.lastx = this.x0 + this.dtx * factor;
+            this.lasty = this.y0 + this.dty * factor;
+            target.x = this.lastx;
+            target.y = this.lasty;
+        }
+    }
+
+    export class MoveTo2 extends MoveBy2 {
         protected x0: number;
         protected y0: number
         protected x1: number;

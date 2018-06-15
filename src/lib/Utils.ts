@@ -9,7 +9,8 @@ module tutils {
 	export const EnemyForce = 11;
 	export const LargeNumber = 1000000;
 	export const ShipTimerInterval = 100;
-	export const EPSILON = 2.2204460492503130808472633361816E-16;
+	export const Epsilon = 2.2204460492503130808472633361816E-16;
+	export const Precision = 1e-12;
 	let bgMusic: egret.SoundChannel;
 	let bgMusicPosition: number = null;
 	let bgMusicName: string = null;

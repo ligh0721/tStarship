@@ -121,13 +121,13 @@ class Unit extends egret.HashObject implements tutils.INode {
 		GameController.instance.actionManager.removeAllActions(this);
 	}
 
-	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
-		if (fixedRotation != true) {
+	public moveStraight(angle: number, speed: number, fixedRotation: boolean=false, ease?: Function, stackable: boolean=false) {
+		if (fixedRotation !== true) {
 			this.rotation = angle;
 		}
 		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
 		let dur = tutils.LongDistance*tutils.SpeedFactor/speed;
-		let act = new tutils.MoveTo(dur, toPos.x, toPos.y, ease);
+		let act = stackable===true ? new tutils.MoveTo2(dur, toPos.x, toPos.y, ease) : new tutils.MoveTo(dur, toPos.x, toPos.y, ease);
 		this.runAction(act);
 		
 		// let tw = egret.Tween.get(this.gameObject);
@@ -139,19 +139,19 @@ class Unit extends egret.HashObject implements tutils.INode {
 	}
 
 	// fixedRotation=false
-	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, onMoveEnd?: ()=>void, thisObject?: any): void {
+	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, stackable: boolean=false, onMoveEnd?: ()=>void, thisObject?: any): void {
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
-		if (fixedRotation != true) {
+		if (fixedRotation !== true) {
 			let angle = Math.atan2(yy, xx);
 			this.rotation = angle * tutils.DegPerRad + 90;
 		}
 		let dis = Math.sqrt(xx*xx+yy*yy);
         let dur = dis * tutils.SpeedFactor / speed;
 
-		this.stopAllActions();
+		// this.stopAllActions();
 		let act = new tutils.Sequence(
-			new tutils.MoveTo(dur, x, y, ease),
+			stackable===true ? new tutils.MoveTo2(dur, x, y, ease) : new tutils.MoveTo(dur, x, y, ease),
 			new tutils.CallFunc(onMoveEnd, thisObject)
 		);
 		this.runAction(act);

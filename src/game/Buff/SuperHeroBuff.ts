@@ -78,7 +78,7 @@ class SuperHeroBuff extends Buff {
 		let startTick: number = 0;
 		hello.setListener(():void=>{
 			gun1.autoFire = true;
-			ship.moveTo(ship.x, world.height-200, ship.speed.value, true, null, ():void=>{
+			ship.moveTo(ship.x, world.height-200, ship.speed.value, true, null, false, ():void=>{
 				startTick = egret.getTimer();
 				this.setTimeoutKeys.push(egret.setTimeout(():void=>{
 					gun1.cleanup();
@@ -111,7 +111,7 @@ class SuperHeroBuff extends Buff {
 				ai.change(randWait, dur);
 				return;
 			}
-			ship.moveTo(x, y, ship.speed.value, true, egret.Ease.getPowInOut(2), ():void=>{
+			ship.moveTo(x, y, ship.speed.value, true, egret.Ease.getPowInOut(2), false, ():void=>{
 				let dur = Math.random() * 500;
 				ai.change(randWait, dur);
 			}, this);
@@ -134,11 +134,11 @@ class SuperHeroBuff extends Buff {
 			for (let i in ship.guns) {
 				ship.guns[i].cleanup();
 			}
-			ship.moveTo(world.width*0.5, ship.y+50, ship.speed.value*0.5, true, egret.Ease.getPowOut(2), ():void=>{
+			ship.moveTo(world.width*0.5, ship.y+50, ship.speed.value*0.5, true, egret.Ease.getPowOut(2), false, ():void=>{
 				ship.canHit = false;
 				let buff = GameController.instance.createBuff("super_hero_ghost_ships");
 				ship.addBuff(buff);
-				ship.moveTo(ship.x, -300, ship.speed.value*3, true, egret.Ease.getPowIn(2), ():void=>{
+				ship.moveTo(ship.x, -300, ship.speed.value*3, true, egret.Ease.getPowIn(2), false, ():void=>{
 					ship.status = UnitStatus.Dead;
 				}, this);
 			}, this);

@@ -21,11 +21,11 @@ class TestLayer extends tutils.Layer {
         let gun = Gun.createGun(Gun, Bullet);
         this.hero.addGun(gun, true);
         this.hero.x = w * 0.5;
-        this.hero.y = h * 0.9;
+        this.hero.y = h * 0.1;
         // gun.bulletLeft = 0;
         // // gun.autoFire = true;
-        // this.layer.touchEnabled = true;
-        // this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        this.layer.touchEnabled = true;
+        this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
         
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
@@ -47,12 +47,14 @@ class TestLayer extends tutils.Layer {
         // tw.to({speed: 0.01}, 10000);
         // this.drawPaths();
 
-        let act = new tutils.RepeatForever(new tutils.Sequence(
-			new tutils.MoveTo(2000, this.hero.x-170, this.hero.y, egret.Ease.getPowInOut(2)),
-			new tutils.MoveTo(2000, this.hero.x, this.hero.y, egret.Ease.getPowInOut(2))
-		));
-		this.hero.runAction(act);
-        this.hero.moveStraight(180, 20, true, egret.Ease.getPowIn(2));
+        // let act = new tutils.RepeatForever(new tutils.Sequence(
+		// 	new tutils.MoveBy(2000, -170, 0),
+		// 	new tutils.MoveBy(2000, 170, 0)
+		// ));
+		// this.hero.runAction(act);
+        // this.hero.moveStraight(180, 20);
+        let buff = GameController.instance.createBuff("super_hero");
+        this.hero.addBuff(buff);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

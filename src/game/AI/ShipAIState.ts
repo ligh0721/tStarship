@@ -15,7 +15,7 @@ class MoveState extends ShipAIChainState {
 		this.ease = ease;
 	}
 	public onEnter(): void {
-		this.ship.moveTo(this.x, this.y, this.speed, this.fixedRotation, this.ease, ():void=>{
+		this.ship.moveTo(this.x, this.y, this.speed, this.fixedRotation, this.ease, false, ():void=>{
 			this.next();
 		}, this);
 	}

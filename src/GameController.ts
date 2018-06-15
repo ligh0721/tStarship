@@ -297,7 +297,7 @@ class GameController {
 			buff.key = key;
 			break;
 		case "super_hero":
-			buff = new SuperHeroBuff(30000);
+			buff = new SuperHeroBuff(1000);
 			buff.name = "Super Hero!";
 			buff.key = key;
 			break;

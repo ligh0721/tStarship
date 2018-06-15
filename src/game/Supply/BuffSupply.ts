@@ -14,12 +14,12 @@ class BuffSupply extends Supply {
 		// tw.to({x: this.x-170}, 2000, egret.Ease.getPowInOut(2));
 		// tw.to({x: this.x}, 2000, egret.Ease.getPowInOut(2));
 		let act = new tutils.RepeatForever(new tutils.Sequence(
-			new tutils.MoveTo(2000, this.x-170, this.y, egret.Ease.getPowInOut(2)),
-			new tutils.MoveTo(2000, this.x, this.y, egret.Ease.getPowInOut(2))
+			new tutils.MoveBy2(2000, -170, 0, egret.Ease.getPowInOut(2)),
+			new tutils.MoveBy2(2000, 170, 0, egret.Ease.getPowInOut(2))
 		));
 		this.runAction(act);
 
-		this.moveStraight(180, this.speed, true, ease);
+		this.moveStraight(180, this.speed, true, ease, true);
 		if (this.pickDist > 0) {
 			this.moveToShip(null);
 		}

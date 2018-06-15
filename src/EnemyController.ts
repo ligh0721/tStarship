@@ -177,7 +177,7 @@ class EnemyController {
         let fire = new tutils.CustomState();
 
 		moveToRight.setListener(()=>{
-            boss.moveTo(w-boss.width*0.5-20, boss.height*0.5+70, boss.speed.value, true, null, ()=>{
+            boss.moveTo(w-boss.width*0.5-20, boss.height*0.5+70, boss.speed.value, true, null, false, ()=>{
                 smgr.change(ajustAngle, moveToLeft);
             }, this);
         }, (dt: number)=>{
@@ -185,7 +185,7 @@ class EnemyController {
         }, this, 100);
 
         moveToLeft.setListener(()=>{
-            boss.moveTo(boss.width*0.5+20, boss.height*0.5+70, boss.speed.value, true, null, ()=>{
+            boss.moveTo(boss.width*0.5+20, boss.height*0.5+70, boss.speed.value, true, null, false, ()=>{
                 smgr.change(ajustAngle, moveToRight);
             }, this);
         }, (dt: number)=>{
@@ -202,7 +202,7 @@ class EnemyController {
         }, this, 100);
 
 		moveToBottom.setListener(()=>{
-			boss.moveTo(boss.x, h+boss.height+100, boss.speed.value*0.5, true, null, ()=>{
+			boss.moveTo(boss.x, h+boss.height+100, boss.speed.value*0.5, true, null, false, ()=>{
 				boss.damaged(boss.hp, null);
 			})
 		}, null, this);
@@ -274,7 +274,7 @@ class EnemyController {
 		boss.ai = smgr;
 
 		moveTo.setListener((pos: {x: number, y: number})=>{
-			boss.moveTo(pos.x, pos.y, boss.speed.value, true, null, ()=>{
+			boss.moveTo(pos.x, pos.y, boss.speed.value, true, null, false, ()=>{
 				if (pos.x == w*0.7) {
 					smgr.change(adjustAngle, {x: w*0.3, y: boss.height*0.5+70}); 
 				} else {
@@ -345,7 +345,7 @@ class EnemyController {
 		}, this, 0);
 
 		moveToBottom.setListener(()=>{
-			boss.moveTo(boss.x, h-boss.height*0.5, boss.speed.value*0.5, true, null, ()=>{
+			boss.moveTo(boss.x, h-boss.height*0.5, boss.speed.value*0.5, true, null, false, ()=>{
 				boss.damaged(boss.hp, null);
 			})
 		}, null, this);

@@ -24,7 +24,7 @@ class MeteoroidBuff extends Buff {
 		ship.y = world.height + ship.height;
 		ship.resetHp(this.power);
 		ship.speed.baseValue = 100;
-		ship.moveTo(ship.x, -ship.height, ship.speed.value, false, null, ():void=>{
+		ship.moveTo(ship.x, -ship.height, ship.speed.value, false, null, false, ():void=>{
 			ship.status = UnitStatus.Dead;
 		})
 	}
