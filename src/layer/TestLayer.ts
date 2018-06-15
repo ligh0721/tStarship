@@ -53,8 +53,17 @@ class TestLayer extends tutils.Layer {
 		// ));
 		// this.hero.runAction(act);
         // this.hero.moveStraight(180, 20);
-        let buff = GameController.instance.createBuff("super_hero");
-        this.hero.addBuff(buff);
+        // let buff = GameController.instance.createBuff("super_hero");
+        // this.hero.addBuff(buff);
+        let act = new tutils.CallFunc(()=>{
+            this.hero.stopAllActions();
+            let act2 = new tutils.CallFunc(()=>{
+                console.log("act2 run");
+            }, this);
+            this.hero.runAction(act2);
+            this.hero.stopAllActions();
+        }, this);
+        this.hero.runAction(act);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

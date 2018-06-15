@@ -1,7 +1,6 @@
 module tutils {
     export class ActionManager {
         public speed: number = 1;
-        private readonly targetMap: {[targetHashCode: number]: egret.IHashObject} = {};
         private readonly targets: {[targetHashCode: number]: TargetActionData} = {};
         private delayLock: boolean = false;
         private readonly delayToRemove: number[] = [];
@@ -17,15 +16,15 @@ module tutils {
                 if (this.delayLock) {
                     data = this.delayToAdd[hashCode];
                     if (data === undefined) {
-                        data = new TargetActionData(pause);
+                        data = new TargetActionData(target, pause);
                         this.delayToAdd[hashCode] = data;
-                        this.targetMap[hashCode] = target;
+                        // this.targetMap[hashCode] = target;
                     }
                 } else {
                     // not exists and not locked
-                    data = new TargetActionData(pause);
+                    data = new TargetActionData(target, pause);
                     this.targets[hashCode] = data;
-                    this.targetMap[hashCode] = target;
+                    // this.targetMap[hashCode] = target;
                 }
             } else {
                 /*
@@ -53,7 +52,6 @@ module tutils {
                 if (data !== undefined) {
                     if (data.removeAction(action)) {
                         delete this.delayToAdd[hashCode];
-                        delete this.targetMap[hashCode];
                     }
                 }
             } else {
@@ -64,14 +62,13 @@ module tutils {
                         this.delayToRemove.push(hashCode);
                     } else {
                         delete this.targets[hashCode];
-                        delete this.targetMap[hashCode];
                     }
                 }
             }
         }
 
-        private removeActionAtIndex(target: egret.IHashObject, data: TargetActionData, index: number): void {
-            let hashCode = target.hashCode;
+        private removeActionAtIndex(data: TargetActionData, index: number): void {
+            let hashCode = data.target.hashCode;
             if (data == null || data.$removed) {
                 // invalid
                 //return;
@@ -92,7 +89,6 @@ module tutils {
                         this.delayToRemove.push(hashCode);
                     } else {
                         delete this.targets[hashCode];
-                        delete this.targetMap[hashCode];
                     }
                 }
             }
@@ -106,7 +102,6 @@ module tutils {
                 data = this.delayToAdd[hashCode];
                 if (data !== undefined) {
                     delete this.delayToAdd[hashCode];
-                    delete this.targetMap[hashCode];
                 }
             } else {
                 // valid
@@ -115,7 +110,6 @@ module tutils {
                     this.delayToRemove.push(hashCode);
                 } else {
                     delete this.targets[hashCode];
-                    delete this.targetMap[hashCode];
                 }
             }
         }
@@ -144,7 +138,6 @@ module tutils {
                 if (data !== undefined) {
                     if (data.removeActionByTag(tag)) {
                         delete this.delayToAdd[hashCode];
-                        delete this.targetMap[hashCode];
                     }
                 }
             } else {
@@ -155,22 +148,21 @@ module tutils {
                         this.delayToRemove.push(hashCode);
                     } else {
                         delete this.targets[hashCode];
-                        delete this.targetMap[hashCode];
                     }
                 }
             }
         }
 
-        public everyValidAction(func: (target: egret.IHashObject, data: TargetActionData, index: number, action: Action)=>void): void {
+        public everyValidAction(func: (data: TargetActionData, index: number, action: Action)=>void): void {
             this.delayLock = true;
             //Debug.Log("Lock");
             //for (KeyValuePair<Node, TargetActionData> kv in _targets) {
             for (let targetHashCode in this.targets) {
                 let data = this.targets[targetHashCode];
                 if (!data.$removed) {
-                    let target = this.targetMap[targetHashCode];
+                    // let target = this.targetMap[targetHashCode];
                     if (data.everyValidAction((index: number, action: Action):void=>{
-                            func(target, data, index, action);
+                            func(data, index, action);
                         })) {
                         data.$removed = true;
                         this.delayToRemove.push(parseInt(targetHashCode));
@@ -182,7 +174,6 @@ module tutils {
             for (let i in this.delayToRemove) {
                 let targetHashCode = this.delayToRemove[i];
                 delete this.targets[targetHashCode];
-                delete this.targetMap[targetHashCode];
             }
             this.delayToRemove.length = 0;
 
@@ -214,12 +205,12 @@ module tutils {
         }
 
         private step(dt: number): void {
-            this.everyValidAction((target: egret.IHashObject, data: TargetActionData, index: number, action: Action):void=>{
+            this.everyValidAction((data: TargetActionData, index: number, action: Action):void=>{
                 if (!data.paused) {
                     action.step(dt*this.speed);
                     if (action.isDone()) {
                         action.stop();
-                        this.removeActionAtIndex(target, data, index);
+                        this.removeActionAtIndex(data, index);
                     }
                 }
             });
@@ -243,13 +234,15 @@ module tutils {
     export class TargetActionData {
         private readonly actions: Action[] = [];
         $removed: boolean = false;
-        paused: boolean = false;
+        readonly target: egret.IHashObject;
+        readonly paused: boolean = false;
 
         private delayLock: boolean = false;
         private delayToRemoveLength: number = 0;
         private readonly delayToAdd: Action[] = [];
 
-        public constructor(paused: boolean) {
+        public constructor(target: egret.IHashObject, paused: boolean) {
+            this.target = target;
             this.paused = paused;
         }
 

@@ -149,7 +149,7 @@ class Unit extends egret.HashObject implements tutils.INode {
 		let dis = Math.sqrt(xx*xx+yy*yy);
         let dur = dis * tutils.SpeedFactor / speed;
 
-		// this.stopAllActions();
+		this.stopAllActions();
 		let act = new tutils.Sequence(
 			stackable===true ? new tutils.MoveTo2(dur, x, y, ease) : new tutils.MoveTo(dur, x, y, ease),
 			new tutils.CallFunc(onMoveEnd, thisObject)

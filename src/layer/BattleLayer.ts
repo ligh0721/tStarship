@@ -563,8 +563,8 @@ class BattleLayer extends tutils.Layer {
         this.enemyCtrl.addRushes4(4000, 20);
         this.enemyCtrl.addRushes5(4000, 20);
         this.enemyCtrl.addRushes6(2000, 20);
-        this.enemyCtrl.addRushes7(3000, 200, 3);
-        this.enemyCtrl.addRushes8(5000, 500, 2);
+        this.enemyCtrl.addRushes7(3000, 200, 2);
+        // this.enemyCtrl.addRushes8(5000, 500, 2);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
