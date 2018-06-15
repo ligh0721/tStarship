@@ -393,6 +393,15 @@ class GameController {
 		part.desc = partInfo.desc;
 		return part;
 	}
+
+	public addAction(target: egret.IHashObject, action: tutils.Action): tutils.Action {
+		this.actionManager.addAction(target, action);
+		return action;
+	}
+
+	public setActionSpeed(speed: number): void {
+		this.actionManager.speed = speed;
+	}
 }
 
 type PlayerShipData = {

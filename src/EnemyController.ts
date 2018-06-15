@@ -447,10 +447,10 @@ class EnemyController {
 		let rush: Rush;
 
 		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
-		rush = new SineRush(delay/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100}, 3000/speedFactor, 20);
+		rush = new SineRush(delay/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100}, 100, 20);
         this.addRush(rush);
 		let ships2 = this.createEnemyShips(5, hp, "RedEnemyShip_png");
-        rush = new SineRush(0/speedFactor, ships2, 200/speedFactor, 3000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100}, 3000/speedFactor, -20);
+        rush = new SineRush(0/speedFactor, ships2, 200/speedFactor, 3000/speedFactor, {x: 50, y: 0}, {x: 50, y: 100}, 100, -20);
         this.addRush(rush);
 		this.putEnemyShipsIntoGroup(ships, ships2);
 	}
@@ -589,9 +589,9 @@ class EnemyController {
 		let a = Math.random() * 200 + 80
 		let x = (Math.random() * (this.world.width - a * 2) + a) * 100 / this.world.width;
 		a *= 100/this.world.width;
-		let t = Math.random() * 1000 + 2000;
+		let wavelen = Math.random() * 50 + 50;
 		let sign = Math.floor(Math.random()*2) * 2 - 1;
-		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur, {x: x, y: 0}, {x: x, y: 100}, t/speedFactor, a*sign);
+		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a*sign);
 		this.addRush(rush);
 	}
 }

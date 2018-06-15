@@ -84,53 +84,23 @@ class Ship extends HpUnit {
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
 		this.ai.stop();
-		this.world.onShipDying(this, src as Ship);
+		let world = this.world;
+		world.onShipDying(this, src as Ship);
 		let tw: egret.Tween;
 		let g: egret.Graphics = null;
 		let from = 20;
 		let to = (this.width + this.height) / 2;
-		if (this.gameObject instanceof egret.Shape) {
-			g = this.gameObject.graphics;
-		} else if (this.gameObject instanceof egret.Sprite) {
-			g = this.gameObject.graphics;
-		} else if (this.gameObject instanceof egret.Bitmap) {
-			let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
-			//let effect = new ExplosionEffect(20, to, "Explosion_png", this.gameObject);
-			this.world.addEffect(effect);
-			tw = egret.Tween.get(effect);
-			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
-			tw.call(()=>{
-				this.world.removeEffect(effect);
-				this.pools.delObject(effect);
-			}, this);
-			this.gameObject.visible = false;
-		}
-
-		if (g != null) {
-			g.clear();
-			g.lineStyle(5, 0xff2916);
-			g.beginFill(0xfef23b, 1);
-			g.drawCircle(this.gameObject.anchorOffsetX, this.gameObject.anchorOffsetY, to);
-			g.endFill();
-			this.gameObject.scaleX = from / to;
-			this.gameObject.scaleY = this.gameObject.scaleX;
-			let effect = this.pools.newObject(Effect, 20, to);
-			effect.setOnChanged((effect: Effect):void=>{
-				this.gameObject.scaleX = effect.value / effect.maximum;
-				this.gameObject.scaleY = this.gameObject.scaleX;
-				this.gameObject.alpha = 1 - (effect.value - effect.minimum) / (effect.maximum - effect.minimum);
-			}, this);
-			tw = egret.Tween.get(effect);
-			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
-			tw.call(()=>{
-				this.pools.delObject(effect);
-			}, this);
-		} else if (!tw) {
-			tw = egret.Tween.get(this.gameObject);
-		}
+		let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
+		//let effect = new ExplosionEffect(20, to, "Explosion_png", this.gameObject);
+		world.addEffect(effect);
+		tw = egret.Tween.get(effect);
+		tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
 		tw.call(()=>{
+			world.removeEffect(effect);
+			this.pools.delObject(effect);
 			this.status = UnitStatus.Dead;
 		}, this);
+		this.gameObject.visible = false;
 	}
 
 	// override

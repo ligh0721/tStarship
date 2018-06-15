@@ -1,5 +1,6 @@
 module tutils {
     export class ActionManager {
+        public speed: number = 1;
         private readonly targetMap: {[targetHashCode: number]: egret.IHashObject} = {};
         private readonly targets: {[targetHashCode: number]: TargetActionData} = {};
         private delayLock: boolean = false;
@@ -215,7 +216,7 @@ module tutils {
         private step(dt: number): void {
             this.everyValidAction((target: egret.IHashObject, data: TargetActionData, index: number, action: Action):void=>{
                 if (!data.paused) {
-                    action.step(dt);
+                    action.step(dt*this.speed);
                     if (action.isDone()) {
                         action.stop();
                         this.removeActionAtIndex(target, data, index);
@@ -776,19 +777,55 @@ module tutils {
 
         public update(factor: number): void {
             let target = this.target as egret.DisplayObject;
-            target.x = (1-factor)*(1-factor)*this.x0 + 2*factor*(1-factor)*this.x1 + factor*factor*this.x2;
-            target.y = (1-factor)*(1-factor)*this.y0 + 2*factor*(1-factor)*this.y1 + factor*factor*this.y2;
+            
+            let x = (1-factor)*(1-factor)*this.x0 + 2*factor*(1-factor)*this.x1 + factor*factor*this.x2;
+            let y = (1-factor)*(1-factor)*this.y0 + 2*factor*(1-factor)*this.y1 + factor*factor*this.y2;
             
             if (!this.fixedRotation) {
-                let x0 = this.x0 + (this.x1 - this.x0) * factor;
-                let y0 = this.y0 + (this.y1 - this.y0) * factor;
-
-                let x1 = this.x1 + (this.x2 - this.x1) * factor;
-                let y1 = this.y1 + (this.y2 - this.y1) * factor;
-
-                let rotation = Math.atan2(y1-y0, x1-x0) * tutils.DegPerRad;
-                target.rotation = rotation + 90;
+                target.rotation = Math.atan2(y-target.y, x-target.x) * tutils.DegPerRad + 90;
             }
+            target.x = x;
+            target.y = y;
+        }
+    }
+
+    export class Sine extends ActionInterval {
+        protected wavelen: number;
+	    protected amplitude: number;
+        protected readonly x0: number;
+        protected readonly y0: number;
+        protected readonly x1: number;
+        protected readonly y1: number;
+        protected readonly fixedRotation: boolean;
+        private readonly $angle: number;
+        private readonly $distance: number;
+
+        public constructor(duration: number, x0: number, y0: number, x1: number, y1: number, wavelen: number, amplitude: number, fixedRotation: boolean=true) {
+            super(duration);
+            this.wavelen = wavelen;
+            this.amplitude = amplitude;
+            this.x0 = x0;
+            this.y0 = y0;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.fixedRotation = fixedRotation;
+            this.$angle = Math.atan2(y1-y0, x1-x0);
+            this.$distance = tutils.getDistance(x0, y0, x1, y1);
+        }
+
+        public update(factor: number): void { 
+            let target = this.target as egret.DisplayObject;
+            let $x = this.$distance * factor;
+            let $y = Math.sin($x*Math.PI*2/this.wavelen)*this.amplitude;
+
+            let x = Math.cos(this.$angle) * $x - Math.sin(this.$angle) * $y + this.x0;
+            let y = Math.sin(this.$angle) * $x + Math.cos(this.$angle) * $y + this.y0;
+
+            if (!this.fixedRotation) {
+                target.rotation = Math.atan2(y-target.y, x-target.x) * tutils.DegPerRad + 90;
+            }
+            target.x = x;
+            target.y = y;
         }
     }
 }

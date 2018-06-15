@@ -24,9 +24,6 @@ class BattleLayer extends tutils.Layer {
 
     private tickerEffect = new Effect(1, 10);
 
-    // 测试函数曲线
-    $pathPercent: number = 0;
-
     // 双击释放技能
     private lastTouchBeginTick: number = 0;
     private lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
@@ -277,26 +274,6 @@ class BattleLayer extends tutils.Layer {
         tw.call(() => {
             this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
         });
-    }
-
-    public get pathPercent(): number {
-        return this.$pathPercent;
-    }
-
-    public set pathPercent(value: number) {
-        let a = 400;
-        let b = 400;
-        let y = value*1000;
-        let x = Math.sqrt(Math.pow(Math.sqrt(a*a+b*b)*2*Math.sin((Math.atan(b/a)-Math.asin((b-y)/Math.sqrt(a*a+b*b)))/2), 2)-y*y);
-        let g = this.layer.graphics;
-        g.drawCircle(x, y, 1);
-    }
-
-    public drawTestPath(): void {
-        let tw = egret.Tween.get(this);
-        this.pathPercent = 0;
-        tw.to({pathPercent: 1}, 10000)
-        this.layer.graphics.lineStyle(1, 0xffffff);
     }
 
     private onShipDying(ship: Ship, killer: Ship): void {
@@ -587,7 +564,7 @@ class BattleLayer extends tutils.Layer {
         this.enemyCtrl.addRushes5(4000, 20);
         this.enemyCtrl.addRushes6(2000, 20);
         this.enemyCtrl.addRushes7(3000, 200, 3);
-        //this.enemyCtrl.addRushes8(5000, 500, 2);
+        this.enemyCtrl.addRushes8(5000, 500, 2);
 
         rush = new CallbackRush(5000, ():void=>{
             this.enemyCtrl.stopRush();
@@ -702,8 +679,8 @@ class BattleLayer extends tutils.Layer {
             let a = Math.random() * 200 + 80
             let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
             a *= 100/this.stage.stageWidth;
-            let t = Math.random() * 1000 + 2000;
-            let rush = new SineRush(delay/(i/WAVE_NUM+2)*3, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
+            let wavelen = Math.random() * 50 + 50;
+            let rush = new SineRush(delay/(i/WAVE_NUM+2)*3, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a);
             this.enemyCtrl.addRush(rush);
         }
         this.enemyCtrl.startRush();

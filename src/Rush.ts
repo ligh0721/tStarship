@@ -128,15 +128,15 @@ class SineRush extends Rush {
 	protected duration: number;
 	protected from: {x: number, y: number};
 	protected to: {x: number, y: number};
-	protected period: number;
+	protected wavelen: number;
 	protected amplitude: number;
 
-	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, period: number, amplitude: number) {
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, wavelen: number, amplitude: number) {
 		super(delay, ships, interval, true);
 		this.duration = duration;
 		this.from = from;
 		this.to = to;
-		this.period = period;
+		this.wavelen = wavelen;
 		this.amplitude = amplitude;
 	}
 
@@ -145,14 +145,21 @@ class SineRush extends Rush {
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
 		this.amplitude *= world.width/100;
+		this.wavelen *= world.height/100;
 	}
 
 	// override
 	protected onRushOne(index: number, ship: Ship): void {
-		let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
-		sin.start(this.duration, ()=>{
+		// let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
+		// sin.start(this.duration, ()=>{
+		// 	ship.status = UnitStatus.Dead;
+		// });
+		ship.gameObject.x = this.from.x;
+		ship.gameObject.y = this.from.y;
+		let act = new tutils.Sequence(new tutils.Sine(this.duration, this.from.x, this.from.y, this.to.x, this.to.y, this.wavelen, this.amplitude), new tutils.CallFunc(():void=>{
 			ship.status = UnitStatus.Dead;
-		});
+		}, this));
+		ship.runAction(act);
 	}
 }
 

@@ -85,7 +85,7 @@
 				</e:Group>
 				<e:Group x="78" y="286" width="100%">
 					<e:Label id="txtNum" text="Num: 5" x="0" y="206" scaleX="1" scaleY="1"/>
-					<e:HSlider id="sldNum" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" value="5" maximum="10" minimum="0"/>
+					<e:HSlider id="sldNum" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" value="5" maximum="10" minimum="1"/>
 					<e:layout>
 					<e:VerticalLayout horizontalAlign="left"/>
 					</e:layout>
@@ -99,7 +99,7 @@
 				</e:Group>
 				<e:Group x="118" y="326" width="100%">
 					<e:Label id="txtDur" text="Dur: 2000" x="0" y="206" scaleX="1" scaleY="1"/>
-					<e:HSlider id="sldDur" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" maximum="20000" minimum="0" value="2000"/>
+					<e:HSlider id="sldDur" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" maximum="20000" minimum="500" value="2000"/>
 					<e:layout>
 					<e:VerticalLayout horizontalAlign="left"/>
 					</e:layout>
@@ -111,9 +111,9 @@
 					<e:VerticalLayout horizontalAlign="left"/>
 					</e:layout>
 				</e:Group>
-				<e:Group id="grpSinT" x="108" y="316" width="100%">
-					<e:Label id="txtSinT" text="SinT: 2000" x="0" y="206" scaleX="1" scaleY="1"/>
-					<e:HSlider id="sldSinT" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" value="2000" maximum="10000" minimum="0"/>
+				<e:Group id="grpSinWL" x="108" y="316" width="100%">
+					<e:Label id="txtSinWL" text="SinWL: 2000" x="0" y="206" scaleX="1" scaleY="1"/>
+					<e:HSlider id="sldSinWL" width="100%" height="20" x="0" y="206" scaleX="1" scaleY="1" value="40" maximum="200" minimum="5"/>
 					<e:layout>
 					<e:VerticalLayout horizontalAlign="left"/>
 					</e:layout>

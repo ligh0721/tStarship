@@ -1,4 +1,4 @@
-class Unit {
+class Unit extends egret.HashObject {
 	gameObject: egret.DisplayObject;
 	id: string;
 	world: World;
@@ -9,6 +9,7 @@ class Unit {
 	private waitToRemove: boolean = false;
 
 	public constructor() {
+		super();
 		this.boundsRect===undefined ? this.boundsRect=new egret.Rectangle() : this.boundsRect.constructor();
 	}
 
@@ -69,6 +70,7 @@ class Unit {
 	protected onCleanup(): void {
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
+		GameController.instance.actionManager.removeAllActions(this);
 	}
 
 	// override
@@ -109,6 +111,10 @@ class Unit {
 			angle += 360;
 		}
 		return angle;
+	}
+
+	public runAction(action: tutils.Action): void {
+		GameController.instance.actionManager.addAction(this, action);
 	}
 
 	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
