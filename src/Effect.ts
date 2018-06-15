@@ -1,4 +1,4 @@
-class Effect {
+class Effect extends egret.HashObject {
 	private $value: number = 0;
 	gameObject: egret.DisplayObject;
 	readonly minimum: number = 0;
@@ -7,6 +7,7 @@ class Effect {
 	private onChangedThis: any = null;
 
 	public constructor(minimum: number, maximum: number) {
+		super();
 		this.minimum = Math.floor(minimum);
 		this.maximum = Math.floor(maximum);
 		this.value = this.minimum;

@@ -117,17 +117,25 @@ class Unit extends egret.HashObject implements tutils.INode {
 		GameController.instance.actionManager.addAction(this, action);
 	}
 
+	public stopAllActions(): void {
+		GameController.instance.actionManager.removeAllActions(this);
+	}
+
 	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
 		if (fixedRotation != true) {
 			this.rotation = angle;
 		}
-		let tw = egret.Tween.get(this.gameObject);
 		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
-		if (this.x === toPos.x) {
-			tw.to({y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
-		} else {
-			tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
-		}
+		let dur = tutils.LongDistance*tutils.SpeedFactor/speed;
+		let act = new tutils.MoveTo(dur, toPos.x, toPos.y, ease);
+		this.runAction(act);
+		
+		// let tw = egret.Tween.get(this.gameObject);
+		// if (this.x === toPos.x) {
+		// 	tw.to({y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+		// } else {
+		// 	tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+		// }
 	}
 
 	// fixedRotation=false
@@ -140,12 +148,20 @@ class Unit extends egret.HashObject implements tutils.INode {
 		}
 		let dis = Math.sqrt(xx*xx+yy*yy);
         let dur = dis * tutils.SpeedFactor / speed;
-        egret.Tween.removeTweens(this);
-        let tw = egret.Tween.get(this);
-        tw.to({x: x, y: y}, dur, ease);
-		if (onMoveEnd) {
-			tw.call(onMoveEnd, thisObject, [this]);
-		}
+
+		this.stopAllActions();
+		let act = new tutils.Sequence(
+			new tutils.MoveTo(dur, x, y, ease),
+			new tutils.CallFunc(onMoveEnd, thisObject)
+		);
+		this.runAction(act);
+
+        // egret.Tween.removeTweens(this);
+        // let tw = egret.Tween.get(this);
+        // tw.to({x: x, y: y}, dur, ease);
+		// if (onMoveEnd) {
+		// 	tw.call(onMoveEnd, thisObject);
+		// }
 	}
 
 	public adjustAngle(dt: number, angleSpeed: number, x: number, y: number): void {

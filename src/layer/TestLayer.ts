@@ -38,14 +38,20 @@ class TestLayer extends tutils.Layer {
         // }, this, 5010), 1);
         // GameController.instance.actionManager.addAction(this.hero.gameObject, act);
 
-        let act = new tutils.Speed(new tutils.Sequence(new tutils.Bezier(2000, 0, 0, 700, 600, 300, 600, false), new tutils.Bezier(2000, 300, 600, 0, 1200, 0, 1200, false), new tutils.Bezier(2000, 0, 1200, 700, 600, 0, 0, false), new tutils.Sine(5000, 0, 0, 700, 1200, 200, 100, false), new tutils.CallFunc(():void=>{
-            console.log("MoveEnd");
-        }, this)), 2.0);
-        GameController.instance.actionManager.speed = 1;
-        GameController.instance.actionManager.addAction(this.hero.gameObject, act);
-        let tw = egret.Tween.get(GameController.instance.actionManager);
-        tw.to({speed: 0.01}, 10000);
+        // let act = new tutils.Speed(new tutils.Sequence(new tutils.Bezier(2000, 0, 0, 700, 600, 300, 600, false), new tutils.Bezier(2000, 300, 600, 0, 1200, 0, 1200, false), new tutils.Bezier(2000, 0, 1200, 700, 600, 0, 0, false), new tutils.Sine(5000, 0, 0, 700, 1200, 200, 100, false), new tutils.CallFunc(():void=>{
+        //     console.log("MoveEnd");
+        // }, this)), 2.0);
+        // GameController.instance.actionManager.speed = 1;
+        // GameController.instance.actionManager.addAction(this.hero.gameObject, act);
+        // let tw = egret.Tween.get(GameController.instance.actionManager);
+        // tw.to({speed: 0.01}, 10000);
         // this.drawPaths();
+
+        let act = new tutils.RepeatForever(new tutils.Sequence(
+			new tutils.MoveTo(2000, this.hero.x-170, this.hero.y, egret.Ease.getPowInOut(2)),
+			new tutils.MoveTo(2000, this.hero.x, this.hero.y, egret.Ease.getPowInOut(2))
+		));
+		this.hero.runAction(act);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {
@@ -128,9 +134,9 @@ class TestLayer extends tutils.Layer {
     private drawSine2(value: number): void {
         const x0 = 100;
         const y0 = 700;
-        const x1 = 100;
+        const x1 = 500;
         const y1 = 300;
-        const wavelen = 200;
+        const wavelen = 200*Math.SQRT2;
         const a = 100;
         const angle = Math.atan2(y1-y0, x1-x0);
         const dis = tutils.getDistance(x0, y0, x1, y1);

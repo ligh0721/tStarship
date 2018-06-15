@@ -29,13 +29,15 @@ class PartsPanel extends eui.Component {
     private draggingIconPos: {x: number, y: number} = {x: 0, y: 0};
 
     private data: {parts: Part[]};
+    private onClose: (res: any)=>void;
 
     private onRemovePartListener: (part: Part)=> void = null;
     private onRemovePartThisObj: any = null;
 
-	public constructor(data: {parts: Part[]}) {
+	public constructor(data: {parts: Part[]}, onClose?: (res: any)=>void) {
         super();
         this.data = data;
+        this.onClose = onClose;
     }
 
     // override
@@ -218,5 +220,8 @@ class PartsPanel extends eui.Component {
 
     private onBtnResume(evt: egret.TouchEvent): void {
         this.parent.removeChild(this);
+        if (this.onClose) {
+            this.onClose(0);
+        }
     }
 }

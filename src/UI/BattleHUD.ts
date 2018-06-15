@@ -223,22 +223,13 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         if (this.alpha!=1 || !this.hero || !this.hero.alive) {
             return;
         }
-
+        
         let parts: Part[] = [];
         for (let id in this.hero.parts) {
             let part = this.hero.parts[id];
             parts.push(part);
         }
-        // let part = new Part([]);
-        // part.model = "GunPower_png";
-        // part.name = "陨石零件";
-        // part.desc = "击败敌人后有10%几率召唤陨石";
-        // parts.push(part);
-        // part = new Part([]);
-        // part.model = "GunCDR_png";
-        // part.name = "暴击零件";
-        // part.desc = "很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害，很厉害的零件";
-        // parts.push(part);
+
         let panel = GameController.instance.showPartsPanel(this, {parts: parts});
         panel.setOnRemovePartListener((part: Part):void=>{
             this.hero.removePart(part.id);

@@ -117,10 +117,16 @@ class BezierRush extends Rush {
 
 	// override
 	protected onRushOne(index: number, ship: Ship): void {
-		let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
-		bezier.start(this.duration, ()=>{
+		// let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
+		// bezier.start(this.duration, ()=>{
+		// 	ship.status = UnitStatus.Dead;
+		// });
+		ship.gameObject.x = this.from.x;
+		ship.gameObject.y = this.from.y;
+		let act = new tutils.Sequence(new tutils.Bezier(this.duration, this.from.x, this.from.y, this.k.x, this.k.y, this.to.x, this.to.y, false), new tutils.CallFunc(():void=>{
 			ship.status = UnitStatus.Dead;
-		});
+		}, this));
+		ship.runAction(act);
 	}
 }
 

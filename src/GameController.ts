@@ -137,7 +137,11 @@ class GameController {
 		return p;
 	}
 	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): PartsPanel {
-		let panel = new PartsPanel(data);
+		let speed = GameController.instance.actionManager.speed;
+		GameController.instance.actionManager.speed = 0;
+		let panel = new PartsPanel(data, (res)=>{
+			GameController.instance.actionManager.speed = speed;
+		});
         parent.addChild(panel);
 		let stage = egret.MainContext.instance.stage;
         panel.x = (stage.stageWidth - panel.width) / 2;

@@ -48,6 +48,7 @@ class HpUnit extends Unit {
 	protected onDying(src: HpUnit) {
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
+		this.stopAllActions();
 		this.status = UnitStatus.Dead;
 	}
 

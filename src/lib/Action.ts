@@ -393,6 +393,12 @@ module tutils {
 
     export class FiniteTimeAction extends Action {
         duration: number = 0;
+        ease?: Function;
+
+        public constructor(ease?: Function) {
+            super();
+            this.ease = ease;
+        }
     }
 
     export class ActionInstant extends FiniteTimeAction {
@@ -410,24 +416,25 @@ module tutils {
 
     export class ActionInterval extends FiniteTimeAction {
         elapsed: number = 0;
-        protected firstTick: boolean = true;
+        protected firstStep: boolean = true;
 
-        public constructor(duration: number) {
-            super();
+        public constructor(duration: number, ease?: Function) {
+            super(ease);
             this.duration = duration===0 ? tutils.EPSILON : duration;
             this.elapsed = 0;
-            this.firstTick = true;
+            this.firstStep = true;
+            this.ease = ease;
         }
 
         public start(target: egret.IHashObject): void {
             super.start(target);
             this.elapsed = 0;
-            this.firstTick = true;
+            this.firstStep = true;
         }
 
         public step(dt: number): void {
-            if (this.firstTick) {
-                this.firstTick = false;
+            if (this.firstStep) {
+                this.firstStep = false;
                 // this.elapsed = 0;
                 this.elapsed = dt;
             } else {
@@ -435,6 +442,9 @@ module tutils {
             }
 
             let factor = Math.max(0, Math.min(1, this.elapsed/Math.max(this.duration, tutils.EPSILON)));
+            if (this.ease) {
+                factor = this.ease(factor);
+            }
             this.update(factor);
         }
 
@@ -480,7 +490,9 @@ module tutils {
     }
 
     export class Sequence extends ActionInterval {
-        protected readonly actions: FiniteTimeAction[] = [null, null];
+        // protected readonly actions: FiniteTimeAction[] = [null, null];
+        readonly one: FiniteTimeAction;
+        readonly two: FiniteTimeAction;
         protected split: number;
         protected last: number;
 
@@ -489,42 +501,35 @@ module tutils {
             let count = actions.length;
             if (count === 0) {
                 console.assert(false, "actions can't be empty");
-                this.actions[0] = new ExtraAction();
-                this.actions[1] = new ExtraAction();
+                this.one = new ExtraAction();
+                this.two = new ExtraAction();
             } else {
-                this.actions[0] = actions[0];
+                this.one = actions[0];
                 if (count === 1) {
-                    this.actions[1] = new ExtraAction();
+                    this.two = new ExtraAction();
                 } else {
                     // else size > 1
                     for (let i=1; i<count-1; i++) {
-                        this.actions[0] = new Sequence(this.actions[0], actions[i]);
+                        this.one = new Sequence(this.one, actions[i]);
                     }
-                    this.actions[1] = actions[count-1];
+                    this.two = actions[count-1];
                 }
             }
-            this.duration = this.actions[0].duration + this.actions[1].duration;
-        }
-
-        public get one(): FiniteTimeAction {
-            return this.actions[0];
-        }
-
-        public get two(): FiniteTimeAction {
-            return this.actions[1];
+            this.duration = this.one.duration + this.two.duration;
         }
 
         public start(target: egret.IHashObject): void {
             if (this.duration > tutils.EPSILON) {
-                this.split = this.actions[0].duration>tutils.EPSILON ? (this.actions[0].duration/this.duration) : 0;
+                this.split = this.one.duration>tutils.EPSILON ? (this.one.duration/this.duration) : 0;
             }
             super.start(target);
             this.last = -1;
         }
 
         public stop(): void {
-            if (this.last!==-1 && this.actions[this.last]) {
-                this.actions[this.last].stop();
+            if (this.last!==-1) {
+                let last = this.last===0 ? this.one : this.two;
+                last.stop();
             }
             super.stop();
         }
@@ -551,36 +556,39 @@ module tutils {
                 }
             }
 
+            let one = this.one;
+            let two = this.two;
             if (found === 1) {
                 if (this.last === -1) {
                     // action[0] was skipped, execute it.
-                    this.actions[0].start(this.target);
-                    this.actions[0].update(1.0);
-                    this.actions[0].stop();
+                    one.start(this.target);
+                    one.update(1.0);
+                    one.stop();
                 } else if (this.last === 0) {
                     // switching to action 1. stop action 0.
-                    this.actions[0].update(1.0);
-                    this.actions[0].stop();
+                    one.update(1.0);
+                    one.stop();
                 }
             } else if (found===0 && this.last===1) {
                 // Reverse mode ?
                 // FIXME: Bug. this case doesn't contemplate when _last==-1, found=0 and in "reverse mode"
                 // since it will require a hack to know if an action is on reverse mode or not.
                 // "step" should be overridden, and the "reverseMode" value propagated to inner Sequences.
-                this.actions[1].update(0);
-                this.actions[1].stop();
+                two.update(0);
+                two.stop();
             }
+            let foundAct = found===0 ? this.one : this.two;
             // Last action found and it is done.
-            if (found===this.last && this.actions[found].isDone()) {
+            if (found===this.last && foundAct.isDone()) {
                 return;
             }
 
             // Last action found and it is done
             if (found !== this.last) {
-                this.actions[found].start(this.target);
+                foundAct.start(this.target);
             }
 
-            this.actions[found].update(new_t);
+            foundAct.update(foundAct.ease ? foundAct.ease(new_t) : new_t);
             this.last = found;
         }
     }
@@ -631,8 +639,8 @@ module tutils {
         }
 
         public update(factor: number): void {
-            this.one.update(factor);
-            this.two.update(factor);
+            this.one.update(this.one.ease ? this.one.ease(factor) : factor);
+            this.two.update(this.two.ease ? this.two.ease(factor) : factor);
         }
     }
 
@@ -686,11 +694,11 @@ module tutils {
                         this.innerAction.stop();
                     } else {
                         // issue #390 prevent jerk, use right update
-                        this.innerAction.update(factor-(this.nextDt-this.innerAction.duration/this.duration));
+                        this.innerAction.update(this.innerAction.ease ? this.innerAction.ease(factor-(this.nextDt-this.innerAction.duration/this.duration)) : (factor-(this.nextDt-this.innerAction.duration/this.duration)));
                     }
                 }
             } else {
-                this.innerAction.update((factor*this.times)%1.0);
+                this.innerAction.update(this.innerAction.ease ? this.innerAction.ease((factor*this.times)%1.0) : ((factor*this.times)%1.0));
             }
         }
 
@@ -715,15 +723,16 @@ module tutils {
 
         public step(dt: number): void {
             this.innerAction.step(dt);
-                if (this.innerAction.isDone()) {
-                    let diff = this.innerAction.elapsed - this.innerAction.duration;
-                    if (diff > this.innerAction.duration)
-                        diff = diff % this.innerAction.duration;
-                    this.innerAction.start(this.target);
-                    // to prevent jerk. issue #390, 1247
-                    this.innerAction.step(0.0);
-                    this.innerAction.step(diff);
+            if (this.innerAction.isDone()) {
+                let diff = this.innerAction.elapsed - this.innerAction.duration;
+                if (diff > this.innerAction.duration) {
+                    diff = diff % this.innerAction.duration;
                 }
+                this.innerAction.start(this.target);
+                // to prevent jerk. issue #390, 1247
+                this.innerAction.step(0.0);
+                this.innerAction.step(diff);
+            }
         }
 
         public isDone(): boolean {
@@ -758,6 +767,53 @@ module tutils {
 
         public isDone(): boolean {
             return this.innerAction.isDone();
+        }
+    }
+
+    export class To extends ActionInterval {
+        protected fromProps: any;
+        protected toProps: any;
+        protected dtProps: any;
+        
+        public constructor(duration: number, props: any, ease?: Function) {
+            super(duration, ease);
+            this.toProps = props;
+        }
+
+        public start(target: egret.IHashObject): void {
+            super.start(target);
+            let target_ = target as any;
+            this.fromProps = {};
+            this.dtProps = {};
+            for (let k in this.toProps) {
+                let from = target_[k];
+                let to = this.toProps[k];
+                this.fromProps[k] = from;
+                this.dtProps[k] = to - from;
+            }
+        }
+
+        public update(factor: number): void {
+            let target = this.target as any;
+            for (let k in this.toProps) {
+                target[k] = this.fromProps[k] + this.dtProps[k] * factor;
+            }
+        }
+    }
+
+    export class Set extends ActionInstant {
+        protected toProps: any;
+
+        public constructor(props: any) {
+            super();
+            this.toProps = props;
+        }
+
+        public update(factor: number): void {
+            let target = this.target as any;
+            for (let k in this.toProps) {
+                target[k] = this.toProps[k];
+            }
         }
     }
 
@@ -841,8 +897,8 @@ module tutils {
         protected dtx: number;
         protected dty: number;
 
-        public constructor(duration: number, dtx: number, dty: number) {
-            super(duration);
+        public constructor(duration: number, dtx: number, dty: number, ease?: Function) {
+            super(duration, ease);
             this.dtx = dtx;
             this.dty = dty;
         }
@@ -856,8 +912,12 @@ module tutils {
 
         public update(factor: number): void {
             let target = this.target as INode;
-            target.x = this.x0 + this.dtx * factor;
-            target.y = this.y0 + this.dty * factor;
+            if (this.dtx !== 0) {
+                target.x = this.x0 + this.dtx * factor;
+            }
+            if (this.dty !== 0) {
+                target.y = this.y0 + this.dty * factor;
+            }
         }
     }
 
@@ -867,8 +927,8 @@ module tutils {
         protected x1: number;
         protected y1: number;
 
-        public constructor(duration: number, x: number, y: number) {
-            super(duration, 0, 0);
+        public constructor(duration: number, x: number, y: number, ease?: Function) {
+            super(duration, 0, 0, ease);
             this.x1 = x;
             this.y1 = y;
         }

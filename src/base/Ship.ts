@@ -83,17 +83,18 @@ class Ship extends HpUnit {
 		
 		egret.Tween.removeTweens(this);
 		egret.Tween.removeTweens(this.gameObject);
+		this.stopAllActions();
+		
 		this.ai.stop();
 		let world = this.world;
 		world.onShipDying(this, src as Ship);
-		let tw: egret.Tween;
 		let g: egret.Graphics = null;
 		let from = 20;
 		let to = (this.width + this.height) / 2;
 		let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
 		//let effect = new ExplosionEffect(20, to, "Explosion_png", this.gameObject);
 		world.addEffect(effect);
-		tw = egret.Tween.get(effect);
+		let tw = egret.Tween.get(effect);
 		tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
 		tw.call(()=>{
 			world.removeEffect(effect);
