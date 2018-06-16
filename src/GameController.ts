@@ -136,11 +136,13 @@ class GameController {
 		});
 		return p;
 	}
-	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): PartsPanel {
+	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any, ectrl: EnemyController): PartsPanel {
 		let speed = GameController.instance.actionManager.speed;
 		GameController.instance.actionManager.speed = 0;
+		ectrl.stopRush();
 		let panel = new PartsPanel(data, (res)=>{
 			GameController.instance.actionManager.speed = speed;
+			ectrl.startRush();
 		});
         parent.addChild(panel);
 		let stage = egret.MainContext.instance.stage;

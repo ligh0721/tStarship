@@ -4,6 +4,7 @@ class EnemyController {
 	private tick: number = 0;
 	private timer: tutils.Timer = new tutils.Timer();
 	private hero: Ship = null;
+	private rushHashObj: egret.HashObject = new egret.HashObject();
 
 	gunEnemyInWorld: boolean = false;
 
@@ -25,7 +26,7 @@ class EnemyController {
 		this.rushes.push(rush);
 	}
 
-	public startRush(frameRate: number=30): void {
+	public startRush(frameRate: number=10): void {
 		if (!this.timer.hasOnTimerListener()) {
 			this.timer.setOnTimerListener(this.onRushStep, this);
 		}
@@ -38,19 +39,24 @@ class EnemyController {
 	}
 
 	private onRushStep(dt: number): void {
-		if(this.rushes.length <= 0) {
-			this.timer.stop();
-			this.tick = 0;
-			return;
-		}
+		for (;;) {
+			if (this.rushes.length <= 0) {
+				this.timer.stop();
+				this.tick = 0;
+				return;
+			}
 
-		let topRush = this.rushes[0];
-		this.tick += dt;
+			let topRush = this.rushes[0];
+			this.tick += dt;
 
-		if(this.tick >= topRush.delay) {
-			topRush.start(this.world);
-			this.tick = 0;
-			this.rushes.splice(0, 1);
+			if (this.tick >= topRush.delay) {
+				topRush.start(this.world);
+				this.tick = 0;
+				dt = 0;
+				this.rushes.splice(0, 1);
+			} else {
+				break;
+			}
 		}
 	}
 

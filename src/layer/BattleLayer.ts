@@ -206,6 +206,7 @@ class BattleLayer extends tutils.Layer {
 
         // 创建玩家飞船血条、能量条
         this.hud.setHero(this.hero);
+        this.hud.setEnemyController(this.enemyCtrl);
         
         // 创建测试补给箱
         let testSupplyTimer = new tutils.Timer();

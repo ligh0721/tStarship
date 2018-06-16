@@ -18,10 +18,16 @@ class TestLayer extends tutils.Layer {
 
         this.hero = new HeroShip("Hero_png");
         this.world.addShip(this.hero);
-        let gun = Gun.createGun(Gun, Bullet);
-        this.hero.addGun(gun, true);
+        
+        let gun = Gun.createGun(StormGun, Bullet);
+		gun.fireCooldown.baseValue = 0;
+		gun.bulletPower.baseValue = 50/2;
+		gun.bulletSpeed.baseValue = 50;
+		gun.period = 500;
+        this.hero.addGun(gun).autoFire = true;
+        
         this.hero.x = w * 0.5;
-        this.hero.y = h * 0.1;
+        this.hero.y = h * 0.9;
         // gun.bulletLeft = 0;
         // // gun.autoFire = true;
         this.layer.touchEnabled = true;
@@ -55,15 +61,8 @@ class TestLayer extends tutils.Layer {
         // this.hero.moveStraight(180, 20);
         // let buff = GameController.instance.createBuff("super_hero");
         // this.hero.addBuff(buff);
-        let act = new tutils.CallFunc(()=>{
-            this.hero.stopAllActions();
-            let act2 = new tutils.CallFunc(()=>{
-                console.log("act2 run");
-            }, this);
-            this.hero.runAction(act2);
-            this.hero.stopAllActions();
-        }, this);
-        this.hero.runAction(act);
+        // let buff = GameController.instance.createBuff("shield_ball");
+        // this.hero.addBuff(buff);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

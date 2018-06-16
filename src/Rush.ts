@@ -1,4 +1,4 @@
-class Rush {
+class Rush extends egret.HashObject {
 	delay: number;
 	protected ships: Ship[];
 	protected interval: number;
@@ -7,6 +7,7 @@ class Rush {
 	protected callbackThisObj: any;
 
 	public constructor(delay: number, ships: Ship[], interval: number, fixedRotaion?: boolean, callback?: Function, callbackThisObj?: any) {
+		super();
 		this.delay = delay;
 		this.ships = ships;
 		this.interval = interval;
@@ -27,15 +28,27 @@ class Rush {
 					this.onRushOne(i, ship);
 				}, this);
 			} else {
-				let t = new tutils.Timer();
 				let i = 0;
-				t.setOnTimerListener((dt: number):void=>{
-					let ship = this.ships[i];
-					world.addShip(ship);
-					this.onRushOne(i, ship);
-					i++;
-				}, this);
-				t.start(this.interval, true, this.ships.length);
+				let act = new tutils.Repeat(new tutils.Sequence(
+					new tutils.CallFunc(():void=>{
+						let ship = this.ships[i];
+						world.addShip(ship);
+						this.onRushOne(i, ship);
+						i++;
+					}, this),
+					new tutils.DelayTime(this.interval)
+				), this.ships.length);
+				GameController.instance.actionManager.addAction(this, act);
+				
+				// let t = new tutils.Timer();
+				// let i = 0;
+				// t.setOnTimerListener((dt: number):void=>{
+				// 	let ship = this.ships[i];
+				// 	world.addShip(ship);
+				// 	this.onRushOne(i, ship);
+				// 	i++;
+				// }, this);
+				// t.start(this.interval, true, this.ships.length);
 			}
 		}
 	}

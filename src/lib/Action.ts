@@ -836,7 +836,7 @@ module tutils {
             let x = (1-factor)*(1-factor)*this.x0 + 2*factor*(1-factor)*this.x1 + factor*factor*this.x2;
             let y = (1-factor)*(1-factor)*this.y0 + 2*factor*(1-factor)*this.y1 + factor*factor*this.y2;
             
-            if (!this.fixedRotation) {
+            if (!this.fixedRotation && (x!==target.x || y!==target.y)) {
                 target.rotation = Math.atan2(y-target.y, x-target.x) * tutils.DegPerRad + 90;
             }
             target.x = x;
@@ -876,7 +876,7 @@ module tutils {
             let x = Math.cos(this.$angle) * $x - Math.sin(this.$angle) * $y + this.x0;
             let y = Math.sin(this.$angle) * $x + Math.cos(this.$angle) * $y + this.y0;
 
-            if (!this.fixedRotation) {
+            if (!this.fixedRotation && (x!==target.x || y!==target.y)) {
                 target.rotation = Math.atan2(y-target.y, x-target.x) * tutils.DegPerRad + 90;
             }
             target.x = x;

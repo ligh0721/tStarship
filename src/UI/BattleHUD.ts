@@ -28,6 +28,7 @@ class BattleHUD extends eui.Component implements IHeroHUD {
 
     private data: {};
     private hero: HeroShip;
+    private ectrl: EnemyController;
 
     public constructor(data: {}) {
         super();
@@ -55,6 +56,10 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         this.hero = hero;
         this.updateHpBar(hero.hp*100/hero.maxHp);
         this.updatePowerBar(hero.power*100/hero.maxPower);
+    }
+
+    public setEnemyController(ectrl: EnemyController): void {
+        this.ectrl = ectrl;
     }
 
     public updateScore(score: number): void {
@@ -230,7 +235,7 @@ class BattleHUD extends eui.Component implements IHeroHUD {
             parts.push(part);
         }
 
-        let panel = GameController.instance.showPartsPanel(this, {parts: parts});
+        let panel = GameController.instance.showPartsPanel(this, {parts: parts}, this.ectrl);
         panel.setOnRemovePartListener((part: Part):void=>{
             this.hero.removePart(part.id);
         }, this);
