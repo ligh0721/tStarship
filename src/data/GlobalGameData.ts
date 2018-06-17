@@ -113,7 +113,7 @@ const GlobalShipsData: ShipsData = {
 		gunName: "制导能量弹(制导)",
 		gun: GuideGun,
 		bullet: ShakeWave2Bullet,
-		bulletSpeed: 100,
+		bulletSpeed: 150,
         fireCD: 150,
 		bulletPower: 18,
 		bulletNum: 1,

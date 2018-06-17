@@ -511,6 +511,21 @@ module tutils {
             this.duration = this.one.duration + this.two.duration;
         }
 
+        public recalcDuration(): void {
+            let t = this.elapsed / this.duration;
+            if (this.one instanceof ActionInterval && this.one.duration===0) {
+                this.one.duration = tutils.Epsilon;
+            }
+            if (this.two instanceof ActionInterval && this.two.duration===0) {
+                this.two.duration = tutils.Epsilon;
+            }
+            this.duration = this.one.duration + this.two.duration;
+            if (this.duration > tutils.Epsilon) {
+                this.split = this.one.duration>tutils.Epsilon ? (this.one.duration/this.duration) : 0;
+            }
+            this.elapsed = isNaN(t) ? 0 : (t * this.duration);
+        }
+
         public start(target: egret.IHashObject): void {
             if (this.duration > tutils.Epsilon) {
                 this.split = this.one.duration>tutils.Epsilon ? (this.one.duration/this.duration) : 0;
@@ -575,7 +590,7 @@ module tutils {
             if (found===this.last && foundAct.isDone()) {
                 return;
             }
-
+    
             // Last action found and it is done
             if (found !== this.last) {
                 foundAct.start(this.target);

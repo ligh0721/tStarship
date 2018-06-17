@@ -28,27 +28,28 @@ class Rush extends egret.HashObject {
 					this.onRushOne(i, ship);
 				}, this);
 			} else {
-				let i = 0;
-				let act = new tutils.Repeat(new tutils.Sequence(
-					new tutils.CallFunc(():void=>{
-						let ship = this.ships[i];
-						world.addShip(ship);
-						this.onRushOne(i, ship);
-						i++;
-					}, this),
-					new tutils.DelayTime(this.interval)
-				), this.ships.length);
-				GameController.instance.actionManager.addAction(this, act);
-				
-				// let t = new tutils.Timer();
 				// let i = 0;
-				// t.setOnTimerListener((dt: number):void=>{
-				// 	let ship = this.ships[i];
-				// 	world.addShip(ship);
-				// 	this.onRushOne(i, ship);
-				// 	i++;
-				// }, this);
+				// let act = new tutils.Repeat(new tutils.Sequence(
+				// 	new tutils.CallFunc(():void=>{
+				// 		let ship = this.ships[i];
+				// 		world.addShip(ship);
+				// 		this.onRushOne(i, ship);
+				// 		i++;
+				// 	}, this),
+				// 	new tutils.DelayTime(this.interval)
+				// ), this.ships.length);
+				// GameController.instance.actionManager.addAction(this, act);
+				
+				let act = new tutils.TimerAction(this.interval, true, this.ships.length);
+				let i = 0;
+				act.setOnTimerListener((dt: number):void=>{
+					let ship = this.ships[i];
+					world.addShip(ship);
+					this.onRushOne(i, ship);
+					i++;
+				}, this);
 				// t.start(this.interval, true, this.ships.length);
+				GameController.instance.actionManager.addAction(this, act);
 			}
 		}
 	}

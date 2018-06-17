@@ -2,7 +2,9 @@ class EnemyController {
 	readonly world: World;
 	private rushes: Rush[] = [];
 	private tick: number = 0;
-	private timer: tutils.Timer = new tutils.Timer();
+	// private timer: tutils.Timer = new tutils.Timer();
+	private rushTimerAct: tutils.TimerAction;
+
 	private hero: Ship = null;
 	private rushHashObj: egret.HashObject = new egret.HashObject();
 
@@ -27,21 +29,50 @@ class EnemyController {
 	}
 
 	public startRush(frameRate: number=10): void {
-		if (!this.timer.hasOnTimerListener()) {
-			this.timer.setOnTimerListener(this.onRushStep, this);
-		}
+		// if (!this.timer.hasOnTimerListener()) {
+		// 	this.timer.setOnTimerListener(this.onRushStep, this);
+		// }
 		this.tick = 0;
-		this.timer.start(1000/frameRate, true, 0);
+		// this.timer.start(1000/frameRate, true, 0);
+		if (!this.rushTimerAct) {
+			this.rushTimerAct = new tutils.TimerAction(1000/frameRate, true, 0);
+			this.rushTimerAct.setOnTimerListener(this.onRushStep, this);
+		}
+
+		// if (this.rushes.length === 0) {
+		// 	return;
+		// }
+
+		// let top: Rush = this.rushes.splice(0, 1)[0];
+		// let seqAct = new tutils.Sequence(
+		// 	new tutils.DelayTime(top.delay),
+		// 	new tutils.CallFunc(():void=>{
+		// 		do {
+		// 			top.start(this.world);
+		// 			if (this.rushes.length === 0) {
+		// 				GameController.instance.actionManager.removeAllActions(this.rushHashObj);
+		// 				return;
+		// 			}
+		// 			top = this.rushes.splice(0, 1)[0];
+		// 		} while (top.delay === 0);
+		// 		seqAct.one.duration = top.delay;
+		// 		seqAct.recalcDuration();
+		// 	}, this)
+		// );
+		// let act = new tutils.RepeatForever(seqAct);
+		GameController.instance.actionManager.addAction(this.rushHashObj, this.rushTimerAct);
 	}
 
 	public stopRush(): void {
-		this.timer.stop();
+		// this.timer.stop();
+		GameController.instance.actionManager.removeAllActions(this.rushHashObj);
 	}
 
 	private onRushStep(dt: number): void {
 		for (;;) {
 			if (this.rushes.length <= 0) {
-				this.timer.stop();
+				// this.timer.stop();
+				GameController.instance.actionManager.removeAllActions(this.rushHashObj);
 				this.tick = 0;
 				return;
 			}
@@ -92,59 +123,61 @@ class EnemyController {
 	}
 
 	public createBoss1(): MotherShip {
-		let ship = new MotherShip("TwoGunBOSSBody_png", 0.5);
-        this.world.addShip(ship);
-        ship.rotation = 180;
-        ship.x = this.world.width * 0.5;
-        ship.y = -ship.height;
-        ship.force.force = tutils.EnemyForce;
+		let boss = new MotherShip("TwoGunBOSSBody_png", 0.5);
+        this.world.addShip(boss);
+        boss.rotation = 180;
+        boss.x = this.world.width * 0.5;
+        boss.y = -boss.height;
+        boss.force.force = tutils.EnemyForce;
 
-        let gunShip = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
-        ship.addGunShip(gunShip, -110, 20);
-        gunShip.rotation = 180;
-        let gun = Gun.createGun(Gun, RedWaveBullet);
-        gunShip.addGun(gun);
+        let gunShipL = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
+        boss.addGunShip(gunShipL, -110, 20);
+        gunShipL.rotation = 180;
+        let gunL = Gun.createGun(Gun, RedWaveBullet);
+        gunShipL.addGun(gunL);
         
-        let gunShip2 = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
-        ship.addGunShip(gunShip2, 110, 20);
-        gunShip2.rotation = 180;
-        let gun2 = Gun.createGun(ShotGun, RedWaveBullet);
-		gun2.bulletAngleDelta = 10;
-        gun2.fireCooldown.baseValue = 1000;
-        gunShip2.addGun(gun2);
+        let gunShipR = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
+        boss.addGunShip(gunShipR, 110, 20);
+        gunShipR.rotation = 180;
+        let gunR = Gun.createGun(ShotGun, RedWaveBullet);
+		gunR.bulletAngleDelta = 10;
+        gunR.fireCooldown.baseValue = 1000;
+        gunShipR.addGun(gunR);
 
-		ship.resetHp(2000);
-        gunShip.resetHp(500);
-		gunShip2.resetHp(100);
+		boss.resetHp(2000);
+        gunShipL.resetHp(500);
+		gunShipR.resetHp(100);
 
-        let moveMotherShip = (ship: MotherShip)=>{
-            let tw = egret.Tween.get(ship);
-            tw.to({x: this.world.width*0.4}, 2000);
-            tw.to({x: this.world.width*0.6}, 4000);
-            tw.to({x: this.world.width*0.5}, 2000);
-            tw.call(moveMotherShip, this, [ship]);
-        };
+		let moveMotherShip = (ship: MotherShip)=>{
+			let act = new tutils.RepeatForever(new tutils.Sequence(
+				new tutils.MoveTo(2000, this.world.width*0.4, ship.y),
+				new tutils.MoveTo(4000, this.world.width*0.6, ship.y),
+				new tutils.MoveTo(2000, this.world.width*0.5, ship.y)
+			));
+			ship.runAction(act);
+		}
+		let rotateGunShip = (gunShip: MotherGunShip)=>{
+			let act = new tutils.RepeatForever(new tutils.Sequence(
+				new tutils.To(1000, {rotation: tutils.getRotateAngle(180, +45)}),
+				new tutils.To(2000, {rotation: tutils.getRotateAngle(180+45, -90)}),
+				new tutils.To(2000, {rotation: tutils.getRotateAngle(180+45-90, +45)})
+			));
+			gunShip.runAction(act);
+		}
+		let act = new tutils.Sequence(
+			new tutils.MoveTo(5000, boss.x, boss.height*0.5+100),
+			new tutils.DelayTime(1000),
+			new tutils.CallFunc(()=>{
+				moveMotherShip(boss);
+				rotateGunShip(gunShipL);
+				rotateGunShip(gunShipR);
+				gunL.autoFire = true;
+				gunR.autoFire = true;
+			}, this)
+		);
+		boss.runAction(act);
 
-        let rotateGunShip = (gunShip: MotherGunShip)=>{
-            let tw = egret.Tween.get(gunShip);
-            tw.set({angle: 180});
-            tw.to({angle: 180+45}, 1000);
-            tw.to({angle: 180-45}, 2000);
-            tw.to({angle: 180}, 2000);
-            tw.call(rotateGunShip, this, [gunShip]);
-        };
-
-        let tw = egret.Tween.get(ship);
-        tw.to({y: ship.height*0.5+100}, 5000)
-        tw.wait(1000);
-        tw.call(()=>{
-            moveMotherShip(ship);
-            rotateGunShip(gunShip);
-            rotateGunShip(gunShip2);
-            gun.autoFire = true;
-            gun2.autoFire = true;
-        }, this);
-		return ship;
+		return boss;
 	}
 
 	public createBoss2(): MotherShip {
@@ -415,7 +448,7 @@ class EnemyController {
 
 		ships = this.createEnemyShips(5, hp, "RedEnemyShip_png");
 		this.putEnemyShipsIntoGroup(ships);
-		rush = new StraightRush(5000/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 70, y: 0}, {x: 70, y: 100});
+		rush = new StraightRush(2000/speedFactor, ships, 200/speedFactor, 3000/speedFactor, {x: 70, y: 0}, {x: 70, y: 100});
 		this.addRush(rush);
 	}
 
@@ -600,4 +633,5 @@ class EnemyController {
 		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a*sign);
 		this.addRush(rush);
 	}
+	
 }

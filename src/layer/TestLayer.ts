@@ -63,6 +63,12 @@ class TestLayer extends tutils.Layer {
         // this.hero.addBuff(buff);
         // let buff = GameController.instance.createBuff("shield_ball");
         // this.hero.addBuff(buff);
+        let act = new tutils.TimerAction(1000, true, 5, false);
+        act.setOnTimerListener((dt: number):void=>{
+            console.log(""+egret.getTimer()+" "+dt);
+        }, this);
+        console.log(""+egret.getTimer()+" start");
+        this.hero.runAction(act);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

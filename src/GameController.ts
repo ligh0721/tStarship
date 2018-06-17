@@ -136,13 +136,13 @@ class GameController {
 		});
 		return p;
 	}
-	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any, ectrl: EnemyController): PartsPanel {
+	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): PartsPanel {
 		let speed = GameController.instance.actionManager.speed;
 		GameController.instance.actionManager.speed = 0;
-		ectrl.stopRush();
+		// ectrl.stopRush();
 		let panel = new PartsPanel(data, (res)=>{
 			GameController.instance.actionManager.speed = speed;
-			ectrl.startRush();
+			// ectrl.startRush();
 		});
         parent.addChild(panel);
 		let stage = egret.MainContext.instance.stage;
@@ -246,13 +246,13 @@ class GameController {
 		let buff: Buff;
 		switch (key) {
 		case "gun_power_up":
-			buff = new GunBuff(8000, 0, +0.50, 0);
+			buff = new GunBuff(8000, 0, +0.20, 0);
 			buff.model = "GunPower_png";
 			buff.name = "Power Up!";
 			buff.key = key;
 			break;
 		case "gun_cdr_up":
-			buff = new GunBuff(8000, -0.30, 0, 0);
+			buff = new GunBuff(8000, -0.20, 0, 0);
 			buff.model = "GunCDR_png";
 			buff.name = "Fire Rate Up!";
 			buff.key = key;
@@ -281,7 +281,7 @@ class GameController {
 			buff.key = key;
 			break;
 		case "turbo_fire_gun":
-			buff = new GunBuff(5000, -0.50, 0, +1.00);
+			buff = new GunBuff(5000, -0.50, 0, +0.50);
 			buff.name = "Turbo Fire!";
 			buff.key = key;
 			break;

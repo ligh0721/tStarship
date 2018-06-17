@@ -1,8 +1,13 @@
 class GuideGun extends Gun {
-	bulletAngleSpeed: number = 50/1000;
+	bulletAngleSpeed: number = 10/1000;
 	private bulletAngleNum = 3;
 	private bulletAngleDelta = 30;
 	private $bulletAngleIndex = 0;
+
+	public constructor() {
+		super();
+		this.fireCooldown.setRange({minValue: 50});
+	}
 
 	public fire() {
 		this.playFireSound();
@@ -26,7 +31,8 @@ class GuideGun extends Gun {
 	protected fireBulletGuild(bullet: Bullet, target: Ship): void {
 		let bulletId = bullet.id;
 		let targetId = "";
-		let timer = new tutils.Timer();
+		let timer = new tutils.TimerByAction(GameController.instance.actionManager);
+		let angleSpeed = 0;
 		timer.setOnTimerListener((dt: number)=> {
 			if (!bullet.alive || bullet.id!=bulletId) {
 				timer.stop();
@@ -34,14 +40,13 @@ class GuideGun extends Gun {
 			}
 			if ((target==null || !target.alive || target.id!=targetId) && this.ship.alive) {
 				targetId = "";
-				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force);
+				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force, 700);
 				if (target != null) {
 					targetId = target.id;
 				}
 			}
 			if (target != null) {
-				let dis = bullet.getDistance(target.gameObject.x, target.gameObject.y);
-				let angleSpeed = 1000000 / Math.max(10, dis*dis) * this.bulletAngleSpeed;
+				angleSpeed += this.bulletAngleSpeed;
 				bullet.adjustAngle(dt, angleSpeed, target.gameObject.x, target.gameObject.y);
 			}
 			let to = bullet.getDirectionPoint(dt*this.bulletSpeed.value/tutils.SpeedFactor)

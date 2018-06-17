@@ -12,9 +12,9 @@ class Gun extends egret.HashObject {
 	private $bulletLeft: number = -1;  // 可发射的剩余子弹数，-1为无限
 
 	private $autoFire: boolean = false;
-	private autoFireTimer: tutils.Timer;
+	private autoFireTimer: tutils.ITimer;
 
-	private seqAct: tutils.Sequence;
+	// private seqAct: tutils.Sequence;
 
 	level: number = 1;
 
@@ -24,7 +24,7 @@ class Gun extends egret.HashObject {
 		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
 		this.bulletPowerLossInterval===undefined ? this.bulletPowerLossInterval=new Value(500, 100) : this.bulletPowerLossInterval.constructor(500, 100);
 		this.bulletSpeed===undefined ? this.bulletSpeed=new Value(50, 0, 200) : this.bulletSpeed.constructor(50, 0, 200);
-		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.Timer() : this.autoFireTimer.constructor();
+		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.TimerByAction(GameController.instance.actionManager) : this.autoFireTimer.constructor(GameController.instance.actionManager);
 	}
 
 	public setBulletType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType) {
@@ -78,7 +78,7 @@ class Gun extends egret.HashObject {
 		return this.$autoFire;
 	}
 
-	public set autoFire2(value: boolean) {
+	public set autoFire(value: boolean) {
 		if (this.ship == null || !this.ship.alive) {
 			this.autoFireTimer.stop();
 			return;
@@ -117,64 +117,63 @@ class Gun extends egret.HashObject {
 		}
 	}
 
-	public set autoFire(value: boolean) {
-		if (this.$autoFire == value) {
-			return;
-		}
-		this.$autoFire = value;
-		if (value) {
-			this.startFireAction();
-		} else {
-			GameController.instance.actionManager.removeAllActions(this);
-		}
-	}
+	// public set autoFire(value: boolean) {
+	// 	if (this.$autoFire == value) {
+	// 		return;
+	// 	}
+	// 	this.$autoFire = value;
+	// 	if (value) {
+	// 		this.startFireAction();
+	// 	} else {
+	// 		GameController.instance.actionManager.removeAllActions(this);
+	// 	}
+	// }
 
-	private startFireAction(): void {
-		this.seqAct = new tutils.Sequence(
-			new tutils.CallFunc(():void=>{
-				if (this.ship == null || !this.ship.alive) {
-					GameController.instance.actionManager.removeAllActions(this);
-					return;
-				}
-				if (this.$bulletLeft != 0) {
-					this.fire();
-					if (this.$bulletLeft > 0) {
-						this.$bulletLeft--;
-						if (this.$bulletLeft == 0) {
-							// this.autoFireTimer.stop();
-							GameController.instance.actionManager.removeAllActions(this);
-						}
-					}
-				}
-				let dur = this.fireCooldown.value===0 ? tutils.Epsilon : this.fireCooldown.value;
-				if (this.seqAct.two.duration !== dur) {
-					this.seqAct.two.duration = dur;
-					this.seqAct.duration = this.seqAct.one.duration + dur;
-				}
-			}, this),
-			new tutils.DelayTime(this.fireCooldown.value)
-		);
-		let act = new tutils.RepeatForever(this.seqAct);
-		GameController.instance.actionManager.addAction(this, act);
-	}
+	// private startFireAction(): void {
+	// 	this.seqAct = new tutils.Sequence(
+	// 		new tutils.CallFunc(():void=>{
+	// 			if (this.ship == null || !this.ship.alive) {
+	// 				GameController.instance.actionManager.removeAllActions(this);
+	// 				return;
+	// 			}
+	// 			if (this.$bulletLeft != 0) {
+	// 				this.fire();
+	// 				if (this.$bulletLeft > 0) {
+	// 					this.$bulletLeft--;
+	// 					if (this.$bulletLeft == 0) {
+	// 						// this.autoFireTimer.stop();
+	// 						GameController.instance.actionManager.removeAllActions(this);
+	// 					}
+	// 				}
+	// 			}
+	// 			if (this.seqAct.two.duration !== this.fireCooldown.value) {
+	// 				this.seqAct.two.duration = this.fireCooldown.value;
+	// 				this.seqAct.recalcDuration();
+	// 			}
+	// 		}, this),
+	// 		new tutils.DelayTime(this.fireCooldown.value)
+	// 	);
+	// 	let act = new tutils.RepeatForever(this.seqAct);
+	// 	GameController.instance.actionManager.addAction(this, act);
+	// }
 
 	public get bulletLeft(): number {
 		return this.$bulletLeft;
 	}
 
-	public set bulletLeft2(value: number) {
+	public set bulletLeft(value: number) {
 		this.$bulletLeft = value;
 		if (value != 0 && this.$autoFire && !this.autoFireTimer.running) {
 			this.autoFireTimer.start(this.fireCooldown.value, true, 0);
 		}
 	}
 
-	public set bulletLeft(value: number) {
-		if (value!=0 && this.$autoFire && this.$bulletLeft==0) {
-			this.startFireAction();
-		}
-		this.$bulletLeft = value;
-	}
+	// public set bulletLeft(value: number) {
+	// 	if (value!=0 && this.$autoFire && this.$bulletLeft==0) {
+	// 		this.startFireAction();
+	// 	}
+	// 	this.$bulletLeft = value;
+	// }
 
 	public cleanup(): void {
 		this.autoFireTimer.stop();

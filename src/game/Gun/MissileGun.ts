@@ -9,7 +9,7 @@ class MissileGun extends Gun {
 
 	public constructor() {
 		super();
-		this.fireCooldown.setRange({minValue: 100});
+		this.fireCooldown.setRange({minValue: 150});
 	}
 
 	public fire() {
@@ -35,7 +35,7 @@ class MissileGun extends Gun {
 	protected fireBulletGuild(bullet: Bullet, target: Ship): void {
 		let bulletId = bullet.id;
 		let targetId = "";
-		let timer = new tutils.Timer();
+		let timer = new tutils.TimerByAction(GameController.instance.actionManager);
 		let yDropSpeed = 40;
 		let bulletSpeed = 0;
 		let angleSpeed = 0;
@@ -46,13 +46,12 @@ class MissileGun extends Gun {
 			}
 			if ((target==null || !target.alive || target.id!=targetId) && this.ship.alive) {
 				targetId = "";
-				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force);
+				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force, 600);
 				if (target != null) {
 					targetId = target.id;
 				}
 			}
 			if (target!=null && bulletSpeed>100) {
-				let dis = bullet.getDistance(target.gameObject.x, target.gameObject.y);
 				angleSpeed += this.bulletAngleSpeed;
 				bullet.adjustAngle(dt, angleSpeed, target.gameObject.x, target.gameObject.y);
 			}

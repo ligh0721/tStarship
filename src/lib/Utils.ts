@@ -39,10 +39,19 @@ module tutils {
 		return getDirectionPoint(x0, y0, a, dis);
 	}
 
-	export function getDistance(x0: number, y0: number, x1: number, y1: number) {
+	export function getDistance(x0: number, y0: number, x1: number, y1: number): number {
 		let dtx = x0 - x1;
 		let dty = y0 - y1;
 		return Math.sqrt(dtx*dtx+dty*dty);
+	}
+
+	export function getRotateAngle(angle0: number, delta: number): number {
+		if (angle0 > 180) {
+			return angle0 + delta - 360;
+		} else if (angle0 < -180) {
+			return angle0 + delta + 360;
+		}
+		return angle0 + delta;
 	}
 
 	export function createBitmapByName(name: string) {

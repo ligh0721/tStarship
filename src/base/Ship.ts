@@ -11,7 +11,8 @@ class Ship extends HpUnit {
 	readonly speed: Value;
 	hero: boolean = false;  // can use supply
 
-	private readonly timer: tutils.Timer;
+	private readonly timer: tutils.ITimer;
+	// private readonly buffTimerAct: tuitls.
 	readonly buffs: { [id: string]: Buff } = {};
 	buffsNum: number = 0;
 
@@ -42,7 +43,7 @@ class Ship extends HpUnit {
 		this.key = key;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
-		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actionManager) : this.timer.constructor(GameController.instance.actionManager);
 		this.ai===undefined ? this.ai=new tutils.StateManager() : this.ai.constructor();
 	}
 
@@ -102,22 +103,6 @@ class Ship extends HpUnit {
 			this.status = UnitStatus.Dead;
 		}, this);
 		this.gameObject.visible = false;
-	}
-
-	// override
-	public onTimer(dt: number): void {
-		//console.log('onTimer: '+egret.getTimer());
-		let toDelBuffs: Buff[] = [];
-		for (let i in this.buffs) {
-			let buff = this.buffs[i];
-			if (buff.step(dt) == false) {
-				toDelBuffs.push(buff);
-			}
-		}
-		for (let i in toDelBuffs) {
-			let buff = toDelBuffs[i];
-			this.removeBuff(buff.id);
-		}
 	}
 
 	// override
@@ -191,6 +176,22 @@ class Ship extends HpUnit {
 		delete this.guns[id];
 		if (this.mainGun == gun) {
 			this.mainGun = null;
+		}
+	}
+
+	// override
+	public onTimer(dt: number): void {
+		//console.log('onTimer: '+egret.getTimer());
+		let toDelBuffs: Buff[] = [];
+		for (let i in this.buffs) {
+			let buff = this.buffs[i];
+			if (buff.step(dt) == false) {
+				toDelBuffs.push(buff);
+			}
+		}
+		for (let i in toDelBuffs) {
+			let buff = toDelBuffs[i];
+			this.removeBuff(buff.id);
 		}
 	}
 

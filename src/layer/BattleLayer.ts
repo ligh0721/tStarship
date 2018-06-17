@@ -206,10 +206,10 @@ class BattleLayer extends tutils.Layer {
 
         // 创建玩家飞船血条、能量条
         this.hud.setHero(this.hero);
-        this.hud.setEnemyController(this.enemyCtrl);
+        // this.hud.setEnemyController(this.enemyCtrl);
         
         // 创建测试补给箱
-        let testSupplyTimer = new tutils.Timer();
+        let testSupplyTimer = new tutils.TimerByAction(GameController.instance.actionManager);
         testSupplyTimer.setOnTimerListener((dt: number): void=>{
             this.createTestSupply();
         });
@@ -558,13 +558,13 @@ class BattleLayer extends tutils.Layer {
     private createTestEnemyRushes() {
         let rush: Rush;
 
-        this.enemyCtrl.addRushes1(2000, 20);
-        this.enemyCtrl.addRushes2(4000, 20);
-        this.enemyCtrl.addRushes3(4000, 20);
-        this.enemyCtrl.addRushes4(4000, 20);
-        this.enemyCtrl.addRushes5(4000, 20);
-        this.enemyCtrl.addRushes6(2000, 20);
-        this.enemyCtrl.addRushes7(3000, 200, 2);
+        // this.enemyCtrl.addRushes1(2000, 20);
+        // this.enemyCtrl.addRushes2(4000, 20);
+        // this.enemyCtrl.addRushes3(4000, 20);
+        // this.enemyCtrl.addRushes4(4000, 20);
+        // this.enemyCtrl.addRushes5(4000, 20);
+        // this.enemyCtrl.addRushes6(2000, 20);
+        // this.enemyCtrl.addRushes7(3000, 200, 2);
         // this.enemyCtrl.addRushes8(5000, 500, 2);
 
         rush = new CallbackRush(5000, ():void=>{
@@ -687,7 +687,130 @@ class BattleLayer extends tutils.Layer {
         this.enemyCtrl.startRush();
     }
 
-    private showBossUI(boss: Ship) {
+    private createAllRushes(): void {
+        const WAVE_NUM = 15;
+        for (let i=1; i<=WAVE_NUM*10; i++) {
+            let level = (i - 1) / WAVE_NUM + 1;
+            let hp = 20 + i;
+            if (i % WAVE_NUM === 0) {
+                switch (level) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                }
+            }
+            if (i == WAVE_NUM) {
+                this.enemyCtrl.addRushes1(2000, hp, 1.5);
+                this.enemyCtrl.addRushes2(4000, hp, 1.5);
+                this.enemyCtrl.addRushes3(4000, hp, 1.5);
+                this.enemyCtrl.addRushes4(4000, hp, 1.5);
+                this.enemyCtrl.addRushes5(4000, hp, 1.5);
+                this.enemyCtrl.addRushes6(2000, hp, 1.5);
+                this.enemyCtrl.addRushes7(3000, 200, 3);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss2();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == WAVE_NUM*2) {
+                this.enemyCtrl.addRushes1(2000, hp, 2.0);
+                this.enemyCtrl.addRushes2(4000, hp, 2.0);
+                this.enemyCtrl.addRushes3(4000, hp, 2.0);
+                this.enemyCtrl.addRushes4(4000, hp, 2.0);
+                this.enemyCtrl.addRushes5(4000, hp, 2.0);
+                this.enemyCtrl.addRushes6(2000, hp, 2.0);
+                this.enemyCtrl.addRushes8(3000, 200, 3);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == WAVE_NUM*3) {
+                this.enemyCtrl.addRushes1(2000, hp, 2.5);
+                this.enemyCtrl.addRushes2(4000, hp, 2.5);
+                this.enemyCtrl.addRushes3(4000, hp, 2.5);
+                this.enemyCtrl.addRushes4(4000, hp, 2.5);
+                this.enemyCtrl.addRushes5(4000, hp, 2.5);
+                this.enemyCtrl.addRushes6(2000, hp, 2.5);
+                this.enemyCtrl.addRushes7(3000, 200, 3);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == WAVE_NUM*4) {
+                this.enemyCtrl.addRushes1(2000, hp, 3.0);
+                this.enemyCtrl.addRushes2(4000, hp, 3.0);
+                this.enemyCtrl.addRushes3(4000, hp, 3.0);
+                this.enemyCtrl.addRushes4(4000, hp, 3.0);
+                this.enemyCtrl.addRushes5(4000, hp, 3.0);
+                this.enemyCtrl.addRushes6(2000, hp, 3.0);
+                this.enemyCtrl.addRushes8(3000, 200, 3);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            } else if (i == WAVE_NUM*5) {
+                this.enemyCtrl.addRushes1(2000, hp, 3.5);
+                this.enemyCtrl.addRushes2(4000, hp, 3.5);
+                this.enemyCtrl.addRushes3(4000, hp, 3.5);
+                this.enemyCtrl.addRushes4(4000, hp, 3.5);
+                this.enemyCtrl.addRushes5(4000, hp, 3.5);
+                this.enemyCtrl.addRushes6(2000, hp, 3.5);
+                this.enemyCtrl.addRushes7(3000, 200, 3);
+                let rush = new CallbackRush(5000, ():void=>{
+                    this.enemyCtrl.stopRush();
+                    let boss = this.enemyCtrl.createBoss3();
+                    this.showBossUI(boss);
+                }, this);
+                this.enemyCtrl.addRush(rush);
+                continue;
+            }
+            if (Math.random() < 0.3) {
+                let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, 0, Math.min(3, 1+i/WAVE_NUM));
+                rush.setCallback(():void=>{
+                    tutils.playSound("Meteoroid_mp3");
+                    rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
+                    rush.to.x = rush.from.x;
+                }, this);
+            }
+
+            if (Math.random() < 0.3) {
+                let num = Math.floor((Math.random()*(i/WAVE_NUM+1))/2) + 1;
+                if (Math.random() < 0.5) {
+                    this.enemyCtrl.addRushes7(2000, hp*10, num, (i/WAVE_NUM+2)*0.5);
+                } else {
+                    this.enemyCtrl.addRushes8(2000, hp*10, num, (i/WAVE_NUM+2)*0.5);
+                }
+            }
+            let n = Math.floor(Math.random()*8+5);
+            let es = this.enemyCtrl.createEnemyShips(n, hp, "RedEnemyShip_png");
+            this.enemyCtrl.putEnemyShipsIntoGroup(es);
+            
+            let delay = Math.random() * 5000 + 2000;
+            let dur = Math.random() * 2000 + 4000;
+            let interval = Math.random() * 200 + 100;
+            let a = Math.random() * 200 + 80
+            let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
+            a *= 100/this.stage.stageWidth;
+            let wavelen = Math.random() * 50 + 50;
+            let rush = new SineRush(delay/(i/WAVE_NUM+2)*3, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a);
+            this.enemyCtrl.addRush(rush);
+        }
+        this.enemyCtrl.startRush();
+    }
+
+    private showBossUI(boss: Ship): void {
         this.hud.showBossHpBar(()=>{
             this.hud.updateBossHpBar(boss.hp*100/boss.maxHp);
         }, this);

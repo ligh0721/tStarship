@@ -48,7 +48,7 @@ class FireState extends ShipAIChainState {
 
 	public onEnter(): void {
 		if (this.ship.mainGun) {
-			this.ship.mainGun.autoFire = true;
+			this.ship.mainGun.autoFire = this.autoFire;
 		}
 		this.next();
 	}
