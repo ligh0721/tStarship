@@ -8,8 +8,6 @@ class EnemyController {
 	private hero: Ship = null;
 	private rushHashObj: egret.HashObject = new egret.HashObject();
 
-	gunEnemyInWorld: boolean = false;
-
 	public constructor(world: World) {
 		this.world = world;
 	}
@@ -536,7 +534,7 @@ class EnemyController {
 		let rush: Rush;
 		
 		ships = this.createEnemyShips(num, hp, "PurpleEnemyShip_png");
-		rush = new CustomRush(delay, ships, 0, null, (index: number, ship: Ship):void=>{
+		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
 			ship.speed.baseValue = 20;
@@ -558,16 +556,10 @@ class EnemyController {
 			let endFire = new FireState(ai, ship, false);
 			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value*speedFactor), true, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
-			let callback = new CallbackState(ai, ():void=>{
-				(ship as EnemyShip).group.decMember();
-			}, this);
-			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead).setNext(callback);
+			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead);
 			ai.change(arrive);
 		}, this);
 		this.addRush(rush);
-		this.putEnemyShipsIntoGroup(ships).setOnEmptyListener(():void=>{
-			this.gunEnemyInWorld = false;
-		}, this);
 	}
 
 	public addRushes8(delay: number, hp: number, num: number, speedFactor: number=1): void {
@@ -576,7 +568,7 @@ class EnemyController {
 		let rush: Rush;
 		
 		ships = this.createEnemyShips(num, hp, "PurpleEnemyShip2_png");
-		rush = new CustomRush(delay, ships, 0, null, (index: number, ship: Ship):void=>{
+		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
 			ship.speed.baseValue = 20;
@@ -598,16 +590,10 @@ class EnemyController {
 			let endFire = new FireState(ai, ship, false);
 			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value*speedFactor), false, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
-			let callback = new CallbackState(ai, ():void=>{
-				(ship as EnemyShip).group.decMember();
-			}, this);
-			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead).setNext(callback);
+			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead);
 			ai.change(arrive);
 		}, this);
 		this.addRush(rush);
-		this.putEnemyShipsIntoGroup(ships).setOnEmptyListener(():void=>{
-			this.gunEnemyInWorld = false;
-		}, this);
 	}
 
 	public addRushes9(delay: number, hp: number, num: number, speedFactor: number=1): void {
@@ -627,11 +613,10 @@ class EnemyController {
 		let interval = Math.random() * 200 + 100;
 		let a = Math.random() * 200 + 80
 		let x = (Math.random() * (this.world.width - a * 2) + a) * 100 / this.world.width;
-		a *= 100/this.world.width;
 		let wavelen = Math.random() * 50 + 50;
 		let sign = Math.floor(Math.random()*2) * 2 - 1;
-		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a*sign);
+		a *= 100 / this.world.width * sign;
+		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a);
 		this.addRush(rush);
 	}
-	
 }
