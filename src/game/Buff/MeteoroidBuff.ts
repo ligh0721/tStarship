@@ -2,8 +2,8 @@ class MeteoroidBuff extends Buff {
 	rate: number;
 	power: number;
 	
-	public constructor(rate: number, power: number) {
-		super(-1, ShipTrigger.OnDestroyTarget);
+	public constructor(duration: number, rate: number, power: number) {
+		super(duration, ShipTrigger.OnDestroyTarget);
 		this.rate = rate;
 		this.power = power;
 	}

@@ -3,8 +3,8 @@ class EnemyShip extends Ship {
 
 	group: EnemyGroup = null;
 
-	public constructor(model: string, scale?: number) {
-		super(model, scale);
+	public constructor(model: string, modelScale?: number) {
+		super(model, modelScale);
 	}
 
 	public damaged(value: number, src: HpUnit): void {

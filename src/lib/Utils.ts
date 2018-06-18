@@ -8,7 +8,7 @@ module tutils {
 	export const AllyForce = 10;
 	export const EnemyForce = 11;
 	export const LargeNumber = 1000000;
-	export const ShipTimerInterval = 100;
+	// export const ShipTimerInterval = 100;
 	export const Epsilon = 2.2204460492503130808472633361816E-16;
 	export const Precision = 1e-12;
 	let bgMusic: egret.SoundChannel;
@@ -52,6 +52,10 @@ module tutils {
 			return angle0 + delta + 360;
 		}
 		return angle0 + delta;
+	}
+
+	export function randomSign(): number {
+		return Math.floor(Math.random()*2) * 2 - 1;
 	}
 
 	export function createBitmapByName(name: string) {

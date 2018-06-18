@@ -276,7 +276,7 @@ class GameController {
 			buff.key = key;
 			break;
 		case "ghost_ships":
-			buff = new GhostShipBuff(10000, 3, 0.2);
+			buff = new GhostShipBuff(Buff.Infinite, 3, 0.2);
 			buff.name = "Ghost Ships!";
 			buff.key = key;
 			break;
@@ -291,10 +291,10 @@ class GameController {
 			buff.key = key;
 			break;
 		case "shield_ball_shield":
-			buff = new ShieldBuff(-1, tutils.LargeNumber);
+			buff = new ShieldBuff(Buff.Infinite, tutils.LargeNumber);
 			break;
 		case "super_hero_ghost_ships":
-			buff = new GhostShipBuff(-1, 3, 0.2);
+			buff = new GhostShipBuff(Buff.Infinite, 3, 0.2);
 			buff.name = "Ghost Ships!";
 			buff.key = key;
 			break;
@@ -314,31 +314,31 @@ class GameController {
 
 		// part's buffs
 		case "part_meteoroid":
-			buff = new MeteoroidBuff(0.20, 200);
+			buff = new MeteoroidBuff(Buff.Infinite, 0.20, 200);
 			buff.name = "Meteoroid Rush";
 			buff.key = key;
 			// buff.model = "PartMeteoroid_png";
 			break;
 		case "part_power_speed_up_2":
-			buff = new PowerSpeedUpBuff(1.25);
+			buff = new PowerSpeedUpBuff(Buff.Infinite, 1.25);
 			buff.key = key;
 			// buff.name = "";
 			// buff.model = "_png";
 			break;
 		case "part_power_battery_2":
-			buff = new PowerNeverEmptyBuff(0.30);
+			buff = new PowerNeverEmptyBuff(Buff.Infinite, 0.30);
 			buff.key = key;
 			// buff.name = "";
 			// buff.model = "_png";
 			break;
 		case "part_test1":
-			buff = new GunBuff(-1, -0.10, 0, +0.10);
+			buff = new GunBuff(Buff.Infinite, -0.10, 0, +0.10);
 			buff.key = key;
 			// buff.name = "Test Part1";
 			// buff.model = "GunCDR_png";
 			break;
 		case "part_test2":
-			buff = new GunBuff(-1, 0.00, +0.10, 0.00);
+			buff = new GunBuff(Buff.Infinite, 0.00, +0.10, 0.00);
 			buff.key = key;
 			// buff.name = "Test Part2";
 			// buff.model = "GunPower_png";
@@ -353,19 +353,19 @@ class GameController {
 		let skill: Skill;
 		switch (key) {
 		case "turbo_fire":
-			skill = new AddBuffSkill([this.createBuff("turbo_fire_gun"), this.createBuff("turbo_fire_ship")]);
+			skill = new AddBuffSkill(1000, [this.createBuff("turbo_fire_gun"), this.createBuff("turbo_fire_ship")]);
 			break;
 		case "shield_ball":
-			skill = new AddBuffSkill([this.createBuff("shield_ball")]);
+			skill = new AddBuffSkill(1000, [this.createBuff("shield_ball")]);
 			break;
 		case "ghost_ships":
-        	skill = new AddBuffSkill([this.createBuff("ghost_ships")]);
+        	skill = new AddBuffSkill(100, [this.createBuff("ghost_ships")]);
 			break;
 		case "super_hero":
-			skill = new AddBuffSkill([this.createBuff("super_hero")]);
+			skill = new AddBuffSkill(1000, [this.createBuff("super_hero")]);
 			break;
 		case "meteoroid_rush":
-			skill = new AddBuffSkill([this.createBuff("meteoroid_rush")]);
+			skill = new AddBuffSkill(1000, [this.createBuff("meteoroid_rush")]);
 			break;
 		default:
 			console.assert(false, "invalid skill key("+key+")");

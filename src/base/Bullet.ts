@@ -5,13 +5,13 @@ class Bullet extends HpUnit {
 	removeOutOfWorld: boolean = true;
 	private readonly effectedShips: { [id: string]: number } = {};
 	readonly model: string;
-	readonly scale: number;
+	readonly modelScale: number;
 
-	public constructor(gun: Gun, model?: string, scale?: number) {
+	public constructor(gun: Gun, model?: string, modelScale?: number) {
 		super();
 		this.gun = gun;
 		this.model = model===undefined ? "BlueBullet2_png" : model;
-		this.scale = scale===undefined ? 1.0 : scale;
+		this.modelScale = modelScale===undefined ? 1.0 : modelScale;
 		this.resetHp(gun.bulletPower.value);
 		this.powerLossPer = gun.bulletPowerLossPer;
 		this.powerLossInterval = gun.bulletPowerLossInterval.value;
@@ -19,8 +19,8 @@ class Bullet extends HpUnit {
 
 	protected createModel(): egret.DisplayObject {
 		let gameObject = tutils.createBitmapByName(this.model);
-		gameObject.width *= this.scale;
-		gameObject.height *= this.scale;
+		gameObject.width *= this.modelScale;
+		gameObject.height *= this.modelScale;
 		return gameObject;
 	}
 

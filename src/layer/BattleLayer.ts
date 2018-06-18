@@ -253,9 +253,9 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onHeroUsePower(): void {
-        if (!this.hero.isPowerFull()) {
-            return;
-        }
+        // if (!this.hero.isPowerFull()) {
+        //     return;
+        // }
         if (this.hero.alive && this.hero.castSkill()) {
             tutils.playSound("Powerup_mp3");
             this.turbo(this.bgCtrl, 100, 20, 5000);
@@ -309,7 +309,15 @@ class BattleLayer extends tutils.Layer {
             let score = Math.max(1, Math.floor(1*this.reachStage/5));
             if (ship instanceof MotherShip) {
                 power *= 80;
-                score *= 10;
+                // score *= 10;
+                for (let i=0; i<20; i++) {
+                    let supply = this.world.pools.newObject(ScoreSupply, score);
+                    supply.speed = 100;
+                    this.world.addSupply(supply);
+                    supply.jump(ship.gameObject.x, ship.gameObject.y, 500, 300, i*50, ():void=>{
+                        supply.drop(supply.x, supply.y, egret.Ease.getPowIn(2));
+                    }, this);
+                }
             } else if (ship instanceof MotherGunShip) {
                 power *= 40;
                 score *= 5;
@@ -560,19 +568,20 @@ class BattleLayer extends tutils.Layer {
         const GUN_ENMEY_CD = 20000;
         let gunEnemyCD = 0;
         for (let i=1; i<=WAVE_NUM*10; i++) {
-            let level = (i - 1) / WAVE_NUM + 1;
-            let speed = Math.min(level*0.5+0.5, 3.0);
+            let level = Math.floor((i-1)/WAVE_NUM) + 1;
+            let speed = Math.floor(Math.min(level*0.2+0.8, 2.0));
+            let speed2 = Math.floor(Math.min(level*0.5+0.5, 3.0));
             let hp = 20 + i;
-            if (i % WAVE_NUM === 0) {
+            if (i%WAVE_NUM === 0) {
                 gunEnemyCD = GUN_ENMEY_CD;
                 let rush: Rush;
-                this.enemyCtrl.addRushes1(2000, hp, speed);
-                this.enemyCtrl.addRushes2(4000, hp, speed);
-                this.enemyCtrl.addRushes3(4000, hp, speed);
-                this.enemyCtrl.addRushes4(4000, hp, speed);
-                this.enemyCtrl.addRushes5(4000, hp, speed);
-                this.enemyCtrl.addRushes6(2000, hp, speed);
-                this.enemyCtrl.addRushes7(3000, 200, 3, speed);
+                this.enemyCtrl.addRushes1(2000, hp, speed2);
+                this.enemyCtrl.addRushes2(4000, hp, speed2);
+                this.enemyCtrl.addRushes3(4000, hp, speed2);
+                this.enemyCtrl.addRushes4(4000, hp, speed2);
+                this.enemyCtrl.addRushes5(4000, hp, speed2);
+                this.enemyCtrl.addRushes6(2000, hp, speed2);
+                this.enemyCtrl.addRushes7(3000, 200, 3, speed2);
                 switch (level) {
                 case 1:
                     rush = new CallbackRush(5000, ():void=>{
@@ -584,29 +593,29 @@ class BattleLayer extends tutils.Layer {
                 case 2:
                     rush = new CallbackRush(5000, ():void=>{
                         this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss1();
+                        let boss = this.enemyCtrl.createBoss2();
                         this.showBossUI(boss);
                     }, this);
                     break;
                 case 3:
                     rush = new CallbackRush(5000, ():void=>{
                         this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss1();
+                        let boss = this.enemyCtrl.createBoss3();
                         this.showBossUI(boss);
                     }, this);
                     break;
                 default:
                     rush = new CallbackRush(5000, ():void=>{
                         this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss1();
+                        let boss = this.enemyCtrl.createBoss3();
                         this.showBossUI(boss);
                     }, this);
                 }
-                this.enemyCtrl.addRush(rush);    
+                this.enemyCtrl.addRush(rush);
             } else {
                 if (Math.random() < 0.3) {
                     // 陨石
-                    let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, 0, speed);
+                    let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, 0, speed2);
                     rush.setCallback(():void=>{
                         tutils.playSound("Meteoroid_mp3");
                         rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
@@ -620,9 +629,9 @@ class BattleLayer extends tutils.Layer {
                     gunEnemyCD = 0;
                     let num = Math.floor(Math.min(4, Math.random()*((level-1)/3+1)+1));
                     if (Math.random() < 0.5) {
-                        this.enemyCtrl.addRushes7(delay, hp*10, num, speed);
+                        this.enemyCtrl.addRushes7(delay, hp*10, num, speed2);
                     } else {
-                        this.enemyCtrl.addRushes8(delay, hp*10, num, speed);
+                        this.enemyCtrl.addRushes8(delay, hp*10, num, speed2);
                     }
                 } else {
                     let num = Math.floor(Math.random()*8+5);

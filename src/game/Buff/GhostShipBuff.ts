@@ -7,7 +7,8 @@ class GhostShipBuff extends Buff {
 	private timer: tutils.Timer;
 
 	public constructor(duration: number, num: number=3, powerPer: number=0.3) {
-		super(duration);
+		super(duration, ShipTrigger.OnInterval | HeroShipTrigger.OnPowerEmpty);
+		this.setInterval(0);
 		this.shipsNum = num;
 		this.powerPer = powerPer;
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
@@ -22,7 +23,7 @@ class GhostShipBuff extends Buff {
 
 		let shipData = GameController.instance.getShipDataByKey(this.ship.key);
 		for (let i=0; i<this.shipsNum; i++) {
-			let ghost = new IntervalHitShip(this.ship.model, this.ship.scale, this.ship);
+			let ghost = new IntervalHitShip(this.ship.model, this.ship.modelScale, this.ship);
 			this.ship.world.addShip(ghost);
 			ghost.resetHp(this.ship.maxHp);
 			ghost.force = this.ship.force;
@@ -96,5 +97,17 @@ class GhostShipBuff extends Buff {
 		}
 		this.ships.length = 0;
 		this.buffIds.length = 0;
+	}
+
+	// override
+	public onInterval(dt: number): void {
+		if (this.ship instanceof HeroShip) {
+			this.ship.addPower(-10);
+		}
+	}
+
+	// override
+	public onPowerEmpty(): void {
+		this.ship.removeBuff(this.id);
 	}
 }

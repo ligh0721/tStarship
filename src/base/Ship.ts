@@ -2,7 +2,7 @@ class Ship extends HpUnit {
 	width: number;
 	height: number;
 	readonly model: string;
-	readonly scale: number;
+	readonly modelScale: number;
 	readonly key: string = null;
 	
 	force: Force;
@@ -11,6 +11,7 @@ class Ship extends HpUnit {
 	readonly speed: Value;
 	hero: boolean = false;  // can use supply
 
+	public static readonly TimerInterval = 100;
 	private readonly timer: tutils.ITimer;
 	// private readonly buffTimerAct: tuitls.
 	readonly buffs: { [id: string]: Buff } = {};
@@ -36,10 +37,10 @@ class Ship extends HpUnit {
 	private onUpdateBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onUpdateBuffThisObject: any = null;
 
-	public constructor(model: string, scale?: number, key?: string) {
+	public constructor(model: string, modelScale?: number, key?: string) {
 		super();
 		this.model = model;
-		this.scale = scale===undefined ? 1.0 : scale;
+		this.modelScale = modelScale===undefined ? 1.0 : modelScale;
 		this.key = key;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
@@ -50,8 +51,8 @@ class Ship extends HpUnit {
 	// override
 	protected onCreate(): egret.DisplayObject {
 		let gameObject = tutils.createBitmapByName(this.model);
-		gameObject.width *= this.scale;
-		gameObject.height *= this.scale;
+		gameObject.width *= this.modelScale;
+		gameObject.height *= this.modelScale;
         this.width = gameObject.width;
 		this.height = gameObject.height;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
@@ -221,7 +222,7 @@ class Ship extends HpUnit {
 				this.timer.setOnTimerListener(this.onTimer, this);
 			}
 			if (!this.timer.running) {
-				this.timer.start(tutils.ShipTimerInterval, false, 0);
+				this.timer.start(Ship.TimerInterval, false, 0);
 			}
 		}
 		this.onAddBuff(buff);

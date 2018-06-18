@@ -12,8 +12,8 @@ class EnemyController {
 		this.world = world;
 	}
 
-	public createEnemyShip(model: string, scale: number=0.4): EnemyShip {
-		let enemyShip = new EnemyShip(model, scale);
+	public createEnemyShip(model: string, modelScale: number=0.4): EnemyShip {
+		let enemyShip = new EnemyShip(model, modelScale);
 		enemyShip.force.force = tutils.EnemyForce;
 		return enemyShip;
 	}
@@ -391,10 +391,10 @@ class EnemyController {
 		return boss;
 	}
 
-	public createEnemyShips(num: number, hp: number, model: string, scale: number=0.4): EnemyShip[] {
+	public createEnemyShips(num: number, hp: number, model: string, modelScale: number=0.4): EnemyShip[] {
 		let ships: EnemyShip[] = [];
 		for (let i=0; i<num; i++) {
-			let ship = this.createEnemyShip(model, scale);
+			let ship = this.createEnemyShip(model, modelScale);
 			ship.resetHp(hp);
 			ships.push(ship);
 		}
@@ -616,7 +616,7 @@ class EnemyController {
 		let wavelen = Math.random() * 50 + 50;
 		let sign = Math.floor(Math.random()*2) * 2 - 1;
 		a *= 100 / this.world.width * sign;
-		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur, {x: x, y: 0}, {x: x, y: 100}, wavelen, a);
+		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur/speedFactor, {x: x, y: 0}, {x: x, y: 100}, wavelen, a);
 		this.addRush(rush);
 	}
 }

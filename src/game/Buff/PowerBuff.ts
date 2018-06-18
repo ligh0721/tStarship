@@ -1,8 +1,8 @@
 class PowerSpeedUpBuff extends Buff {
 	per: number;
 
-	public constructor(per: number) {
-		super(-1, HeroShipTrigger.OnPowerChange);
+	public constructor(duration:number, per: number) {
+		super(duration, HeroShipTrigger.OnPowerChange);
 		this.per = per;
 	}
 
@@ -18,8 +18,8 @@ class PowerSpeedUpBuff extends Buff {
 class PowerNeverEmptyBuff extends Buff {
 	per: number;
 
-	public constructor(per: number) {
-		super(-1, HeroShipTrigger.OnPowerEmpty);
+	public constructor(duration: number, per: number) {
+		super(duration, HeroShipTrigger.OnPowerEmpty);
 		this.per = per;
 	}
 

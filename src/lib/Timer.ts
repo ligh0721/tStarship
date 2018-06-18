@@ -61,7 +61,7 @@ module tutils {
 
 			do {
 				this.$wantTick += this.$interval;
-			} while (this.autoSkip && start>this.$wantTick);
+			} while (this.autoSkip && start>=this.$wantTick);
 
 			return false;
 		}
@@ -174,7 +174,7 @@ module tutils {
         }
 
         public step(dt: number): void {
-			if (!this.$running) {
+			if (!this.$running || dt===0) {
 				return;
 			}
 			this.$tick += dt;
@@ -200,7 +200,7 @@ module tutils {
 
 			do {
 				this.$wantTick += this.$interval;
-			} while (this.autoSkip && this.$tick>this.$wantTick);
+			} while (this.autoSkip && this.$tick>=this.$wantTick);
         }
 
 		public update(factor: number): void {

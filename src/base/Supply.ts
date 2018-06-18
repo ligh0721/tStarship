@@ -66,7 +66,7 @@ class Supply extends Unit {
 		}
 	}
 
-	public moveToShip(target: Ship) {
+	protected moveToShip(target: Ship) {
 		let targetId = target==null ? 0 : target.id;
 		let angleRaw = target==null ? 0 : Math.atan2(target.gameObject.y-this.gameObject.y, target.gameObject.x-this.gameObject.x);
 		let thisId = this.id;
@@ -94,5 +94,26 @@ class Supply extends Unit {
 			this.gameObject.y = to.y;
 		}, this);
 		timer.start(1000/100, true, 0);
+	}
+
+	public jump(x: number, y: number, width: number, height: number, delay: number, onEnd:()=>void, thisObj: any): void {
+		this.x = x;
+		this.y = y;
+		let dtx = (Math.random() - 0.5) * width;
+		let h = Math.sqrt((1 - (dtx * dtx) / (width * width)) * height * height);
+		let dty = -Math.random() * h;
+		let dis = Math.sqrt(dtx*dtx+dty*dty);
+		this.gameObject.alpha = 0;
+		let act = new tutils.Sequence(
+			new tutils.DelayTime(delay),
+			new tutils.Spawn(
+				new tutils.CallFunc(():void=>{
+					this.gameObject.alpha = 1;
+				}, this),
+				new tutils.MoveBy(300, dtx, dty, egret.Ease.getPowOut(2))
+			),
+			new tutils.CallFunc(onEnd, thisObj)
+		);
+		this.runAction(act);
 	}
 }

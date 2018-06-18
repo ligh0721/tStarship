@@ -21,8 +21,8 @@ class HeroShip extends Ship {
 	private onRemovePartListener: (ship: Ship, part: Part)=>void = null;
 	private onRemovePartThisObject: any = null;
 
-    public constructor(model: string, scale?: number, key?: string) {
-		super(model, scale, key);
+    public constructor(model: string, modelScale?: number, key?: string) {
+		super(model, modelScale, key);
         this.hero = true;
         this.hitRect===undefined ? this.hitRect=new egret.Rectangle() : this.hitRect.constructor();
         this.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;
@@ -40,6 +40,9 @@ class HeroShip extends Ship {
         this.power += value;
         if (this.power > this.maxPower) {
             this.power = this.maxPower;
+        } else if (this.power <= 0) {
+            this.power = 0;
+            this.$triggerOnPowerEmpty();
         }
         if (this.heroHUD) {
             this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
@@ -68,9 +71,7 @@ class HeroShip extends Ship {
         if (this.skill == null) {
             return false;
         }
-        this.clearPower();
-        this.skill.cast();
-        return true;
+        return this.skill.cast();
     }
 
     public move(x: number, y: number): void {
