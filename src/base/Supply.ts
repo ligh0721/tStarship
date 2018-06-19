@@ -83,7 +83,7 @@ class Supply extends Unit {
 				} else {
 					timer.interval = 0;
 					targetId = target.id;
-					egret.Tween.removeTweens(this.gameObject);
+					// egret.Tween.removeTweens(this.gameObject);
 					this.stopAllActions();
 				}
 			}

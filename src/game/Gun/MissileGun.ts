@@ -24,7 +24,7 @@ class MissileGun extends Gun {
 				bullet.explosionPowerLossInterval = this.explosionPowerLossInterval;
 			}
 			let angle = (i - (this.bulletNum - 1) / 2) * this.bulletAngleDelta + this.ship.rotation;
-			let firePos = Unit.getDirectionPoint(this.ship.x, this.ship.y+55, angle, this.ship.height*0.5);
+			let firePos = Unit.getDirectionPoint(this.ship.x, this.ship.y+60, angle, this.ship.height*0.5);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y;
 			bullet.rotation = angle;

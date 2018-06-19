@@ -9,7 +9,7 @@ module tutils {
 		protected onTimerListener: (dt: number)=>void = null;
 		protected thisObject: any = null;
 		protected timerInterval: number;
-		protected timer: tutils.Timer;
+		protected timer: tutils.ITimer;
 		public args: any[];
 
 		public setListener(onEnter: (...args: any[])=>void, onTimer: (dt: number)=>void, thisObject: any, timerInterval?: number) {
@@ -18,7 +18,7 @@ module tutils {
 			this.thisObject = thisObject;
 			this.timerInterval = timerInterval===undefined ? 100 : timerInterval;
 			if (this.onTimerListener) {
-				this.timer = new tutils.Timer();
+				this.timer = new tutils.TimerByAction(GameController.instance.actionManager);
 				this.timer.setOnTimerListener(this.onTimer, this);
 			}
 		}

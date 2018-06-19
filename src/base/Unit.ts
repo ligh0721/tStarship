@@ -76,8 +76,8 @@ class Unit extends egret.HashObject implements tutils.INode {
 
 	// override
 	protected onCleanup(): void {
-		egret.Tween.removeTweens(this);
-		egret.Tween.removeTweens(this.gameObject);
+		// egret.Tween.removeTweens(this);
+		// egret.Tween.removeTweens(this.gameObject);
 		GameController.instance.actionManager.removeAllActions(this);
 	}
 

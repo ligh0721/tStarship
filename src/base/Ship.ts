@@ -83,8 +83,8 @@ class Ship extends HpUnit {
 			src.$triggerOnDestroyTarget(this);
 		}
 		
-		egret.Tween.removeTweens(this);
-		egret.Tween.removeTweens(this.gameObject);
+		// egret.Tween.removeTweens(this);
+		// egret.Tween.removeTweens(this.gameObject);
 		this.stopAllActions();
 		
 		this.ai.stop();

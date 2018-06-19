@@ -177,7 +177,7 @@ class Gun extends egret.HashObject {
 
 	public cleanup(): void {
 		this.autoFireTimer.stop();
-		egret.Tween.removeTweens(this);
+		// egret.Tween.removeTweens(this);
 		this.onCleanup();
 		GameController.instance.actionManager.removeAllActions(this);
 	}

@@ -600,8 +600,55 @@ class EnemyController {
 		// 瞄准的排炮兵
 	}
 
-	public addRushes10(delay: number, hp: number, num: number, speedFactor: number=1): void {
+	public addRushes10(delay: number, hp: number, speedFactor: number=1): void {
 		// 跟随的敌兵
+		let num = 1;
+		let ships = this.createEnemyShips(1, hp, "GreenEnemyShip_png", 0.8);
+		let rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
+			ship.x = (index + 1) * ship.world.width / (num + 1);
+			ship.y = -ship.height;
+			ship.speed.baseValue = 10 * speedFactor;
+			ship.rotation = 180;
+
+			let ai = new tutils.StateManager();
+			ship.ai = ai;
+			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value*5*speedFactor, false, egret.Ease.getPowOut(2));
+			let follow = new tutils.CustomState();
+
+			let shipId = ship.id;
+			let targetId = "";
+			let target: Ship = null;
+			let xspeedDelta = 30/1000 * speedFactor;
+			let xspeed = 0;
+			follow.setListener(():void=>{
+				ship.moveTo(ship.x, ship.world.height+ship.height, ship.speed.value, true, null, true, ():void=>{
+					ship.status = UnitStatus.Dead;
+				}, this);
+			}, (dt: number):void=>{
+				if (!ship.alive || ship.id!=shipId) {
+					return;
+				}
+				if ((target==null || !target.alive || target.id!=targetId) && ship.alive) {
+					targetId = "";
+					target = this.world.findNearestAliveEnemyShip(ship.gameObject.x, ship.gameObject.y, ship.force);
+					if (target != null) {
+						targetId = target.id;
+					}
+				}
+				if (target!=null && ship.gameObject.y<target.y) {
+					let dt = target.x - ship.x;
+					if (dt > 0) {
+						xspeed += dt*xspeed<0 ? xspeedDelta*2 : xspeedDelta;
+					} else if (dt < 0) {
+						xspeed -= dt*xspeed<0 ? xspeedDelta*2 : xspeedDelta;
+					}
+				}
+				ship.x += xspeed;
+			}, this, 0);
+			arrive.setNext(follow);
+			ai.change(arrive);
+		}, this);
+		this.addRush(rush);
 	}
 
 	public addRushes11(delay: number, hp: number, num: number, speedFactor: number=1): void {
@@ -610,10 +657,10 @@ class EnemyController {
 		this.putEnemyShipsIntoGroup(es);
 		
 		let dur = Math.random() * 3000 + 3000;
-		let interval = Math.random() * 200 + 100;
-		let a = Math.random() * 200 + 80
+		let interval = Math.random() * 200 + 300;
+		let a = Math.random() * 150 + 50
 		let x = (Math.random() * (this.world.width - a * 2) + a) * 100 / this.world.width;
-		let wavelen = Math.random() * 50 + 50;
+		let wavelen = Math.random() * 30 + 50;
 		let sign = Math.floor(Math.random()*2) * 2 - 1;
 		a *= 100 / this.world.width * sign;
 		let rush = new SineRush(delay/speedFactor, es, interval/speedFactor, dur/speedFactor, {x: x, y: 0}, {x: x, y: 100}, wavelen, a);

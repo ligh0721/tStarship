@@ -11,7 +11,6 @@ class BattleLayer extends tutils.Layer {
     private heroShipData: PlayerShipData;
 
     private enemyCtrl: EnemyController;
-    private readonly buffuis: BuffProgress[] = [];
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private bgCtrl: tutils.BackgroundController;
     // private bgCtrl2: BackgroundController;
@@ -123,10 +122,6 @@ class BattleLayer extends tutils.Layer {
 
     // override
     protected onCleanUp(): void {
-        for (let i in this.buffuis) {
-            let buffui = this.buffuis[i];
-            egret.Tween.removeTweens(buffui);
-        }
         this.enemyCtrl.stopRush();
         tutils.stopBgMusic();
         this.world.cleanup();
@@ -224,8 +219,8 @@ class BattleLayer extends tutils.Layer {
         // 创建调试面板
         // this.createDebugPanel();
 
-        // 创建测试敌军
-        // this.createTestEnemyShip(1);
+        // 创建敌军小队
+        this.createAllRushes();
 
         // 最后添加事件监听器
         this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
@@ -240,9 +235,6 @@ class BattleLayer extends tutils.Layer {
 
             this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             this.layer.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-            // 创建敌军小队
-            this.createAllRushes();
-            // this.createTestEnemyShip(50);
             
             // let boss = this.enemyCtrl.createBoss2();
             // this.createBossUI(boss);
@@ -567,21 +559,25 @@ class BattleLayer extends tutils.Layer {
         const WAVE_NUM = 15;
         const GUN_ENMEY_CD = 20000;
         let gunEnemyCD = 0;
+        const FOLLOW_ENMEY_CD = 20000;
+        let followEnemyCD = 0;
+        this.enemyCtrl.addRushes10(1000, 500, 1.0);
         for (let i=1; i<=WAVE_NUM*10; i++) {
             let level = Math.floor((i-1)/WAVE_NUM) + 1;
             let speed = Math.floor(Math.min(level*0.2+0.8, 2.0));
             let speed2 = Math.floor(Math.min(level*0.5+0.5, 3.0));
-            let hp = 20 + i;
+            let hp = Math.floor(20+i/2);
             if (i%WAVE_NUM === 0) {
                 gunEnemyCD = GUN_ENMEY_CD;
+                followEnemyCD = FOLLOW_ENMEY_CD;
                 let rush: Rush;
-                this.enemyCtrl.addRushes1(2000, hp, speed2);
+                this.enemyCtrl.addRushes1(4000, hp, speed2);
                 this.enemyCtrl.addRushes2(4000, hp, speed2);
                 this.enemyCtrl.addRushes3(4000, hp, speed2);
                 this.enemyCtrl.addRushes4(4000, hp, speed2);
                 this.enemyCtrl.addRushes5(4000, hp, speed2);
-                this.enemyCtrl.addRushes6(2000, hp, speed2);
-                this.enemyCtrl.addRushes7(3000, 200, 3, speed2);
+                this.enemyCtrl.addRushes6(4000, hp, speed2);
+                this.enemyCtrl.addRushes7(4000, hp*5, 3, speed2);
                 switch (level) {
                 case 1:
                     rush = new CallbackRush(5000, ():void=>{
@@ -624,19 +620,24 @@ class BattleLayer extends tutils.Layer {
                 }
 
                 let delay = Math.random() * 5000 + 2000;
-                if (Math.random()<0.3 && gunEnemyCD>=GUN_ENMEY_CD) {
+                let rnd = Math.random();
+                if (rnd<0.3 && gunEnemyCD>=GUN_ENMEY_CD) {
                     // 开炮Enemy
                     gunEnemyCD = 0;
                     let num = Math.floor(Math.min(4, Math.random()*((level-1)/3+1)+1));
                     if (Math.random() < 0.5) {
-                        this.enemyCtrl.addRushes7(delay, hp*10, num, speed2);
+                        this.enemyCtrl.addRushes7(delay, hp*5, num, speed2);
                     } else {
-                        this.enemyCtrl.addRushes8(delay, hp*10, num, speed2);
+                        this.enemyCtrl.addRushes8(delay, hp*5, num, speed2);
                     }
+                } else if (rnd>=0.3 && rnd<0.6 && followEnemyCD>=FOLLOW_ENMEY_CD) {
+                    followEnemyCD = 0;
+                    this.enemyCtrl.addRushes10(delay, hp*20, speed2);
                 } else {
                     let num = Math.floor(Math.random()*8+5);
                     this.enemyCtrl.addRushes11(delay, hp, num, speed);
                     gunEnemyCD += delay;
+                    followEnemyCD += delay;
                 }
             }
         }
