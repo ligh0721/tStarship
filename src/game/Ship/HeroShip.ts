@@ -12,6 +12,7 @@ class HeroShip extends Ship {
 
     readonly onPowerChangeTriggers: { [id: string]: Buff } = {};
     readonly onPowerEmptyTriggers: { [id: string]: Buff } = {};
+    readonly onDamageTargetTriggers: { [id: string]: Buff } = {};
 
 	// from unit
 	private onAddPartListener: (ship: Ship, part: Part)=>void = null;
@@ -28,12 +29,17 @@ class HeroShip extends Ship {
         this.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;
 	}
 
-    public damaged(value: number, src: HpUnit): void {
-		super.damaged(value, src);
+    public damaged(value: number, src: HpUnit, unit: HpUnit): void {
+		super.damaged(value, src, unit);
         if (this.heroHUD) {
             this.heroHUD.updateHpBar(this.hp*100/this.maxHp);
         }
 	}
+
+    public damageTarget(value: number, target: Ship, unit: HpUnit): number {
+        value = this.$triggerOnDamageTarget(value, target, unit);
+        return value;
+    }
 
     public addPower(value: number): void {
         value = this.$triggerOnPowerChange(value);
@@ -141,6 +147,9 @@ class HeroShip extends Ship {
 		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
 			this.onPowerEmptyTriggers[buff.id] = buff;
 		}
+        if (buff.triggerFlags & HeroShipTrigger.OnDamageTarget) {
+			this.onDamageTargetTriggers[buff.id] = buff;
+		}
 	}
 
     // override
@@ -151,6 +160,9 @@ class HeroShip extends Ship {
 		}
 		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
 			delete this.onPowerEmptyTriggers[buff.id];
+		}
+        if (buff.triggerFlags & HeroShipTrigger.OnDamageTarget) {
+			delete this.onDamageTargetTriggers[buff.id];
 		}
 	}
 
@@ -167,6 +179,14 @@ class HeroShip extends Ship {
             let buff = this.onPowerEmptyTriggers[id];
             buff.onPowerEmpty();
         }
+	}
+
+    public $triggerOnDamageTarget(value: number, target: Ship, unit: HpUnit): number {
+		for (let id in this.onDamageTargetTriggers) {
+            let buff = this.onDamageTargetTriggers[id];
+            value = buff.onDamageTarget(value, target, unit);
+        }
+        return value;
 	}
 
 	public addPart(part: Part): boolean {
@@ -233,5 +253,6 @@ class HeroShip extends Ship {
 enum HeroShipTrigger {
 	// ext
 	OnPowerChange = 1 << 20,
-	OnPowerEmpty = 1 << 21
+	OnPowerEmpty = 1 << 21,
+    OnDamageTarget = 1 << 22
 }

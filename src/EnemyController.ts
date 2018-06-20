@@ -240,7 +240,7 @@ class EnemyController {
 
 		moveToBottom.setListener(()=>{
 			boss.moveTo(boss.x, h+boss.height+100, boss.speed.value*0.5, true, null, false, ()=>{
-				boss.damaged(boss.hp, null);
+				boss.damaged(boss.hp, null, null);
 			})
 		}, null, this);
 
@@ -383,7 +383,7 @@ class EnemyController {
 
 		moveToBottom.setListener(()=>{
 			boss.moveTo(boss.x, h-boss.height*0.5, boss.speed.value*0.5, true, null, false, ()=>{
-				boss.damaged(boss.hp, null);
+				boss.damaged(boss.hp, null, null);
 			})
 		}, null, this);
 		smgr.change(moveTo, {x: w*0.3, y: boss.height*0.5+70});

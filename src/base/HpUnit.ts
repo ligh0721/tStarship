@@ -16,7 +16,7 @@ class HpUnit extends Unit {
 		return this.$hp.hp;
 	}
 
-	public damaged(value: number, src: HpUnit): void {
+	public damaged(value: number, src: HpUnit, unit: HpUnit): void {
 		this.damagedLow(value, src);
 	}
 

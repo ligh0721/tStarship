@@ -34,7 +34,7 @@ class GhostShipBuff extends Buff {
 				gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 				gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
 				gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
-				gun.bulletPower.baseValue = Math.max(1, Math.floor(this.ship.mainGun.bulletPower.baseValue * this.powerPer));
+				gun.bulletPower.baseValue = Math.max(1, this.ship.mainGun.bulletPower.baseValue * this.powerPer);
 				gun.bulletNum = this.ship.mainGun.bulletNum;
 				ghost.addGun(gun, true).autoFire = true;
 			}

@@ -9,7 +9,7 @@ class PowerSpeedUpBuff extends Buff {
 	// override
 	public onPowerChange(change: number): number {
 		if (change > 0) {
-			change = Math.floor(change*this.per);
+			change = change*this.per;
 		}
 		return change;
 	}
@@ -26,6 +26,6 @@ class PowerNeverEmptyBuff extends Buff {
 	// override
 	public onPowerEmpty(): void {
 		let hero = this.ship as HeroShip;
-		hero.addPower(Math.floor(hero.maxPower*this.per));
+		hero.addPower(hero.maxPower*this.per);
 	}
 }

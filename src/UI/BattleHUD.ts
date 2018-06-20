@@ -216,6 +216,32 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         }
     }
 
+    public addBattleTip(x: number, y: number, text: string, angleRange: number, font: string, scale: number): void {
+        let lbl = new egret.BitmapText();
+        lbl.font = RES.getRes(font);
+        lbl.text = text;
+        this.addChild(lbl);
+        lbl.anchorOffsetX = lbl.width * 0.5;
+        lbl.anchorOffsetY = lbl.height * 0.5;
+        lbl.x = x;
+        lbl.y = y;
+        lbl.scaleX = scale;
+        lbl.scaleY = scale;
+        let angle = (Math.random() - 0.5) * angleRange;
+        let pos = Unit.getDirectionPoint(0, 0, angle, 100);
+        let act = new tutils.Sequence(
+            new tutils.Spawn(
+                new tutils.To(500, {alpha: 0}),
+                new tutils.MoveBy(500, pos.x, pos.y)
+            ),
+            new tutils.CallFunc(():void=>{
+                GameController.instance.actionManager.removeAllActions(lbl);
+                this.removeChild(lbl);
+            }, this)
+        );
+        GameController.instance.actionManager.addAction(lbl, act);
+    }
+
     private onTweenGroupComplete(evt: egret.Event): void {
     }
 

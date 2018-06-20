@@ -280,10 +280,10 @@ class World {
 				}
 				if (bullet.gun.ship.force.isMyEnemy(ship.force) && ship.canHit && bullet.onHitEnemyShipTest(ship)) {
 					//console.log("bullet hit!");
-					let dt = Math.min(bullet.hp, Math.floor(bullet.maxHp*bullet.powerLossPer));
+					let dt = Math.min(bullet.hp, bullet.maxHp*bullet.powerLossPer);
 					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
-					ship.damaged(dt, bullet.gun.ship);
-					bullet.damaged(dt, ship);
+					ship.damaged(dt, bullet.gun.ship, bullet);
+					bullet.damaged(dt, ship, ship);
 					//tutils.playSound("Hit_mp3");
 					if (!ship.alive) {
 						//console.log("dead!");
@@ -307,8 +307,8 @@ class World {
 					}
 					if (ship.force.isMyEnemy(ship2.force) && ship.canHit && ship2.canHit && ship.onHitEnemyShipTest(ship2)) {
 						//console.log("ship hit!");
-						ship.damaged(ship2.maxHp, ship2);
-						ship2.damaged(ship.maxHp, ship);
+						ship.damaged(ship2.maxHp, ship2, ship2);
+						ship2.damaged(ship.maxHp, ship, ship);
 						if (!ship.alive) {
 							//console.log("dead!");
 							break;

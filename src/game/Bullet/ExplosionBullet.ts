@@ -34,11 +34,19 @@ class ExplosionBullet extends Bullet {
 		bullet.gameObject.y = this.gameObject.y;
 		bullet.factor = 0;
 
-		let tw = egret.Tween.get(bullet);
-		tw.to({factor: 1}, 400, egret.Ease.getPowOut(3));
-		tw.call(()=>{
-			bullet.damaged(bullet.hp, src);
-		}, this);
+		// let tw = egret.Tween.get(bullet);
+		// tw.to({factor: 1}, 400, egret.Ease.getPowOut(3));
+		// tw.call(()=>{
+		// 	bullet.damaged(bullet.hp, src, src);
+		// }, this);
+
+		let act = new tutils.Sequence(
+			new tutils.To(400, {factor: 1}, egret.Ease.getPowOut(3)),
+			new tutils.CallFunc(():void=>{
+				bullet.damaged(bullet.hp, src, src);
+			}, this)
+		);
+		bullet.runAction(act);
 	}
 }
 
@@ -66,11 +74,13 @@ class MissileBullet extends Bullet {
 		bullet.gameObject.y = this.gameObject.y;
 		bullet.factor = 0;
 
-		let tw = egret.Tween.get(bullet);
-		tw.to({factor: 1}, 400, egret.Ease.getPowOut(3));
-		tw.call(()=>{
-			bullet.damaged(bullet.hp, src);
-		}, this);
+		let act = new tutils.Sequence(
+			new tutils.To(400, {factor: 1}, egret.Ease.getPowOut(3)),
+			new tutils.CallFunc(():void=>{
+				bullet.damaged(bullet.hp, src, src);
+			}, this)
+		);
+		bullet.runAction(act);
 	}
 }
 

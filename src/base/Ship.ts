@@ -129,10 +129,10 @@ class Ship extends HpUnit {
 		}
 	}
 
-	public $triggerOnDamaged(value: number, src: Ship): number {
+	public $triggerOnDamaged(value: number, src: Ship, unit: HpUnit): number {
 		for (let id in this.onDamagedTriggers) {
 			let buff = this.onDamagedTriggers[id];
-			value = buff.onDamaged(value, src);
+			value = buff.onDamaged(value, src, unit);
 		}
 		return value;
 	}
@@ -144,11 +144,16 @@ class Ship extends HpUnit {
 		}
 	}
 
-	public damaged(value: number, src: HpUnit): void {
+	public damaged(value: number, src: HpUnit, unit: HpUnit): void {
 		if (src instanceof Ship) {
-			value = this.$triggerOnDamaged(value, src);
+			value = src.damageTarget(value, this, unit);
+			value = this.$triggerOnDamaged(value, src, unit);
 		}
 		this.damagedLow(value, src);
+	}
+
+	public damageTarget(value: number, target: Ship, unit: HpUnit): number {
+		return value;
 	}
 
 	// main=false
@@ -197,6 +202,9 @@ class Ship extends HpUnit {
 	}
 
 	public addBuff(buff: Buff): Buff {
+		if (!this.alive) {
+			return;
+		}
 		if (buff.key) {
 			// 如果buff存在名称，则处理覆盖逻辑
 			for (let buffId in this.buffs) {

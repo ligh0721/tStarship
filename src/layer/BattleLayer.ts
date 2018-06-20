@@ -102,6 +102,7 @@ class BattleLayer extends tutils.Layer {
         this.highScore = playerData.highscore.score;
         this.hud.updateScore(this.score);
         this.hud.updateHighScore(this.highScore);
+        GameController.instance.setBattleHUD(this.hud);
 
         // 初始化世界掉落表
         this.partsDropTableRare = new DropTable<DropTable<string>>();
@@ -112,11 +113,13 @@ class BattleLayer extends tutils.Layer {
 
         table.push("part_power_speed_up_2", 100);
         table.push("part_power_battery_2", 100);
-        this.partsDropTableRare.push(table, 1000);
+        table.push("part_critical_2", 100);
+        this.partsDropTableRare.push(table, 600);
 
         table = new DropTable<string>();
         table.push("part_meteoroid", 100);
-        this.partsDropTableRare.push(table, 1000);
+        table.push("part_elec_induced_gun", 100);
+        this.partsDropTableRare.push(table, 300);
         
 	}
 
@@ -210,11 +213,11 @@ class BattleLayer extends tutils.Layer {
         });
         testSupplyTimer.start(8000, true, 0);
 
-        // let part = GameController.instance.createPart("part_meteoroid");
-        // let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-        // supply.speed = 20;
-        // this.world.addSupply(supply);
-        // supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
+        let part = GameController.instance.createPart("part_elec_induced_gun");
+        let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+        supply.speed = 20;
+        this.world.addSupply(supply);
+        supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -561,12 +564,19 @@ class BattleLayer extends tutils.Layer {
         let gunEnemyCD = 0;
         const FOLLOW_ENMEY_CD = 20000;
         let followEnemyCD = 0;
-        this.enemyCtrl.addRushes10(1000, 500, 1.0);
+        // this.enemyCtrl.addRushes10(1000, 500, 1.0);
+        // let rush = new CallbackRush(5000, ():void=>{
+        //     this.enemyCtrl.stopRush();
+        //     let boss = this.enemyCtrl.createBoss1();
+        //     boss.resetHp(100000);
+        //     this.showBossUI(boss);
+        // }, this);
+        // this.enemyCtrl.addRush(rush);
         for (let i=1; i<=WAVE_NUM*10; i++) {
             let level = Math.floor((i-1)/WAVE_NUM) + 1;
             let speed = Math.floor(Math.min(level*0.2+0.8, 2.0));
             let speed2 = Math.floor(Math.min(level*0.5+0.5, 3.0));
-            let hp = Math.floor(20+i/2);
+            let hp = Math.floor(20+i/1);
             if (i%WAVE_NUM === 0) {
                 gunEnemyCD = GUN_ENMEY_CD;
                 followEnemyCD = FOLLOW_ENMEY_CD;

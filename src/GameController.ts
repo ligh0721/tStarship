@@ -17,6 +17,7 @@ class GameController {
 	battleShips: string[];
 
 	actionManager: tutils.ActionManager = new tutils.ActionManager();
+	hud: BattleHUD;
 
 	public constructor() {
 		this.allShipsData = this.fixShipsData(GlobalShipsData);
@@ -59,6 +60,10 @@ class GameController {
 
 	public setBattleShips(battleShips: string[]): void {
 		this.battleShips = battleShips;
+	}
+
+	public setBattleHUD(hud: BattleHUD): void {
+		this.hud = hud;
 	}
 
 	public deletePlayerData(): void {
@@ -275,6 +280,14 @@ class GameController {
             buff.name = "Satellite Ball!";
 			buff.key = key;
 			break;
+		
+		// runtime buff
+		case "elec_induced":
+			buff = new ElecBuff(5000, 10);
+			buff.key = key;
+			break;
+
+		// skill's buffs
 		case "ghost_ships":
 			buff = new GhostShipBuff(Buff.Infinite, 3, 0.2);
 			buff.name = "Ghost Ships!";
@@ -330,6 +343,24 @@ class GameController {
 			buff.key = key;
 			// buff.name = "";
 			// buff.model = "_png";
+			break;
+		case "part_critical_2":
+			buff = new CriticalBuff(Buff.Infinite, 0.20, 2.0);
+			buff.key = key;
+			break;
+		case "part_elec_induced_gun":
+			let gun2 = Gun.createGun(SineGun, BlueDiamondBullet);
+			gun2.fireCooldown.baseValue = 5000;
+			gun2.amplitudeDelta = 150;
+			gun2.bulletNum = 2;
+			gun2.bulletSpeed.baseValue = 100;
+			gun2.bulletPowerLossInterval.baseValue = 10000;
+			gun2.bulletPowerLossPer = 0.001;
+			gun2.bulletPower.baseValue = 5/gun2.bulletPowerLossPer;
+			let buff2 = new AddTargetBuffBuff(Buff.Infinite, 0.2, ["elec_induced"]);
+			buff2.key = "part_elec_induced_buff";
+			buff = new AddGunAndBuffBuff(Buff.Infinite, gun2, [buff2]);
+			buff.key = key;
 			break;
 		case "part_test1":
 			buff = new GunBuff(Buff.Infinite, -0.10, 0, +0.10);

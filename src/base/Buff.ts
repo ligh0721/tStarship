@@ -35,7 +35,12 @@ class Buff {
 	}
 
 	// override
-	public onDamaged(value: number, src: Ship): number {
+	public onDamaged(value: number, src: Ship, unit: HpUnit): number {
+		return value;
+	}
+
+	// override
+	public onDamageTarget(value: number, target: Ship, unit: HpUnit): number {
 		return value;
 	}
 

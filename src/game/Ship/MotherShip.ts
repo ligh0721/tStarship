@@ -30,7 +30,7 @@ class MotherShip extends Ship {
 		for (let i in this.gunShips) {
 			let gunShip = this.gunShips[i].gunShip;
 			if (gunShip.alive) {
-				gunShip.damaged(gunShip.hp, null);
+				gunShip.damaged(gunShip.hp, null, null);
 			}
 		}
 		this.gameObject.cacheAsBitmap = false;

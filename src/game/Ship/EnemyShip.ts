@@ -7,8 +7,8 @@ class EnemyShip extends Ship {
 		super(model, modelScale);
 	}
 
-	public damaged(value: number, src: HpUnit): void {
-		super.damaged(value, src);
+	public damaged(value: number, src: HpUnit, unit: HpUnit): void {
+		super.damaged(value, src, unit);
 		if (this.alive) {
 			if (this.hpBar == null) {
 				this.hpBar = this.pools.newObject(ShipHpBar, this).create();

@@ -26,6 +26,8 @@ const GlobalAllParts: string[] = [
 	"part_test1",
 	"part_test2",
 	"part_meteoroid",
+	"part_critical_2",
+	"part_elec_induced_gun",
 	"part_power_speed_up_2",
 	"part_power_battery_2"
 ];
@@ -233,14 +235,26 @@ const GlobalPartsData: PartsData = {
 		desc: "当能量耗尽时立即补充25%能量",
 		buffs: ["part_power_battery_2"],
 	},
+	part_critical_2: {
+		name: "中级暴击零件(测试)",
+		model: "PartPowerUp1_png",
+		desc: "击中敌方目标有20%概率对其造成200%伤害！",
+		buffs: ["part_critical_2"],
+	},
+	part_elec_induced_gun: {
+		name: "电磁波炮(测试)",
+		model: "PartPowerUp1_png",
+		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加10点感电伤害！",
+		buffs: ["part_elec_induced_gun"],
+	},
 	part_test1: {
-		name: "低级攻速零件(测试)",
+		name: "中级攻速零件(测试)",
 		model: "PartCDRUp1_png",
 		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击，通常来讲可以增加10%射速！",
 		buffs: ["part_test1"],
 	},
 	part_test2: {
-		name: "低级火力零件(测试)",
+		name: "中级火力零件(测试)",
 		model: "PartPowerUp1_png",
 		desc: "增加10%主炮火力",
 		buffs: ["part_test2"],

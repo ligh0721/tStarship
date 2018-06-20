@@ -72,7 +72,7 @@ class SatelliteGun extends Gun {
 				if (bullet == null || !bullet.alive) {
 					continue;
 				}
-				bullet.damaged(bullet.hp, null);
+				bullet.damaged(bullet.hp, null, null);
 			}
 		}
 	}
