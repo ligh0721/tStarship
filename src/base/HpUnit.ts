@@ -17,6 +17,10 @@ class HpUnit extends Unit {
 	}
 
 	public damaged(value: number, src: HpUnit): void {
+		this.damagedLow(value, src);
+	}
+
+	public damagedLow(value: number, src: HpUnit): void {
 		this.$hp.hp -= value;
 		this.onHpChanged(-value);
 		if (this.$hp.hp <= 0) {

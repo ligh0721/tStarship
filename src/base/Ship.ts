@@ -148,7 +148,7 @@ class Ship extends HpUnit {
 		if (src instanceof Ship) {
 			value = this.$triggerOnDamaged(value, src);
 		}
-		super.damaged(value, src);
+		this.damagedLow(value, src);
 	}
 
 	// main=false
