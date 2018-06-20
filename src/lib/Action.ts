@@ -834,8 +834,8 @@ module tutils {
         protected readonly y2: number;
         protected readonly fixedRotation: boolean;
 
-        public constructor(duration: number, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, fixedRotation: boolean=true) {
-            super(duration);
+        public constructor(duration: number, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, fixedRotation: boolean=true, ease: Function=null) {
+            super(duration, ease);
             this.x0 = x0;
             this.y0 = y0;
             this.x1 = x1;
@@ -870,8 +870,8 @@ module tutils {
         private readonly $angle: number;
         private readonly $distance: number;
 
-        public constructor(duration: number, x0: number, y0: number, x1: number, y1: number, wavelen: number, amplitude: number, fixedRotation: boolean=true) {
-            super(duration);
+        public constructor(duration: number, x0: number, y0: number, x1: number, y1: number, wavelen: number, amplitude: number, fixedRotation: boolean=true, ease: Function=null) {
+            super(duration, ease);
             this.wavelen = wavelen;
             this.amplitude = amplitude;
             this.x0 = x0;

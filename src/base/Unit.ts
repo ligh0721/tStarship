@@ -146,6 +146,16 @@ class Unit extends egret.HashObject implements tutils.INode {
 		// }
 	}
 
+	public moveSine(angle: number, speed: number, wavelen, amplitude, fixedRotation: boolean=false, ease?: Function) {
+		if (fixedRotation !== true) {
+			this.rotation = angle;
+		}
+		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
+		let dur = tutils.LongDistance*tutils.SpeedFactor/speed;
+		let act = new tutils.Sine(dur, this.x, this.y, toPos.x, toPos.y, wavelen, amplitude, fixedRotation, ease);
+		this.runAction(act);
+	}
+
 	// fixedRotation=false
 	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, stackable: boolean=false, onMoveEnd?: ()=>void, thisObject?: any): void {
 		let xx = x-this.gameObject.x;
