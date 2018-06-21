@@ -4,13 +4,15 @@ class HeroShipsPanel extends eui.Component {
     private btnStart: eui.Button;
     private lblName: eui.Label;
     private lblGunDesc: eui.Label;
-    private lblName2: eui.Label;
-    private lblGunDesc2: eui.Label;
+    // private lblName2: eui.Label;
+    // private lblGunDesc2: eui.Label;
 
-    private lblHpV: eui.Label;
-    private lblPowerV: eui.Label;
-    private lblFireRateV: eui.Label;
-    private lblExpV: eui.Label;
+    private lblHpV: eui.BitmapLabel;
+    private lblPowerV: eui.BitmapLabel;
+    private lblFireRateV: eui.BitmapLabel;
+    private lblExpV: eui.BitmapLabel;
+    private lblExp: eui.BitmapLabel;
+    private imgIcon: eui.Image;
 
     private progHp: eui.Rect;
     private progPower: eui.Rect;
@@ -27,7 +29,7 @@ class HeroShipsPanel extends eui.Component {
     protected createChildren(): void {
         super.createChildren();
 
-        this.skinName = "resource/custom_skins/HeroShipsPanelSkin.exml";
+        this.skinName = "resource/custom_skins/HeroShipsPanelSkinV2.exml";
         this.progHp.percentWidth = 0;
         this.progPower.percentWidth = 0;
         this.progFireRate.percentWidth = 0;
@@ -37,6 +39,7 @@ class HeroShipsPanel extends eui.Component {
         this.lblCoins.text = this.formatCoins(playerData.coins);
 
         this.updateList();
+        this.width = egret.MainContext.instance.stage.stageWidth;
         this.height = egret.MainContext.instance.stage.stageHeight;
         this.lstShips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
         this.btnStart.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
@@ -64,7 +67,7 @@ class HeroShipsPanel extends eui.Component {
             if (playerShipData) {
                 // player ships
                 let exp = playerShipData.exp;
-                item.level = "Lv." + GameController.instance.expToLevel(exp);
+                item.level = GameController.instance.expToLevel(exp).toString();
                 if (firstUnlockedIndex < 0) {
                     firstUnlockedIndex = items.length;
                 }
@@ -122,8 +125,8 @@ class HeroShipsPanel extends eui.Component {
         let playerShipData = GameController.instance.getPlayerShipDataByKey(shipId);
         if (!playerShipData) {
             this.shipDetail.selectedIndex = 1;
-            this.lblName.text = "未知";
-            this.lblGunDesc.text = "未知";
+            this.lblName.text = shipData.name;
+            this.lblGunDesc.text = shipData.gunName;
             this.lblHpV.text = "--";
             this.lblPowerV.text = "--";
             this.lblFireRateV.text = "--";
@@ -134,8 +137,8 @@ class HeroShipsPanel extends eui.Component {
             this.progExp.percentWidth = 0;
             this.btnStart.visible = false;
 
-            this.lblName2.text = shipData.name;
-            this.lblGunDesc2.text = shipData.gunName;
+            // this.lblName2.text = shipData.name;
+            // this.lblGunDesc2.text = shipData.gunName;
             let playerData = GameController.instance.playerData;
             this.btnUnlock.label = shipData.coins.toString();
             this.btnUnlock.enabled = playerData.coins>=shipData.coins;
@@ -148,17 +151,20 @@ class HeroShipsPanel extends eui.Component {
         this.lblGunDesc.text = shipData.gunName;
         this.lblHpV.text = shipData.maxHp.toString();
         this.lblPowerV.text = shipData.bulletPower.toString() + (shipData.bulletNum===1 ? "" : " x " + shipData.bulletNum.toString());
-        this.lblFireRateV.text = (1000 / Math.max(1000/60, shipData.fireCD)).toFixed(2) + "/s";
+        this.lblFireRateV.text = (1000 / Math.max(1000/60, shipData.fireCD)).toFixed(1) + "/s";
         let level = GameController.instance.expToLevel(playerShipData.exp);
         let expText = "MAX";
         let expPerWidth = 100;
         if (level !== GameController.instance.expTable.length) {
+            // 没满级
             let expBase = level===1 ? 0 : GameController.instance.expTable[level-2];
             let expNext = GameController.instance.expTable[level-1];
             expPerWidth = (playerShipData.exp - expBase) * 100 / (expNext - expBase);
             expText = expPerWidth.toFixed(0) + "%";
         }
         this.lblExpV.text = expText;
+        this.lblExp.text = "Exp(Lv." + level + ")";
+        this.imgIcon.source = shipData.model;
 
         egret.Tween.removeTweens(this.progHp);
         egret.Tween.removeTweens(this.progPower);

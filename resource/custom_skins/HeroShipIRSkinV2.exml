@@ -2,7 +2,7 @@
 <e:Skin class="HeroShipIRSkinV2" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="180" height="180">
 	<e:Image id="bg" horizontalCenter="0" verticalCenter="0" source="shipitembg_png" scale9Grid="18,21,23,19" width="180" height="180"/>
 	<e:Image id="icon" width="160" height="160" source="{data.icon}" filters="{data.filter}" horizontalCenter="0" verticalCenter="0"/>
-	<e:Rect width="70" height="70" fillAlpha="0.5" ellipseWidth="40" ellipseHeight="40" enabled="false" verticalCenter="-55" horizontalCenter="-55"/>
-	<e:BitmapLabel id="level" font="FranklinGothicHeavy60_fnt" scaleX="0.8" scaleY="0.8" width="100" height="66" anchorOffsetX="50" text="{data.level}" textAlign="center" verticalCenter="-59.5" horizontalCenter="-55"/>
-	<e:Image id="selected" source="shipitemsel_png" alpha="{data.selected}" horizontalCenter="0" verticalCenter="0"/>
+	<e:Image source="levelbg_png" top="0" left="0"/>
+	<e:BitmapLabel id="level" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" text="{data.level}" top="8" left="-1"/>
+	<e:Image id="selected" source="shipitemsel_png" alpha="{data.selected}" horizontalCenter="0" verticalCenter="0" scale9Grid="38,38,1,1" width="210" height="210"/>
 </e:Skin>

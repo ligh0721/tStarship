@@ -207,7 +207,7 @@ const GlobalShipsData: ShipsData = {
 		bullet: MissileBullet,
 		bulletSpeed: 200,
         fireCD: 1000,
-		bulletPower: 25,
+		bulletPower: 20,
 		bulletNum: 3,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
@@ -244,7 +244,7 @@ const GlobalPartsData: PartsData = {
 	part_elec_induced_gun: {
 		name: "电磁发射器",
 		model: "PartElecInducedGun_png",
-		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加15点感电伤害！",
+		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加10点感电伤害！",
 		buffs: ["part_elec_induced_gun"],
 	},
 	part_test1: {
