@@ -17,7 +17,7 @@ class CriticalBuff extends Buff {
 			if (value < 10) {
 				console.log("??");
 			}
-			GameController.instance.hud.addBattleTip(unit.x, unit.y, "CRI "+value.toFixed(0)+"!", 45, "FranklinGothicHeavyRed_fnt", 1.0);
+			GameController.instance.hud.addBattleTip(unit.x, unit.y, "CRI "+value.toFixed(0)+"!", 45, "FranklinGothicHeavyItalicRed_fnt", 1.0);
 			return value;
 		}
 		return value;

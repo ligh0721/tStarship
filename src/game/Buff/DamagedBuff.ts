@@ -34,7 +34,7 @@ class ElecBuff extends Buff {
 		value += power;
 		let x = (Math.random() * 0.6 - 0.3) * this.ship.width;
 		let y = (Math.random() * 0.6 - 0.3) * this.ship.height;
-		GameController.instance.hud.addBattleTip(this.ship.x+x, this.ship.y+y, "-"+power.toFixed(0), 360, "FranklinGothicHeavyBlue_fnt", 0.6);
+		GameController.instance.hud.addBattleTip(this.ship.x+x, this.ship.y+y, "-"+power.toFixed(0), 360, "FranklinGothicHeavyItalicBlue_fnt", 0.6);
 		// TODO: effect
 		return value;
 	}

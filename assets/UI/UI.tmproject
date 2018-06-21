@@ -2,7 +2,6 @@
     "version": 5,
     "files": [
         "./UI/shipitemsel.png",
-        "./UI/shipitembg2.png",
         "./UI/shipitembg.png",
         "./UI/purplebar.png",
         "./UI/progbarfill.png",
@@ -10,8 +9,8 @@
         "./UI/panelbg2.png",
         "./UI/panelbg.png",
         "./UI/greenbtnnormal.png",
-        "./UI/greenbtndown2.png",
         "./UI/greenbtndown.png",
+        "./UI/greenbtndis.png",
         "./UI/coinbarfill.png",
         "./UI/coinbarbg.png",
         "./UI/bluebar.png"

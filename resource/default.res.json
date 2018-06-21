@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png,FarSpace_png,NearSpace_png,bgGrey_png,bg_jpg,bgGrey_jpg,ComicSansMS60_0_png,ComicSansMS60_fnt,Bgmusic_mp3,EaseGunShoot_mp3,Explosion0_mp3,Explosion1_mp3,Explosion2_mp3,ExplosionBullet_mp3,ExplosionGunShoot_mp3,GuideGunShoot_mp3,GunPowerup_mp3,GunShoot_mp3,Hit_mp3,PickPower_mp3,Powerup_mp3,RowGunShoot_mp3,ShotGunShoot_mp3,SoundWaveGunShoot_mp3,font_png,score_png,font_fnt,score_fnt,Arial40_0_png,Arial40_fnt,bluebutton_disable_png,greenbutton_disable_png,MissileGunShoot_mp3,Meteoroid_mp3,grid100_png,FranklinGothicHeavyBlue_fnt,FranklinGothicHeavyBlue_0_png,FranklinGothicHeavyRed_fnt,FranklinGothicHeavyRed_0_png,FranklinGothicHeavy_fnt,FranklinGothicHeavy_0_png,Main_json,UI_json,loading2_png,toast-bg_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,bluebutton_normal_png,bluebutton_down_png,greenbutton_normal_png,greenbutton_down_png,FarSpace_png,NearSpace_png,bgGrey_png,bg_jpg,bgGrey_jpg,ComicSansMS60_0_png,ComicSansMS60_fnt,Bgmusic_mp3,EaseGunShoot_mp3,Explosion0_mp3,Explosion1_mp3,Explosion2_mp3,ExplosionBullet_mp3,ExplosionGunShoot_mp3,GuideGunShoot_mp3,GunPowerup_mp3,GunShoot_mp3,Hit_mp3,PickPower_mp3,Powerup_mp3,RowGunShoot_mp3,ShotGunShoot_mp3,SoundWaveGunShoot_mp3,font_png,score_png,font_fnt,score_fnt,Arial40_0_png,Arial40_fnt,bluebutton_disable_png,greenbutton_disable_png,MissileGunShoot_mp3,Meteoroid_mp3,grid100_png,Main_json,loading2_png,toast-bg_png,FranklinGothicHeavyItalicBlue_0_png,FranklinGothicHeavyItalicRed_0_png,FranklinGothicHeavyItalic_0_png,FranklinGothicHeavyItalic_fnt,FranklinGothicHeavyItalicBlue_fnt,FranklinGothicHeavyItalicRed_fnt,FranklinGothicHeavy30_0_png,FranklinGothicHeavy60_0_png,FranklinGothicHeavy30_fnt,FranklinGothicHeavy60_fnt,UI_json,FranklinGothicHeavyBlue30_0_png,FranklinGothicHeavyLightGreen60_0_png,FranklinGothicHeavyLightGreen260_0_png,FranklinGothicHeavyOrange30_0_png,FranklinGothicHeavyPurple30_0_png,FranklinGothicHeavyBlue30_fnt,FranklinGothicHeavyLightGreen60_fnt,FranklinGothicHeavyLightGreen260_fnt,FranklinGothicHeavyOrange30_fnt,FranklinGothicHeavyPurple30_fnt",
 			"name": "preload"
 		}
 	],
@@ -317,46 +317,10 @@
 			"name": "grid100_png"
 		},
 		{
-			"url": "assets/Fonts/FranklinGothicHeavyBlue.fnt",
-			"type": "font",
-			"name": "FranklinGothicHeavyBlue_fnt"
-		},
-		{
-			"url": "assets/Fonts/FranklinGothicHeavyBlue_0.png",
-			"type": "image",
-			"name": "FranklinGothicHeavyBlue_0_png"
-		},
-		{
-			"url": "assets/Fonts/FranklinGothicHeavyRed.fnt",
-			"type": "font",
-			"name": "FranklinGothicHeavyRed_fnt"
-		},
-		{
-			"url": "assets/Fonts/FranklinGothicHeavyRed_0.png",
-			"type": "image",
-			"name": "FranklinGothicHeavyRed_0_png"
-		},
-		{
-			"url": "assets/Fonts/FranklinGothicHeavy.fnt",
-			"type": "font",
-			"name": "FranklinGothicHeavy_fnt"
-		},
-		{
-			"url": "assets/Fonts/FranklinGothicHeavy_0.png",
-			"type": "image",
-			"name": "FranklinGothicHeavy_0_png"
-		},
-		{
 			"url": "assets/Main.json",
 			"type": "sheet",
 			"name": "Main_json",
 			"subkeys": "BGMeteoroid1_png,BGMeteoroid2_png,BGMeteoroid3_png,BGMeteoroid4_png,BigBlueEllipseBullet1_png,BigBlueEllipseBullet_png,BigRedEllipseBullet1_png,BigRedEllipseBullet_png,BlackFatHeroShip_png,BlueBallBullet_png,BlueBullet1_png,BlueBullet2_png,BlueBullet3_png,BlueBullet4_png,BlueBullet5_png,BlueEllipseBullet_png,BlueEnemyShip_png,BlueFatHeroShip_png,BossShip1_png,Bullet_png,DeepOrangeFatHeroShip_png,DripBullet_png,Energy2_png,Energy3_png,Energy4_png,Energy_png,Explosion_png,GearBullet_png,GreenEnemyShip_png,GreenFatHeroShip_png,GreenHeroShip_png,GreyPixel_png,GunCDR_png,GunLevelUp_png,GunPower_png,GunShip1_png,GunShip2_png,Hero_png,Meteoroid_png,MissileBullet_png,OrangeFatHeroShip_png,PartBattery_png,PartCDRUp1_png,PartCritical2_png,PartElecInducedGun_png,PartMeteoroid_png,PartPowerSpeedUp_png,PartPowerUp1_png,PurpleEnemyShip2_png,PurpleEnemyShip_png,PurpleFatHeroShip_png,RedBullet1_png,RedBullet2_png,RedBullet3_png,RedBullet4_png,RedBullet5_png,RedBullet_png,RedEnemyShip_png,RedFatHeroShip_png,RedHeroShip_png,RedPixel_png,SatelliteGun_png,ShakeWaveBullet2_png,ShakeWaveBullet_png,Solar2_png,Solar_png,SoundWaveBullet_png,SoundWave_png,TwoGunBOSSBody_png,TwoGunBOSSGun_png,WhiteFatHeroShip_png,WhitePixel_png,coin2_png"
-		},
-		{
-			"name": "UI_json",
-			"type": "sheet",
-			"url": "assets/UI.json",
-			"subkeys": "bluebar_png,coinbarbg_png,coinbarfill_png,greenbtndown_png,greenbtndown2_png,greenbtnnormal_png,panelbg_png,panelbg2_png,progbarbg_png,progbarfill_png,purplebar_png,shipitembg_png,shipitembg2_png,shipitemsel_png"
 		},
 		{
 			"name": "loading2_png",
@@ -367,6 +331,112 @@
 			"name": "toast-bg_png",
 			"type": "image",
 			"url": "assets/GameUI/toast-bg.png"
+		},
+		{
+			"name": "FranklinGothicHeavyItalicBlue_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyItalicBlue_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyItalicRed_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyItalicRed_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyItalic_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyItalic_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyItalic_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyItalic.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavyItalicBlue_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyItalicBlue.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavyItalicRed_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyItalicRed.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavy30_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavy30_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavy60_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavy60_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavy30_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavy30.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavy60_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavy60.fnt"
+		},
+		{
+			"name": "UI_json",
+			"type": "sheet",
+			"url": "assets/UI.json",
+			"subkeys": "bluebar_png,coinbarbg_png,coinbarfill_png,greenbtndis_png,greenbtndown_png,greenbtnnormal_png,panelbg_png,panelbg2_png,progbarbg_png,progbarfill_png,purplebar_png,shipitembg_png,shipitemsel_png"
+		},
+		{
+			"name": "FranklinGothicHeavyBlue30_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyBlue30_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyLightGreen60_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyLightGreen60_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyLightGreen260_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyLightGreen260_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyOrange30_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyOrange30_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyPurple30_0_png",
+			"type": "image",
+			"url": "assets/Fonts/FranklinGothicHeavyPurple30_0.png"
+		},
+		{
+			"name": "FranklinGothicHeavyBlue30_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyBlue30.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavyLightGreen60_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyLightGreen60.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavyLightGreen260_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyLightGreen260.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavyOrange30_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyOrange30.fnt"
+		},
+		{
+			"name": "FranklinGothicHeavyPurple30_fnt",
+			"type": "font",
+			"url": "assets/Fonts/FranklinGothicHeavyPurple30.fnt"
 		}
 	]
 }
