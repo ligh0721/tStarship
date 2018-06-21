@@ -1,0 +1,27 @@
+{
+    "version": 5,
+    "files": [
+        "./UI/shipitemsel.png",
+        "./UI/shipitembg2.png",
+        "./UI/shipitembg.png",
+        "./UI/purplebar.png",
+        "./UI/progbarfill.png",
+        "./UI/progbarbg.png",
+        "./UI/panelbg2.png",
+        "./UI/panelbg.png",
+        "./UI/greenbtnnormal.png",
+        "./UI/greenbtndown2.png",
+        "./UI/greenbtndown.png",
+        "./UI/coinbarfill.png",
+        "./UI/coinbarbg.png",
+        "./UI/bluebar.png"
+    ],
+    "projectName": "UI",
+    "options": {
+        "layoutMath": "3",
+        "sizeMode": "2n",
+        "useExtension": 1,
+        "layoutGap": 1,
+        "extend": 0
+    }
+}
