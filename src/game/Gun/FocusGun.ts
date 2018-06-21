@@ -31,15 +31,25 @@ class FocusGun extends Gun {
 
 	protected fireBulletTurnToFocus(bullet: Bullet, angle: number, turnBefore: number, focusX: number, focusY: number) {
 		bullet.rotation = angle;
-		let tw = egret.Tween.get(bullet.gameObject);
 		let toPos = Unit.getDirectionPoint(bullet.gameObject.x, bullet.gameObject.y, angle, turnBefore);
-		tw.to({x: toPos.x, y: toPos.y}, turnBefore*tutils.SpeedFactor/this.bulletSpeed.value, egret.Ease.getPowOut(1));
 		let toPos1 = Unit.getForwardPoint(toPos.x, toPos.y, focusX, focusY, tutils.LongDistance);
 		let angle1 = Math.atan2(toPos1.y-toPos.y, toPos1.x-toPos.x) * tutils.DegPerRad + 90;
-		tw.call(()=>{
-			bullet.rotation = angle1;
-		}, this);
-		tw.to({x: toPos1.x, y: toPos1.y}, tutils.LongDistance*tutils.SpeedFactor/this.bulletSpeed.value, egret.Ease.getPowIn(1));
+
+		// let tw = egret.Tween.get(bullet.gameObject);
+		// tw.to({x: toPos.x, y: toPos.y}, turnBefore*tutils.SpeedFactor/this.bulletSpeed.value, egret.Ease.getPowOut(1));
+		// tw.call(()=>{
+		// 	bullet.rotation = angle1;
+		// }, this);
+		// tw.to({x: toPos1.x, y: toPos1.y}, tutils.LongDistance*tutils.SpeedFactor/this.bulletSpeed.value, egret.Ease.getPowIn(1));
+
+		let act = new tutils.Sequence(
+			new tutils.MoveTo(turnBefore*tutils.SpeedFactor/this.bulletSpeed.value, toPos.x, toPos.y),
+			new tutils.CallFunc(():void=>{
+				bullet.rotation = angle1;
+			}, this),
+			new tutils.MoveTo(tutils.LongDistance*tutils.SpeedFactor/this.bulletSpeed.value, toPos1.x, toPos1.y)
+		);
+		bullet.runAction(act);
 	}
 
 	// override

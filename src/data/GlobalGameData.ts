@@ -236,15 +236,15 @@ const GlobalPartsData: PartsData = {
 		buffs: ["part_power_battery_2"],
 	},
 	part_critical_2: {
-		name: "中级暴击零件(测试)",
-		model: "PartPowerUp1_png",
+		name: "暴击零件",
+		model: "PartCritical2_png",
 		desc: "击中敌方目标有20%概率对其造成200%伤害！",
 		buffs: ["part_critical_2"],
 	},
 	part_elec_induced_gun: {
-		name: "电磁波炮(测试)",
-		model: "PartPowerUp1_png",
-		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加10点感电伤害！",
+		name: "电磁发射器",
+		model: "PartElecInducedGun_png",
+		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加15点感电伤害！",
 		buffs: ["part_elec_induced_gun"],
 	},
 	part_test1: {

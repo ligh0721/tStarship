@@ -105,20 +105,28 @@ class BattleLayer extends tutils.Layer {
         GameController.instance.setBattleHUD(this.hud);
 
         // 初始化世界掉落表
+        // green
         this.partsDropTableRare = new DropTable<DropTable<string>>();
         let table = new DropTable<string>();
         table.push("part_test1", 100);
         table.push("part_test2", 100);
+        table.push("part_critical_2", 50);
         this.partsDropTableRare.push(table, 1000);
 
+        // blue
+        // table = new DropTable<string>();
+        // this.partsDropTableRare.push(table, 600);
+
+        // purple
+        table = new DropTable<string>();
         table.push("part_power_speed_up_2", 100);
         table.push("part_power_battery_2", 100);
-        table.push("part_critical_2", 100);
+        table.push("part_elec_induced_gun", 100);
         this.partsDropTableRare.push(table, 600);
 
+        // orange
         table = new DropTable<string>();
         table.push("part_meteoroid", 100);
-        table.push("part_elec_induced_gun", 100);
         this.partsDropTableRare.push(table, 300);
         
 	}
@@ -213,11 +221,11 @@ class BattleLayer extends tutils.Layer {
         });
         testSupplyTimer.start(8000, true, 0);
 
-        let part = GameController.instance.createPart("part_elec_induced_gun");
-        let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-        supply.speed = 20;
-        this.world.addSupply(supply);
-        supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
+        // let part = GameController.instance.createPart("part_elec_induced_gun");
+        // let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+        // supply.speed = 20;
+        // this.world.addSupply(supply);
+        // supply.drop(this.stage.stageWidth*0.5, 0, egret.Ease.getPowIn(2));
 
         // 创建调试面板
         // this.createDebugPanel();
@@ -295,7 +303,7 @@ class BattleLayer extends tutils.Layer {
             }
 
             if (ship instanceof EnemyShip && ship.isLastGroupMember()) {
-                let score = Math.max(1, Math.floor(ship.group.max/4*(1+this.reachStage/2)));
+                let score = Math.max(1, Math.floor(ship.group.max/5*(1+this.reachStage/3)));
                 this.hud.showTip("coin2_png", "+"+score, "Wave Clear!");
                 this.addScore(score);
             }

@@ -85,7 +85,7 @@ class BlueStarBullet extends Bullet {
 
 class BlueDiamondBullet extends Bullet {
 	public constructor(gun: Gun) {
-		super(gun, "BlueBullet4_png");
+		super(gun, "BlueBullet4_png", 1.5);
 	}
 }
 
