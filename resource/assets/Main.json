@@ -38,10 +38,10 @@
 "PartPowerSpeedUp_png":{"x":1219,"y":1435,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
 "PartMeteoroid_png":{"x":1117,"y":1435,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
 "PartCDRUp1_png":{"x":1476,"y":1432,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
-"PartBattery_png":{"x":1578,"y":1464,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
+"PartBattery_png":{"x":121,"y":1473,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
 "GreyPixel_png":{"x":1279,"y":485,"w":1,"h":1,"offX":0,"offY":0,"sourceW":1,"sourceH":1},
 "Explosion_png":{"x":732,"y":977,"w":25,"h":25,"offX":2,"offY":2,"sourceW":28,"sourceH":29},
-"coin2_png":{"x":1680,"y":1464,"w":95,"h":89,"offX":0,"offY":3,"sourceW":95,"sourceH":95},
+"coin2_png":{"x":223,"y":1473,"w":95,"h":89,"offX":0,"offY":3,"sourceW":95,"sourceH":95},
 "SoundWaveBullet_png":{"x":1155,"y":659,"w":100,"h":38,"offX":0,"offY":1,"sourceW":100,"sourceH":40},
 "ShakeWaveBullet2_png":{"x":1359,"y":1432,"w":115,"h":94,"offX":3,"offY":4,"sourceW":120,"sourceH":103},
 "ShakeWaveBullet_png":{"x":1899,"y":921,"w":118,"h":97,"offX":1,"offY":8,"sourceW":120,"sourceH":120},
@@ -69,4 +69,6 @@
 "SatelliteGun_png":{"x":628,"y":1085,"w":34,"h":33,"offX":0,"offY":0,"sourceW":34,"sourceH":33},
 "GunPower_png":{"x":592,"y":1085,"w":34,"h":33,"offX":0,"offY":0,"sourceW":34,"sourceH":33},
 "GunLevelUp_png":{"x":1441,"y":1161,"w":31,"h":30,"offX":0,"offY":0,"sourceW":31,"sourceH":30},
-"GunCDR_png":{"x":556,"y":1085,"w":34,"h":33,"offX":0,"offY":0,"sourceW":34,"sourceH":33}}}
+"GunCDR_png":{"x":556,"y":1085,"w":34,"h":33,"offX":0,"offY":0,"sourceW":34,"sourceH":33},
+"PartCritical2_png":{"x":1578,"y":1464,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
+"PartElecInducedGun_png":{"x":1680,"y":1464,"w":100,"h":100,"offX":0,"offY":0,"sourceW":100,"sourceH":100}}}
