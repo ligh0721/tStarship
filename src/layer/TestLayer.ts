@@ -19,12 +19,12 @@ class TestLayer extends tutils.Layer {
         this.hero = new HeroShip("Hero_png");
         this.world.addShip(this.hero);
         
-        let gun = Gun.createGun(StormGun, Bullet);
-		gun.fireCooldown.baseValue = 0;
-		gun.bulletPower.baseValue = 50/2;
-		gun.bulletSpeed.baseValue = 50;
-		gun.period = 500;
-        this.hero.addGun(gun).autoFire = true;
+        // let gun = Gun.createGun(StormGun, Bullet);
+		// gun.fireCooldown.baseValue = 0;
+		// gun.bulletPower.baseValue = 50/2;
+		// gun.bulletSpeed.baseValue = 50;
+		// gun.period = 500;
+        // this.hero.addGun(gun).autoFire = true;
         
         this.hero.x = w * 0.5;
         this.hero.y = h * 0.9;
@@ -36,39 +36,15 @@ class TestLayer extends tutils.Layer {
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
 
-        // let act = new Repeat(new Sequence(new DelayTime(2000), new CallFunc((n: number):void=>{
-        //     console.log(n);
-        // }, this, 5010)), 10);
-        // let act: tutils.Action = new tutils.Repeat(new tutils.CallFunc((n: number):void=>{
-        //     console.log(n);
-        // }, this, 5010), 1);
-        // GameController.instance.actionManager.addAction(this.hero.gameObject, act);
+        // let bmp = tutils.createBitmapByName("PartElecInducedGun_png");
+        // this.addChild(bmp);
+        // bmp.x = 100;
+        // bmp.y = 100;
 
-        // let act = new tutils.Speed(new tutils.Sequence(new tutils.Bezier(2000, 0, 0, 700, 600, 300, 600, false), new tutils.Bezier(2000, 300, 600, 0, 1200, 0, 1200, false), new tutils.Bezier(2000, 0, 1200, 700, 600, 0, 0, false), new tutils.Sine(5000, 0, 0, 700, 1200, 200, 100, false), new tutils.CallFunc(():void=>{
-        //     console.log("MoveEnd");
-        // }, this)), 2.0);
-        // GameController.instance.actionManager.speed = 1;
-        // GameController.instance.actionManager.addAction(this.hero.gameObject, act);
-        // let tw = egret.Tween.get(GameController.instance.actionManager);
-        // tw.to({speed: 0.01}, 10000);
-        // this.drawPaths();
-
-        // let act = new tutils.RepeatForever(new tutils.Sequence(
-		// 	new tutils.MoveBy(2000, -170, 0),
-		// 	new tutils.MoveBy(2000, 170, 0)
-		// ));
-		// this.hero.runAction(act);
-        // this.hero.moveStraight(180, 20);
-        // let buff = GameController.instance.createBuff("super_hero");
-        // this.hero.addBuff(buff);
-        // let buff = GameController.instance.createBuff("shield_ball");
-        // this.hero.addBuff(buff);
-        let act = new tutils.TimerAction(1000, true, 5, false);
-        act.setOnTimerListener((dt: number):void=>{
-            console.log(""+egret.getTimer()+" "+dt);
-        }, this);
-        console.log(""+egret.getTimer()+" start");
-        this.hero.runAction(act);
+        // bmp = tutils.createBitmapByName("GunCDR_png");
+        // this.addChild(bmp);
+        // bmp.x = 200;
+        // bmp.y = 200;
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

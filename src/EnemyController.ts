@@ -607,7 +607,7 @@ class EnemyController {
 		let rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
-			ship.speed.baseValue = 10 * speedFactor;
+			ship.speed.baseValue = 5 * speedFactor;
 			ship.rotation = 180;
 
 			let ai = new tutils.StateManager();
