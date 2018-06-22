@@ -2,6 +2,6 @@
 <e:Skin class="GreenButtonSkinV2" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
     <e:Image
             
-             source.down="greenbtndown_png" source.disabled="greenbtndis_png" scale9Grid="13,14,34,34" source="greenbtnnor_png" source.up="greenbtnnor_png" anchorOffsetY.down="0" height.down="100%" x.down="0" y.down="2" width="100%" height="100%"/>
-	<e:Label id="labelDisplay" text="START" textAlign="center" fontFamily="Microsoft YaHei" bold="true" top="2" bottom="12" right="30" left="30" verticalAlign="middle" left.down="30" right.down="30" top.down="4" bottom.down="10" size="35" left.up="30" right.up="30" top.up="2" bottom.up="12" left.disabled="30" right.disabled="30" top.disabled="2" bottom.disabled="12"/>
+             source.down="greenbtndown_png" source.disabled="greenbtndis_png" scale9Grid="13,14,34,34" source="greenbtnnor_png" source.up="greenbtnnor_png" anchorOffsetY.down="0" height.down="100%" x.down="0" y.down="0" width="100%" height="100%"/>
+	<e:Label id="labelDisplay" text="START" textAlign="center" fontFamily="Microsoft YaHei" bold="true" top="4" bottom="10" right="30" left="30" verticalAlign="middle" left.down="30" right.down="30" top.down="6" bottom.down="8" size="35" left.up="30" right.up="30" top.up="4" bottom.up="10" left.disabled="30" right.disabled="30" top.disabled="4" bottom.disabled="10"/>
 </e:Skin>
