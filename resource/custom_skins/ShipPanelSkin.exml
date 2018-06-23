@@ -1,25 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="ShipPanelSkin" width="720" height="960" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
-	<e:Rect width="100%" height="100%" x="0" y="0" enabled="false" fillColor="0x171b34"/>
-	<e:Group id="grpTop" scaleX="1" scaleY="1" height="50" width="100%" horizontalCenter="0" top="0">
-		<e:Group width="200" height="100%" top="0" right="0">
-			<e:Group width="100%" height="100%" scaleX="1" scaleY="1">
-				<e:Group width="30" height="100%" x="251" y="19">
-				</e:Group>
-				<e:Group width="100%" height="100%">
-					<e:Image source="coinbarbg_png" bottom="3" scale9Grid="12,0,37,40" width="100%" right="0"/>
-					<e:Image bottom="7" source="coinbarfill_png" scale9Grid="12,0,30,31" width="100%" right="6"/>
-				</e:Group>
-				<e:layout>
-				<e:HorizontalLayout gap="0" horizontalAlign="left" verticalAlign="top"/>
-				</e:layout>
-			</e:Group>
-			<e:Image source="coin2_png" height="50" width="50" scaleX="1" scaleY="1" top="0" left="0"/>
-			<e:BitmapLabel id="lblCoins" text="198300" anchorOffsetX="0" right="23" verticalCenter="-0.5" width="300" textAlign="right" font="FranklinGothicHeavy30_fnt" scaleX="0.9" scaleY="0.9"/>
-		</e:Group>
-	</e:Group>
-	<e:Group id="grpMiddle" width="100%" horizontalCenter="0" verticalCenter="-30">
-		<e:Group id="grpAttr" anchorOffsetY="0" scaleX="1" scaleY="1" height="367" right="0" width="720" y="82">
+<e:Skin class="ShipPanelSkin" width="720" height="960" currentState="init" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*"  states="init,final" >
+	<w:Declarations>
+		<tween:TweenGroup id="open">
+			<tween:TweenItem target="{grpTop}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" x="{-720}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300" ease="cubicOut">
+					<tween:props>
+						<e:Object alpha="{1}" x="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{grpAttr}">
+				<tween:Wait duration="150"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" x="{-720}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300" ease="cubicOut">
+					<tween:props>
+						<e:Object x="{0}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{grpEquip}">
+				<tween:Wait duration="300"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{-720}" alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300" ease="cubicOut">
+					<tween:props>
+						<e:Object x="{0}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{grpBottom}">
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" x="{-720}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250" ease="cubicOut">
+					<tween:props>
+						<e:Object alpha="{1}" x="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="popEquip">
+			<tween:TweenItem target="{grpPop}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{rect0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="350">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{grpEquipPop}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0.2}" scaleY="{0.2}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="350" ease="backOut">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect id="rect" width="100%" height="100%" x="0" y="0" enabled="false" fillColor="0x171b34"/>
+	<e:Group id="grpMiddle" width="100%" x="0" y="46" x.init="0" y.final="46">
+		<e:Group id="grpAttr" anchorOffsetY="0" scaleX="1" scaleY="1" width="100%" x.final="0" height="367" x="0" y="82" x.init="-720">
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" source="panelbg2_png" scale9Grid="60,64,12,11" height="383" left="-20" right="-20" top="-18"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24"/>
 			<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="23" bottom="68" top="94"/>
@@ -99,7 +170,7 @@
 			</e:layout>
 			</e:Group>
 		</e:Group>
-		<e:Group id="grpEquip" anchorOffsetY="0" top="385" y="-610" scaleX="1" scaleY="1" height="424" left="0" right="0">
+		<e:Group id="grpEquip" anchorOffsetY="0" scaleX="1" scaleY="1" height="424" width="100%" x.final="0" x="0" y="385" x.init="-720">
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" source="purplebar_png" scale9Grid="23,0,3,80" width="60%"/>
 			<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="23" bottom="68" top="94"/>
@@ -134,12 +205,12 @@
 			</e:Group>
 		</e:Group>
 	</e:Group>
-	<e:Group id="grpBottom" height="147" left="0" right="0" bottom="0">
+	<e:Group id="grpBottom" height="147" width.init="100%" y.init="813" width="100%" x="0" y="813" x.init="-720">
 		<e:Button id="btnStart" label="START" skinName="GreenButtonSkinV2" width="250" scaleX="1" scaleY="1" height="80" bottom="29" horizontalCenter="0.5"/>
 	</e:Group>
-	<e:Group id="grpPop" width="100%" height="100%" y="0" x="0" visible="false">
-		<e:Rect width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.5"/>
-		<e:Group id="grpEquipPop" anchorOffsetY="0" scaleX="1" scaleY="1" height="624" width="671" horizontalCenter="0" verticalCenter="0">
+	<e:Group id="grpPop" width="100%" height="100%" y="0" x="0" visible.init="false" alpha.final="0">
+		<e:Rect id="rect0" width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.5"/>
+		<e:Group id="grpEquipPop" anchorOffsetY="0" scaleX="1" scaleY="1" height="545" width="671" horizontalCenter="0" verticalCenter="0">
 		<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24" visible="false"/>
 		<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" width="60%" source="bluebar_png" height="80" scale9Grid="29,0,3,110"/>
@@ -225,6 +296,22 @@
 					<e:VerticalLayout horizontalAlign="center"/>
 				</e:layout>
 			</e:Group>
+		</e:Group>
+	</e:Group>
+	<e:Group id="grpTop" scaleX="1" scaleY="1" height="50" width="100%" x.init="-720" y.init="0" x="0" y="0">
+		<e:Group width="200" height="100%" top="0" right="0">
+		<e:Group width="100%" height="100%" scaleX="1" scaleY="1">
+			<e:Group width="30" height="100%" x="251" y="19"/>
+			<e:Group width="100%" height="100%">
+			<e:Image source="coinbarbg_png" bottom="3" scale9Grid="12,0,37,40" width="100%" right="0"/>
+			<e:Image bottom="7" source="coinbarfill_png" scale9Grid="12,0,30,31" width="100%" right="6"/>
+			</e:Group>
+			<e:layout>
+			<e:HorizontalLayout gap="0" horizontalAlign="left" verticalAlign="top"/>
+			</e:layout>
+		</e:Group>
+		<e:Image source="coin2_png" height="50" width="50" scaleX="1" scaleY="1" top="0" left="0"/>
+		<e:BitmapLabel id="lblCoins" text="198300" anchorOffsetX="0" right="23" verticalCenter="-0.5" width="300" textAlign="right" font="FranklinGothicHeavy30_fnt" scaleX="0.9" scaleY="0.9"/>
 		</e:Group>
 	</e:Group>
 </e:Skin>
