@@ -23,7 +23,7 @@
 			<e:Group width="100%" x="260" y="126.36" scaleX="1" scaleY="1" anchorOffsetY="0" height="100%">
 				<e:Image source="bluebar_png" scale9Grid="29,0,4,110" anchorOffsetX="0" width="320" top="-83" left="29"/>
 				<e:BitmapLabel text="Ships" textAlign="center" width="300" scaleX="0.8" scaleY="0.8" left="69" top="-82" font="FranklinGothicHeavyLightGreen60_fnt"/>
-				<e:Image height="100%" source="panelbg2_png" scale9Grid="14,13,33,33" anchorOffsetY="0" left="15" right="15" top="-22"/>
+				<e:Image height="100%" scale9Grid="14,13,33,33" anchorOffsetY="0" left="15" right="15" top="-22" source="panelbg_png"/>
 				<e:Scroller width="100%" scaleX="1" scaleY="1" horizontalCenter="0" anchorOffsetY="0" height="100%" top="-20">
 				<e:Group width="100%" height="100%">
 					<e:List id="lstShips" horizontalCenter="0" top="18" itemRendererSkinName="HeroShipIRSkinV2">
@@ -49,7 +49,7 @@
 				</e:Scroller>
 			</e:Group>
 			<e:Group width="100%" height="300" x="662" y="553">
-				<e:Image source="panelbg_png" scale9Grid="56,60,21,21" top="-92" left="-21" right="-21" bottom="-22"/>
+				<e:Image scale9Grid="56,60,21,21" top="-92" left="-21" right="-21" bottom="-22" source="panelbg2_png"/>
 				<e:Image top="-70" left="24" source="purplebar_png" scale9Grid="23,0,4,80" anchorOffsetX="0" right="24"/>
 				<e:BitmapLabel id="lblName_" text="HERO" scaleX="0.8" scaleY="0.8" left="69" top="-60" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
 				<e:Label id="lblName" text="英雄号" anchorOffsetX="0" top="-56" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xfaffdf"/>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HScrollBarSkin" minWidth="20" minHeight="8" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="thumb" width="30" height="10" fillColor="0xd1c4b3" verticalCenter="0" enabled="false"/>
+</e:Skin>
