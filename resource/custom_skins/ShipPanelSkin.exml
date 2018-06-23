@@ -54,21 +54,31 @@
 				</tween:To>
 			</tween:TweenItem>
 		</tween:TweenGroup>
-		<tween:TweenGroup id="popEquip">
+		<tween:TweenGroup id="openEquip">
 			<tween:TweenItem target="{grpPop}">
-				<tween:Set>
-					<tween:props>
-						<e:Object alpha="{1}"/>
-					</tween:props>
-				</tween:Set>
-			</tween:TweenItem>
-			<tween:TweenItem target="{rect0}">
 				<tween:Set>
 					<tween:props>
 						<e:Object alpha="{0}"/>
 					</tween:props>
 				</tween:Set>
-				<tween:To duration="350">
+				<tween:To duration="100">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="150">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{rectPopMask}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
 					<tween:props>
 						<e:Object alpha="{1}"/>
 					</tween:props>
@@ -77,12 +87,55 @@
 			<tween:TweenItem target="{grpEquipPop}">
 				<tween:Set>
 					<tween:props>
-						<e:Object scaleX="{0.2}" scaleY="{0.2}"/>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
 					</tween:props>
 				</tween:Set>
-				<tween:To duration="350" ease="backOut">
+				<tween:To duration="250" ease="backOut">
 					<tween:props>
 						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="closeEquip">
+			<tween:TweenItem target="{grpPop}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="150">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="100">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{rectPopMask}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{grpEquipPop}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250" ease="backIn">
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
 					</tween:props>
 				</tween:To>
 			</tween:TweenItem>
@@ -208,8 +261,8 @@
 	<e:Group id="grpBottom" height="147" width.init="100%" y.init="813" width="100%" x="0" y="813" x.init="-720">
 		<e:Button id="btnStart" label="START" skinName="GreenButtonSkinV2" width="250" scaleX="1" scaleY="1" height="80" bottom="29" horizontalCenter="0.5"/>
 	</e:Group>
-	<e:Group id="grpPop" width="100%" height="100%" y="0" x="0" visible.init="false" alpha.final="0">
-		<e:Rect id="rect0" width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.5"/>
+	<e:Group id="grpPop" width="100%" height="100%" y="0" x="0" alpha="0">
+		<e:Rect id="rectPopMask" width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.5"/>
 		<e:Group id="grpEquipPop" anchorOffsetY="0" scaleX="1" scaleY="1" height="545" width="671" horizontalCenter="0" verticalCenter="0">
 		<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24" visible="false"/>
@@ -255,7 +308,7 @@
 				</e:Group>
 				<e:Group width="100%" x="405" y="295">
 					<e:Button id="btnEquipGun" label="Equip" skinName="GreenButtonSkinV2" width="204" scaleX="1" scaleY="1" verticalCenter="0" right="0"/>
-					<e:Button id="btnEquipSkill" label="Equip" skinName="GreenButtonSkinV2" width="204" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0" visible="false"/>
+					<e:Button id="btnEquipSkill" label="Equip" skinName="GreenButtonSkinV2" width="204" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0"/>
 					<e:Group id="grpGunDetail" left="0" x="286" scaleX="1" scaleY="1" width="338" verticalCenter="0">
 						<e:Group x="611" y="158" anchorOffsetX="0" anchorOffsetY="1" height="25" width="100%">
 						<e:Group width="100" height="20" left="0">
