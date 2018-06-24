@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<e:Skin class="GreenButtonSkinV3" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Image
+            
+             source.down="greenbtndown_png" source.disabled="greenbtndis_png" scale9Grid="13,14,34,34" source="greenbtnnor_png" source.up="greenbtnnor_png" anchorOffsetY.down="0" height.down="100%" x.down="0" y.down="0" width="100%" height="100%"/>
+	<e:Group top="0" bottom="0" left="36" right="36">
+		<e:BitmapLabel id="labelDisplay" text="START" textAlign="center" right="50" verticalAlign="middle" left.down="50" right.down="50" top.down="9" bottom.down="24" size="35" left.up="50" right.up="50" top.up="7" bottom.up="26" left.disabled="50" right.disabled="50" top.disabled="7" bottom.disabled="26" left="50" bottom="26" top="7" font.disabled="FranklinGothicHeavy60_fnt" font.down="FranklinGothicHeavy60_fnt" font.up="FranklinGothicHeavy60_fnt" font="FranklinGothicHeavy60_fnt" x="14" y="7" scaleX="1" scaleY="1"/>
+	</e:Group>
+</e:Skin>

@@ -142,8 +142,9 @@
 		</tween:TweenGroup>
 	</w:Declarations>
 	<e:Rect width="100%" height="100%" x="0" y="0" enabled="false" fillColor="0x171b34"/>
-	<e:Group id="grpMiddle" width="100%" x="0" x.init="0" y.final="46" verticalCenter="-75">
-		<e:Group id="grpAttr" anchorOffsetY="0" scaleX="1" scaleY="1" width="100%" x.final="0" height="452" x="0" x.init="-720" verticalCenter="-109">
+	<e:Group id="grpMain" width="100%" horizontalCenter="0" verticalCenter="17" height="860">
+		<e:Group id="grpMiddle" width="100%" x="0" x.init="0" y.final="46" scaleX="1" scaleY="1" top="0">
+		<e:Group id="grpAttr" anchorOffsetY="0" scaleX="1" scaleY="1" width="100%" x.final="0" height="452" x="0" x.init="-720" top="0">
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" source="panelbg2_png" scale9Grid="60,64,12,11" left="-20" right="-20" top="-18" bottom="77"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24"/>
 			<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="24" bottom="150" top="94"/>
@@ -170,19 +171,19 @@
 				</e:layout>
 				</e:Group>
 				<e:Group x="611" y="158" height="20" width="100%">
-					<e:Group width="100" height="20" left="0">
+				<e:Group width="100" height="20" left="0">
 					<e:BitmapLabel id="lblSpeed" text="Speed" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
-					</e:Group>
-					<e:Group height="20" width="100%" verticalCenter="0" x="120">
+				</e:Group>
+				<e:Group height="20" width="100%" verticalCenter="0" x="120">
 					<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
 					<e:Rect id="progSpeed" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
-					</e:Group>
-					<e:Group width="80" height="20" right="0">
+				</e:Group>
+				<e:Group width="80" height="20" right="0">
 					<e:BitmapLabel id="lblSpeedV" text="200" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-					</e:Group>
-					<e:layout>
+				</e:Group>
+				<e:layout>
 					<e:HorizontalLayout gap="15"/>
-					</e:layout>
+				</e:layout>
 				</e:Group>
 				<e:Group x="611" y="158" height="20" width="100%">
 				<e:Group width="100" height="20" left="0">
@@ -238,7 +239,7 @@
 			</e:layout>
 			</e:Group>
 		</e:Group>
-		<e:Group id="grpEquip" anchorOffsetY="0" scaleX="1" scaleY="1" height="441" width="100%" x.final="0" x="0" x.init="-720" verticalCenter="191">
+		<e:Group id="grpEquip" anchorOffsetY="0" scaleX="1" scaleY="1" height="441" width="100%" x.final="0" x="0" x.init="-720" top="307">
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" source="purplebar_png" scale9Grid="23,0,3,80" width="60%"/>
 			<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="24" bottom="67" top="94"/>
@@ -279,9 +280,10 @@
 			</e:layout>
 			</e:Group>
 		</e:Group>
-	</e:Group>
-	<e:Group id="grpBottom" height="147" width.init="100%" y.init="813" width="100%" x="0" x.init="-720" verticalCenter="406">
-		<e:Button id="btnStart" label="START" skinName="GreenButtonSkinV2" width="250" scaleX="1" scaleY="1" height="80" bottom="29" horizontalCenter="0.5"/>
+		</e:Group>
+		<e:Group id="grpBottom" width.init="100%" y.init="813" width="100%" x="0" x.init="-720" bottom="0" y="785" scaleX="1" scaleY="1">
+		<e:Button id="btnStart" label="START" horizontalCenter="0" bottom="15" skinName="GreenButtonSkinV3"/>
+		</e:Group>
 	</e:Group>
 	<e:Group id="grpPop" width="100%" height="100%" x="0" alpha="1" alpha.final="0" alpha.init="0" y="0" visible="false">
 		<e:Rect id="rectPopMask" width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.75"/>
