@@ -123,6 +123,7 @@ class ShipPanel extends eui.Component {
             } else {
                 // unlock
                 GameController.instance.addNewGun(this.curEquipKey);
+                this.btnEquip.enabled = true;
             }
             this.updateEquipGunList();
         } else {
@@ -136,6 +137,7 @@ class ShipPanel extends eui.Component {
             } else {
                 // unlock
                 GameController.instance.addNewSkill(this.curEquipKey);
+                this.btnEquip.enabled = true;
             }
             this.updateEquipSkillList();
         }
