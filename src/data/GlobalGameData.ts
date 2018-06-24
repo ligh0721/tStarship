@@ -1,5 +1,5 @@
 const GlobalConfig = {
-	ver: 0,
+	ver: 1,
 	reset: true
 }
 
@@ -8,18 +8,32 @@ const GlobalMaxPower = 100;  // for UI
 const GlobalMaxFireRate = 10;  // for UI
 
 const GlobalExpTable = [300, 600, 900, 1500, 2400, 3900, 6300, 10200, 16500, 26700, 43200, 69900, 113100, 183000, 296100, 479100, 775200, 1254300, 2029500, 3283800];
+const GlobalGunExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
+const GlobalSkillExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
 
-const GlobalAllShips: string[] = [
-	//"ship_test",
-	"ship_hero",
-	"ship_row",
-	"ship_shot",
-	"ship_hunter",
-	"ship_soundwave",
-	"ship_energy",
-	"ship_explosion",
-	"ship_focus",
-	"ship_missile",
+const GlobalHeroModel = "RedHeroShip_png";
+const GlobalHeroModelScale = 0.4;
+
+const GlobalAllGuns: string[] = [
+	//"gun_test",
+	"gun_single",
+	"gun_row",
+	"gun_shot",
+	"gun_guide",
+	"gun_soundwave",
+	"gun_energywave",
+	"gun_explosion",
+	"gun_focus",
+	"gun_missile",
+	"gun_sine",
+];
+
+const GlobalAllSkills: string[] = [
+	"skill_turbo_fire",
+	"skill_shield_ball",
+	"skill_ghost_ships",
+	"skill_super_hero",
+	"skill_meteoroid_rush"
 ];
 
 const GlobalAllParts: string[] = [
@@ -33,14 +47,11 @@ const GlobalAllParts: string[] = [
 ];
 
 // all datas
-const GlobalShipsData: ShipsData = {
-	ship_test: {
-		name: "测试号",
+const GlobalGunsData: GunsData = {
+	gun_test: {
+		name: "测试炮",
+		desc: "测试用的",
 		model: "Energy_png",
-		scale: 1.2,
-		maxHp: 10,
-		speed: 200,
-		gunName: "测试炮",
 		gun: SatelliteGun,
 		bullet: StormBullet,
 		bulletSpeed: 100,
@@ -49,16 +60,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 3,
 		bulletHitTimes: 10,
 		bulletHitInterval: 1000,
-		skill: "shield_ball",
 		coins: 10
 	},
-    ship_hero: {
-		name: "英雄号",
+    gun_single: {
+		name: "单束粒子炮",
+		desc: "普通的主炮，只能发射一列粒子束，但射速很快",
 		model: "Hero_png",
-		scale: 1.2,
-		maxHp: 12,
-		speed: 200,
-		gunName: "单束粒子炮",
 		gun: Gun,
 		bullet: BlueWaveBullet,
 		bulletSpeed: 200,
@@ -67,16 +74,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "super_hero",
 		coins: 0
 	},
-    ship_soundwave: {
-		name: "音波使者",
+    gun_soundwave: {
+		name: "多重音波炮",
+		desc: "很强力的主炮，有一定穿透效果，一次发射多枚弹药",
 		model: "SoundWave_png",
-		scale: 1.2,
-		maxHp: 12,
-		speed: 200,
-		gunName: "多重音波炮(低穿透)",
 		gun: SoundWaveGun,
 		bullet: SoundWaveBullet,
 		bulletSpeed: 100,
@@ -85,16 +88,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 5,
 		bulletHitTimes: 2,
 		bulletHitInterval: 500,
-		skill: "turbo_fire",
 		coins: 2500
     },
-    ship_energy: {
-		name: "超能之翼",
+    gun_energywave: {
+		name: "能量波动炮",
+		desc: "具有超强的贯穿力，每一发都威力巨大，但射速较慢",
 		model: "Energy3_png",
-		scale: 1.2,
-		maxHp: 15,
-		speed: 200,
-		gunName: "能量波动(高穿透)",
 		gun: EaseGun,
 		bullet: ShakeWaveBullet,
 		bulletSpeed: 100,
@@ -103,16 +102,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 20,
 		bulletHitInterval: 200,
-		skill: "shield_ball",
 		coins: 2000
     },
-    ship_hunter: {
-		name: "赏金猎人",
+    gun_guide: {
+		name: "制导能量弹炮",
+		desc: "子弹自动制导，射速较快",
 		model: "OrangeFatHeroShip_png",
-		scale: 0.4,
-		maxHp: 16,
-		speed: 200,
-		gunName: "制导能量弹(制导)",
 		gun: GuideGun,
 		bullet: ShakeWave2Bullet,
 		bulletSpeed: 150,
@@ -121,16 +116,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "turbo_fire",
 		coins: 1000
     },
-    ship_explosion: {
-		name: "爆破者",
+    gun_explosion: {
+		name: "等离子炸弹炮",
+		desc: "发射威力强大的等离子炸弹，炸弹命中目标会爆炸，对周围敌方目标造成溅射伤害",
 		model: "Energy4_png",
-		scale: 1.2,
-		maxHp: 20,
-		speed: 200,
-		gunName: "离子炸弹(溅射)",
 		gun: ExplosionGun,
 		bullet: ExplosionBullet,
 		bulletSpeed: 160,
@@ -139,16 +130,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 1,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "meteoroid_rush",
 		coins: 3000
     },
-    ship_focus: {
-		name: "和谐号",
+    gun_focus: {
+		name: "聚焦粒子束炮",
+		desc: "具备一定穿透能力，子弹先向四周射出，然后在前方聚焦于一点",
 		model: "Energy2_png",
-		scale: 1.2,
-		maxHp: 12,
-		speed: 200,
-		gunName: "聚焦粒子束(中穿透)",
 		gun: FocusGun,
 		bullet: BlueWaveBullet,
 		bulletSpeed: 180,
@@ -157,16 +144,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 2,
 		bulletHitTimes: 5,
 		bulletHitInterval: 1000,
-		skill: "shield_ball",
 		coins: 2800
     },
-    ship_row: {
-		name: "开拓者",
+    gun_row: {
+		name: "复束粒子炮",
+		desc: "可以同时发射多列子弹",
 		model: "RedHeroShip_png",
-		scale: 0.4,
-		maxHp: 14,
-		speed: 200,
-		gunName: "多重粒子炮",
 		gun: RowGun,
 		bullet: BlueWaveBullet,
 		bulletSpeed: 160,
@@ -175,16 +158,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 2,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "ghost_ships",
 		coins: 500
     },
-    ship_shot: {
-		name: "游荡者",
+    gun_shot: {
+		name: "发散粒子炮",
+		desc: "发射散弹，威力强大，射速一般",
 		model: "GreenHeroShip_png",
-		scale: 0.4,
-		maxHp: 15,
-		speed: 200,
-		gunName: "发散粒子炮",
 		gun: ShotGun,
 		bullet: BlueWaveBullet,
 		bulletSpeed: 160,
@@ -193,16 +172,12 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 5,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "shield_ball",
 		coins: 1200
     },
-	ship_missile: {
-		name: "导弹天使",
+	gun_missile: {
+		name: "导弹发射器",
+		desc: "一次发射三枚制导导弹，导弹击中目标之后将爆炸，对周围敌方目标造成溅射伤害",
 		model: "Energy_png",
-		scale: 1.2,
-		maxHp: 20,
-		speed: 200,
-		gunName: "制导导弹(制导爆炸)",
 		gun: MissileGun,
 		bullet: MissileBullet,
 		bulletSpeed: 200,
@@ -211,9 +186,55 @@ const GlobalShipsData: ShipsData = {
 		bulletNum: 3,
 		bulletHitTimes: 1,
 		bulletHitInterval: 1000,
-		skill: "turbo_fire",
 		coins: 5000
     },
+	gun_sine: {
+		name: "正弦轨道炮",
+		desc: "可同时发射多枚以相同波长、不同振幅的、且具备一定贯穿力的子弹",
+		model: "WhiteFatHeroShip_png",
+		gun: SineGun,
+		bullet: BlueWaveBullet,
+		bulletSpeed: 180,
+        fireCD: 200,
+		bulletPower: 5,
+		bulletNum: 2,
+		bulletHitTimes: 5,
+		bulletHitInterval: 1000,
+		coins: 2800
+    },
+};
+
+const GlobalSkillsData: SkillsData = {
+	skill_turbo_fire: {
+		name: "火力倾泻",
+		desc: "大幅度提高主炮发射速率，但是为了维持稳定，飞船会暂时降低一定机动性",
+		model: "RedFatHeroShip_png",
+		coins: 0
+	},
+	skill_shield_ball: {
+		name: "风暴齿轮",
+		desc: "向前发射一枚巨大的能量齿轮，能量齿轮高速旋转并缓慢向前移动，同时会射出大量能量弹，能量齿轮可以阻挡敌方子弹",
+		model: "GearBullet_png",
+		coins: 0
+	},
+	skill_super_hero: {
+		name: "火力援助",
+		desc: "请求银河号进行支援，银河号具备多重火力，并且可以阻挡敌方子弹",
+		model: "GreenHeroShip_png",
+		coins: 0
+	},
+	skill_ghost_ships: {
+		name: "量子幻影",
+		desc: "制造若干幻影协助战斗，幻影飞船将会继承母舰一部分基础火力",
+		model: "PurpleFatHeroShip_png",
+		coins: 0
+	},
+	skill_meteoroid_rush: {
+		name: "流星灾难",
+		desc: "召唤大量流星冲击前方区域，流星撞击可对敌方目标造成巨大伤害，流星可以阻挡敌方子弹",
+		model: "Meteoroid_png",
+		coins: 0
+	},
 };
 
 const GlobalPartsData: PartsData = {
@@ -259,17 +280,36 @@ const GlobalPartsData: PartsData = {
 		desc: "增加10%主炮火力",
 		buffs: ["part_test2"],
 	}
-}
+};
 
-const GlobalPlayerInitData: PlayPrefsData = {
+const GlobalPlayerInitData: PlayerData = {
 	ver: GlobalConfig.ver,
     highscore: {
         score: 0,
         stage: 0,
-        shipKey: "",
+        gunKey: "",
+		skillKey: "",
     },
     maxStage: 0,
     coins: 10000,
-	shipsNum: 0,
-    ships: {},
+	maxHp: 3,
+	speed: 100,
+	exp: 0,
+	enemies: 0,
+	gunsNum: 1,
+    guns: {
+		gun_single: {
+			exp: 0,
+			use: 0
+		}
+	},
+	gun: "gun_single",
+	skillsNum: 1,
+	skills: {
+		skill_turbo_fire: {
+			exp: 0,
+			use: 0
+		}
+	},
+	skill: "skill_turbo_fire"
 };

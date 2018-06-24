@@ -20,7 +20,7 @@ class SuperHeroBuff extends Buff {
 
 	private createSuperHero(): Ship {
 		let world = this.ship.world;
-		let ship = new Ship("Energy_png", 1.2);
+		let ship = new Ship("GreenHeroShip_png_png", 0.4);
 		world.addShip(ship);
 		ship.hero = true;
 		ship.x = world.width * 0.5;

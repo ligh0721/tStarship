@@ -34,6 +34,6 @@ class GameOverPanel extends eui.Component {
     }
 
     private onBtnReturn(evt: egret.TouchEvent): void {
-        GameController.instance.replaceRootLayerNextFrame(HeroShipsLayer);
+        GameController.instance.replaceRootLayerNextFrame(ShipLayer);
     }
 }

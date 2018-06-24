@@ -8,7 +8,7 @@ class BattleLayer extends tutils.Layer {
 
 	private world: World;
     private hero: HeroShip;
-    private heroShipData: PlayerShipData;
+    // private heroGunData: PlayerGunData;
 
     private enemyCtrl: EnemyController;
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
@@ -178,20 +178,17 @@ class BattleLayer extends tutils.Layer {
     }
 
     protected startGame(): void {
-        for (let i in GameController.instance.battleShips) {
-            let shipId = GameController.instance.battleShips[i];
-            let playerShipData = GameController.instance.getPlayerShipDataByKey(shipId);
-            playerShipData.use++;
-        }
+        let playerGunData = GameController.instance.getPlayerGunData();
+        playerGunData.use++;
+        let playerSkillData = GameController.instance.getPlayerSkillData();
+        playerSkillData.use++;
         GameController.instance.savePlayerData();
         
         tutils.playBgMusic("Bgmusic_mp3");
 
         // 创建玩家飞船
-        let heroShipId = GameController.instance.battleShips[0];
-        let hero = GameController.instance.createHeroShip(heroShipId, this.world);
+        let hero = GameController.instance.createHeroShip(this.world);
         this.hero = hero;
-        this.heroShipData = GameController.instance.getPlayerShipDataByKey(heroShipId);
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
 
@@ -347,8 +344,8 @@ class BattleLayer extends tutils.Layer {
             
 
             // 更新统计
-            this.heroShipData.exp += score*2;
-            this.heroShipData.enemy++;
+            // this.heroGunData.exp += score*2;
+            // this.heroGunData.enemy++;
             this.destroyEnemies++;
 
             let now = egret.getTimer();
@@ -362,7 +359,8 @@ class BattleLayer extends tutils.Layer {
                     // new high score!
                     playerData.highscore.score = this.score;
                     playerData.highscore.stage = this.reachStage;
-                    playerData.highscore.shipKey = GameController.instance.battleShips[0];
+                    playerData.highscore.gunKey = playerData.gun;
+                    playerData.highscore.skillKey = playerData.skill;
                 }
                 if (this.reachStage > playerData.maxStage) {
                     playerData.maxStage = this.reachStage;
@@ -401,7 +399,8 @@ class BattleLayer extends tutils.Layer {
             // new high score!
             playerData.highscore.score = this.score;
             playerData.highscore.stage = this.reachStage;
-            playerData.highscore.shipKey = GameController.instance.battleShips[0];
+            playerData.highscore.gunKey = playerData.gun;
+            playerData.highscore.skillKey = playerData.skill;
         }
         if (this.reachStage > playerData.maxStage) {
             playerData.maxStage = this.reachStage;
@@ -682,7 +681,7 @@ class BattleLayer extends tutils.Layer {
         let supply: Supply;
         let gun: Gun;
         let i = Math.floor(Math.random()*4);
-        if (this.heroShipData.use<=3 && this.hero.mainGun.level===1) {
+        if (GameController.instance.getPlayerGunData().use<=3 && this.hero.mainGun.level===1) {
             // 飞船使用次数少于3时第一个buff必定是主炮升级
             buff = GameController.instance.createBuff("gun_level_up");
             supply = new BuffSupply(buff.model, [buff]);

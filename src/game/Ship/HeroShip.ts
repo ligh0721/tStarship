@@ -22,8 +22,8 @@ class HeroShip extends Ship {
 	private onRemovePartListener: (ship: Ship, part: Part)=>void = null;
 	private onRemovePartThisObject: any = null;
 
-    public constructor(model: string, modelScale?: number, key?: string) {
-		super(model, modelScale, key);
+    public constructor(model: string, modelScale?: number) {
+		super(model, modelScale);
         this.hero = true;
         this.hitRect===undefined ? this.hitRect=new egret.Rectangle() : this.hitRect.constructor();
         this.hitTestFlags = ShipHitTestType.Ship | ShipHitTestType.Supply;

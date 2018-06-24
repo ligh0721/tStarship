@@ -3,7 +3,7 @@ class Ship extends HpUnit {
 	height: number;
 	readonly model: string;
 	readonly modelScale: number;
-	readonly key: string = null;
+	// readonly key: string = null;
 	
 	force: Force;
 	mainGun: Gun = null;
@@ -37,11 +37,11 @@ class Ship extends HpUnit {
 	private onUpdateBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onUpdateBuffThisObject: any = null;
 
-	public constructor(model: string, modelScale?: number, key?: string) {
+	public constructor(model: string, modelScale?: number) {
 		super();
 		this.model = model;
 		this.modelScale = modelScale===undefined ? 1.0 : modelScale;
-		this.key = key;
+		// this.key = key;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
 		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actionManager) : this.timer.constructor(GameController.instance.actionManager);
