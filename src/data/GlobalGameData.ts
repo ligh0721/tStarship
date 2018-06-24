@@ -4,6 +4,7 @@ const GlobalConfig = {
 }
 
 const GlobalMaxHp = 50;  // for UI
+const GlobalMaxSpeed = 500;
 const GlobalMaxPower = 100;  // for UI
 const GlobalMaxFireRate = 10;  // for UI
 
@@ -293,7 +294,7 @@ const GlobalPlayerInitData: PlayerData = {
     maxStage: 0,
     coins: 10000,
 	maxHp: 3,
-	speed: 100,
+	speed: 150,
 	exp: 0,
 	enemies: 0,
 	gunsNum: 1,

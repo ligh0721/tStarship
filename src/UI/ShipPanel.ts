@@ -14,6 +14,8 @@ class ShipPanel extends eui.Component {
     private lblCoins: eui.BitmapLabel;
     private lblHpV: eui.BitmapLabel;
     private progHp: eui.Rect;
+    private lblSpeedV: eui.BitmapLabel;
+    private progSpeed: eui.Rect;
     private lblPowerV: eui.BitmapLabel;
     private progPower: eui.Rect;
     private lblFireRateV: eui.BitmapLabel;
@@ -175,6 +177,7 @@ class ShipPanel extends eui.Component {
 
     private updateShipDetal(): void {
         this.lblHpV.text = this.playerData.maxHp.toString();
+        this.lblSpeedV.text = this.playerData.speed.toString();
         let level = GameController.instance.expToLevel(this.playerData.exp);
         let expText = "MAX";
         let expPerWidth = 100;
@@ -189,9 +192,12 @@ class ShipPanel extends eui.Component {
         this.lblExp.text = "Exp(Lv." + level + ")";
 
         egret.Tween.removeTweens(this.progHp);
+        egret.Tween.removeTweens(this.progSpeed);
         egret.Tween.removeTweens(this.progPower);
         let tw = egret.Tween.get(this.progHp)
         tw.to({percentWidth: Math.min(100, this.playerData.maxHp * 100 / GlobalMaxHp)}, 100, egret.Ease.getPowOut(2));
+        tw = egret.Tween.get(this.progSpeed)
+        tw.to({percentWidth: Math.min(100, this.playerData.speed * 100 / GlobalMaxSpeed)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progExp)
         tw.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
     }
@@ -275,7 +281,9 @@ class ShipPanel extends eui.Component {
         }
 
         this.lstEquips.dataProvider = new eui.ArrayCollection(items);
-        if (this.lstEquips.selectedIndex < 0) {
+        if (unlockedSelectedIndex > -1) {
+            this.setListItemSelected(unlockedSelectedIndex);
+        } else if (this.lstEquips.selectedIndex < 0) {
             this.setListItemSelected(0);
         } else {
             this.curEquipKey = null;
@@ -388,7 +396,9 @@ class ShipPanel extends eui.Component {
         }
 
         this.lstEquips.dataProvider = new eui.ArrayCollection(items);
-        if (this.lstEquips.selectedIndex < 0) {
+        if (unlockedSelectedIndex > -1) {
+            this.setListItemSelected(unlockedSelectedIndex);
+        } else if (this.lstEquips.selectedIndex < 0) {
             this.setListItemSelected(0);
         } else {
             this.curEquipKey = null;
