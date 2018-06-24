@@ -29,7 +29,7 @@ class GhostShipBuff extends Buff {
 			ghost.speed.baseValue = this.ship.speed.baseValue;
 			ghost.force = this.ship.force;
 
-			if (gunData) {
+			if (this.ship instanceof HeroShip) {
 				let gun = Gun.createGun(gunData.gun, gunData.bullet);
 				gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 				gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
