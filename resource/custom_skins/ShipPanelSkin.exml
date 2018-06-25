@@ -254,7 +254,7 @@
 				<e:BitmapLabel id="lblGunLevel" verticalCenter="-38" left="25" font="FranklinGothicHeavy30_fnt" text="20" scaleX="0.6" scaleY="0.7" width="50" textAlign="center"/>
 				<e:Image anchorOffsetX="0" anchorOffsetY="0" left="61" source="levelbg_png" verticalCenter="35" scaleX="0.5" scaleY="0.5" scale9Grid="26,0,6,60" right="563"/>
 				<e:BitmapLabel verticalCenter="31" left="66" font="FranklinGothicHeavy30_fnt" text="Cannon" scaleX="0.5" scaleY="0.7" textAlign="center"/>
-				<e:Button id="btnChangeGun" label="CHANGE" skinName="GreenButtonSkinV2" anchorOffsetY="0" top="10" bottom="10" right="25"/>
+				<e:Button id="btnChangeGun" label="CHANGE" anchorOffsetY="0" top="10" bottom="10" right="25" width="225" skinName="GreenButtonSkinV3"/>
 				<e:Group height="100%" verticalCenter="0" left="150" right="265">
 				<e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="16" scaleX="1" scaleY="1" top="10" visible="false"/>
 				<e:Label id="lblGunName" text="聚焦粒子炮" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="0" x="16" scaleX="1" scaleY="1" top="15"/>
@@ -268,7 +268,7 @@
 				<e:BitmapLabel id="lblSkillLevel" verticalCenter="-38" left="25" font="FranklinGothicHeavy30_fnt" text="20" scaleX="0.6" scaleY="0.7" width="50" textAlign="center"/>
 				<e:Image anchorOffsetX="0" anchorOffsetY="0" left="61" source="levelbg_png" verticalCenter="35" scaleX="0.5" scaleY="0.5" scale9Grid="26,0,6,60" right="563"/>
 				<e:BitmapLabel verticalCenter="31" left="72" font="FranklinGothicHeavy30_fnt" text="Skill" scaleX="0.7" scaleY="0.7" textAlign="center"/>
-				<e:Button id="btnChangeSkill" label="CHANGE" skinName="GreenButtonSkinV2" anchorOffsetY="0" top="10" bottom="10" right="25"/>
+				<e:Button id="btnChangeSkill" label="CHANGE" anchorOffsetY="0" top="10" bottom="10" right="25" skinName="GreenButtonSkinV3" anchorOffsetX="0" width="225"/>
 				<e:Group height="100%" verticalCenter="0" left="150" right="265">
 				<e:BitmapLabel id="lblSkillName_" font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="16" scaleX="1" scaleY="1" top="10" visible="false"/>
 				<e:Label id="lblSkillName" text="能量光轮" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="0" x="16" scaleX="1" scaleY="1" top="15"/>
@@ -282,10 +282,13 @@
 		</e:Group>
 		</e:Group>
 		<e:Group id="grpBottom" width.init="100%" y.init="813" width="100%" x="0" x.init="-720" bottom="0" y="785" scaleX="1" scaleY="1">
-		<e:Button id="btnStart" label="START" horizontalCenter="0" bottom="15" skinName="GreenButtonSkinV3"/>
+		<e:Button id="btnStart" label="START" horizontalCenter="0" skinName="GreenButtonSkinV3" top="0"/>
 		</e:Group>
+		<e:layout>
+			<e:VerticalLayout/>
+		</e:layout>
 	</e:Group>
-	<e:Group id="grpPop" width="100%" height="100%" x="0" alpha="1" alpha.final="0" alpha.init="0" y="0" visible="false">
+	<e:Group id="grpPop" width="100%" height="100%" x="0" alpha="1" alpha.final="0" alpha.init="0" y="0">
 		<e:Rect id="rectPopMask" width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.75"/>
 		<e:Group id="grpEquipPop" anchorOffsetY="0" scaleX="1" scaleY="1" height="545" width="671" horizontalCenter="0" verticalCenter="0">
 		<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
@@ -331,7 +334,7 @@
 					<e:Label id="lblEquipDesc" text="multi bullets, through, fast rate" bold="true" textColor="0xFF852F" anchorOffsetX="0" anchorOffsetY="0" size="18" textAlign="left" left="10" wordWrap="true" italic="true" scaleX="1" scaleY="1" top="50" right="0" bottom="10" x="0" y="164"/>
 				</e:Group>
 				<e:Group width="100%" x="405" y="295">
-					<e:Button id="btnEquip" label="Equip" skinName="GreenButtonSkinV2" width="204" scaleX="1" scaleY="1" verticalCenter="0" right="0"/>
+					<e:Button id="btnEquip" label="Equip" width="204" scaleX="1" scaleY="1" verticalCenter="0" right="0" skinName="GreenButtonSkinV3" height="66"/>
 					<e:Group id="grpGunDetail" left="0" x="286" scaleX="1" scaleY="1" width="338" verticalCenter="0">
 						<e:Group x="611" y="158" anchorOffsetX="0" height="15" width="100%">
 						<e:Group width="100" height="15" left="0">
@@ -407,7 +410,7 @@
 					<e:VerticalLayout horizontalAlign="center"/>
 				</e:layout>
 			</e:Group>
-			<e:Button id="btnCheat" label="Cheat" skinName="GreenButtonSkinV2" right="50" top="28"/>
+			<e:Button id="btnCheat" label="Cheat" right="50" top="28" width="180" height="66" skinName="GreenButtonSkinV3"/>
 		</e:Group>
 	</e:Group>
 	<e:Group id="grpTop" scaleX="1" scaleY="1" height="50" width="100%" x.init="-720" y.init="0" x="0" alpha.init="0" top="0">
@@ -416,7 +419,7 @@
 			<e:Group width="30" height="100%" x="251" y="19"/>
 			<e:Group width="100%" height="100%">
 			<e:Image source="coinbarbg_png" bottom="3" scale9Grid="12,0,37,40" width="100%" right="0"/>
-			<e:Image bottom="7" source="coinbarfill_png" scale9Grid="12,0,30,31" width="100%" right="6"/>
+			<e:Image bottom="7" source="coinbarfill_png" scale9Grid="12,0,30,31" right="6" left="4"/>
 			</e:Group>
 			<e:layout>
 			<e:HorizontalLayout gap="0" horizontalAlign="left" verticalAlign="top"/>
