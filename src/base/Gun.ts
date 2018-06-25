@@ -197,9 +197,11 @@ class Gun extends egret.HashObject {
 		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.rotation, this.ship.height*0.5);
 	}
 
-	public levelUp(): void {
-		this.level++;
-		this.onLevelUp();
+	public levelUp(num: number=1): void {
+		for (let i=0; i<num; i++) {
+			this.level++;
+			this.onLevelUp();
+		}
 		tutils.playSound("GunPowerup_mp3");
 	}
 
