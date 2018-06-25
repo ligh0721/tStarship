@@ -91,11 +91,12 @@ class ShipPanel extends eui.Component {
 
         this.playerData = GameController.instance.playerData;
         this.lblCoins.text = this.playerData.coins.toString();
+
+        this.btnTab.selected = true;
+
         this.setGun(this.playerData.gun);
         this.setSkill(this.playerData.skill);
         this.updateShipDetal();
-
-        this.btnTab.selected = true;
         this.currentState = "ShipInit";
         this.openShip.play(0);
     }
@@ -120,6 +121,9 @@ class ShipPanel extends eui.Component {
         case "0":
             break;
         case "1":
+            this.setGun(this.playerData.gun);
+            this.setSkill(this.playerData.skill);
+            this.updateShipDetal();
             this.currentState = "ShipInit";
             this.openShip.play(0);
             break;
@@ -186,7 +190,8 @@ class ShipPanel extends eui.Component {
 
     private onBtnClearArchives(evt: egret.TouchEvent): void {
         egret.localStorage.clear();
-        GameController.instance.loadPlayerData();
+        GameController.instance.resetPlayerData();
+        this.lblCoins.text = this.playerData.coins.toString();
     }
 
     private onBtnStart(evt: egret.TouchEvent): void {
@@ -368,6 +373,7 @@ class ShipPanel extends eui.Component {
             this.progEquipGunPower.percentWidth = 0;
             this.progEquipGunFireRate.percentWidth = 0;
             this.progEquipGunExp.percentWidth = 0;
+            this.lblEquipGunExp.text = "Exp";
             this.btnEquip.enabled = false;
 
             // let playerData = GameController.instance.playerData;
@@ -477,6 +483,9 @@ class ShipPanel extends eui.Component {
         if (!playerSkillData) {
             this.lblEquipName.text = skillData.name;
             this.lblEquipDesc.text = skillData.desc;
+            this.lblEquipSkillExpV.text = "--";
+            this.progEquipSkillExp.percentWidth = 0;
+            this.lblEquipSkillExp.text = "Exp";
             this.btnEquip.enabled = false;
 
             // let playerData = GameController.instance.playerData;
