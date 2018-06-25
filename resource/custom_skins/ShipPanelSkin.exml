@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="ShipPanelSkin" width="720" height="960" currentState="init" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*"  states="init,final" >
+<e:Skin class="ShipPanelSkin" width="720" height="960" currentState="ShipInit" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*"  states="init,final,ShipInit,ShipFinal,SocialInit" >
+	<w:Config id="16437832afe"/>
 	<w:Declarations>
-		<tween:TweenGroup id="open">
-			<tween:TweenItem target="{grpTop}">
-				<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}" x="{-720}"/>
-					</tween:props>
-				</tween:Set>
-				<tween:To duration="300" ease="cubicOut">
-					<tween:props>
-						<e:Object alpha="{1}" x="{0}"/>
-					</tween:props>
-				</tween:To>
-			</tween:TweenItem>
+		<tween:TweenGroup id="openShip">
 			<tween:TweenItem target="{grpAttr}">
-				<tween:Wait duration="150"/>
 				<tween:Set>
 					<tween:props>
 						<e:Object alpha="{0}" x="{-720}"/>
@@ -28,20 +16,20 @@
 				</tween:To>
 			</tween:TweenItem>
 			<tween:TweenItem target="{grpEquip}">
-				<tween:Wait duration="300"/>
+				<tween:Wait duration="100"/>
 				<tween:Set>
 					<tween:props>
 						<e:Object x="{-720}" alpha="{0}"/>
 					</tween:props>
 				</tween:Set>
 				<tween:To duration="300" ease="cubicOut">
-					<tween:props>
+					<tween:props x.ShipFinal="0">
 						<e:Object x="{0}" alpha="{1}"/>
 					</tween:props>
 				</tween:To>
 			</tween:TweenItem>
 			<tween:TweenItem target="{grpButton}">
-				<tween:Wait duration="500"/>
+				<tween:Wait duration="200"/>
 				<tween:Set>
 				<tween:props>
 					<e:Object alpha="{0}" x="{-720}"/>
@@ -54,8 +42,8 @@
 				</tween:To>
 			</tween:TweenItem>
 		</tween:TweenGroup>
-		<tween:TweenGroup id="openEquip">
-			<tween:TweenItem target="{grpPop}">
+		<tween:TweenGroup id="openPopEquip">
+			<tween:TweenItem target="{grpShipPop}">
 				<tween:Set>
 					<tween:props>
 						<e:Object alpha="{0}"/>
@@ -72,7 +60,7 @@
 					</tween:props>
 				</tween:To>
 			</tween:TweenItem>
-			<tween:TweenItem target="{rectPopMask}">
+			<tween:TweenItem target="{rctShipPopMask}">
 				<tween:Set>
 					<tween:props>
 						<e:Object alpha="{0}"/>
@@ -97,8 +85,8 @@
 				</tween:To>
 			</tween:TweenItem>
 		</tween:TweenGroup>
-		<tween:TweenGroup id="closeEquip">
-			<tween:TweenItem target="{grpPop}">
+		<tween:TweenGroup id="closePopEquip">
+			<tween:TweenItem target="{grpShipPop}">
 				<tween:Set>
 					<tween:props>
 						<e:Object alpha="{1}"/>
@@ -115,7 +103,7 @@
 					</tween:props>
 				</tween:To>
 			</tween:TweenItem>
-			<tween:TweenItem target="{rectPopMask}">
+			<tween:TweenItem target="{rctShipPopMask}">
 				<tween:Set>
 					<tween:props>
 						<e:Object alpha="{1}"/>
@@ -141,170 +129,196 @@
 			</tween:TweenItem>
 		</tween:TweenGroup>
 	</w:Declarations>
-	<e:Rect width="100%" height="100%" x="0" y="0" enabled="false" fillColor="0x171b34"/>
-	<e:Group id="grpMain" width="100%" horizontalCenter="0" verticalCenter="17" height="860">
-		<e:Group id="grpMiddle" width="100%" x="0" x.init="0" y.final="46" scaleX="1" scaleY="1" top="0">
-		<e:Group id="grpAttr" anchorOffsetY="0" scaleX="1" scaleY="1" width="100%" x.final="0" height="452" x="0" x.init="-720" top="0">
-			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" source="panelbg2_png" scale9Grid="60,64,12,11" left="-20" right="-20" top="-18" bottom="77"/>
-			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24"/>
-			<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="24" bottom="150" top="94"/>
-			<e:BitmapLabel text="PROPERTIES" scaleX="0.8" scaleY="0.8" left="69" top="11" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
-			<e:Label text="属性" anchorOffsetX="0" top="14" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xfaffdf"/>
-			<e:Group height="200" top="97" left="16" right="16">
-			<e:Group width="220" height="200" x="70" y="178">
-				<e:Image id="imgIcon" source="RedHeroShip_png" scaleX="1" scaleY="1" width="200" height="200" verticalCenter="0" left="12"/>
+	<e:Group width="100%" height="100%" x="0" y="0">
+		<e:ViewStack id="vsMain" width="100%" height="100%" x="-71" y="611" selectedIndex="2" selectedIndex.init="1" selectedIndex.ShipInit="1" selectedIndex.ShipFinal="1" selectedIndex.final="1" selectedIndex.SocialInit="2">
+			<e:Group id="grpChest" width="100%" height="100%" name="视图">
+				<e:Rect width="100%" height="100%" enabled="false" fillColor="0x171B34" scaleX="1" scaleY="1" x="0" y="0"/>
+				<e:Group width="100%" height="100%" horizontalCenter="0" top="0"/>
 			</e:Group>
-			<e:Group width="100%" top="56" x="200" y="-146">
-				<e:Group x="601" y="148" height="20" width="100%">
-				<e:Group width="100" height="20" left="0">
-					<e:BitmapLabel id="lblHp" text="Heath" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
+			<e:Group id="grpShip" width="100%" height="100%" name="视图">
+				<e:Rect width="100%" height="100%" enabled="false" fillColor="0x171b34" scaleX="1" scaleY="1" x="0" y="0"/>
+				<e:Group width="100%" horizontalCenter="0" height="830" x="0" verticalCenter="30">
+					<e:Group id="grpShipMiddle" width="100%" x="0" x.init="0" y.final="46" top="0" x.ShipInit="0" y.ShipFinal="46">
+					<e:Group id="grpAttr" anchorOffsetY="0" scaleX="1" scaleY="1" width="100%" x.final="0" height="452" x="0" x.init="-720" top="0" x.ShipInit="-720" x.ShipFinal="0">
+						<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" source="panelbg2_png" scale9Grid="60,64,12,11" left="-20" right="-20" top="-18" bottom="77"/>
+						<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24"/>
+						<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="24" bottom="150" top="94"/>
+						<e:BitmapLabel text="PROPERTIES" scaleX="0.8" scaleY="0.8" left="69" top="11" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
+						<e:Label text="属性" anchorOffsetX="0" top="14" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xfaffdf"/>
+						<e:Group height="200" top="97" left="16" right="16">
+						<e:Group width="220" height="200" x="70" y="178">
+							<e:Image id="imgIcon" source="RedHeroShip_png" scaleX="1" scaleY="1" width="200" height="200" verticalCenter="0" left="12"/>
+						</e:Group>
+						<e:Group width="100%" top="56" x="200" y="-146">
+							<e:Group x="601" y="148" height="20" width="100%">
+							<e:Group width="100" height="20" left="0">
+								<e:BitmapLabel id="lblHp" text="Heath" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
+							</e:Group>
+							<e:Group height="20" width="100%" verticalCenter="0" x="120">
+								<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xffffff" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xc1c298"/>
+								<e:Rect id="progHp" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xfed44c"/>
+							</e:Group>
+							<e:Group width="80" height="20" right="0">
+								<e:BitmapLabel id="lblHpV" text="200" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
+							</e:Group>
+							<e:layout>
+								<e:HorizontalLayout gap="15"/>
+							</e:layout>
+							</e:Group>
+							<e:Group x="611" y="158" height="20" width="100%">
+							<e:Group width="100" height="20" left="0">
+								<e:BitmapLabel id="lblSpeed" text="Speed" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
+							</e:Group>
+							<e:Group height="20" width="100%" verticalCenter="0" x="120">
+								<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
+								<e:Rect id="progSpeed" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
+							</e:Group>
+							<e:Group width="80" height="20" right="0">
+								<e:BitmapLabel id="lblSpeedV" text="200" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
+							</e:Group>
+							<e:layout>
+								<e:HorizontalLayout gap="15"/>
+							</e:layout>
+							</e:Group>
+							<e:Group x="611" y="158" height="20" width="100%">
+							<e:Group width="100" height="20" left="0">
+								<e:BitmapLabel id="lblPower" text="Power" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
+							</e:Group>
+							<e:Group height="20" width="100%" verticalCenter="0" x="120">
+								<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
+								<e:Rect id="progPower" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
+							</e:Group>
+							<e:Group width="80" height="20" right="0">
+								<e:BitmapLabel id="lblPowerV" text="10" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
+							</e:Group>
+							<e:layout>
+								<e:HorizontalLayout gap="15"/>
+							</e:layout>
+							</e:Group>
+							<e:Group x="621" y="168" height="20" width="100%">
+							<e:Group width="100" height="20" left="0">
+								<e:BitmapLabel id="lblFireRate" text="FireRate" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
+							</e:Group>
+							<e:Group height="20" width="100%" verticalCenter="0" x="120">
+								<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
+								<e:Rect id="progFireRate" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
+							</e:Group>
+							<e:Group width="80" height="20" right="0">
+								<e:BitmapLabel id="lblFireRateV" text="10.0/s" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
+							</e:Group>
+							<e:layout>
+								<e:HorizontalLayout gap="15"/>
+							</e:layout>
+							</e:Group>
+							<e:Group x="631" y="178" height="20" width="100%">
+							<e:Group width="100" height="20" left="0">
+								<e:BitmapLabel id="lblExp" text="Exp(Lv.5)" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
+							</e:Group>
+							<e:Group height="20" width="100%" verticalCenter="0" x="120">
+								<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
+								<e:Rect id="progExp" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
+							</e:Group>
+							<e:Group width="80" height="20" right="0">
+								<e:BitmapLabel id="lblExpV" text="70%" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
+							</e:Group>
+							<e:layout>
+								<e:HorizontalLayout gap="15"/>
+							</e:layout>
+							</e:Group>
+							<e:layout>
+							<e:VerticalLayout gap="15"/>
+							</e:layout>
+						</e:Group>
+						<e:layout>
+							<e:HorizontalLayout gap="0" verticalAlign="middle" horizontalAlign="left"/>
+						</e:layout>
+						</e:Group>
+					</e:Group>
+					<e:Group id="grpEquip" anchorOffsetY="0" scaleX="1" scaleY="1" height="441" width="100%" x.final="0" x="0" x.init="-720" top="307" x.ShipInit="-720" x.ShipFinal="0">
+						<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
+						<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" source="purplebar_png" scale9Grid="23,0,3,80" width="60%"/>
+						<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="24" bottom="67" top="94"/>
+						<e:Rect fillAlpha="1" strokeColor="0x7F776D" enabled="false" left="25" right="25" fillColor="0x7f776d" height="3" verticalCenter="13"/>
+						<e:BitmapLabel text="HERO" scaleX="0.8" scaleY="0.8" left="69" top="11" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
+						<e:Label text="构造" anchorOffsetX="0" top="14" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xfaffdf"/>
+						<e:Group anchorOffsetX="0" anchorOffsetY="0" left="16" right="16" top="99" bottom="72">
+						<e:Group width="100%" x="135" y="1" height="120">
+							<e:Image width="200" source="shipitembg_png" scale9Grid="26,25,8,9" anchorOffsetX="0" height="200" scaleX="0.5" scaleY="0.5" left="25" verticalCenter="0"/>
+							<e:Image id="imgGun" width="100" scale9Grid="26,25,8,9" anchorOffsetX="0" height="100" scaleX="1" scaleY="1" left="25" verticalCenter="0" source="Hero_png"/>
+							<e:Image anchorOffsetX="0" anchorOffsetY="0" left="25" source="levelbg_png" verticalCenter="-35" scaleX="0.5" scaleY="0.5"/>
+							<e:BitmapLabel id="lblGunLevel" verticalCenter="-38" left="25" font="FranklinGothicHeavy30_fnt" text="20" scaleX="0.6" scaleY="0.7" width="50" textAlign="center"/>
+							<e:Image anchorOffsetX="0" anchorOffsetY="0" left="61" source="levelbg_png" verticalCenter="35" scaleX="0.5" scaleY="0.5" scale9Grid="26,0,6,60" right="563"/>
+							<e:BitmapLabel verticalCenter="31" left="66" font="FranklinGothicHeavy30_fnt" text="Cannon" scaleX="0.5" scaleY="0.7" textAlign="center"/>
+							<e:Button id="btnChangeGun" label="CHANGE" anchorOffsetY="0" top="10" bottom="10" right="25" width="225" skinName="GreenButtonSkinV3"/>
+							<e:Group height="100%" verticalCenter="0" left="150" right="265">
+							<e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="16" scaleX="1" scaleY="1" top="10" visible="false"/>
+							<e:Label id="lblGunName" text="聚焦粒子炮" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="0" x="16" scaleX="1" scaleY="1" top="15"/>
+							<e:Label id="lblGunDesc" text="multi bullets, through, fast rate" bold="true" textColor="0xFF852F" anchorOffsetX="0" anchorOffsetY="0" size="18" textAlign="left" left="0" wordWrap="true" italic="true" scaleX="1" scaleY="1" top="52" right="0" bottom="10"/>
+							</e:Group>
+						</e:Group>
+						<e:Group width="100%" x="145" y="53" height="120">
+							<e:Image width="200" source="shipitembg_png" scale9Grid="26,25,8,9" anchorOffsetX="0" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" left="25"/>
+							<e:Image id="imgSkill" width="100" scale9Grid="26,25,8,9" anchorOffsetX="0" height="100" scaleX="1" scaleY="1" verticalCenter="0" left="25" source="RedFatHeroShip_png"/>
+							<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="0.5" scaleY="0.5" left="25" source="levelbg_png" verticalCenter="-35"/>
+							<e:BitmapLabel id="lblSkillLevel" verticalCenter="-38" left="25" font="FranklinGothicHeavy30_fnt" text="20" scaleX="0.6" scaleY="0.7" width="50" textAlign="center"/>
+							<e:Image anchorOffsetX="0" anchorOffsetY="0" left="61" source="levelbg_png" verticalCenter="35" scaleX="0.5" scaleY="0.5" scale9Grid="26,0,6,60" right="563"/>
+							<e:BitmapLabel verticalCenter="31" left="72" font="FranklinGothicHeavy30_fnt" text="Skill" scaleX="0.7" scaleY="0.7" textAlign="center"/>
+							<e:Button id="btnChangeSkill" label="CHANGE" anchorOffsetY="0" top="10" bottom="10" right="25" skinName="GreenButtonSkinV3" anchorOffsetX="0" width="225"/>
+							<e:Group height="100%" verticalCenter="0" left="150" right="265">
+							<e:BitmapLabel id="lblSkillName_" font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="16" scaleX="1" scaleY="1" top="10" visible="false"/>
+							<e:Label id="lblSkillName" text="能量光轮" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="0" x="16" scaleX="1" scaleY="1" top="15"/>
+							<e:Label id="lblSkillDesc" text="multi bullets, through, fast rate" bold="true" textColor="0xFF852F" anchorOffsetX="0" anchorOffsetY="0" size="18" textAlign="left" left="0" wordWrap="true" italic="true" scaleX="1" scaleY="1" top="50" right="0" bottom="10"/>
+							</e:Group>
+						</e:Group>
+						<e:layout>
+							<e:VerticalLayout gap="21" verticalAlign="middle" horizontalAlign="center"/>
+						</e:layout>
+						</e:Group>
+					</e:Group>
+					</e:Group>
+					<e:Group id="grpShipBottom" width.init="100%" y.init="813" width="100%" x="0" x.init="-720" bottom="0" y="785" width.ShipInit="100%" y.ShipInit="813" x.ShipInit="-720">
+					<e:Group id="grpButton" width="100%" height="100%" top="0" x.init="-720" x.ShipInit="-720" x.ShipFinal="0" x.final="0">
+						<e:Button id="btnStart" label="START" skinName="GreenButtonSkinV3" top="-29" y="0" scaleX="1" scaleY="1" horizontalCenter="0" height="95" width="250"/>
+					</e:Group>
+					</e:Group>
+					<e:layout>
+					<e:VerticalLayout/>
+					</e:layout>
 				</e:Group>
-				<e:Group height="20" width="100%" verticalCenter="0" x="120">
-					<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xffffff" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xc1c298"/>
-					<e:Rect id="progHp" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xfed44c"/>
-				</e:Group>
-				<e:Group width="80" height="20" right="0">
-					<e:BitmapLabel id="lblHpV" text="200" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-				</e:Group>
-				<e:layout>
-					<e:HorizontalLayout gap="15"/>
-				</e:layout>
-				</e:Group>
-				<e:Group x="611" y="158" height="20" width="100%">
-				<e:Group width="100" height="20" left="0">
-					<e:BitmapLabel id="lblSpeed" text="Speed" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
-				</e:Group>
-				<e:Group height="20" width="100%" verticalCenter="0" x="120">
-					<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
-					<e:Rect id="progSpeed" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
-				</e:Group>
-				<e:Group width="80" height="20" right="0">
-					<e:BitmapLabel id="lblSpeedV" text="200" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-				</e:Group>
-				<e:layout>
-					<e:HorizontalLayout gap="15"/>
-				</e:layout>
-				</e:Group>
-				<e:Group x="611" y="158" height="20" width="100%">
-				<e:Group width="100" height="20" left="0">
-					<e:BitmapLabel id="lblPower" text="Power" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
-				</e:Group>
-				<e:Group height="20" width="100%" verticalCenter="0" x="120">
-					<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
-					<e:Rect id="progPower" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
-				</e:Group>
-				<e:Group width="80" height="20" right="0">
-					<e:BitmapLabel id="lblPowerV" text="10" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-				</e:Group>
-				<e:layout>
-					<e:HorizontalLayout gap="15"/>
-				</e:layout>
-				</e:Group>
-				<e:Group x="621" y="168" height="20" width="100%">
-				<e:Group width="100" height="20" left="0">
-					<e:BitmapLabel id="lblFireRate" text="FireRate" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
-				</e:Group>
-				<e:Group height="20" width="100%" verticalCenter="0" x="120">
-					<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
-					<e:Rect id="progFireRate" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
-				</e:Group>
-				<e:Group width="80" height="20" right="0">
-					<e:BitmapLabel id="lblFireRateV" text="10.0/s" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-				</e:Group>
-				<e:layout>
-					<e:HorizontalLayout gap="15"/>
-				</e:layout>
-				</e:Group>
-				<e:Group x="631" y="178" height="20" width="100%">
-				<e:Group width="100" height="20" left="0">
-					<e:BitmapLabel id="lblExp" text="Exp(Lv.5)" scaleX="0.7" scaleY="0.8" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
-				</e:Group>
-				<e:Group height="20" width="100%" verticalCenter="0" x="120">
-					<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
-					<e:Rect id="progExp" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
-				</e:Group>
-				<e:Group width="80" height="20" right="0">
-					<e:BitmapLabel id="lblExpV" text="70%" width="200" scaleX="0.7" scaleY="0.8" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-				</e:Group>
-				<e:layout>
-					<e:HorizontalLayout gap="15"/>
-				</e:layout>
-				</e:Group>
-				<e:layout>
-				<e:VerticalLayout gap="15"/>
-				</e:layout>
 			</e:Group>
-			<e:layout>
-				<e:HorizontalLayout gap="0" verticalAlign="middle" horizontalAlign="left"/>
-			</e:layout>
+			<e:Group id="grpSocial" width="100%" height="100%" name="视图">
+				<e:Button id="btnClearArchives" label="Clear Archives" horizontalCenter="0" verticalCenter="0" skinName="GreenButtonSkinV3" height="97"/>
 			</e:Group>
-		</e:Group>
-		<e:Group id="grpEquip" anchorOffsetY="0" scaleX="1" scaleY="1" height="441" width="100%" x.final="0" x="0" x.init="-720" top="307">
-			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
-			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" source="purplebar_png" scale9Grid="23,0,3,80" width="60%"/>
-			<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" left="24" right="24" bottom="67" top="94"/>
-			<e:Rect fillAlpha="1" strokeColor="0x7F776D" enabled="false" left="25" right="25" fillColor="0x7f776d" height="3" verticalCenter="13"/>
-			<e:BitmapLabel text="HERO" scaleX="0.8" scaleY="0.8" left="69" top="11" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
-			<e:Label text="构造" anchorOffsetX="0" top="14" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xfaffdf"/>
-			<e:Group anchorOffsetX="0" anchorOffsetY="0" left="16" right="16" top="99" bottom="72">
-			<e:Group width="100%" x="135" y="1" height="120">
-				<e:Image width="200" source="shipitembg_png" scale9Grid="26,25,8,9" anchorOffsetX="0" height="200" scaleX="0.5" scaleY="0.5" left="25" verticalCenter="0"/>
-				<e:Image id="imgGun" width="100" scale9Grid="26,25,8,9" anchorOffsetX="0" height="100" scaleX="1" scaleY="1" left="25" verticalCenter="0" source="Hero_png"/>
-				<e:Image anchorOffsetX="0" anchorOffsetY="0" left="25" source="levelbg_png" verticalCenter="-35" scaleX="0.5" scaleY="0.5"/>
-				<e:BitmapLabel id="lblGunLevel" verticalCenter="-38" left="25" font="FranklinGothicHeavy30_fnt" text="20" scaleX="0.6" scaleY="0.7" width="50" textAlign="center"/>
-				<e:Image anchorOffsetX="0" anchorOffsetY="0" left="61" source="levelbg_png" verticalCenter="35" scaleX="0.5" scaleY="0.5" scale9Grid="26,0,6,60" right="563"/>
-				<e:BitmapLabel verticalCenter="31" left="66" font="FranklinGothicHeavy30_fnt" text="Cannon" scaleX="0.5" scaleY="0.7" textAlign="center"/>
-				<e:Button id="btnChangeGun" label="CHANGE" anchorOffsetY="0" top="10" bottom="10" right="25" width="225" skinName="GreenButtonSkinV3"/>
-				<e:Group height="100%" verticalCenter="0" left="150" right="265">
-				<e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="16" scaleX="1" scaleY="1" top="10" visible="false"/>
-				<e:Label id="lblGunName" text="聚焦粒子炮" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="0" x="16" scaleX="1" scaleY="1" top="15"/>
-				<e:Label id="lblGunDesc" text="multi bullets, through, fast rate" bold="true" textColor="0xFF852F" anchorOffsetX="0" anchorOffsetY="0" size="18" textAlign="left" left="0" wordWrap="true" italic="true" scaleX="1" scaleY="1" top="52" right="0" bottom="10"/>
-				</e:Group>
-			</e:Group>
-			<e:Group width="100%" x="145" y="53" height="120">
-				<e:Image width="200" source="shipitembg_png" scale9Grid="26,25,8,9" anchorOffsetX="0" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" left="25"/>
-				<e:Image id="imgSkill" width="100" scale9Grid="26,25,8,9" anchorOffsetX="0" height="100" scaleX="1" scaleY="1" verticalCenter="0" left="25" source="RedFatHeroShip_png"/>
-				<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="0.5" scaleY="0.5" left="25" source="levelbg_png" verticalCenter="-35"/>
-				<e:BitmapLabel id="lblSkillLevel" verticalCenter="-38" left="25" font="FranklinGothicHeavy30_fnt" text="20" scaleX="0.6" scaleY="0.7" width="50" textAlign="center"/>
-				<e:Image anchorOffsetX="0" anchorOffsetY="0" left="61" source="levelbg_png" verticalCenter="35" scaleX="0.5" scaleY="0.5" scale9Grid="26,0,6,60" right="563"/>
-				<e:BitmapLabel verticalCenter="31" left="72" font="FranklinGothicHeavy30_fnt" text="Skill" scaleX="0.7" scaleY="0.7" textAlign="center"/>
-				<e:Button id="btnChangeSkill" label="CHANGE" anchorOffsetY="0" top="10" bottom="10" right="25" skinName="GreenButtonSkinV3" anchorOffsetX="0" width="225"/>
-				<e:Group height="100%" verticalCenter="0" left="150" right="265">
-				<e:BitmapLabel id="lblSkillName_" font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="16" scaleX="1" scaleY="1" top="10" visible="false"/>
-				<e:Label id="lblSkillName" text="能量光轮" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="0" x="16" scaleX="1" scaleY="1" top="15"/>
-				<e:Label id="lblSkillDesc" text="multi bullets, through, fast rate" bold="true" textColor="0xFF852F" anchorOffsetX="0" anchorOffsetY="0" size="18" textAlign="left" left="0" wordWrap="true" italic="true" scaleX="1" scaleY="1" top="50" right="0" bottom="10"/>
-				</e:Group>
-			</e:Group>
-			<e:layout>
-				<e:VerticalLayout gap="21" verticalAlign="middle" horizontalAlign="center"/>
-			</e:layout>
-			</e:Group>
-		</e:Group>
-		</e:Group>
-		<e:Group id="grpBottom" width.init="100%" y.init="813" width="100%" x="0" x.init="-720" bottom="0" y="785" scaleX="1" scaleY="1">
-			<e:Group id="grpButton" width="100%" height="100%" top="0" x.init="-720">
-				<e:Button id="btnStart" label="START" skinName="GreenButtonSkinV3" top="0" y="0" scaleX="1" scaleY="1" horizontalCenter="0"/>
+		</e:ViewStack>
+		<e:Group id="grpBottom" width="100%" x="74" y="174">
+			<e:Group width="100%" horizontalCenter="0" x="0" bottom="0">
+				<e:RadioButton label="Chest" skinName="GreenButtonSkinV3" width="100%" value="0" height="80"/>
+				<e:RadioButton id="btnTab" label="Ship" skinName="GreenButtonSkinV3" x="10" y="10" width="100%" value="1" height="80"/>
+				<e:RadioButton label="Social" skinName="GreenButtonSkinV3" x="20" y="20" width="100%" value="2" height="80"/>
+				<e:layout>
+				<e:HorizontalLayout/>
+				</e:layout>
 			</e:Group>
 		</e:Group>
 		<e:layout>
 			<e:VerticalLayout/>
 		</e:layout>
 	</e:Group>
-	<e:Group id="grpPop" width="100%" height="100%" x="0" alpha="1" alpha.final="0" alpha.init="0" y="0">
-		<e:Rect id="rectPopMask" width="100%" height="100%" x="0" y="0" enabled="false" fillAlpha="0.75"/>
-		<e:Group id="grpEquipPop" anchorOffsetY="0" scaleX="1" scaleY="1" height="545" width="671" horizontalCenter="0" verticalCenter="0">
-		<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
+	<e:Group id="grpShipPop" width="100%" height="100%" alpha="1" alpha.final="0" alpha.init="0" scaleX="1" scaleY="1" horizontalCenter="0" top="0" alpha.ShipInit="0" alpha.ShipFinal="0" visible="false">
+		<e:Rect id="rctShipPopMask" width="100%" height="100%" x="0" y="0" fillAlpha="0.8"/>
+		<e:Group id="grpEquipPop" anchorOffsetY="0" scaleX="1" scaleY="1" width="671" horizontalCenter="0" verticalCenter="-52" height="667">
+			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="-18" bottom="2" right="-20" left="-20" source="panelbg2_png" scale9Grid="60,64,12,11"/>
 			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" source="purplebar_png" scale9Grid="23,0,3,80" width="60%" left="24" visible="false"/>
-		<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" width="60%" source="bluebar_png" height="80" scale9Grid="29,0,3,110"/>
-		<e:BitmapLabel text="HERO" scaleX="0.8" scaleY="0.8" left="69" top="11" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
-		<e:Label id="lblEquipTypeName" text="主炮" anchorOffsetX="0" top="14" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xFAFFDF"/>
+			<e:Image anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" top="0" left="24" width="60%" source="bluebar_png" height="80" scale9Grid="29,0,3,110"/>
+			<e:BitmapLabel text="HERO" scaleX="0.8" scaleY="0.8" left="69" top="11" font="FranklinGothicHeavyLightGreen260_fnt" visible="false"/>
+			<e:Label id="lblEquipTypeName" text="主炮" anchorOffsetX="0" top="14" left="63" fontFamily="Microsoft YaHei" size="48" verticalAlign="middle" textAlign="left" bold="true" textColor="0xFAFFDF"/>
 			<e:Group horizontalCenter="0" top="100" bottom="56" left="50" right="50">
 				<e:Group anchorOffsetX="0" anchorOffsetY="0" top="100" left="40" x="-10" y="0" scaleX="1" scaleY="1" width="100%" height="100%">
-					<e:Scroller id="scrEquips" anchorOffsetX="0" anchorOffsetY="0" width="100%" height="100%" top="0" skinName="ScrollerSkin">
+				<e:Scroller id="scrEquips" anchorOffsetX="0" anchorOffsetY="0" width="100%" height="100%" top="0" skinName="ScrollerSkin">
 					<e:Group id="grpScrEquipsView" y="14">
-						<e:List id="lstEquips" itemRendererSkinName="HeroShipEquipIRSkin" top="0" horizontalCenter="0">
+					<e:List id="lstEquips" itemRendererSkinName="HeroShipEquipIRSkin" top="0" horizontalCenter="0">
 						<e:ArrayCollection>
-							<e:Array>
+						<e:Array>
 							<e:Object icon="Energy2_png" level="1" selected=""/>
 							<e:Object icon="Energy_png" level="2" selected="1"/>
 							<e:Object icon="Energy3_png" level="10" selected=""/>
@@ -313,23 +327,23 @@
 							<e:Object icon="GreenHeroShip_png" level="9" selected=""/>
 							<e:Object icon="Energy2_png" level="2" selected=""/>
 							<e:Object icon="Energy2_png" level="1" selected=""/>
-							</e:Array>
+						</e:Array>
 						</e:ArrayCollection>
 						<e:layout>
-							<e:TileLayout horizontalGap="2" verticalGap="2" orientation="rows" horizontalAlign="center" requestedColumnCount="5" paddingTop="25" paddingBottom="25" paddingLeft="0"/>
+						<e:TileLayout horizontalGap="2" verticalGap="2" orientation="rows" horizontalAlign="center" requestedColumnCount="5" paddingTop="25" paddingBottom="25" paddingLeft="0"/>
 						</e:layout>
-						</e:List>
-						<e:layout>
-						<e:BasicLayout/>
-						</e:layout>
-					</e:Group>
-					</e:Scroller>
-					<e:Rect width="100%" height="100%" strokeWeight="3" fillAlpha="0" horizontalCenter="0" strokeColor="0x7f776d" enabled="false"/>
+					</e:List>
 					<e:layout>
-					<e:BasicLayout/>
+						<e:BasicLayout/>
 					</e:layout>
+					</e:Group>
+				</e:Scroller>
+				<e:Rect width="100%" height="100%" strokeWeight="3" fillAlpha="0" horizontalCenter="0" strokeColor="0x7f776d" enabled="false"/>
+				<e:layout>
+					<e:BasicLayout/>
+				</e:layout>
 				</e:Group>
-				<e:Group width="100%" height="130" name="Group">
+				<e:Group width="100%" height="130">
 					<e:Rect strokeWeight="3" fillAlpha="0" strokeColor="0x7F776D" enabled="false" horizontalCenter="0" width="100%" bottom="10" top="10"/>
 					<e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" text="Focus Cannon" left="0" x="0" scaleX="1" scaleY="1" top="10" y="124" visible="false"/>
 					<e:Label id="lblEquipName" text="聚焦粒子炮[Lv.2]" textColor="0x2A9AAE" bold="true" fontFamily="SimHei" left="10" x="0" scaleX="1" scaleY="1" top="20" y="124"/>
@@ -369,19 +383,19 @@
 						</e:layout>
 						</e:Group>
 						<e:Group x="631" y="178" height="15" width="100%">
-							<e:Group width="100" height="15" left="0">
+						<e:Group width="100" height="15" left="0">
 							<e:BitmapLabel id="lblEquipGunExp" text="Exp(Lv.10)" scaleX="0.5" scaleY="0.6" verticalCenter="-3" width="200" textAlign="right" font="FranklinGothicHeavyBlue30_fnt" right="0"/>
-							</e:Group>
-							<e:Group height="15" width="100%" verticalCenter="0" x="120">
+						</e:Group>
+						<e:Group height="15" width="100%" verticalCenter="0" x="120">
 							<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" scaleX="1" scaleY="1" strokeWeight="0" fillColor="0xC1C298"/>
 							<e:Rect id="progEquipGunExp" scaleX="1" scaleY="1" height="100%" width="70%" fillColor="0xFED44C"/>
-							</e:Group>
-							<e:Group width="80" height="15" right="0">
+						</e:Group>
+						<e:Group width="80" height="15" right="0">
 							<e:BitmapLabel id="lblEquipGunExpV" text="70%" width="200" scaleX="0.5" scaleY="0.6" textAlign="left" verticalCenter="-3" font="FranklinGothicHeavyOrange30_fnt" left="0"/>
-							</e:Group>
-							<e:layout>
+						</e:Group>
+						<e:layout>
 							<e:HorizontalLayout gap="15"/>
-							</e:layout>
+						</e:layout>
 						</e:Group>
 						<e:layout>
 						<e:VerticalLayout gap="5"/>
@@ -409,13 +423,13 @@
 					</e:Group>
 				</e:Group>
 				<e:layout>
-					<e:VerticalLayout horizontalAlign="center"/>
+				<e:VerticalLayout horizontalAlign="center"/>
 				</e:layout>
 			</e:Group>
 			<e:Button id="btnCheat" label="Cheat" right="50" top="28" width="180" height="66" skinName="GreenButtonSkinV3"/>
 		</e:Group>
 	</e:Group>
-	<e:Group id="grpTop" scaleX="1" scaleY="1" height="50" width="100%" x.init="-720" y.init="0" x="0" alpha.init="0" top="0">
+	<e:Group id="grpTop" scaleX="1" scaleY="1" height="50" width="100%" x.init="0" y.init="0" top="0" x="0" y="0" x.ShipInit="0" y.ShipInit="0">
 		<e:Group width="200" height="100%" top="0" right="0">
 		<e:Group width="100%" height="100%" scaleX="1" scaleY="1">
 			<e:Group width="30" height="100%" x="251" y="19"/>

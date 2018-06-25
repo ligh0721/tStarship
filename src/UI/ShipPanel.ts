@@ -1,14 +1,14 @@
 class ShipPanel extends eui.Component {
-    private open: egret.tween.TweenGroup;
-    private openEquip: egret.tween.TweenGroup;
-    private closeEquip: egret.tween.TweenGroup;
+    private openShip: egret.tween.TweenGroup;
+    private openPopEquip: egret.tween.TweenGroup;
+    private closePopEquip: egret.tween.TweenGroup;
     private btnStart: eui.Button;
     private btnChangeGun: eui.Button;
     private btnChangeSkill: eui.Button;
     private btnEquip: eui.Button;
     private grpGunDetail: eui.Group;
     private grpSkillDetail: eui.Group;
-    private grpPop: eui.Group;
+    private grpShipPop: eui.Group;
     private imgGun: eui.Image;
     private imgSkill: eui.Image;
     private lblCoins: eui.BitmapLabel;
@@ -44,9 +44,15 @@ class ShipPanel extends eui.Component {
     private lblEquipSkillExpV: eui.BitmapLabel;
     private lblEquipName: eui.Label;
     private lblEquipDesc: eui.Label;
-    private btnCheat: eui.Button;
+    private rctShipPopMask: eui.Rect;
+    private vsMain: eui.ViewStack;
+    private btnTab: eui.RadioButton;
+    private grpChest: eui.Group;
+    private grpShip: eui.Group;
+    private grpSocial: eui.Group;
     
-
+    private btnCheat: eui.Button;
+    private btnClearArchives: eui.Button;
 
     private playerData: PlayerData = null;
     private gun: string = "";
@@ -62,19 +68,22 @@ class ShipPanel extends eui.Component {
         super.createChildren();
 
         this.skinName = "resource/custom_skins/ShipPanelSkin.exml";
-        this.currentState = "init";
         this.height = egret.MainContext.instance.stage.stageHeight;
-        this.open.addEventListener("complete", this.onTweenGroupComplete, this);
-        this.openEquip.addEventListener("complete", this.onTweenGroupComplete, this);
-        this.closeEquip.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.btnCheat.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnCheat, this);
+        this.btnClearArchives.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnClearArchives, this);
+
+        this.btnTab.group.addEventListener(eui.UIEvent.CHANGE, this.onMainTabChange, this);
+        this.openShip.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.openPopEquip.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.closePopEquip.addEventListener("complete", this.onTweenGroupComplete, this);
         this.btnStart.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
         this.btnChangeGun.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnChangeGun, this);
         this.btnChangeSkill.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnChangeSkill, this);
         this.btnEquip.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnEquip, this);
         this.lstEquips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
-        this.btnCheat.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnCheat, this);
+        this.rctShipPopMask.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShipPopMask, this);
 
-        this.grpPop.visible = false;
+        this.grpShipPop.visible = false;
         this.btnChangeGun.touchEnabled = false;
         this.btnChangeSkill.touchEnabled = false;
         this.btnStart.touchEnabled = false;
@@ -86,27 +95,59 @@ class ShipPanel extends eui.Component {
         this.setSkill(this.playerData.skill);
         this.updateShipDetal();
 
-        this.open.play(0);
+        this.btnTab.selected = true;
+        this.currentState = "ShipInit";
+        this.openShip.play(0);
+    }
+
+    private onMainTabChange(e: eui.UIEvent){
+        let radioGroup: eui.RadioButtonGroup = e.target;
+        switch (this.vsMain.selectedIndex) {
+        case 0:
+            break;
+        case 1:
+            this.openShip.play(0);  // for bug
+            this.openShip.stop();
+            this.openPopEquip.stop();
+            this.closePopEquip.stop();
+            this.currentState = "ShipInit";
+            break;
+        case 2:
+            this.currentState = "SocialInit";
+            break;
+        }
+        switch (radioGroup.selectedValue) {
+        case "0":
+            break;
+        case "1":
+            this.currentState = "ShipInit";
+            this.openShip.play(0);
+            break;
+        case "2":
+            this.currentState = "SocialInit";
+            break;
+        }
+        this.vsMain.selectedIndex = radioGroup.selectedValue;
     }
 
     private onTweenGroupComplete(evt: egret.Event): void {
         switch (evt.target) {
-        case this.open:
-            this.currentState = "final";
+        case this.openShip:
+            this.currentState = "ShipFinal";
             this.btnStart.touchEnabled = true;
             this.btnChangeGun.touchEnabled = true;
             this.btnChangeSkill.touchEnabled = true;
             break;
 
-        case this.openEquip:
+        case this.openPopEquip:
             this.btnEquip.touchEnabled = true;
             break;
 
-        case this.closeEquip:
-            this.currentState = "final";
+        case this.closePopEquip:
+            this.currentState = "ShipFinal";
             this.btnChangeGun.touchEnabled = true;
             this.btnChangeSkill.touchEnabled = true;
-            this.grpPop.visible = false;
+            this.grpShipPop.visible = false;
             break;
         }
     }
@@ -143,6 +184,11 @@ class ShipPanel extends eui.Component {
         GameController.instance.savePlayerData();
     }
 
+    private onBtnClearArchives(evt: egret.TouchEvent): void {
+        egret.localStorage.clear();
+        GameController.instance.loadPlayerData();
+    }
+
     private onBtnStart(evt: egret.TouchEvent): void {
         this.playerData.gun = this.gun;
         this.playerData.skill = this.skill;
@@ -151,19 +197,19 @@ class ShipPanel extends eui.Component {
     }
 
     private onBtnChangeGun(evt: egret.TouchEvent): void {
-        this.grpPop.visible = true;
+        this.grpShipPop.visible = true;
         this.btnChangeGun.touchEnabled = false;
         this.btnChangeSkill.touchEnabled = false;
         this.setupGunPopPanel();
-        this.openEquip.play(0);
+        this.openPopEquip.play(0);
     }
 
     private onBtnChangeSkill(evt: egret.TouchEvent): void {
-        this.grpPop.visible = true;
+        this.grpShipPop.visible = true;
         this.btnChangeGun.touchEnabled = false;
         this.btnChangeSkill.touchEnabled = false;
         this.setupSkillPopPanel();
-        this.openEquip.play(0);
+        this.openPopEquip.play(0);
     }
 
     private onBtnEquip(evt: egret.TouchEvent): void {
@@ -173,7 +219,13 @@ class ShipPanel extends eui.Component {
         } else {
             this.setSkill(this.curEquipKey);
         }
-        this.closeEquip.play(0);
+        this.closePopEquip.play(0);
+    }
+
+    private onTapShipPopMask(evt: egret.TouchEvent): void {
+        if (evt.target === this.rctShipPopMask) {
+            this.closePopEquip.play(0);
+        }
     }
 
     private updateShipDetal(): void {

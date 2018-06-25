@@ -193,16 +193,21 @@ class Gun extends egret.HashObject {
 	protected onCleanup(): void {
 	}
 
-	public getFirePosition(): {x: number, y: number} {
+	protected getFirePosition(): {x: number, y: number} {
 		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.rotation, this.ship.height*0.5);
 	}
 
-	public levelUp(num: number=1): void {
+	public levelUp(num: number=1, sound: boolean=true): void {
+		if (num === 0) {
+			return;
+		}
 		for (let i=0; i<num; i++) {
 			this.level++;
 			this.onLevelUp();
 		}
-		tutils.playSound("GunPowerup_mp3");
+		if (sound) {
+			tutils.playSound("GunPowerup_mp3");
+		}
 	}
 
 	// override

@@ -67,7 +67,7 @@ const GlobalGunsData: GunsData = {
 		name: "单束粒子炮",
 		desc: "普通的主炮，只能发射一列粒子束，但射速很快",
 		model: "Hero_png",
-		gun: Gun,
+		gun: SingleGun,
 		bullet: BlueWaveBullet,
 		bulletSpeed: 200,
         fireCD: 100,

@@ -229,7 +229,7 @@ class GameController {
 		hero.speed.baseValue = this.playerData.speed;
 
 		let gunKey = this.playerData.gun;
-		let gunData = this.allGunsData[gunKey];
+		let gunData = this.getGunDataByKey(gunKey);
 		let gun = Gun.createGun(gunData.gun, gunData.bullet);
 		gun.bulletSpeed.baseValue = gunData.bulletSpeed;
 		gun.fireCooldown.baseValue = gunData.fireCD;
@@ -239,12 +239,18 @@ class GameController {
 		gun.bulletNum = gunData.bulletNum;
 		hero.addGun(gun, true);
 
-		this.playerData.gun
+		let playerGunData = this.getPlayerGunData();
+		let level = this.expToGunLevel(playerGunData.exp);
+		gun.levelUp(level-1, false);
 
 		let skillKey = this.playerData.skill;
-		let skillData = this.allSkillsData[skillKey];
+		let skillData = this.getSkillDataByKey(skillKey);
 		let skill = this.createSkill(this.playerData.skill);
 		hero.setSkill(skill);
+
+		let playerSkillData = this.getPlayerSkillData();
+		level = this.expToSkillLevel(playerSkillData.exp);
+		skill.levelUp(level-1, false);
 		return hero;
 	}
 
