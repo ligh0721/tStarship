@@ -239,6 +239,8 @@ class GameController {
 		gun.bulletNum = gunData.bulletNum;
 		hero.addGun(gun, true);
 
+		this.playerData.gun
+
 		let skillKey = this.playerData.skill;
 		let skillData = this.allSkillsData[skillKey];
 		let skill = this.createSkill(this.playerData.skill);
@@ -285,7 +287,7 @@ class GameController {
 				return i;
 			}
 		}
-		return this.gunExpTable.length;
+		return this.gunExpTable.length+1;
 	}
 
 	public expToSkillLevel(exp: number): number {

@@ -40,17 +40,17 @@
 					</tween:props>
 				</tween:To>
 			</tween:TweenItem>
-			<tween:TweenItem target="{grpBottom}">
+			<tween:TweenItem target="{grpButton}">
 				<tween:Wait duration="500"/>
 				<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}" x="{-720}"/>
-					</tween:props>
+				<tween:props>
+					<e:Object alpha="{0}" x="{-720}"/>
+				</tween:props>
 				</tween:Set>
 				<tween:To duration="250" ease="cubicOut">
-					<tween:props>
-						<e:Object alpha="{1}" x="{0}"/>
-					</tween:props>
+				<tween:props>
+					<e:Object alpha="{1}" x="{0}"/>
+				</tween:props>
 				</tween:To>
 			</tween:TweenItem>
 		</tween:TweenGroup>
@@ -282,7 +282,9 @@
 		</e:Group>
 		</e:Group>
 		<e:Group id="grpBottom" width.init="100%" y.init="813" width="100%" x="0" x.init="-720" bottom="0" y="785" scaleX="1" scaleY="1">
-		<e:Button id="btnStart" label="START" horizontalCenter="0" skinName="GreenButtonSkinV3" top="0"/>
+			<e:Group id="grpButton" width="100%" height="100%" top="0" x.init="-720">
+				<e:Button id="btnStart" label="START" skinName="GreenButtonSkinV3" top="0" y="0" scaleX="1" scaleY="1" horizontalCenter="0"/>
+			</e:Group>
 		</e:Group>
 		<e:layout>
 			<e:VerticalLayout/>

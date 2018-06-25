@@ -112,33 +112,32 @@ class ShipPanel extends eui.Component {
     }
 
     private onBtnCheat(evt: egret.TouchEvent): void {
+        let curEquipKey = this.curEquipKey;
         if (this.editingGun) {
             let gunPlayerData = GameController.instance.getPlayerGunDataByKey(this.curEquipKey);
             if (gunPlayerData) {
                 // add exp
                 gunPlayerData.exp++;
-                let curEquipKey = this.curEquipKey;
-                this.curEquipKey = null;
-                this.updateEquipGunDetail(curEquipKey)
             } else {
                 // unlock
                 GameController.instance.addNewGun(this.curEquipKey);
                 this.btnEquip.enabled = true;
             }
+            this.curEquipKey = null;
+            this.updateEquipGunDetail(curEquipKey)
             this.updateEquipGunList();
         } else {
             let skillPlayerData = GameController.instance.getPlayerSkillDataByKey(this.curEquipKey);
             if (skillPlayerData) {
                 // add exp
                 skillPlayerData.exp++;
-                let curEquipKey = this.curEquipKey;
-                this.curEquipKey = null;
-                this.updateEquipSkillDetail(curEquipKey)
             } else {
                 // unlock
                 GameController.instance.addNewSkill(this.curEquipKey);
                 this.btnEquip.enabled = true;
             }
+            this.curEquipKey = null;
+            this.updateEquipSkillDetail(curEquipKey)
             this.updateEquipSkillList();
         }
         GameController.instance.savePlayerData();
@@ -183,7 +182,7 @@ class ShipPanel extends eui.Component {
         let level = GameController.instance.expToLevel(this.playerData.exp);
         let expText = "MAX";
         let expPerWidth = 100;
-        if (level !== GameController.instance.expTable.length) {
+        if (level < GameController.instance.expTable.length+1) {
             // 没满级
             let expBase = level===1 ? 0 : GameController.instance.expTable[level-2];
             let expNext = GameController.instance.expTable[level-1];
@@ -333,7 +332,7 @@ class ShipPanel extends eui.Component {
         let level = GameController.instance.expToGunLevel(playerGunData.exp);
         let expText = "MAX";
         let expPerWidth = 100;
-        if (level !== GameController.instance.gunExpTable.length) {
+        if (level !== GameController.instance.gunExpTable.length+1) {
             // 没满级
             let expBase = level===1 ? 0 : GameController.instance.gunExpTable[level-2];
             let expNext = GameController.instance.gunExpTable[level-1];
@@ -440,7 +439,7 @@ class ShipPanel extends eui.Component {
         let level = GameController.instance.expToSkillLevel(playerSkillData.exp);
         let expText = "MAX";
         let expPerWidth = 100;
-        if (level !== GameController.instance.skillExpTable.length) {
+        if (level !== GameController.instance.skillExpTable.length+1) {
             // 没满级
             let expBase = level===1 ? 0 : GameController.instance.skillExpTable[level-2];
             let expNext = GameController.instance.skillExpTable[level-1];
