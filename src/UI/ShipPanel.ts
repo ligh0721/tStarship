@@ -1,7 +1,8 @@
 class ShipPanel extends eui.Component {
-    private openShip: egret.tween.TweenGroup;
+    private openBattle: egret.tween.TweenGroup;
     private openPopEquip: egret.tween.TweenGroup;
     private closePopEquip: egret.tween.TweenGroup;
+    private openShop: egret.tween.TweenGroup;
     private btnStart: eui.Button;
     private btnChangeGun: eui.Button;
     private btnChangeSkill: eui.Button;
@@ -73,9 +74,10 @@ class ShipPanel extends eui.Component {
         this.btnClearArchives.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnClearArchives, this);
 
         this.btnTab.group.addEventListener(eui.UIEvent.CHANGE, this.onMainTabChange, this);
-        this.openShip.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.openBattle.addEventListener("complete", this.onTweenGroupComplete, this);
         this.openPopEquip.addEventListener("complete", this.onTweenGroupComplete, this);
         this.closePopEquip.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.openShop.addEventListener("complete", this.onTweenGroupComplete, this);
         this.btnStart.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
         this.btnChangeGun.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnChangeGun, this);
         this.btnChangeSkill.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnChangeSkill, this);
@@ -94,24 +96,23 @@ class ShipPanel extends eui.Component {
 
         this.btnTab.selected = true;
 
-        this.setGun(this.playerData.gun);
-        this.setSkill(this.playerData.skill);
-        this.updateShipDetal();
-        this.currentState = "ShipInit";
-        this.openShip.play(0);
+        this.initBattleView();
     }
 
     private onMainTabChange(e: eui.UIEvent){
         let radioGroup: eui.RadioButtonGroup = e.target;
         switch (this.vsMain.selectedIndex) {
         case 0:
+            // this.openShop.play(0);  // for bug
+            // this.openShop.stop();
+            this.currentState = "ShopInit";
             break;
         case 1:
-            this.openShip.play(0);  // for bug
-            this.openShip.stop();
+            this.openBattle.play(0);  // for bug
+            this.openBattle.stop();
             this.openPopEquip.stop();
             this.closePopEquip.stop();
-            this.currentState = "ShipInit";
+            this.currentState = "BattleInit";
             break;
         case 2:
             this.currentState = "SocialInit";
@@ -119,13 +120,11 @@ class ShipPanel extends eui.Component {
         }
         switch (radioGroup.selectedValue) {
         case "0":
+            // this.initShopView();
+            this.currentState = "ShopInit";
             break;
         case "1":
-            this.setGun(this.playerData.gun);
-            this.setSkill(this.playerData.skill);
-            this.updateShipDetal();
-            this.currentState = "ShipInit";
-            this.openShip.play(0);
+            this.initBattleView();
             break;
         case "2":
             this.currentState = "SocialInit";
@@ -136,8 +135,8 @@ class ShipPanel extends eui.Component {
 
     private onTweenGroupComplete(evt: egret.Event): void {
         switch (evt.target) {
-        case this.openShip:
-            this.currentState = "ShipFinal";
+        case this.openBattle:
+            this.currentState = "BattleFinal";
             this.btnStart.touchEnabled = true;
             this.btnChangeGun.touchEnabled = true;
             this.btnChangeSkill.touchEnabled = true;
@@ -148,12 +147,29 @@ class ShipPanel extends eui.Component {
             break;
 
         case this.closePopEquip:
-            this.currentState = "ShipFinal";
+            this.currentState = "BattleFinal";
             this.btnChangeGun.touchEnabled = true;
             this.btnChangeSkill.touchEnabled = true;
             this.grpShipPop.visible = false;
             break;
+
+        case this.openShop:
+            this.currentState = "ShopFinal";
+            break;
         }
+    }
+
+    private initBattleView(): void {
+        this.setGun(this.playerData.gun);
+        this.setSkill(this.playerData.skill);
+        this.updateShipDetal();
+        this.currentState = "BattleInit";
+        this.openBattle.play(0);
+    }
+
+    private initShopView(): void {
+        this.currentState = "ShopInit";
+        this.openShop.play(0);
     }
 
     private onBtnCheat(evt: egret.TouchEvent): void {

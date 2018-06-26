@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<e:Skin class="GreenButtonSkinV3" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
-    <e:Image
-            
-             source.down="greenbtndown_png" source.disabled="greenbtndis_png" scale9Grid="13,14,34,34" source="greenbtnnor_png" source.up="greenbtnnor_png" anchorOffsetY.down="0" height.down="100%" x.down="0" y.down="0" width="100%" height="100%"/>
-	<e:Group top="10" bottom="14" left="40" right="40" height="50" left.down="40" right.down="40" top.down="12" bottom.down="12">
-		<e:BitmapLabel id="labelDisplay" text="START" textAlign="center" verticalAlign="middle" font.disabled="FranklinGothicHeavy60_fnt" font.down="FranklinGothicHeavy60_fnt" font.up="FranklinGothicHeavy60_fnt" font="FranklinGothicHeavy60_fnt" scaleY="0.8" horizontalCenter="0" scaleX="0.8" verticalCenter="-7"/>
-	</e:Group>
+<e:Skin class="GreenButtonSkinV3" minHeight="50" minWidth="100" states="up,down,disabled" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+    <e:Image anchorOffsetY.down="0" height="100%" height.down="100%" scale9Grid="13,14,34,34" source="greenbtnnor_png" source.disabled="greenbtndis_png" source.down="greenbtndown_png" source.up="greenbtnnor_png" width="100%" x.down="0" y.down="0"/>
+    <e:Group bottom="13" bottom.down="11" height="50" left="40" left.down="40" right="40" right.down="40" top="11" top.down="13" left.disabled="40" right.disabled="40" top.disabled="11" bottom.disabled="13">
+        <e:BitmapLabel font="FranklinGothicHeavy60_fnt" font.disabled="FranklinGothicHeavy60_fnt" font.down="FranklinGothicHeavy60_fnt" font.up="FranklinGothicHeavy60_fnt" horizontalCenter="0" id="labelDisplay" scaleX="0.8" scaleY="0.8" text="Open 5" textAlign="center" verticalAlign="middle" verticalCenter="-7"/>
+    </e:Group>
 </e:Skin>

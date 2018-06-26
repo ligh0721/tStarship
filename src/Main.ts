@@ -150,8 +150,8 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        // GameController.instance.createRootLayer(ShipLayer);
-        GameController.instance.createRootLayer(TestLayer);
+        GameController.instance.createRootLayer(ShipLayer);
+        // GameController.instance.createRootLayer(TestLayer);
         // GameController.instance.createRootLayer(EditorLayer);
     }
 
