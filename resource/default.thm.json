@@ -18,7 +18,6 @@
 	"exmls": [
 		"resource/custom_skins/BattleHUDSkin.exml",
 		"resource/custom_skins/BlueButtonSkin.exml",
-		"resource/custom_skins/ChestPanelSkin.exml",
 		"resource/custom_skins/EditorPanelSkin.exml",
 		"resource/custom_skins/GreenButtonSkin.exml",
 		"resource/custom_skins/GameOverPanelSkin.exml",

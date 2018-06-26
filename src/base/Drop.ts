@@ -3,6 +3,10 @@ class Drop {
 	}
 }
 
+class Chest {
+
+}
+
 class DropTable<T> {
 	private items: {item: T, weight: number}[] = [];
 	private totalWeight: number = 0;
@@ -22,6 +26,14 @@ class DropTable<T> {
 			}
 		}
 		return null;
+	}
+	
+	public randomR(): any {
+		let item = this.random();
+		if (item instanceof DropTable) {
+			return item.randomR();
+		}
+		return item;
 	}
 
 	public clear(): void {

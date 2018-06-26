@@ -17,7 +17,7 @@ class TestLayer extends tutils.Layer {
         this.world.start(30);
 
         this.hero = new HeroShip("Hero_png");
-        this.world.addShip(this.hero);
+        // this.world.addShip(this.hero);
         
         // let gun = Gun.createGun(StormGun, Bullet);
 		// gun.fireCooldown.baseValue = 0;
@@ -26,12 +26,12 @@ class TestLayer extends tutils.Layer {
 		// gun.period = 500;
         // this.hero.addGun(gun).autoFire = true;
         
-        this.hero.x = w * 0.5;
-        this.hero.y = h * 0.9;
+        // this.hero.x = w * 0.5;
+        // this.hero.y = h * 0.9;
         // gun.bulletLeft = 0;
-        // // gun.autoFire = true;
-        this.layer.touchEnabled = true;
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        // gun.autoFire = true;
+        // this.layer.touchEnabled = true;
+        // this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
         
         // this.enemyCtrl = new EnemyController(this.world);
         // this.enemyCtrl.createBoss1();
@@ -45,6 +45,32 @@ class TestLayer extends tutils.Layer {
         // this.addChild(bmp);
         // bmp.x = 200;
         // bmp.y = 200;
+
+        let partsDropTableRare = new DropTable<DropTable<string>>();
+        let table = new DropTable<string>();
+        table.push("part_test1", 100);
+        table.push("part_test2", 100);
+        table.push("part_critical_2", 50);
+        partsDropTableRare.push(table, 1000);
+
+        // blue
+        // table = new DropTable<string>();
+        // this.partsDropTableRare.push(table, 600);
+
+        // purple
+        table = new DropTable<string>();
+        table.push("part_power_speed_up_2", 100);
+        table.push("part_power_battery_2", 100);
+        table.push("part_elec_induced_gun", 100);
+        partsDropTableRare.push(table, 600);
+
+        // orange
+        table = new DropTable<string>();
+        table.push("part_meteoroid", 100);
+        partsDropTableRare.push(table, 300);
+
+        let d: string = partsDropTableRare.randomR();
+        console.log(d);
     }
 
     private onTouchBegin(evt: egret.TouchEvent) {

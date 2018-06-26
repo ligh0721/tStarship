@@ -1,6 +1,7 @@
 const GlobalConfig = {
 	ver: 1,
-	reset: true
+	reset: true,
+	freeChestCD: 3600
 }
 
 const GlobalMaxHp = 50;  // for UI
@@ -14,6 +15,31 @@ const GlobalSkillExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
 
 const GlobalHeroModel = "RedHeroShip_png";
 const GlobalHeroModelScale = 0.4;
+
+const GUN_SINGLE = "gun_single";
+const GUN_ROW = "gun_row";
+const GUN_SHOT = "gun_shot";
+const GUN_GUIDE = "gun_guide";
+const GUN_SOUNDWAVE = "gun_soundwave";
+const GUN_ENERGYWAVE = "gun_energywave";
+const GUN_EXPLOSION = "gun_explosion";
+const GUN_FOCUS = "gun_focus";
+const GUN_MISSILE = "gun_missile";
+const GUN_SINE = "gun_sine";
+
+const SKILL_TURBO_FIRE = "skill_turbo_fire";
+const SKILL_SHIELD_BALL = "skill_shield_ball";
+const SKILL_GHOST_SHIPS = "skill_ghost_ships";
+const SKILL_SUPER_HERO = "skill_super_hero";
+const SKILL_METEOROID_RUSH = "skill_meteoroid_rush";
+
+const PART_TEST1 = "part_test1";
+const PART_TEST2 = "part_test2";
+const PART_METEOROID = "part_meteoroid";
+const PART_CRITICAL_2 = "part_critical_2";
+const PART_ELEC_INDUCED_GUN = "part_elec_induced_gun";
+const PART_POWER_SPEED_UP_2 = "part_power_speed_up_2";
+const PART_POWER_BATTERY_2 = "part_power_battery_2";
 
 const GlobalAllGuns: string[] = [
 	//"gun_test",
@@ -45,6 +71,51 @@ const GlobalAllParts: string[] = [
 	"part_elec_induced_gun",
 	"part_power_speed_up_2",
 	"part_power_battery_2"
+];
+
+const GlobalChest1Drop = [
+	[
+		[
+			["shipexp_1", 100],
+			["shipexp_2", 100],
+			["shipexp_5", 100],
+			["shipexp_10", 100]
+		],
+		100
+	],
+	[
+		[
+			["gun_single", 100],
+			["gun_row", 100],
+			["gun_shot", 100],
+			["gun_guide", 100],
+			["gun_soundwave", 100],
+			["gun_energywave", 100],
+			["gun_explosion", 100],
+			["gun_focus", 100],
+			["gun_missile", 100],
+			["gun_sine", 100]
+		],
+		100
+	],
+	[
+		[
+			["skill_turbo_fire", 100],
+			["skill_shield_ball", 100],
+			["skill_ghost_ships", 100],
+			["skill_super_hero", 100],
+			["skill_meteoroid_rush", 100]
+		],
+		100
+	]
+];
+
+const GlobalChest1SkillDrop: [string, number][] = [
+	["skill_turbo_fire", 100],
+	["skill_shield_ball", 100],
+	["skill_ghost_ships", 100],
+	["skill_super_hero", 100],
+	["skill_meteoroid_rush", 100]
 ];
 
 // all datas
@@ -312,5 +383,9 @@ const GlobalPlayerInitData: PlayerData = {
 			use: 0
 		}
 	},
-	skill: "skill_turbo_fire"
+	skill: "skill_turbo_fire",
+	onlineChestTs: 0,
+	adChestTs: 0,
+	sharechestTs: 0,
+	allChests: [0]
 };

@@ -15,6 +15,8 @@ class GameController {
 	readonly allSkills: string[];
 	readonly allParts: string[];
 
+	readonly allChestDrop: DropTable<any>[];
+
 	playerData: PlayerData = null;
 	private static KeyData: string = "PlayPrefsData";
 
@@ -31,9 +33,10 @@ class GameController {
 		this.gunExpTable = GlobalGunExpTable;
 		this.skillExpTable = GlobalSkillExpTable;
 
-		this.allGuns = this.checkAllGuns(GlobalAllGuns);
-		this.allSkills = this.checkAllSkills(GlobalAllSkills);
-		this.allParts = this.checkAllParts(GlobalAllParts);
+		this.allGuns = this.loadAndCheckAllGuns(GlobalAllGuns);
+		this.allSkills = this.loadAndCheckAllSkills(GlobalAllSkills);
+		this.allParts = this.loadAndCheckAllParts(GlobalAllParts);
+		this.allChestDrop = this.loadAllChestDropTable();
 		
 		console.log("load guns data", this.allGunsData);
 		console.log("load skills data", this.allSkillsData);
@@ -180,7 +183,7 @@ class GameController {
 		return data;
 	}
 
-	private checkAllGuns(guns: string[]): string[] {
+	private loadAndCheckAllGuns(guns: string[]): string[] {
 		for (let i in guns) {
 			let gunKey = guns[i];
 			console.assert(this.getGunDataByKey(gunKey)!==null);
@@ -196,7 +199,7 @@ class GameController {
 		return data;
 	}
 
-	private checkAllSkills(skills: string[]): string[] {
+	private loadAndCheckAllSkills(skills: string[]): string[] {
 		for (let i in skills) {
 			let skillKey = skills[i];
 			console.assert(this.getSkillDataByKey(skillKey)!==null);
@@ -212,12 +215,34 @@ class GameController {
 		return data;
 	}
 
-	private checkAllParts(parts: string[]): string[] {
+	private loadAndCheckAllParts(parts: string[]): string[] {
 		for (let i in parts) {
 			let partKey = parts[i];
 			console.assert(this.getPartDataByKey(partKey)!==null);
 		}
 		return parts;
+	}
+
+	private loadAllChestDropTable(): DropTable<any>[] {
+		let ret: DropTable<any>[] = [];
+		let chest1 = this.loadDropTable(GlobalChest1Drop);
+		ret.push(chest1);
+		return ret;
+	}
+
+	private loadDropTable(rawTable: any[]): DropTable<any> {
+		let ret: DropTable<any> = new DropTable<any>();
+		for (let i in rawTable) {
+			let drop = rawTable[i];
+			let item = drop[0];
+			let weight = drop[1];
+			if (typeof(drop) === "string") {
+				ret.push(item, weight);
+			} else {
+				ret.push(this.loadDropTable(item), weight);
+			}
+		}
+		return ret;
 	}
 
 	public createHeroShip(world: World): HeroShip {
@@ -566,7 +591,11 @@ type PlayerData = {
 	gun: string,
 	skillsNum: number,
     skills: {[key: string]: PlayerSkillData},
-	skill: string
+	skill: string,
+	onlineChestTs: number,
+	adChestTs: number,
+	sharechestTs: number,
+	allChests: number[]
 };
 
 type GunDataItem = {
