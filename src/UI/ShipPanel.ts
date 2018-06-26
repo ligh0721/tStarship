@@ -189,8 +189,7 @@ class ShipPanel extends eui.Component {
     }
 
     private onBtnClearArchives(evt: egret.TouchEvent): void {
-        egret.localStorage.clear();
-        GameController.instance.resetPlayerData();
+        this.playerData = GameController.instance.resetPlayerData();
         this.lblCoins.text = this.playerData.coins.toString();
     }
 
