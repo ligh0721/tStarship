@@ -1,0 +1,3 @@
+﻿<e:Skin xmlns:e="http://ns.egret.com/eui" states="up,down" class="TabBarSkin">
+    <e:Label textColor.down="0xFFFFFF" textColor.up="0x666666" horizontalCenter="0" verticalCenter="0" text="{data}" bold="true" size="50" width="200" verticalAlign="middle" textAlign="center"/>
+</e:Skin>

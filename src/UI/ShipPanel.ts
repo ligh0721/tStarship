@@ -48,12 +48,13 @@ class ShipPanel extends eui.Component {
     private rctShipPopMask: eui.Rect;
     private vsMain: eui.ViewStack;
     private btnTab: eui.RadioButton;
-    private grpChest: eui.Group;
-    private grpShip: eui.Group;
+    private grpShop: eui.Group;
+    private grpBattle: eui.Group;
     private grpSocial: eui.Group;
     
     private btnCheat: eui.Button;
     private btnClearArchives: eui.Button;
+    private tabBottom: eui.TabBar;
 
     private playerData: PlayerData = null;
     private gun: string = "";
@@ -84,6 +85,7 @@ class ShipPanel extends eui.Component {
         this.btnEquip.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnEquip, this);
         this.lstEquips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
         this.rctShipPopMask.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShipPopMask, this);
+        // this.vsMain.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onMainStackViewChange, this);
 
         this.grpShipPop.visible = false;
         this.btnChangeGun.touchEnabled = false;
@@ -96,6 +98,8 @@ class ShipPanel extends eui.Component {
 
         this.btnTab.selected = true;
 
+        this.tabBottom.dataProvider = this.vsMain;
+
         this.initBattleView();
     }
 
@@ -105,32 +109,38 @@ class ShipPanel extends eui.Component {
         case 0:
             // this.openShop.play(0);  // for bug
             // this.openShop.stop();
-            this.currentState = "ShopInit";
+            // this.currentState = "ShopInit";
+            this.grpShop.visible = false;
             break;
         case 1:
-            this.openBattle.play(0);  // for bug
-            this.openBattle.stop();
-            this.openPopEquip.stop();
-            this.closePopEquip.stop();
+            // this.openBattle.play(0);  // for bug
+            // this.openBattle.stop();
+            // this.openPopEquip.stop();
+            // this.closePopEquip.stop();
             this.currentState = "BattleInit";
+            this.grpBattle.visible = false;
             break;
         case 2:
-            this.currentState = "SocialInit";
+            // this.currentState = "SocialInit";
+            this.grpSocial.visible = false;
             break;
         }
-        switch (radioGroup.selectedValue) {
-        case "0":
-            // this.initShopView();
-            this.currentState = "ShopInit";
+
+        this.vsMain.selectedIndex = radioGroup.selectedValue;
+
+        switch (this.vsMain.selectedIndex) {
+        case 0:
+            this.initShopView();
             break;
-        case "1":
+        case 1:
             this.initBattleView();
             break;
-        case "2":
-            this.currentState = "SocialInit";
+        case 2:
+            // this.currentState = "SocialInit";
+            this.grpSocial.visible = true;
+            this.currentState = "BattleInit";
             break;
         }
-        this.vsMain.selectedIndex = radioGroup.selectedValue;
     }
 
     private onTweenGroupComplete(evt: egret.Event): void {
@@ -160,15 +170,17 @@ class ShipPanel extends eui.Component {
     }
 
     private initBattleView(): void {
+        this.grpBattle.visible = true;
+        this.currentState = "BattleInit";
         this.setGun(this.playerData.gun);
         this.setSkill(this.playerData.skill);
         this.updateShipDetal();
-        this.currentState = "BattleInit";
         this.openBattle.play(0);
     }
 
     private initShopView(): void {
-        this.currentState = "ShopInit";
+        this.grpShop.visible = true;
+        // this.currentState = "ShopInit";
         this.openShop.play(0);
     }
 

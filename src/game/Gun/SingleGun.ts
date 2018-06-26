@@ -3,7 +3,7 @@ class SingleGun extends Gun {
 	// override
 	protected playFireSound(): void {
 		if (this.ship.hero) {
-			tutils.playSound("EaseGunShoot_mp3");
+			tutils.playSound("GunShoot_mp3");
 		}
 	}
 
