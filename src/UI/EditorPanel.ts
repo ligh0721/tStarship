@@ -1,4 +1,4 @@
-class EditorPanel extends eui.Component {
+class EditorPanel extends tutils.Component {
     private world: World = null;
     private enemyCtrl: EnemyController = null;
     pressLayer: boolean = false;
@@ -33,9 +33,7 @@ class EditorPanel extends eui.Component {
     private txtPos: eui.Label;
 
     // override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
         this.skinName = "resource/custom_skins/EditorPanelSkin.exml";
         this.width = egret.MainContext.instance.stage.stageWidth;
 
@@ -44,18 +42,18 @@ class EditorPanel extends eui.Component {
         let vLayout = this.grpGridH.layout as eui.VerticalLayout;
         vLayout.gap = (this.height-30) / 10;
 
-        this.btnTabPath.group.addEventListener(eui.UIEvent.CHANGE, this.onEditorTabChange, this);
+        this.evtMgr.regEvent(this.btnTabPath.group, eui.UIEvent.CHANGE, this.onEditorTabChange);
         
-        this.btnRun.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnRun, this);
-        this.btnClear.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnClear, this);
+        this.evtMgr.regEvent(this.btnRun, egret.TouchEvent.TOUCH_TAP, this.onBtnRun);
+        this.evtMgr.regEvent(this.btnClear, egret.TouchEvent.TOUCH_TAP, this.onBtnClear);
 
-        this.sldType.addEventListener(eui.UIEvent.CHANGE, this.onTypeChanged, this);
-        this.sldNum.addEventListener(eui.UIEvent.CHANGE, this.onNumChanged, this);
-        this.sldItv.addEventListener(eui.UIEvent.CHANGE, this.onItvChanged, this);
-        this.sldDur.addEventListener(eui.UIEvent.CHANGE, this.onDurChanged, this);
-        this.sldSinA.addEventListener(eui.UIEvent.CHANGE, this.onSinAChanged, this);
-        this.sldSinWL.addEventListener(eui.UIEvent.CHANGE, this.onSinWLChanged, this);
-        this.iptCode.addEventListener(eui.UIEvent.FOCUS_IN, this.onCodeFocus, this);
+        this.evtMgr.regEvent(this.sldType, eui.UIEvent.CHANGE, this.onTypeChanged);
+        this.evtMgr.regEvent(this.sldNum, eui.UIEvent.CHANGE, this.onNumChanged);
+        this.evtMgr.regEvent(this.sldItv, eui.UIEvent.CHANGE, this.onItvChanged);
+        this.evtMgr.regEvent(this.sldDur, eui.UIEvent.CHANGE, this.onDurChanged);
+        this.evtMgr.regEvent(this.sldSinA, eui.UIEvent.CHANGE, this.onSinAChanged);
+        this.evtMgr.regEvent(this.sldSinWL, eui.UIEvent.CHANGE, this.onSinWLChanged);
+        this.evtMgr.regEvent(this.iptCode, eui.UIEvent.FOCUS_IN, this.onCodeFocus);
 
         this.grpSinA.visible = false;
         this.grpSinWL.visible = false;
@@ -69,9 +67,9 @@ class EditorPanel extends eui.Component {
         this.txtPos.text = "(x, y): (0%, 0%)";
 
         this.grpWorld.touchEnabled = true;
-        this.grpWorld.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        this.grpWorld.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.grpWorld.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        this.evtMgr.regEvent(this.grpWorld, egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin);
+        this.evtMgr.regEvent(this.grpWorld, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
+        this.evtMgr.regEvent(this.grpWorld, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
 
         this.world = new World(this.grpWorld, this.width, this.height);
         this.world.start(30);

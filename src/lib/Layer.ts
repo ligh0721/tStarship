@@ -3,12 +3,12 @@ module tutils {
 		readonly root: Main;
 		readonly stage: egret.Stage;
 		layer: egret.Sprite;
+		protected evtMgr: EventManager;
 		
 		public constructor(root: Main) {
 			this.root = root;
 			this.stage = root.stage;
-			// this.layer = this.onCreate();
-			// layer.onInit();  // bad code
+			this.evtMgr = new EventManager(this);
 		}
 
 		public static createAt<LAYER extends Layer>(t: new(r: Main) => LAYER, root: Main): LAYER {
@@ -39,12 +39,12 @@ module tutils {
 				return;
 			}
 			this.layer.removeEventListener(eui.UIEvent.REMOVED, this.$onRemoved, this);
+			this.removeAllChildren();
 			this.onRemoved();
 		}
 
 		// override
 		protected onRemoved(): void {
-			this.removeAllChildren();
 		}
 
 		public $create(): egret.Sprite {

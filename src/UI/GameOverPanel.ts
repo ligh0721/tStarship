@@ -1,4 +1,4 @@
-class GameOverPanel extends eui.Component {
+class GameOverPanel extends tutils.Component {
     private open: egret.tween.TweenGroup;
     private lblHighScore: eui.Label;
     private lblStages: eui.Label;
@@ -14,19 +14,17 @@ class GameOverPanel extends eui.Component {
     }
 
     // override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
         this.skinName = "resource/custom_skins/GameOverPanelSkin.exml";
         this.currentState = "init";
 
-        this.btnReturn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnReturn, this);
+        this.evtMgr.regEvent(this.btnReturn, egret.TouchEvent.TOUCH_TAP, this.onBtnReturn);
         this.lblHighScore.text = "HIGH SCORE: " + this.data.high;
         this.lblStages.text = "STAGES: " + this.data.stages;
         this.lblEnemies.text = "ENEMIES: " + this.data.enemies;
         this.lblBosses.text = "BOSSES: " + this.data.bosses;
         this.lblScore.text = this.data.score.toString();
-        this.open.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.evtMgr.regEvent(this.open, "complete", this.onTweenGroupComplete);
         this.open.play();
     }
 

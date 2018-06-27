@@ -1,4 +1,4 @@
-class BattleHUD extends eui.Component implements IHeroHUD {
+class BattleHUD extends tutils.Component implements IHeroHUD {
     private grpBossHpBar: eui.Group;
     private grpScore: eui.Group;
     private grpHighScore: eui.Group;
@@ -35,9 +35,7 @@ class BattleHUD extends eui.Component implements IHeroHUD {
     }
 
     // override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
         this.skinName = "resource/custom_skins/BattleHUDSkin.exml";
         this.currentState = "init";
 
@@ -47,8 +45,8 @@ class BattleHUD extends eui.Component implements IHeroHUD {
         this.lblHighScore.text = playerData.highscore.score.toString();
         this.lblScore.text = "0";
         this.grpBossHpBar.visible = false;
-        this.btnPower.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnPower, this);
-        this.grpParts.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapGrpParts, this);
+        this.evtMgr.regEvent(this.btnPower, egret.TouchEvent.TOUCH_TAP, this.onBtnPower);
+        this.evtMgr.regEvent(this.grpParts, egret.TouchEvent.TOUCH_TAP, this.onTapGrpParts);
     }
 
     public setHero(hero: HeroShip): void {
