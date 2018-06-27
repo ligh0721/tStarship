@@ -43,7 +43,7 @@
             </tween:TweenItem>
         </tween:TweenGroup>
         <tween:TweenGroup id="openPopEquip">
-            <tween:TweenItem target="{grpShipPop}">
+            <tween:TweenItem target="{grpPopEquip}">
                 <tween:Set>
                     <tween:props>
                         <e:Object alpha="{0}"/>
@@ -60,7 +60,7 @@
                     </tween:props>
                 </tween:To>
             </tween:TweenItem>
-            <tween:TweenItem target="{rctShipPopMask}">
+            <tween:TweenItem target="{rctPopEquipMask}">
                 <tween:Set>
                     <tween:props>
                         <e:Object alpha="{0}"/>
@@ -86,7 +86,7 @@
             </tween:TweenItem>
         </tween:TweenGroup>
         <tween:TweenGroup id="closePopEquip">
-            <tween:TweenItem target="{grpShipPop}">
+            <tween:TweenItem target="{grpPopEquip}">
                 <tween:Set>
                     <tween:props>
                         <e:Object alpha="{1}"/>
@@ -103,7 +103,7 @@
                     </tween:props>
                 </tween:To>
             </tween:TweenItem>
-            <tween:TweenItem target="{rctShipPopMask}">
+            <tween:TweenItem target="{rctPopEquipMask}">
                 <tween:Set>
                     <tween:props>
                         <e:Object alpha="{1}"/>
@@ -129,7 +129,7 @@
             </tween:TweenItem>
         </tween:TweenGroup>
         <tween:TweenGroup id="openShop">
-            <tween:TweenItem target="{btnFree}">
+            <tween:TweenItem target="{grpFreeChest}">
                 <tween:Set>
                     <tween:props>
                         <e:Object x="{-300}"/>
@@ -146,7 +146,7 @@
     <e:Group height="100%" width="100%" x="0" y="0">
         <e:ViewStack height="100%" id="vsMain" selectedIndex="1" width="100%" x="-71" y="611">
             <e:Group height="100%" id="grpShop" name="Shop" width="100%">
-                <e:Rect enabled="false" fillColor="0x171B34" height="100%" scaleX="1" scaleY="1" width="100%" x="0" y="0"/>
+                <e:Rect enabled="false" fillColor="0x171B34" height="100%" width="100%" x="0" y="0"/>
                 <e:Group height="100%" horizontalCenter="0" top="0" width="100%">
                     <e:Group horizontalCenter="0" scaleX="1" scaleY="1" verticalCenter="0" width="489">
                         <e:Image bottom="0" height="47" left="0" right="0" scale9Grid="29,0,3,110" scaleX="1" scaleY="1" source="bluebar_png" x="-16"/>
@@ -155,10 +155,10 @@
                     </e:Group>
                     <e:Button bottom="52" height="100" horizontalCenter="-150" id="btnOpenChest1" label="Open 1" skinName="GreenButtonSkinV3" width="250"/>
                     <e:Button bottom="52" height="100" horizontalCenter="150" id="btnOpenChest5" label="Open 5" skinName="GreenButtonSkinV3" width="250"/>
-                    <e:Group height="85" height.ShopInit="85" id="btnFree" top="150" top.ShopInit="150" width="300" x="0" x.ShopInit="-300">
+                    <e:Group id="grpFreeChest" height="85" height.ShopInit="85" top="150" top.ShopInit="150" width="300" x="0" x.ShopInit="-300">
                         <e:Rect ellipseHeight="20" ellipseWidth="20" enabled.ShopInit="false" fillAlpha="0.5" height="100%" left="-20" right="0" scaleX="1" scaleY="1" y="0"/>
                         <e:Image left="29" scaleX="0.7" scaleY="0.7" source="Chest_png" verticalCenter="0"/>
-                        <e:Button height="55" horizontalCenter="46" label="Free" skinName="GreenButtonSmallSkinV3" verticalCenter="0" visible="false" width="123"/>
+                        <e:Button id="btnFreeChest" height="55" horizontalCenter="46" label="Free" skinName="GreenButtonSmallSkinV3" verticalCenter="0" width="123" visible="false"/>
                         <e:BitmapLabel font="FranklinGothicHeavy30_fnt" id="lblFreeChestLeft" left="121" text="21:56:20" textAlign="center" verticalCenter="12" width="150"/>
                         <e:BitmapLabel font="FranklinGothicHeavy30_fnt" left="105" text="NEXT FREE" textAlign="center" verticalCenter="-12.5" width="180"/>
                     </e:Group>
@@ -338,8 +338,8 @@
             <e:VerticalLayout/>
         </e:layout>
     </e:Group>
-    <e:Group alpha="1" alpha.BattleFinal="0" alpha.BattleInit="0" alpha.final="0" alpha.init="0" height="100%" horizontalCenter="0" id="grpShipPop" scaleX="1" scaleY="1" top="0" width="100%" visible="false">
-        <e:Rect fillAlpha="0.8" height="100%" id="rctShipPopMask" width="100%" x="0" y="0"/>
+    <e:Group alpha="1" alpha.BattleFinal="0" alpha.BattleInit="0" alpha.final="0" alpha.init="0" height="100%" horizontalCenter="0" id="grpPopEquip" scaleX="1" scaleY="1" top="0" width="100%" visible="false">
+        <e:Rect fillAlpha="0.8" height="100%" id="rctPopEquipMask" width="100%" x="0" y="0"/>
         <e:Group anchorOffsetY="0" height="667" horizontalCenter="0" id="grpEquipPop" scaleX="1" scaleY="1" verticalCenter="-52" width="671">
             <e:Image anchorOffsetX="0" anchorOffsetY="0" bottom="2" left="-20" right="-20" scale9Grid="60,64,12,11" scaleX="1" scaleY="1" source="panelbg2_png" top="-18"/>
             <e:Image anchorOffsetX="0" anchorOffsetY="0" left="24" scale9Grid="23,0,3,80" scaleX="1" scaleY="1" source="purplebar_png" top="0" visible="false" width="60%"/>
@@ -463,7 +463,7 @@
             <e:Button height="66" id="btnCheat" label="Cheat" right="50" skinName="GreenButtonSkinV3" top="28" width="180"/>
         </e:Group>
     </e:Group>
-    <e:Group height="50" id="grpTop" scaleX="1" scaleY="1" top="0" width="100%" x="0" x.BattleInit="0" x.init="0" y="0" y.BattleInit="0" y.init="0">
+    <e:Group height="50" id="grpTop" top="0" width="100%" x="0" x.BattleInit="0" x.init="0" y="0" y.BattleInit="0" y.init="0">
         <e:Group height="100%" id="grpCoins" right="0" top="0" width="200">
             <e:Group height="100%" scaleX="1" scaleY="1" width="100%">
                 <e:Group height="100%" width="30" x="251" y="19"/>
@@ -478,14 +478,14 @@
             <e:Image height="50" left="0" scaleX="1" scaleY="1" source="coin2_png" top="0" width="50"/>
             <e:BitmapLabel anchorOffsetX="0" font="FranklinGothicHeavy30_fnt" id="lblCoins" right="23" scaleX="0.9" scaleY="0.9" text="198300" textAlign="right" verticalCenter="-0.5" width="300"/>
         </e:Group>
-        <e:Group id="grpPortrait" left="0" scaleX="1" scaleY="1" top="0">
-            <e:Group left="0" scaleX="1" scaleY="1" top="0">
-                <e:Group height="92" horizontalCenter="0" scaleX="1" scaleY="1" verticalCenter="0" width="92" x="5" y="5">
+        <e:Group id="grpPortrait" left="0" top="0" width="300">
+            <e:Group left="0" top="0">
+                <e:Group height="92" horizontalCenter="0" verticalCenter="0" width="92" x="5" y="5">
                     <e:Image height="100%" horizontalCenter="0" id="imgPlayerPortrait" source="PlayerDefault_png" verticalCenter="0" width="100%"/>
                 </e:Group>
-                <e:Image left="0" scaleX="1" scaleY="1" source="PlayerPortrait_png" top="0"/>
+                <e:Image left="0" source="PlayerPortrait_png" top="0"/>
             </e:Group>
-            <e:BitmapLabel font="FranklinGothicHeavy30_fnt" id="lblPlayerName" left="108" scaleX="1" scaleY="1" text="Gabe Newell" top="0"/>
+            <e:BitmapLabel font="FranklinGothicHeavy30_fnt" id="lblPlayerName" left="108" text="Gabe Newell" top="0"/>
         </e:Group>
     </e:Group>
 </e:Skin>
