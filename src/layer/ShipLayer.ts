@@ -9,19 +9,12 @@ class ShipLayer extends tutils.Layer {
 
     protected onInit() {
         this.panel = new ShipPanel();
-        this.layer.addChild(this.panel);
-        
-        // let playerData = GameController.instance.loadPlayerData();
-        // if (playerData.shipsNum === 0) {
-        //     this.addShips();
-        // }
+        this.addChild(this.panel);
     }
 
-    public async addShips() {
-        // GameController.instance.addNewHeroShip("ship_hero");
-        // this.panel.updateList();
-        // await GameController.instance.showNewShipPanel(this.layer, {shipId: "ship_hero"});
-
-        // GameController.instance.savePlayerData();
+    // override
+    protected onRemoved(): void {
+        this.removeChild(this.panel);
+        this.panel = null;
     }
 }

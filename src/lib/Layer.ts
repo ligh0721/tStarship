@@ -21,10 +21,37 @@ module tutils {
 			return this.layer.addChild(child);
 		}
 
+		public removeChild(child: egret.DisplayObject): egret.DisplayObject {
+			return this.layer.removeChild(child);
+		}
+
+		protected removeAllChildren(): void {
+			if (this.layer.numChildren <= 0) {
+				return;
+			}
+			for (let i=this.layer.numChildren-1; i>=0; i--) {
+				this.layer.removeChildAt(i);
+			}
+		}
+
+		private $onRemoved(evt: eui.UIEvent): void {
+			if (evt.target !== this.layer) {
+				return;
+			}
+			this.layer.removeEventListener(eui.UIEvent.REMOVED, this.$onRemoved, this);
+			this.onRemoved();
+		}
+
+		// override
+		protected onRemoved(): void {
+			this.removeAllChildren();
+		}
+
 		public $create(): egret.Sprite {
 			this.onCfgStage();
 			console.log("stage size: "+this.stage.stageWidth+"x"+this.stage.stageHeight);
 			this.layer = this.onCreate();
+			this.layer.addEventListener(eui.UIEvent.REMOVED, this.$onRemoved, this);
 			this.onInit();
 			return this.layer;
 		}
@@ -45,14 +72,14 @@ module tutils {
 		}
 
 		public cleanup(): void {
-			this.onCleanUp();
+			// this.onCleanUp();
 			this.root.removeChild(this.layer);
 			egret.Tween.removeAllTweens();
-			// this.layer = null;
+			this.layer = null;
 		}
 
-		// override
-		protected onCleanUp(): void {
-		}
+		// // override
+		// protected onCleanUp(): void {
+		// }
 	}
 }

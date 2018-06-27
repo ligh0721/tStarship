@@ -65,16 +65,16 @@ class BattleLayer extends tutils.Layer {
         // this.layer.addChildAt(this.bgCtrl2.gameObject, 1);
         
         this.worldLayer = new egret.Sprite();
-        this.layer.addChild(this.worldLayer);
+        this.addChild(this.worldLayer);
 
         this.hudLayer = new egret.Sprite();
-        this.layer.addChild(this.hudLayer);
+        this.addChild(this.hudLayer);
 
         this.gameOverLayer = new egret.Sprite();
-        this.layer.addChild(this.gameOverLayer);
+        this.addChild(this.gameOverLayer);
 
         this.msgLayer = new egret.Sprite();
-        this.layer.addChild(this.msgLayer);
+        this.addChild(this.msgLayer);
 		
         // 创建世界
         this.world = new World(this.worldLayer, stageW, stageH);
@@ -132,10 +132,11 @@ class BattleLayer extends tutils.Layer {
 	}
 
     // override
-    protected onCleanUp(): void {
+    protected onRemoved(): void {
         this.enemyCtrl.stopRush();
         tutils.stopBgMusic();
         this.world.cleanup();
+        this.removeAllChildren();
     }
 
     protected createPushStart(): void {

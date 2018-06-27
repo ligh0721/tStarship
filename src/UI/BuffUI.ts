@@ -40,6 +40,9 @@ class BuffUI extends eui.Component {
 	}
 
 	protected onRemoved(evt: eui.UIEvent): void {
+		if (evt.target !== this) {
+			return;
+		}
 		this.timer.stop();
 		this.buff = null;
 	}

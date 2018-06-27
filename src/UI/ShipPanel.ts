@@ -1,3 +1,102 @@
+class Component extends eui.Component {
+    private eventsMap: {[hashCode: number]: {target: egret.EventDispatcher, type: string, listener: Function}[]} = {};
+
+    // override
+    protected createChildren(): void {
+        super.createChildren();
+        this.addEventListener(eui.UIEvent.REMOVED, this.$onRemoved, this);
+        this.onInit();
+    }
+
+    private $onRemoved(evt: eui.UIEvent): void {
+        this.removeEventListener(eui.UIEvent.REMOVED, this.$onRemoved, this);
+        this.onRemoved();
+    }
+
+    protected regEvent(obj: egret.EventDispatcher, type: string, listener: Function, useCapture?: boolean, priority?: number): any {
+        let ret = obj.addEventListener(type, listener, this, useCapture, priority);
+        let list = this.eventsMap[obj.hashCode];
+        if (list === undefined) {
+            list = [];
+            this.eventsMap[obj.hashCode] = list;
+        }
+        for (let i in list) {
+            let item = list[i];
+            if (item.type===type && item.listener===listener) {
+                return ret;
+            }
+        }
+        list.push({target: obj, type: type, listener: listener});
+        return ret;
+    }
+
+    protected unregEvent(obj: egret.EventDispatcher, type: string, listener: Function, useCapture?: boolean): void {
+        obj.removeEventListener(type, listener, this, useCapture);
+        let list = this.eventsMap[obj.hashCode];
+        if (list === undefined) {
+            return;
+        }
+        for (let i in list) {
+            let item = list[i];
+            if (item.type===type && item.listener===listener) {
+                list.splice(parseInt(i), 1);
+                break;
+            }
+        }
+        if (list.length === 0) {
+            delete this.eventsMap[obj.hashCode];
+        }
+    }
+
+    protected unregEvents(obj: egret.EventDispatcher, useCapture?: boolean): void {
+        let list = this.eventsMap[obj.hashCode];
+        if (list === undefined) {
+            return;
+        }
+        for (let i in list) {
+            let item = list[i];
+            item.target.removeEventListener(item.type, item.listener, this, useCapture);
+        }
+        delete this.eventsMap[obj.hashCode];
+    }
+
+    protected unregAllEvents(useCapture?: boolean): void {
+        for (let hashCode in this.eventsMap) {
+            let list = this.eventsMap[hashCode];
+            for (let i in list) {
+                let item = list[i];
+                item.target.removeEventListener(item.type, item.listener, this, useCapture);
+            }
+            delete this.eventsMap[hashCode];
+        }
+    }
+
+    // override
+    public removeChild(child: egret.DisplayObject): egret.DisplayObject {
+        this.unregEvents(child);
+        return super.removeChild(child);
+    }
+
+    protected removeAllChildren(): void {
+        if (this.numChildren <= 0) {
+            return;
+        }
+        for (let i=this.numChildren-1; i>=0; i--) {
+            let child = this.getChildAt(i);
+            this.unregEvents(child);
+            this.removeChildAt(i);
+        }
+    }
+
+    // override
+    protected onInit(): void {
+    }
+
+    // override
+    protected onRemoved(): void {
+    }
+}
+
 class ShipPanel extends eui.Component {
     private openBattle: egret.tween.TweenGroup;
     private openPopEquip: egret.tween.TweenGroup;
@@ -66,7 +165,7 @@ class ShipPanel extends eui.Component {
     private gun: string = null;
     private skill: string = null;
     private curEquipKey: string = null;
-    private freeChestUpdate: tutils.ITimer;
+    private freeChestUpdate: tutils.ITimer = null;
 
 	public constructor() {
         super();
@@ -78,6 +177,7 @@ class ShipPanel extends eui.Component {
 
         this.skinName = "resource/custom_skins/ShipPanelSkin.exml";
         this.height = egret.MainContext.instance.stage.stageHeight;
+        this.addEventListener(eui.UIEvent.REMOVED, this.onRemoved, this);
         this.btnCheat.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnCheat, this);
         this.btnClearArchives.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnClearArchives, this);
 
@@ -113,7 +213,33 @@ class ShipPanel extends eui.Component {
         this.initBattleView();
     }
 
-    private onMainTabChange(e: eui.UIEvent){
+    protected onRemoved(evt: eui.UIEvent): void {
+        if (evt.target !== this) {
+            return;
+        }
+        this.removeEventListener(eui.UIEvent.REMOVED, this.onRemoved, this);
+        this.btnCheat.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnCheat, this);
+        this.btnClearArchives.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnClearArchives, this);
+
+        this.btnTab.group.removeEventListener(eui.UIEvent.CHANGE, this.onMainTabChange, this);
+        this.openBattle.removeEventListener("complete", this.onTweenGroupComplete, this);
+        this.openPopEquip.removeEventListener("complete", this.onTweenGroupComplete, this);
+        this.closePopEquip.removeEventListener("complete", this.onTweenGroupComplete, this);
+        this.openShop.removeEventListener("complete", this.onTweenGroupComplete, this);
+        this.btnStart.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnStart, this);
+        this.btnChangeGun.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnChangeGun, this);
+        this.btnChangeSkill.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnChangeSkill, this);
+        this.btnEquip.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnEquip, this);
+        this.lstEquips.removeEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
+        this.rctPopEquipMask.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShipPopMask, this);
+        // this.vsMain.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onMainStackViewChange, this);
+        this.btnFreeChest.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnFreeChest, this);
+        this.btnOpenChest1.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest1, this);
+        this.btnOpenChest5.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest5, this);
+    }
+
+    private onMainTabChange(e: eui.UIEvent):void {
+        console.log('tab'+this.hashCode+', '+this.playerData.sharechestTs);
         let radioGroup: eui.RadioButtonGroup = e.target;
         let lastSelectedIndex = this.vsMain.selectedIndex;
         
@@ -187,6 +313,10 @@ class ShipPanel extends eui.Component {
             // this.commitProperties();
             break;
         }
+    }
+
+    protected commitProperties(): void {
+        super.commitProperties();
     }
 
     private initBattleView(): void {
@@ -276,10 +406,13 @@ class ShipPanel extends eui.Component {
     }
 
     private onBtnClearArchives(evt: egret.TouchEvent): void {
+        console.log('before clear'+this.hashCode+', '+this.playerData.sharechestTs);
         this.playerData = GameController.instance.resetPlayerData();
+        console.log('after clear'+this.hashCode+', '+this.playerData.sharechestTs);
         this.gun = null;
         this.skill = null;
         this.lblCoins.text = this.playerData.coins.toString();
+        this.commitProperties();
     }
 
     private onBtnStart(evt: egret.TouchEvent): void {

@@ -80,7 +80,8 @@ class GameController {
 	}
 
 	public resetPlayerData(): PlayerData {
-		this.playerData = GlobalPlayerInitData;
+		this.playerData = JSON.parse(JSON.stringify(GlobalPlayerInitData));
+		this.playerData.sharechestTs = egret.getTimer();  // FIXME
 		egret.localStorage.clear();
 		this.savePlayerData();
 		return this.playerData;
@@ -95,6 +96,7 @@ class GameController {
 		data = this.decodePlayerData(data);
 		this.playerData = JSON.parse(data);
 		console.log("load player prefs", this.playerData);
+		this.playerData.sharechestTs = egret.getTimer();  // FIXME
 		return this.playerData;
 	}
 
