@@ -186,10 +186,6 @@ class ShipPanel extends tutils.Component {
         }
     }
 
-    protected commitProperties(): void {
-        super.commitProperties();
-    }
-
     private initBattleView(): void {
         this.currentState = "BattleInit";
         this.commitProperties();

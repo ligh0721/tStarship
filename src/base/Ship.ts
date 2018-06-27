@@ -44,7 +44,7 @@ class Ship extends HpUnit {
 		// this.key = key;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
-		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actionManager) : this.timer.constructor(GameController.instance.actionManager);
+		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actMgr) : this.timer.constructor(GameController.instance.actMgr);
 		this.ai===undefined ? this.ai=new tutils.StateManager() : this.ai.constructor();
 	}
 
@@ -62,13 +62,12 @@ class Ship extends HpUnit {
 
 	// override
 	protected onCleanup(): void {
-		for (let i in this.guns) {
-			let gun = this.guns[i];
+		for (let id in this.guns) {
+			let gun = this.guns[id];
 			gun.cleanup();
 		}
-		for (let i in this.buffs) {
-			let buff = this.buffs[i];
-			buff.cleanup();
+		for (let id in this.buffs) {
+			this.removeBuff(id);
 		}
 		if (this.timer.running) {
 			this.timer.stop();

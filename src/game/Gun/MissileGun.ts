@@ -35,7 +35,7 @@ class MissileGun extends Gun {
 	protected fireBulletGuild(bullet: Bullet, target: Ship): void {
 		let bulletId = bullet.id;
 		let targetId = "";
-		let timer = new tutils.TimerByAction(GameController.instance.actionManager);
+		let timer = new tutils.TimerByAction(GameController.instance.actMgr);
 		let yDropSpeed = 40;
 		let bulletSpeed = 0;
 		let angleSpeed = 0;

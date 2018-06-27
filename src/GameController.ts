@@ -22,7 +22,7 @@ class GameController {
 
 	// battleShips: string[];
 
-	actionManager: tutils.ActionManager = new tutils.ActionManager();
+	actMgr: tutils.ActionManager = new tutils.ActionManager();
 	hud: BattleHUD;
 
 	public constructor() {
@@ -49,7 +49,7 @@ class GameController {
 
 	public init(root: Main): void {
 		this.root = root;
-		this.actionManager.start(60);
+		this.actMgr.start(60);
 	}
 
 	public createRootLayer<LAYER extends tutils.Layer>(t: new(r: Main) => LAYER): tutils.Layer {
@@ -163,11 +163,11 @@ class GameController {
 		return p;
 	}
 	public showPartsPanel(parent: egret.DisplayObjectContainer, data: any): PartsPanel {
-		let speed = GameController.instance.actionManager.speed;
-		GameController.instance.actionManager.speed = 0;
+		let speed = GameController.instance.actMgr.speed;
+		GameController.instance.actMgr.speed = 0;
 		// ectrl.stopRush();
 		let panel = new PartsPanel(data, (res)=>{
-			GameController.instance.actionManager.speed = speed;
+			GameController.instance.actMgr.speed = speed;
 			// ectrl.startRush();
 		});
         parent.addChild(panel);
@@ -549,12 +549,12 @@ class GameController {
 	}
 
 	public addAction(target: egret.IHashObject, action: tutils.Action): tutils.Action {
-		this.actionManager.addAction(target, action);
+		this.actMgr.addAction(target, action);
 		return action;
 	}
 
 	public setActionSpeed(speed: number): void {
-		this.actionManager.speed = speed;
+		this.actMgr.speed = speed;
 	}
 }
 

@@ -8,7 +8,7 @@ class SatelliteGun extends Gun {
 
 	public constructor() {
 		super();
-		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actionManager) : this.timer.constructor(GameController.instance.actionManager);
+		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actMgr) : this.timer.constructor(GameController.instance.actMgr);
 	}
 
 	public fire(): void {

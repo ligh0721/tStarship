@@ -233,11 +233,11 @@ class BattleHUD extends tutils.Component implements IHeroHUD {
                 new tutils.MoveBy(500, pos.x, pos.y)
             ),
             new tutils.CallFunc(():void=>{
-                GameController.instance.actionManager.removeAllActions(lbl);
+                GameController.instance.actMgr.removeAllActions(lbl);
                 this.removeChild(lbl);
             }, this)
         );
-        GameController.instance.actionManager.addAction(lbl, act);
+        GameController.instance.actMgr.addAction(lbl, act);
     }
 
     private onTweenGroupComplete(evt: egret.Event): void {

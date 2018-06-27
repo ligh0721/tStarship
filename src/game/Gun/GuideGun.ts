@@ -31,7 +31,7 @@ class GuideGun extends Gun {
 	protected fireBulletGuild(bullet: Bullet, target: Ship): void {
 		let bulletId = bullet.id;
 		let targetId = "";
-		let timer = new tutils.TimerByAction(GameController.instance.actionManager);
+		let timer = new tutils.TimerByAction(GameController.instance.actMgr);
 		let angleSpeed = 0;
 		timer.setOnTimerListener((dt: number)=> {
 			if (!bullet.alive || bullet.id!=bulletId) {

@@ -14,7 +14,6 @@ class ShipLayer extends tutils.Layer {
 
     // override
     protected onRemoved(): void {
-        this.removeChild(this.panel);
         this.panel = null;
     }
 }

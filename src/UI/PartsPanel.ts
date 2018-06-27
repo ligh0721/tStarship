@@ -1,4 +1,4 @@
-class PartsPanel extends eui.Component {
+class PartsPanel extends tutils.Component {
     private open: egret.tween.TweenGroup;
     private btnResume: eui.Button;
     private rctSel0: eui.Rect;
@@ -41,9 +41,7 @@ class PartsPanel extends eui.Component {
     }
 
     // override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
         this.skinName = "resource/custom_skins/PartsPanelSkin.exml";
         this.width = egret.MainContext.instance.stage.stageWidth;
         this.currentState = "init";
@@ -51,13 +49,13 @@ class PartsPanel extends eui.Component {
         this.imgIcon.push(this.imgIcon0, this.imgIcon1, this.imgIcon2, this.imgIcon3)
 
         for (let i in this.imgIcon) {
-            this.imgIcon[i].addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapPart, this);
+            this.evtMgr.regEvent(this.imgIcon[i], egret.TouchEvent.TOUCH_TAP, this.onTapPart);
         }
-        this.grpInside.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onDragPartBegin, this);
-        this.grpOutside.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onDragPartMove, this);
-        this.grpInside.addEventListener(egret.TouchEvent.TOUCH_END, this.onDragPartEnd, this);
-        this.grpInside.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onDragPartOutside, this);
-        this.btnResume.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnResume, this);
+        this.evtMgr.regEvent(this.grpInside, egret.TouchEvent.TOUCH_BEGIN, this.onDragPartBegin);
+        this.evtMgr.regEvent(this.grpOutside, egret.TouchEvent.TOUCH_MOVE, this.onDragPartMove);
+        this.evtMgr.regEvent(this.grpInside, egret.TouchEvent.TOUCH_END, this.onDragPartEnd);
+        this.evtMgr.regEvent(this.grpInside, egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onDragPartOutside);
+        this.evtMgr.regEvent(this.btnResume, egret.TouchEvent.TOUCH_TAP, this.onBtnResume);
         this.draggingIconFake = new eui.Image();
         this.draggingIconFake.width = 100;
         this.draggingIconFake.height = 100;
@@ -70,7 +68,7 @@ class PartsPanel extends eui.Component {
         this.parts = this.data.parts;
         this.updatePartsList();
 
-        this.open.addEventListener("complete", this.onTweenGroupComplete, this);
+        this.evtMgr.regEvent(this.open, "complete", this.onTweenGroupComplete);
         this.open.play();
     }
 

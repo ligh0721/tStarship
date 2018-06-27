@@ -78,7 +78,7 @@ class Unit extends egret.HashObject implements tutils.INode {
 	protected onCleanup(): void {
 		// egret.Tween.removeTweens(this);
 		// egret.Tween.removeTweens(this.gameObject);
-		GameController.instance.actionManager.removeAllActions(this);
+		GameController.instance.actMgr.removeAllActions(this);
 	}
 
 	// override
@@ -122,11 +122,11 @@ class Unit extends egret.HashObject implements tutils.INode {
 	}
 
 	public runAction(action: tutils.Action): void {
-		GameController.instance.actionManager.addAction(this, action);
+		GameController.instance.actMgr.addAction(this, action);
 	}
 
 	public stopAllActions(): void {
-		GameController.instance.actionManager.removeAllActions(this);
+		GameController.instance.actMgr.removeAllActions(this);
 	}
 
 	public moveStraight(angle: number, speed: number, fixedRotation: boolean=false, ease?: Function, stackable: boolean=false) {

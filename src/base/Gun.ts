@@ -24,7 +24,7 @@ class Gun extends egret.HashObject {
 		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
 		this.bulletPowerLossInterval===undefined ? this.bulletPowerLossInterval=new Value(500, 100) : this.bulletPowerLossInterval.constructor(500, 100);
 		this.bulletSpeed===undefined ? this.bulletSpeed=new Value(50, 0, 200) : this.bulletSpeed.constructor(50, 0, 200);
-		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.TimerByAction(GameController.instance.actionManager) : this.autoFireTimer.constructor(GameController.instance.actionManager);
+		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.TimerByAction(GameController.instance.actMgr) : this.autoFireTimer.constructor(GameController.instance.actMgr);
 	}
 
 	public setBulletType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType) {
@@ -179,7 +179,7 @@ class Gun extends egret.HashObject {
 		this.autoFireTimer.stop();
 		// egret.Tween.removeTweens(this);
 		this.onCleanup();
-		GameController.instance.actionManager.removeAllActions(this);
+		GameController.instance.actMgr.removeAllActions(this);
 	}
 
 	// override

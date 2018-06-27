@@ -19,10 +19,9 @@ class PartUI extends eui.Component {
 		this.imgBuff.width = this.width;
 		this.imgBuff.height = this.height;
 		this.imgBuff.source = this.part.model;
-
-		this.addEventListener(eui.UIEvent.REMOVED, this.onRemoved, this);
 	}
 
+	// override
 	protected onRemoved(evt: eui.UIEvent): void {
 		this.part = null;
 	}

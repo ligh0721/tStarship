@@ -18,7 +18,7 @@ module tutils {
 			this.thisObject = thisObject;
 			this.timerInterval = timerInterval===undefined ? 100 : timerInterval;
 			if (this.onTimerListener) {
-				this.timer = new tutils.TimerByAction(GameController.instance.actionManager);
+				this.timer = new tutils.TimerByAction(GameController.instance.actMgr);
 				this.timer.setOnTimerListener(this.onTimer, this);
 			}
 		}

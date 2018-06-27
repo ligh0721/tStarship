@@ -58,19 +58,19 @@ class EnemyController {
 		// 	}, this)
 		// );
 		// let act = new tutils.RepeatForever(seqAct);
-		GameController.instance.actionManager.addAction(this.rushHashObj, this.rushTimerAct);
+		GameController.instance.actMgr.addAction(this.rushHashObj, this.rushTimerAct);
 	}
 
 	public stopRush(): void {
 		// this.timer.stop();
-		GameController.instance.actionManager.removeAllActions(this.rushHashObj);
+		GameController.instance.actMgr.removeAllActions(this.rushHashObj);
 	}
 
 	private onRushStep(dt: number): void {
 		for (;;) {
 			if (this.rushes.length <= 0) {
 				// this.timer.stop();
-				GameController.instance.actionManager.removeAllActions(this.rushHashObj);
+				GameController.instance.actMgr.removeAllActions(this.rushHashObj);
 				this.tick = 0;
 				return;
 			}

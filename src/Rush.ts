@@ -49,7 +49,7 @@ class Rush extends egret.HashObject {
 					i++;
 				}, this);
 				// t.start(this.interval, true, this.ships.length);
-				GameController.instance.actionManager.addAction(this, act);
+				GameController.instance.actMgr.addAction(this, act);
 			}
 		}
 	}

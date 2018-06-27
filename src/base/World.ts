@@ -12,6 +12,8 @@ class World {
 	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
 
+	timer: tutils.ITimer;
+
 	// private readonly obShip: Ship;
 
 	// 部分监听器可以从world广播优化成ship单播 
@@ -45,15 +47,19 @@ class World {
 	}
 
 	public start(frameRate: number): void {
-		let t = new tutils.Timer();
-		t.setOnTimerListener((dt: number): void=> {
-			this.step(dt);
-		}, this);
-		t.start(1000/frameRate, true, 0);
+		if (!this.timer) {
+			this.timer = new tutils.TimerByAction(GameController.instance.actMgr);
+			this.timer.setOnTimerListener((dt: number): void=> {
+				this.step(dt);
+			}, this);
+		}
+		this.timer.start(1000/frameRate, true, 0);
 	}
 
 	public cleanup(): void {
-		
+		if (this.timer) {
+			this.timer.stop();
+		}
 	}
 
 	public getShip(id: string): Ship {

@@ -22,6 +22,7 @@ class BattleLayer extends tutils.Layer {
     private txtHeroScale: egret.TextField;
 
     private tickerEffect = new Effect(1, 10);
+    private supplySpawner: tutils.ITimer;
 
     // 双击释放技能
     private lastTouchBeginTick: number = 0;
@@ -135,8 +136,8 @@ class BattleLayer extends tutils.Layer {
     protected onRemoved(): void {
         this.enemyCtrl.stopRush();
         tutils.stopBgMusic();
+        this.bgCtrl.stop();
         this.world.cleanup();
-        this.removeAllChildren();
     }
 
     protected createPushStart(): void {
@@ -164,11 +165,11 @@ class BattleLayer extends tutils.Layer {
             tw.call(change, this, [txt]);
         }
         change(this.txtPushStart);
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart, this);
+        this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart);
     }
 
     protected onTouchTapPushStart(evt: egret.TouchEvent): void {
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart, this);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart);
         egret.Tween.removeTweens(this.txtPushStart);
         this.msgLayer.removeChild(this.txtPushStart);
         this.txtPushStart = null;
@@ -213,11 +214,11 @@ class BattleLayer extends tutils.Layer {
         // this.hud.setEnemyController(this.enemyCtrl);
         
         // 创建测试补给箱
-        let testSupplyTimer = new tutils.TimerByAction(GameController.instance.actionManager);
-        testSupplyTimer.setOnTimerListener((dt: number): void=>{
+        this.supplySpawner = new tutils.TimerByAction(GameController.instance.actMgr);
+        this.supplySpawner.setOnTimerListener((dt: number): void=>{
             this.createTestSupply();
         });
-        testSupplyTimer.start(8000, true, 0);
+        this.supplySpawner.start(8000, true, 0);
 
         // let test_parts = ["part_elec_induced_gun", "part_critical_2"];
         // for (let i in test_parts) {
@@ -236,7 +237,7 @@ class BattleLayer extends tutils.Layer {
         this.createAllRushes();
 
         // 最后添加事件监听器
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin);
         let tw = egret.Tween.get(this.hero);
         tw.to({y: this.stage.stageHeight - 200}, 1000);  
         tw.wait(1000);
@@ -246,8 +247,8 @@ class BattleLayer extends tutils.Layer {
 
             this.hero.mainGun.autoFire = true;
 
-            this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            this.layer.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
+            this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
             
             // let boss = this.enemyCtrl.createBoss2();
             // this.createBossUI(boss);
@@ -387,10 +388,11 @@ class BattleLayer extends tutils.Layer {
 
     private gameOver(): void {
         // GAME OVER
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
         this.enemyCtrl.stopRush();
+        this.supplySpawner.stop();
 
         // 玩家数据
         let playerData = GameController.instance.playerData;
@@ -532,7 +534,7 @@ class BattleLayer extends tutils.Layer {
         this.sldHeroScale.value = 100;
         this.hero.gameObject.scaleX = this.sldHeroScale.value / 100;
         this.hero.gameObject.scaleY = this.sldHeroScale.value / 100;
-        this.sldHeroScale.addEventListener(eui.UIEvent.CHANGE, this.onHeroScaleChanged, this)
+        this.evtMgr.regEvent(this.sldHeroScale, eui.UIEvent.CHANGE, this.onHeroScaleChanged);
         this.txtHeroScale = new egret.TextField();
         this.hudLayer.addChild(this.txtHeroScale);
         this.txtHeroScale.x = 0;

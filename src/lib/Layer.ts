@@ -22,6 +22,7 @@ module tutils {
 		}
 
 		public removeChild(child: egret.DisplayObject): egret.DisplayObject {
+			this.evtMgr.unregEvents(child);
 			return this.layer.removeChild(child);
 		}
 
@@ -32,14 +33,17 @@ module tutils {
 			for (let i=this.layer.numChildren-1; i>=0; i--) {
 				this.layer.removeChildAt(i);
 			}
+			this.evtMgr.unregAllEvents();
 		}
 
 		private $onRemoved(evt: eui.UIEvent): void {
 			if (evt.target !== this.layer) {
+				this.evtMgr.unregEvents(evt.target);
 				return;
 			}
 			this.layer.removeEventListener(eui.UIEvent.REMOVED, this.$onRemoved, this);
 			this.removeAllChildren();
+			this.evtMgr.cleanup();
 			this.onRemoved();
 		}
 
