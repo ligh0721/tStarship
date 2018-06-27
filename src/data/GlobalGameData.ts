@@ -1,7 +1,7 @@
 const GlobalConfig = {
 	ver: 1,
 	reset: true,
-	freeChestCD: 3600
+	freeChestCD: 3600e3
 }
 
 const GlobalMaxHp = 50;  // for UI
@@ -384,7 +384,7 @@ const GlobalPlayerInitData: PlayerData = {
 		}
 	},
 	skill: "skill_turbo_fire",
-	onlineChestTs: 0,
+	freeChestTs: 0,
 	adChestTs: 0,
 	sharechestTs: 0,
 	allChests: [0]

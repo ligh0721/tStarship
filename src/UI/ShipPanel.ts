@@ -52,15 +52,21 @@ class ShipPanel extends eui.Component {
     private lblEquipDesc: eui.Label;
     private rctPopEquipMask: eui.Rect;
     private btnFreeChest: eui.Button;
+    private lblFreeChestLeft: eui.BitmapLabel;
+    private lblFreeChestTitle: eui.BitmapLabel;
+    private lblChestNum: eui.BitmapLabel;
+    private btnOpenChest1: eui.Button;
+    private btnOpenChest5: eui.Button;
     
     private btnCheat: eui.Button;
     private btnClearArchives: eui.Button;
     private tabBottom: eui.TabBar;
 
     private playerData: PlayerData = null;
-    private gun: string = "";
-    private skill: string = "";
+    private gun: string = null;
+    private skill: string = null;
     private curEquipKey: string = null;
+    private freeChestUpdate: tutils.ITimer;
 
 	public constructor() {
         super();
@@ -87,6 +93,9 @@ class ShipPanel extends eui.Component {
         this.lstEquips.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onTapListItem, this);
         this.rctPopEquipMask.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapShipPopMask, this);
         // this.vsMain.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onMainStackViewChange, this);
+        this.btnFreeChest.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnFreeChest, this);
+        this.btnOpenChest1.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest1, this);
+        this.btnOpenChest5.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest5, this);
 
         this.grpPopEquip.visible = false;
         this.btnChangeGun.touchEnabled = false;
@@ -155,7 +164,7 @@ class ShipPanel extends eui.Component {
     private onTweenGroupComplete(evt: egret.Event): void {
         switch (evt.target) {
         case this.openBattle:
-            this.currentState = "BattleFinal";
+            // this.currentState = "BattleFinal";
             this.btnStart.touchEnabled = true;
             this.btnChangeGun.touchEnabled = true;
             this.btnChangeSkill.touchEnabled = true;
@@ -166,15 +175,16 @@ class ShipPanel extends eui.Component {
             break;
 
         case this.closePopEquip:
-            this.currentState = "BattleFinal";
+            // this.currentState = "BattleFinal";
             this.btnChangeGun.touchEnabled = true;
             this.btnChangeSkill.touchEnabled = true;
             this.grpPopEquip.visible = false;
             break;
 
         case this.openShop:
-            this.commitProperties();
-            this.currentState = "ShopFinal";
+            // this.commitProperties();
+            // this.currentState = "ShopFinal";
+            // this.commitProperties();
             break;
         }
     }
@@ -182,8 +192,8 @@ class ShipPanel extends eui.Component {
     private initBattleView(): void {
         this.currentState = "BattleInit";
         this.commitProperties();
-        this.setGun(this.playerData.gun);
-        this.setSkill(this.playerData.skill);
+        this.setGun(this.gun ? this.gun : this.playerData.gun);
+        this.setSkill(this.skill ? this.skill : this.playerData.skill);
         this.updateShipDetal();
         this.openBattle.play(0);
     }
@@ -191,6 +201,45 @@ class ShipPanel extends eui.Component {
     private initShopView(): void {
         this.currentState = "ShopInit";
         this.commitProperties();
+
+        // 免费宝箱时间
+        if (!this.freeChestUpdate) {
+            this.freeChestUpdate = new tutils.Timer();
+            this.freeChestUpdate.setOnTimerListener((dt: number):void=>{
+                let now = new Date();
+                let left = this.playerData.freeChestTs + GlobalConfig.freeChestCD - now.getTime();
+                if (left > 0) {
+                    let str = new Date(left).toISOString().substr(11, 8);
+                    this.lblFreeChestLeft.text = str;
+                } else {
+                    // 到时间了
+                    this.freeChestUpdate.stop();
+                    this.lblFreeChestTitle.visible = false;
+                    this.lblFreeChestLeft.visible = false;
+                    this.btnFreeChest.visible = true;
+                }
+            }, this);
+        }
+        
+        let now = new Date();
+        let left = this.playerData.freeChestTs + GlobalConfig.freeChestCD - now.getTime();
+        if (left > 0) {
+            // 显示剩余时间
+            this.lblFreeChestTitle.visible = true;
+            this.lblFreeChestLeft.visible = true;
+            this.btnFreeChest.visible = false;
+
+            let str = new Date(left).toISOString().substr(11, 8);
+            this.lblFreeChestLeft.text = str;
+            this.freeChestUpdate.start(0);
+        } else {
+            // 免费宝箱可以领取
+            this.lblFreeChestTitle.visible = false;
+            this.lblFreeChestLeft.visible = false;
+            this.btnFreeChest.visible = true;
+        }
+
+        this.lblChestNum.text = "x " + this.playerData.allChests[0].toString();
         this.openShop.play(0);
     }
 
@@ -228,6 +277,8 @@ class ShipPanel extends eui.Component {
 
     private onBtnClearArchives(evt: egret.TouchEvent): void {
         this.playerData = GameController.instance.resetPlayerData();
+        this.gun = null;
+        this.skill = null;
         this.lblCoins.text = this.playerData.coins.toString();
     }
 
@@ -579,6 +630,44 @@ class ShipPanel extends eui.Component {
 
     private get editingGun(): boolean {
         return this.grpGunDetail.visible;
+    }
+
+    private onBtnFreeChest(evt: egret.TouchEvent): void {
+        let targetTs = this.playerData.freeChestTs + GlobalConfig.freeChestCD;
+        let now = new Date();
+        let left = this.playerData.freeChestTs + GlobalConfig.freeChestCD - now.getTime();
+        if (left > 0) {
+            return;
+        }
+        this.playerData.allChests[0]++;
+        this.playerData.freeChestTs = now.getTime();
+        this.lblFreeChestTitle.visible = true;
+        this.lblFreeChestLeft.visible = true;
+        this.btnFreeChest.visible = false;
+
+        let str = new Date(GlobalConfig.freeChestCD).toISOString().substr(11, 8);
+        this.lblFreeChestLeft.text = str;
+        this.freeChestUpdate.start(0);
+
+        this.lblChestNum.text = "x " + this.playerData.allChests[0].toString();
+    }
+
+    private onBtnOpenChest1(evt: egret.TouchEvent): void {
+        this.openChest(1);
+    }
+
+    private onBtnOpenChest5(evt: egret.TouchEvent): void {
+        this.openChest(5);
+    }
+
+    private openChest(num: 1|5): void {
+        let left = this.playerData.allChests[0] - num;
+        if (left < 0) {
+            // 箱子不足
+            return;
+        }
+
+        this.playerData.allChests[0] = left;
     }
 }
 

@@ -592,7 +592,7 @@ type PlayerData = {
 	skillsNum: number,
     skills: {[key: string]: PlayerSkillData},
 	skill: string,
-	onlineChestTs: number,
+	freeChestTs: number,
 	adChestTs: number,
 	sharechestTs: number,
 	allChests: number[]

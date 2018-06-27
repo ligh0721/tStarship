@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="ShipPanelSkin" currentState="ShopFinal" height="960" states="init,final,BattleInit,BattleFinal,SocialInit,ShopInit,ShopFinal" width="720" xmlns:e="http://ns.egret.com/eui" xmlns:tween="egret.tween.*" xmlns:w="http://ns.egret.com/wing">
+<e:Skin class="ShipPanelSkin" currentState="BattleInit" height="960" states="init,final,BattleInit,BattleFinal,SocialInit,ShopInit,ShopFinal" width="720" xmlns:e="http://ns.egret.com/eui" xmlns:tween="egret.tween.*" xmlns:w="http://ns.egret.com/wing">
     <w:Config id="16437832afe"/>
     <w:Declarations>
         <tween:TweenGroup id="openBattle">
@@ -160,7 +160,7 @@
                         <e:Image left="29" scaleX="0.7" scaleY="0.7" source="Chest_png" verticalCenter="0"/>
                         <e:Button id="btnFreeChest" height="55" horizontalCenter="46" label="Free" skinName="GreenButtonSmallSkinV3" verticalCenter="0" width="123" visible="false"/>
                         <e:BitmapLabel font="FranklinGothicHeavy30_fnt" id="lblFreeChestLeft" left="121" text="21:56:20" textAlign="center" verticalCenter="12" width="150"/>
-                        <e:BitmapLabel font="FranklinGothicHeavy30_fnt" left="105" text="NEXT FREE" textAlign="center" verticalCenter="-12.5" width="180"/>
+                        <e:BitmapLabel font="FranklinGothicHeavy30_fnt" id="lblFreeChestTitle" left="105" text="NEXT FREE" textAlign="center" verticalCenter="-12.5" width="180"/>
                     </e:Group>
                 </e:Group>
             </e:Group>
