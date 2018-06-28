@@ -227,12 +227,12 @@ class GameController {
 
 	private loadAllChestDropTable(): DropTable<any>[] {
 		let ret: DropTable<any>[] = [];
-		let chest1 = this.loadDropTable(GlobalChest1Drop);
+		let chest1 = this.$loadDropTable(GlobalChest1Drop);
 		ret.push(chest1);
 		return ret;
 	}
 
-	private loadDropTable(rawTable: any[]): DropTable<any> {
+	private $loadDropTable(rawTable: any[]): DropTable<any> {
 		let ret: DropTable<any> = new DropTable<any>();
 		for (let i in rawTable) {
 			let drop = rawTable[i];
@@ -241,7 +241,7 @@ class GameController {
 			if (typeof(drop) === "string") {
 				ret.push(item, weight);
 			} else {
-				ret.push(this.loadDropTable(item), weight);
+				ret.push(this.$loadDropTable(item), weight);
 			}
 		}
 		return ret;

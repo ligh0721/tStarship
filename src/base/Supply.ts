@@ -62,17 +62,18 @@ class Supply extends Unit {
 		this.y = y;
 		this.moveStraight(180, this.speed, true, ease);
 		if (this.pickDist > 0) {
-			this.moveToShip(null);
+			this.moveToShip();
 		}
 	}
 
-	protected moveToShip(target: Ship) {
+	protected moveToShip() {
+		let target: Ship = null;
 		let targetId = target==null ? 0 : target.id;
 		let angleRaw = target==null ? 0 : Math.atan2(target.gameObject.y-this.gameObject.y, target.gameObject.x-this.gameObject.x);
 		let thisId = this.id;
 		let timer = new tutils.Timer();
-		timer.setOnTimerListener((dt: number)=> {
-			if (!this.alive || this.id != thisId || (target != null && (!target.alive || target.id != targetId))) {
+		timer.setOnTimerListener((dt: number): void=> {
+			if (!this.world.running || !this.alive || this.id!=thisId || (target!=null && (!target.alive || target.id!=targetId))) {
 				timer.stop();
 				return;
 			}

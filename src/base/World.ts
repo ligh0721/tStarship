@@ -56,6 +56,10 @@ class World {
 		this.timer.start(1000/frameRate, true, 0);
 	}
 
+	public get running(): boolean {
+		return this.timer.running;
+	}
+
 	public cleanup(): void {
 		if (this.timer) {
 			this.timer.stop();
