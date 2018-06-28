@@ -387,5 +387,5 @@ const GlobalPlayerInitData: PlayerData = {
 	freeChestTs: 0,
 	adChestTs: 0,
 	sharechestTs: 0,
-	allChests: [0]
+	allChests: [100]
 };

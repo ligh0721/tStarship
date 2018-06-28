@@ -3,6 +3,10 @@ class ShipPanel extends tutils.Component {
     private openPopEquip: egret.tween.TweenGroup;
     private closePopEquip: egret.tween.TweenGroup;
     private openShop: egret.tween.TweenGroup;
+    private preOpenChest: egret.tween.TweenGroup;
+    private endOpenChest: egret.tween.TweenGroup;
+    private openChest1: egret.tween.TweenGroup;
+    private openChest5: egret.tween.TweenGroup;
     private vsMain: eui.ViewStack;
     private btnTab: eui.RadioButton;
     private grpShop: eui.Group;
@@ -57,6 +61,8 @@ class ShipPanel extends tutils.Component {
     private lblChestNum: eui.BitmapLabel;
     private btnOpenChest1: eui.Button;
     private btnOpenChest5: eui.Button;
+    private grpPopOpenChests: eui.Group;
+    private rctPopOpenChestsMask: eui.Rect;
     
     private btnCheat: eui.Button;
     private btnClearArchives: eui.Button;
@@ -67,6 +73,7 @@ class ShipPanel extends tutils.Component {
     private skill: string = null;
     private curEquipKey: string = null;
     private freeChestUpdate: tutils.ITimer = null;
+    private numChestOpened: 1|5 = 1;
 
     
     // override
@@ -82,6 +89,10 @@ class ShipPanel extends tutils.Component {
         this.evtMgr.regEvent(this.openPopEquip, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.closePopEquip, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.openShop, "complete", this.onTweenGroupComplete);
+        this.evtMgr.regEvent(this.preOpenChest, "complete", this.onTweenGroupComplete);
+        this.evtMgr.regEvent(this.endOpenChest, "complete", this.onTweenGroupComplete);
+        this.evtMgr.regEvent(this.openChest1, "complete", this.onTweenGroupComplete);
+        this.evtMgr.regEvent(this.openChest5, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.btnStart, egret.TouchEvent.TOUCH_TAP, this.onBtnStart);
         this.evtMgr.regEvent(this.btnChangeGun, egret.TouchEvent.TOUCH_TAP, this.onBtnChangeGun);
         this.evtMgr.regEvent(this.btnChangeSkill, egret.TouchEvent.TOUCH_TAP, this.onBtnChangeSkill);
@@ -94,6 +105,7 @@ class ShipPanel extends tutils.Component {
         this.evtMgr.regEvent(this.btnOpenChest5, egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest5);
 
         this.grpPopEquip.visible = false;
+        this.grpPopOpenChests.visible = false;
         this.btnChangeGun.touchEnabled = false;
         this.btnChangeSkill.touchEnabled = false;
         this.btnStart.touchEnabled = false;
@@ -183,6 +195,23 @@ class ShipPanel extends tutils.Component {
             // this.currentState = "ShopFinal";
             // this.commitProperties();
             break;
+
+        case this.preOpenChest:
+            if (this.numChestOpened === 1) {
+                this.openChest1.play(0);
+            } else {
+                this.openChest5.play(0);
+            }
+            break;
+
+        case this.endOpenChest:
+            break;
+
+        case this.openChest1:
+            break;
+
+        case this.openChest5:
+            break;
         }
     }
 
@@ -198,6 +227,7 @@ class ShipPanel extends tutils.Component {
     private initShopView(): void {
         this.currentState = "ShopInit";
         this.commitProperties();
+        this.grpPopOpenChests.visible = false;
 
         // 免费宝箱时间
         if (!this.freeChestUpdate) {
@@ -318,6 +348,14 @@ class ShipPanel extends tutils.Component {
     private onTapShipPopMask(evt: egret.TouchEvent): void {
         if (evt.target === this.rctPopEquipMask) {
             this.closePopEquip.play(0);
+        }
+    }
+
+    private onTapOpenChestsMask(evt: egret.TouchEvent): void {
+        if (evt.target === this.rctPopOpenChestsMask) {
+            this.grpPopOpenChests.visible = false;
+            this.grpPopOpenChests.alpha = 0;
+            this.endOpenChest.play(0);
         }
     }
 
@@ -668,6 +706,11 @@ class ShipPanel extends tutils.Component {
         }
 
         this.playerData.allChests[0] = left;
+        this.lblChestNum.text = "x " + left;
+        this.numChestOpened = num;
+        this.preOpenChest.play(0);
+        this.grpPopOpenChests.visible = true;
+        this.evtMgr.regEvent(this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapOpenChestsMask);
     }
 }
 

@@ -21,7 +21,7 @@ class BuffSupply extends Supply {
 
 		this.moveStraight(180, this.speed, true, ease, true);
 		if (this.pickDist > 0) {
-			this.moveToShip(null);
+			this.moveToShip();
 		}
 	}
 

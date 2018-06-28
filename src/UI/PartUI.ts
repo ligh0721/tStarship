@@ -1,4 +1,4 @@
-class PartUI extends eui.Component {
+class PartUI extends tutils.Component {
 	private imgBuff: eui.Image;
 	part: Part;
 
@@ -8,9 +8,7 @@ class PartUI extends eui.Component {
 	}
 
 	// override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
 		this.width = 50;
 		this.height = 50;
 
@@ -22,7 +20,7 @@ class PartUI extends eui.Component {
 	}
 
 	// override
-	protected onRemoved(evt: eui.UIEvent): void {
+	protected onRemoved(): void {
 		this.part = null;
 	}
 }
