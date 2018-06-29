@@ -6,7 +6,6 @@ class ShipPanel extends tutils.Component {
     private preOpenChest: egret.tween.TweenGroup;
     private endOpenChest: egret.tween.TweenGroup;
     private openChest1: egret.tween.TweenGroup;
-    private openChest5: egret.tween.TweenGroup;
     private vsMain: eui.ViewStack;
     private btnTab: eui.RadioButton;
     private grpShop: eui.Group;
@@ -63,6 +62,11 @@ class ShipPanel extends tutils.Component {
     private btnOpenChest5: eui.Button;
     private grpPopOpenChests: eui.Group;
     private rctPopOpenChestsMask: eui.Rect;
+    private grpChestItemLevel0: eui.Group;
+    private lblChestItemLevel0: eui.BitmapLabel;
+    private progChestItemExp0: eui.Rect;
+    private imgChestIcon0: eui.Image;
+    
     
     private btnCheat: eui.Button;
     private btnClearArchives: eui.Button;
@@ -92,7 +96,6 @@ class ShipPanel extends tutils.Component {
         this.evtMgr.regEvent(this.preOpenChest, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.endOpenChest, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.openChest1, "complete", this.onTweenGroupComplete);
-        this.evtMgr.regEvent(this.openChest5, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.btnStart, egret.TouchEvent.TOUCH_TAP, this.onBtnStart);
         this.evtMgr.regEvent(this.btnChangeGun, egret.TouchEvent.TOUCH_TAP, this.onBtnChangeGun);
         this.evtMgr.regEvent(this.btnChangeSkill, egret.TouchEvent.TOUCH_TAP, this.onBtnChangeSkill);
@@ -197,20 +200,14 @@ class ShipPanel extends tutils.Component {
             break;
 
         case this.preOpenChest:
-            if (this.numChestOpened === 1) {
-                this.openChest1.play(0);
-            } else {
-                this.openChest5.play(0);
-            }
+            this.openChest1.play(0);
             break;
 
         case this.endOpenChest:
             break;
 
         case this.openChest1:
-            break;
-
-        case this.openChest5:
+            this.runShowChestDrop(1);
             break;
         }
     }
@@ -529,10 +526,10 @@ class ShipPanel extends tutils.Component {
         egret.Tween.removeTweens(this.progEquipGunPower);
         egret.Tween.removeTweens(this.progEquipGunFireRate);
         egret.Tween.removeTweens(this.progEquipGunExp);
-        let tw = egret.Tween.get(this.progEquipGunPower)
+        let tw = egret.Tween.get(this.progEquipGunPower);
         tw.to({percentWidth: Math.min(100, gunData.bulletPower * gunData.bulletNum * 100 / GlobalMaxPower)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progEquipGunFireRate)
-        tw.to({percentWidth: Math.min(100, 100000 / gunData.fireCD / GlobalMaxFireRate)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, 100000/gunData.fireCD/GlobalMaxFireRate)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progEquipGunExp)
         tw.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
     }
@@ -711,6 +708,44 @@ class ShipPanel extends tutils.Component {
         this.preOpenChest.play(0);
         this.grpPopOpenChests.visible = true;
         this.evtMgr.regEvent(this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapOpenChestsMask);
+    }
+
+    private runShowChestDrop(num: 1|5): void {
+        let playerGunData = GameController.instance.getPlayerGunDataByKey("gun_single");
+        let level = GameController.instance.expToGunLevel(playerGunData.exp);
+        this.lblChestItemLevel0.text = level.toString();
+        let expPerWidth = 100;
+        if (level !== GameController.instance.gunExpTable.length+1) {
+            // 没满级
+            let expBase = level===1 ? 0 : GameController.instance.gunExpTable[level-2];
+            let expNext = GameController.instance.gunExpTable[level-1];
+            expPerWidth = (playerGunData.exp - expBase) * 100 / (expNext - expBase);
+        }
+        this.progChestItemExp0.percentWidth = expPerWidth;
+        let tw = egret.Tween.get(this.grpChestItemLevel0);
+        tw.call(():void=>{
+            this.imgChestIcon0.source = "RedHeroShip_png";
+        }, this);
+        tw.set({alpha: 1}, 500);
+        tw.wait(100);
+        tw.call(():void=>{
+            playerGunData.exp++;
+            let level2 = GameController.instance.expToGunLevel(playerGunData.exp);
+            let expPerWidth = 100;
+            if (level2 !== GameController.instance.gunExpTable.length+1) {
+                // 没满级
+                let expBase = level2===1 ? 0 : GameController.instance.gunExpTable[level2-2];
+                let expNext = GameController.instance.gunExpTable[level2-1];
+                expPerWidth = (playerGunData.exp - expBase) * 100 / (expNext - expBase);
+            }
+            let tw2 = egret.Tween.get(this.progChestItemExp0);
+            tw2.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
+            if (level2 !== level) {
+                tw2.call(():void=>{
+                    this.lblChestItemLevel0.text = level2.toString();
+                }, this);
+            }
+        }, this);
     }
 }
 

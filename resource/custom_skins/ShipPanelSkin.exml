@@ -211,89 +211,6 @@
 					</tween:To>
 				</tween:TweenItem>
 			</tween:TweenGroup>
-			<tween:TweenGroup id="openChest5">
-				<tween:TweenItem target="{grpChestItem0}">
-					<tween:Wait duration="300"/>
-					<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}" x="{310}" y="{538}"/>
-					</tween:props>
-					</tween:Set>
-					<tween:To duration="500" ease="cubicOut">
-					<tween:props>
-						<e:Object alpha="{1}" x="{50}" y="{320}"/>
-					</tween:props>
-					</tween:To>
-				</tween:TweenItem>
-				<tween:TweenItem target="{grpChestItem1}">
-					<tween:Wait duration="100"/>
-					<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}" x="{310}" y="{538}"/>
-					</tween:props>
-					</tween:Set>
-					<tween:To duration="500" ease="cubicOut">
-					<tween:props>
-						<e:Object alpha="{1}" x="{180}" y="{285}"/>
-					</tween:props>
-					</tween:To>
-				</tween:TweenItem>
-				<tween:TweenItem target="{grpChestItem2}">
-					<tween:Set>
-						<tween:props>
-							<e:Object alpha="{0}" x="{310}" y="{538}"/>
-						</tween:props>
-					</tween:Set>
-					<tween:To duration="500" ease="cubicOut">
-						<tween:props>
-							<e:Object alpha="{1}" y="{250}" x="{310}"/>
-						</tween:props>
-					</tween:To>
-				</tween:TweenItem>
-				<tween:TweenItem target="{grpChestItem3}">
-					<tween:Wait duration="200"/>
-					<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}" x="{310}" y="{538}"/>
-					</tween:props>
-					</tween:Set>
-					<tween:To duration="500" ease="cubicOut">
-					<tween:props>
-						<e:Object alpha="{1}" x="{440}" y="{285}"/>
-					</tween:props>
-					</tween:To>
-				</tween:TweenItem>
-				<tween:TweenItem target="{grpChestItem4}">
-					<tween:Wait duration="400"/>
-					<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}" x="{310}" y="{538}"/>
-					</tween:props>
-					</tween:Set>
-					<tween:To duration="500" ease="cubicOut">
-					<tween:props>
-						<e:Object alpha="{1}" x="{570}" y="{320}"/>
-					</tween:props>
-					</tween:To>
-				</tween:TweenItem>
-				<tween:TweenItem target="{grpPopOpenChests}">
-					<tween:Set>
-					<tween:props>
-						<e:Object alpha="{0}"/>
-					</tween:props>
-					</tween:Set>
-					<tween:To duration="100">
-					<tween:props>
-						<e:Object alpha="{1}"/>
-					</tween:props>
-					</tween:To>
-					<tween:To duration="150">
-					<tween:props>
-						<e:Object alpha="{1}"/>
-					</tween:props>
-					</tween:To>
-				</tween:TweenItem>
-			</tween:TweenGroup>
 			<tween:TweenGroup id="endOpenChest">
 				<tween:TweenItem target="{grpChests}">
 					<tween:Set>
@@ -659,7 +576,7 @@
 			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
 				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
 				<e:Image id="imgChestIcon0" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
-				<e:Group id="grpChestItemLevel0" x="0" y="0">
+				<e:Group id="grpChestItemLevel0" x="0" y="0" alpha="0">
 					<e:Image x="0" y="0" source="levelbg_png"/>
 					<e:BitmapLabel id="lblChestItemLevel0" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
 					<e:Group height="30" width="200" x="0" y="220">
@@ -668,62 +585,6 @@
 					</e:Group>
 				</e:Group>
 			</e:Group>
-		</e:Group>
-		<e:Group id="grpChestItem1" width="100" height="100" x="310" y="538" alpha="0">
-			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
-				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
-				<e:Image id="imgChestIcon1" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
-				<e:Group id="grpChestItemLevel1" x="0" y="0">
-					<e:Image x="0" y="0" source="levelbg_png"/>
-					<e:BitmapLabel id="lblChestItemLevel1" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
-                    <e:Group height="30" width="200" x="0" y="220">
-						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
-						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp1" width="70%"/>
-					</e:Group>
-				</e:Group>
-			</e:Group>
-		</e:Group>
-		<e:Group id="grpChestItem2" width="100" height="100" x="310" y="538" alpha="0">
-			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
-				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
-				<e:Image id="imgChestIcon2" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
-				<e:Group id="grpChestItemLevel2" x="0" y="0">
-					<e:Image x="0" y="0" source="levelbg_png"/>
-					<e:BitmapLabel id="lblChestItemLevel2" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
-                    <e:Group height="30" width="200" x="0" y="220">
-						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
-						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp2" width="70%"/>
-					</e:Group>
-				</e:Group>
-			</e:Group>
-		</e:Group>
-		<e:Group id="grpChestItem3" width="100" height="100" x="310" y="538" alpha="0">
-			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
-				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
-				<e:Image id="imgChestIcon3" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
-				<e:Group id="grpChestItemLevel3" x="0" y="0">
-					<e:Image x="0" y="0" source="levelbg_png"/>
-					<e:BitmapLabel id="lblChestItemLevel3" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
-                    <e:Group height="30" width="200" x="0" y="220">
-						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
-						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp3" width="70%"/>
-					</e:Group>
-				</e:Group>
-			</e:Group>
-		</e:Group>
-		<e:Group id="grpChestItem4" width="100" height="100" x="310" y="538" alpha="0">
-			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
-				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
-				<e:Image id="imgChestIcon4" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
-				<e:Group id="grpChestItemLevel4" x="0" y="0">
-					<e:Image x="0" y="0" source="levelbg_png"/>
-					<e:BitmapLabel id="lblChestItemLevel4" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
-                    <e:Group height="30" width="200" x="0" y="220">
-						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
-						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp4" width="70%"/>
-					</e:Group>
-				</e:Group>
-            </e:Group>
 		</e:Group>
 		<e:Image scaleX="1.2" scaleY="1.2" source="Chest_png" y="600" x="288" visible="false"/>
 	</e:Group>
