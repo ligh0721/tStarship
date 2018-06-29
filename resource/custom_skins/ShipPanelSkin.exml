@@ -374,8 +374,8 @@
                                             <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblHp" right="0" scaleX="0.7" scaleY="0.8" text="Heath" textAlign="right" verticalCenter="-3" width="200"/>
                                         </e:Group>
                                         <e:Group height="20" verticalCenter="0" width="100%" x="120">
-                                            <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xc1c298" height="100%" scaleX="1" scaleY="1" strokeColor="0xffffff" strokeWeight="0" width="100%"/>
-                                            <e:Rect fillColor="0xfed44c" height="100%" id="progHp" scaleX="1" scaleY="1" width="70%"/>
+                                            <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                            <e:Rect fillColor="0xfed44c" height="100%" id="progHp" width="70%"/>
                                         </e:Group>
                                         <e:Group height="20" right="0" width="80">
                                             <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblHpV" left="0" scaleX="0.7" scaleY="0.8" text="200" textAlign="left" verticalCenter="-3" width="200"/>
@@ -389,8 +389,8 @@
                                             <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblSpeed" right="0" scaleX="0.7" scaleY="0.8" text="Speed" textAlign="right" verticalCenter="-3" width="200"/>
                                         </e:Group>
                                         <e:Group height="20" verticalCenter="0" width="100%" x="120">
-                                            <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                            <e:Rect fillColor="0xFED44C" height="100%" id="progSpeed" scaleX="1" scaleY="1" width="70%"/>
+                                            <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                            <e:Rect fillColor="0xfed44c" height="100%" id="progSpeed" width="70%"/>
                                         </e:Group>
                                         <e:Group height="20" right="0" width="80">
                                             <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblSpeedV" left="0" scaleX="0.7" scaleY="0.8" text="200" textAlign="left" verticalCenter="-3" width="200"/>
@@ -404,8 +404,8 @@
                                             <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblPower" right="0" scaleX="0.7" scaleY="0.8" text="Power" textAlign="right" verticalCenter="-3" width="200"/>
                                         </e:Group>
                                         <e:Group height="20" verticalCenter="0" width="100%" x="120">
-                                            <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                            <e:Rect fillColor="0xFED44C" height="100%" id="progPower" scaleX="1" scaleY="1" width="70%"/>
+                                            <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                            <e:Rect fillColor="0xfed44c" height="100%" id="progPower" width="70%"/>
                                         </e:Group>
                                         <e:Group height="20" right="0" width="80">
                                             <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblPowerV" left="0" scaleX="0.7" scaleY="0.8" text="10" textAlign="left" verticalCenter="-3" width="200"/>
@@ -419,8 +419,8 @@
                                             <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblFireRate" right="0" scaleX="0.7" scaleY="0.8" text="FireRate" textAlign="right" verticalCenter="-3" width="200"/>
                                         </e:Group>
                                         <e:Group height="20" verticalCenter="0" width="100%" x="120">
-                                            <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                            <e:Rect fillColor="0xFED44C" height="100%" id="progFireRate" scaleX="1" scaleY="1" width="70%"/>
+                                            <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                            <e:Rect fillColor="0xfed44c" height="100%" id="progFireRate" width="70%"/>
                                         </e:Group>
                                         <e:Group height="20" right="0" width="80">
                                             <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblFireRateV" left="0" scaleX="0.7" scaleY="0.8" text="10.0/s" textAlign="left" verticalCenter="-3" width="200"/>
@@ -434,8 +434,8 @@
                                             <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblExp" right="0" scaleX="0.7" scaleY="0.8" text="Exp(Lv.5)" textAlign="right" verticalCenter="-3" width="200"/>
                                         </e:Group>
                                         <e:Group height="20" verticalCenter="0" width="100%" x="120">
-                                            <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                            <e:Rect fillColor="0xFED44C" height="100%" id="progExp" scaleX="1" scaleY="1" width="70%"/>
+                                            <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                            <e:Rect fillColor="0xfed44c" height="100%" id="progExp" width="70%"/>
                                         </e:Group>
                                         <e:Group height="20" right="0" width="80">
                                             <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblExpV" left="0" scaleX="0.7" scaleY="0.8" text="70%" textAlign="left" verticalCenter="-3" width="200"/>
@@ -581,8 +581,8 @@
                                 <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblEquipGunPower" right="0" scaleX="0.5" scaleY="0.6" text="Power" textAlign="right" verticalCenter="-3" width="200"/>
                             </e:Group>
                             <e:Group height="15" verticalCenter="0" width="100%" x="120">
-                                <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                <e:Rect fillColor="0xFED44C" height="100%" id="progEquipGunPower" scaleX="1" scaleY="1" width="70%"/>
+                                <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                <e:Rect fillColor="0xfed44c" height="100%" id="progEquipGunPower" width="70%"/>
                             </e:Group>
                             <e:Group height="15" right="0" width="80">
                                 <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblEquipGunPowerV" left="0" scaleX="0.5" scaleY="0.6" text="10" textAlign="left" verticalCenter="-3" width="200"/>
@@ -596,8 +596,8 @@
                                 <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblEquipGunFireRate" right="0" scaleX="0.5" scaleY="0.6" text="FireRate" textAlign="right" verticalCenter="-3" width="200"/>
                             </e:Group>
                             <e:Group height="15" verticalCenter="0" width="100%" x="120">
-                                <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                <e:Rect fillColor="0xFED44C" height="100%" id="progEquipGunFireRate" scaleX="1" scaleY="1" width="70%"/>
+                                <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                <e:Rect fillColor="0xfed44c" height="100%" id="progEquipGunFireRate" width="70%"/>
                             </e:Group>
                             <e:Group height="15" right="0" width="80">
                                 <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblEquipGunFireRateV" left="0" scaleX="0.5" scaleY="0.6" text="10.0/s" textAlign="left" verticalCenter="-3" width="200"/>
@@ -611,8 +611,8 @@
                                 <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblEquipGunExp" right="0" scaleX="0.5" scaleY="0.6" text="Exp(Lv.10)" textAlign="right" verticalCenter="-3" width="200"/>
                             </e:Group>
                             <e:Group height="15" verticalCenter="0" width="100%" x="120">
-                                <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                <e:Rect fillColor="0xFED44C" height="100%" id="progEquipGunExp" scaleX="1" scaleY="1" width="70%"/>
+                                <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                <e:Rect fillColor="0xfed44c" height="100%" id="progEquipGunExp" width="70%"/>
                             </e:Group>
                             <e:Group height="15" right="0" width="80">
                                 <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblEquipGunExpV" left="0" scaleX="0.5" scaleY="0.6" text="70%" textAlign="left" verticalCenter="-3" width="200"/>
@@ -631,8 +631,8 @@
                                 <e:BitmapLabel font="FranklinGothicHeavyBlue30_fnt" id="lblEquipSkillExp" right="0" scaleX="0.5" scaleY="0.6" text="Exp(Lv.10)" textAlign="right" verticalCenter="-3" width="200"/>
                             </e:Group>
                             <e:Group height="15" verticalCenter="0" width="100%" x="120">
-                                <e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0xC1C298" height="100%" scaleX="1" scaleY="1" strokeColor="0xFFFFFF" strokeWeight="0" width="100%"/>
-                                <e:Rect fillColor="0xFED44C" height="100%" id="progEquipSkillExp" scaleX="1" scaleY="1" width="70%"/>
+                                <e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+                                <e:Rect fillColor="0xfed44c" height="100%" id="progEquipSkillExp" width="70%"/>
                             </e:Group>
                             <e:Group height="15" right="0" width="80">
                                 <e:BitmapLabel font="FranklinGothicHeavyOrange30_fnt" id="lblEquipSkillExpV" left="0" scaleX="0.5" scaleY="0.6" text="70%" textAlign="left" verticalCenter="-3" width="200"/>
@@ -653,29 +653,79 @@
             <e:Button height="66" id="btnCheat" label="Cheat" right="50" skinName="GreenButtonSkinV3" top="28" width="180"/>
         </e:Group>
     </e:Group>
-	<e:Group id="grpPopOpenChests" width="100%" height="100%" top="0" horizontalCenter="0" visible.BattleInit="false" alpha="0">
-		<e:Rect id="rctPopOpenChestsMask" height="100%" width="100%" x="0" y="0" fillColor="0x000000" fillAlpha="0.8" scaleX="1" scaleY="1"/>
-		<e:Group id="grpChestItem0" width="100" height="100" x="310" y="538" alpha="0" scaleX="1" scaleY="1">
-			<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0"/>
-			<e:Image id="imgChestIcon0" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png"/>
+	<e:Group id="grpPopOpenChests" width="100%" height="100%" top="0" horizontalCenter="0" alpha="0">
+		<e:Rect id="rctPopOpenChestsMask" height="100%" width="100%" x="0" y="0" fillColor="0x000000" fillAlpha="0.8"/>
+		<e:Group id="grpChestItem0" width="100" height="100" x="310" y="538" alpha="0">
+			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
+				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
+				<e:Image id="imgChestIcon0" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
+				<e:Group id="grpChestItemLevel0" x="0" y="0">
+					<e:Image x="0" y="0" source="levelbg_png"/>
+					<e:BitmapLabel id="lblChestItemLevel0" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
+					<e:Group height="30" width="200" x="0" y="220">
+						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp0" width="70%"/>
+					</e:Group>
+				</e:Group>
+			</e:Group>
 		</e:Group>
-		<e:Group id="grpChestItem1" width="100" height="100" x="310" y="538" alpha="0" scaleX="1" scaleY="1">
-			<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0"/>
-			<e:Image id="imgChestIcon1" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png"/>
+		<e:Group id="grpChestItem1" width="100" height="100" x="310" y="538" alpha="0">
+			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
+				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
+				<e:Image id="imgChestIcon1" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
+				<e:Group id="grpChestItemLevel1" x="0" y="0">
+					<e:Image x="0" y="0" source="levelbg_png"/>
+					<e:BitmapLabel id="lblChestItemLevel1" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
+                    <e:Group height="30" width="200" x="0" y="220">
+						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp1" width="70%"/>
+					</e:Group>
+				</e:Group>
+			</e:Group>
 		</e:Group>
-		<e:Group id="grpChestItem2" width="100" height="100" x="310" y="538" alpha="0" scaleX="1" scaleY="1">
-			<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0"/>
-			<e:Image id="imgChestIcon2" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png"/>
+		<e:Group id="grpChestItem2" width="100" height="100" x="310" y="538" alpha="0">
+			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
+				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
+				<e:Image id="imgChestIcon2" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
+				<e:Group id="grpChestItemLevel2" x="0" y="0">
+					<e:Image x="0" y="0" source="levelbg_png"/>
+					<e:BitmapLabel id="lblChestItemLevel2" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
+                    <e:Group height="30" width="200" x="0" y="220">
+						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp2" width="70%"/>
+					</e:Group>
+				</e:Group>
+			</e:Group>
 		</e:Group>
-		<e:Group id="grpChestItem3" width="100" height="100" x="310" y="538" alpha="0" scaleX="1" scaleY="1">
-			<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0"/>
-			<e:Image id="imgChestIcon3" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png"/>
+		<e:Group id="grpChestItem3" width="100" height="100" x="310" y="538" alpha="0">
+			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
+				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
+				<e:Image id="imgChestIcon3" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
+				<e:Group id="grpChestItemLevel3" x="0" y="0">
+					<e:Image x="0" y="0" source="levelbg_png"/>
+					<e:BitmapLabel id="lblChestItemLevel3" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
+                    <e:Group height="30" width="200" x="0" y="220">
+						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp3" width="70%"/>
+					</e:Group>
+				</e:Group>
+			</e:Group>
 		</e:Group>
-		<e:Group id="grpChestItem4" width="100" height="100" x="310" y="538" alpha="0" scaleX="1" scaleY="1">
-			<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0"/>
-			<e:Image id="imgChestIcon4" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png"/>
+		<e:Group id="grpChestItem4" width="100" height="100" x="310" y="538" alpha="0">
+			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
+				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
+				<e:Image id="imgChestIcon4" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
+				<e:Group id="grpChestItemLevel4" x="0" y="0">
+					<e:Image x="0" y="0" source="levelbg_png"/>
+					<e:BitmapLabel id="lblChestItemLevel4" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
+                    <e:Group height="30" width="200" x="0" y="220">
+						<e:Rect fillColor="0xc1c298" height="100%" width="100%"/>
+						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp4" width="70%"/>
+					</e:Group>
+				</e:Group>
+            </e:Group>
 		</e:Group>
-		<e:Image scaleX="1.2" scaleY="1.2" source="Chest_png" y="600" x="288"/>
+		<e:Image scaleX="1.2" scaleY="1.2" source="Chest_png" y="600" x="288" visible="false"/>
 	</e:Group>
     <e:Group height="50" id="grpTop" top="0" width="100%" x="0" x.BattleInit="0" x.init="0" y="0" y.BattleInit="0" y.init="0">
         <e:Group height="100%" id="grpCoins" right="0" top="0" width="200">
