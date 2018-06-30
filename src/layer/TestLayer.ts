@@ -48,8 +48,8 @@ class TestLayer extends tutils.Layer {
 
         let partsDropTableRare = new DropTable<DropTable<string>>();
         let table = new DropTable<string>();
-        table.push("part_test1", 100);
-        table.push("part_test2", 100);
+        table.push("part_cdr_up_1", 100);
+        table.push("part_power_up_1", 100);
         table.push("part_critical_2", 50);
         partsDropTableRare.push(table, 1000);
 

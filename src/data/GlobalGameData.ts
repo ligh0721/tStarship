@@ -1,15 +1,20 @@
 const GlobalConfig = {
 	ver: 1,
 	reset: true,
-	freeChestCD: 3600e3
+	baseMaxHp: 2,
+	baseSpeed: 150,
+	basePowerIncPer: 0.0,
+	maxStar: 5,
+	freeChestCD: 3600e3,
+	chestPrice: 200,
 }
 
-const GlobalMaxHp = 50;  // for UI
-const GlobalMaxSpeed = 500;
-const GlobalMaxPower = 100;  // for UI
-const GlobalMaxFireRate = 10;  // for UI
+const GlobalUIMaxHp = 50;  // for UI
+const GlobalUIMaxSpeed = 500;  // for UI
+const GlobalUIMaxPower = 100;  // for UI
+const GlobalUIMaxFireRate = 10;  // for UI
 
-const GlobalExpTable = [300, 600, 900, 1500, 2400, 3900, 6300, 10200, 16500, 26700, 43200, 69900, 113100, 183000, 296100, 479100, 775200, 1254300, 2029500, 3283800];
+const GlobalExpTable = [10, 20, 30, 50, 70, 100, 130, 170, 210, 260, 310, 370, 430, 500, 570, 650, 730, 820, 910, 1010];
 const GlobalGunExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
 const GlobalSkillExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
 
@@ -33,8 +38,8 @@ const SKILL_GHOST_SHIPS = "skill_ghost_ships";
 const SKILL_SUPER_HERO = "skill_super_hero";
 const SKILL_METEOROID_RUSH = "skill_meteoroid_rush";
 
-const PART_TEST1 = "part_test1";
-const PART_TEST2 = "part_test2";
+const PART_POWER_UP_1 = "part_cdr_up_1";
+const PART_CDR_UP_1 = "part_power_up_1";
 const PART_METEOROID = "part_meteoroid";
 const PART_CRITICAL_2 = "part_critical_2";
 const PART_ELEC_INDUCED_GUN = "part_elec_induced_gun";
@@ -63,9 +68,16 @@ const GlobalAllSkills: string[] = [
 	"skill_meteoroid_rush"
 ];
 
+const GlobalAllShipExps: string[] = [
+	"shipexp_1",
+	"shipexp_2",
+	"shipexp_5",
+	"shipexp_10",
+];
+
 const GlobalAllParts: string[] = [
-	"part_test1",
-	"part_test2",
+	"part_cdr_up_1",
+	"part_power_up_1",
 	"part_meteoroid",
 	"part_critical_2",
 	"part_elec_induced_gun",
@@ -76,12 +88,12 @@ const GlobalAllParts: string[] = [
 const GlobalChest1Drop = [
 	[
 		[
-			["shipexp_1", 100],
-			["shipexp_2", 100],
+			["shipexp_1", 1000],
+			["shipexp_2", 500],
 			["shipexp_5", 100],
-			["shipexp_10", 100]
+			["shipexp_10", 10]
 		],
-		100
+		2000
 	],
 	[
 		[
@@ -96,7 +108,7 @@ const GlobalChest1Drop = [
 			["gun_missile", 100],
 			["gun_sine", 100]
 		],
-		100
+		1000
 	],
 	[
 		[
@@ -106,17 +118,59 @@ const GlobalChest1Drop = [
 			["skill_super_hero", 100],
 			["skill_meteoroid_rush", 100]
 		],
-		100
+		500
 	]
 ];
 
-const GlobalChest1SkillDrop: [string, number][] = [
-	["skill_turbo_fire", 100],
-	["skill_shield_ball", 100],
-	["skill_ghost_ships", 100],
-	["skill_super_hero", 100],
-	["skill_meteoroid_rush", 100]
+const GlobalBluePartsDrop = [
+	["part_cdr_up_1", 1000],
+	["part_power_up_1", 1000]
 ];
+
+const GlobalPurplePartsDrop = [
+	["part_critical_2", 1000],
+	["part_power_speed_up_2", 1000],
+	["part_power_battery_2", 1000]
+];
+
+const GlobalOrangePartsDrop = [
+	["part_meteoroid", 1000],
+	["part_elec_induced_gun", 1000]
+];
+
+const GlobalNormalEnemyDrop = [
+	["coin_1", 1000],
+	[GlobalBluePartsDrop, 2]
+];
+
+const GlobalSeniorEnemyDrop = [
+	["coin_1", 1000],
+	[GlobalBluePartsDrop, 100],
+	[GlobalPurplePartsDrop, 50]
+];
+
+const GlobalEliteEnemyDrop = [
+	[GlobalPurplePartsDrop, 1000],
+	[GlobalOrangePartsDrop, 100]
+];
+
+const GlobalBossEnemyDrop = [
+	["coin_1", 1000],
+	[
+		[
+			[GlobalBluePartsDrop, 1000],
+			[GlobalPurplePartsDrop, 500],
+			[GlobalOrangePartsDrop, 200],
+		],
+		100
+	],
+];
+
+const GlobalMeteoroidEnemyDrop = [
+	["coin_1", 1000],
+	["part_meteoroid", 20]
+];
+
 
 // all datas
 const GlobalGunsData: GunsData = {
@@ -214,7 +268,7 @@ const GlobalGunsData: GunsData = {
         fireCD: 200,
 		bulletPower: 5,
 		bulletNum: 2,
-		bulletHitTimes: 5,
+		bulletHitTimes: 2,
 		bulletHitInterval: 1000,
 		coins: 2800
     },
@@ -270,13 +324,13 @@ const GlobalGunsData: GunsData = {
         fireCD: 200,
 		bulletPower: 5,
 		bulletNum: 2,
-		bulletHitTimes: 5,
+		bulletHitTimes: 2,
 		bulletHitInterval: 1000,
 		coins: 2800
     },
 };
 
-const GlobalSkillsData: SkillsData = {
+const GlobalSkillsData: SkillsData = { 
 	skill_turbo_fire: {
 		name: "火力倾泻",
 		desc: "大幅度提高主炮发射速率，但是为了维持稳定，飞船会暂时降低一定机动性",
@@ -292,7 +346,7 @@ const GlobalSkillsData: SkillsData = {
 	skill_super_hero: {
 		name: "火力援助",
 		desc: "请求银河号进行支援，银河号具备多重火力，并且可以阻挡敌方子弹",
-		model: "GreenHeroShip_png",
+		model: "BlueHeroShip_png",
 		coins: 0
 	},
 	skill_ghost_ships: {
@@ -308,6 +362,29 @@ const GlobalSkillsData: SkillsData = {
 		coins: 0
 	},
 };
+
+const GlobalShipExpData: ShipExpsData = {
+	shipexp_1: {
+		name: "飞船经验 +1",
+		model: "ShipExp1_png",
+		exp: 1
+	},
+	shipexp_2: {
+		name: "飞船经验 +2",
+		model: "ShipExp2_png",
+		exp: 2
+	},
+	shipexp_5: {
+		name: "飞船经验 +5",
+		model: "ShipExp5_png",
+		exp: 5
+	},
+	shipexp_10: {
+		name: "飞船经验 +10",
+		model: "ShipExp10_png",
+		exp: 10
+	},
+}
 
 const GlobalPartsData: PartsData = {
 	part_meteoroid: {
@@ -340,17 +417,17 @@ const GlobalPartsData: PartsData = {
 		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加10点感电伤害！",
 		buffs: ["part_elec_induced_gun"],
 	},
-	part_test1: {
-		name: "中级攻速零件(测试)",
+	part_cdr_up_1: {
+		name: "初级攻速零件",
 		model: "PartCDRUp1_png",
-		desc: "能够非常快、非常快地、超乎你想像的快，总之很快的去进行射击，通常来讲可以增加10%射速！",
-		buffs: ["part_test1"],
+		desc: "增加10%射速！",
+		buffs: ["part_cdr_up_1"],
 	},
-	part_test2: {
-		name: "中级火力零件(测试)",
+	part_power_up_1: {
+		name: "初级火力零件",
 		model: "PartPowerUp1_png",
 		desc: "增加10%主炮火力",
-		buffs: ["part_test2"],
+		buffs: ["part_power_up_1"],
 	}
 };
 
@@ -364,8 +441,6 @@ const GlobalPlayerInitData: PlayerData = {
     },
     maxStage: 0,
     coins: 10000,
-	maxHp: 3,
-	speed: 150,
 	exp: 0,
 	enemies: 0,
 	gunsNum: 1,
@@ -387,5 +462,5 @@ const GlobalPlayerInitData: PlayerData = {
 	freeChestTs: 0,
 	adChestTs: 0,
 	sharechestTs: 0,
-	allChests: [100]
+	allChests: [0]
 };

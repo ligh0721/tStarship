@@ -455,7 +455,7 @@ module tutils {
     }
 
     export class DelayTime extends ActionInterval {
-        public constructor(duration) {
+        public constructor(duration: number) {
             super(duration);
         }
 

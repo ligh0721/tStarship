@@ -5,6 +5,6 @@
              source="greenbtnnor_png" source.up="greenbtnnor_png" source.down="greenbtndown_png" source.disabled="greenbtndis_png" scale9Grid="13,14,34,34" y.down="0"/>
     <e:Label id="labelDisplay" top="4" bottom="10" left="71" right="30"
             
-             textColor="0xFFFFFF" verticalAlign="middle" textAlign="center" top.down="6" bottom.down="8" text="2000" bold="true" strokeColor="0x3f3f3f" strokeColor.disabled="0x3f3f3f" textColor.disabled="0xff7f7f" fontFamily="Microsoft YaHei" size.up="35" size.down="35" size.disabled="35" size="35" left.down="71" right.down="30" left.up="71" right.up="30" top.up="4" bottom.up="10" left.disabled="71" right.disabled="30" top.disabled="4" bottom.disabled="10"/>
+             textColor="0xFFFFFF" verticalAlign="middle" textAlign="center" top.down="6" bottom.down="8" text="2000" bold="true" strokeColor="0x3f3f3f" strokeColor.disabled="0x3f3f3f" textColor.disabled="0xff7f7f" fontFamily="SimHei" size.up="35" size.down="35" size.disabled="35" size="35" left.down="71" right.down="30" left.up="71" right.up="30" top.up="4" bottom.up="10" left.disabled="71" right.disabled="30" top.disabled="4" bottom.disabled="10"/>
     <e:Image id="iconDisplay" horizontalCenter="-49.5" verticalCenter="-0.5" source="coin2_png" width="35" height="35" horizontalCenter.down="-49.5" verticalCenter.down="1.5" horizontalCenter.up="-49.5" verticalCenter.up="-0.5" horizontalCenter.disabled="-49.5" verticalCenter.disabled="-0.5"/>
 </e:Skin>

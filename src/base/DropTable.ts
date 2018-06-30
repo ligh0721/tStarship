@@ -1,12 +1,3 @@
-class Drop {
-	public constructor() {
-	}
-}
-
-class Chest {
-
-}
-
 class DropTable<T> {
 	private items: {item: T, weight: number}[] = [];
 	private totalWeight: number = 0;

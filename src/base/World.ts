@@ -290,7 +290,7 @@ class World {
 				}
 				if (bullet.gun.ship.force.isMyEnemy(ship.force) && ship.canHit && bullet.onHitEnemyShipTest(ship)) {
 					//console.log("bullet hit!");
-					let dt = Math.min(bullet.hp, bullet.maxHp*bullet.powerLossPer);
+					let dt = Math.min(bullet.hp, bullet.maxHp/bullet.maxHitTimes);
 					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
 					ship.damaged(dt, bullet.gun.ship, bullet);
 					bullet.damaged(dt, ship, ship);

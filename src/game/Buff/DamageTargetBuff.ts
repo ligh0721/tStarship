@@ -12,11 +12,12 @@ class CriticalBuff extends Buff {
 
 	// override
 	public onDamageTarget(value: number, target: Ship, unit: HpUnit): number {
-		if (Math.random() < this.rate) {
+		let rate = this.rate;
+		if (unit instanceof Bullet) {
+			rate /= unit.gun.bulletNum;
+		}
+		if (Math.random() < rate) {
 			value = (this.a * value + this.b) * (Math.random() * 0.3 + 0.85);
-			if (value < 10) {
-				console.log("??");
-			}
 			GameController.instance.hud.addBattleTip(unit.x, unit.y, "CRI "+value.toFixed(0)+"!", 45, "FranklinGothicHeavyItalicRed_fnt", 1.0);
 			return value;
 		}

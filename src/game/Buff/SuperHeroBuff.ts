@@ -20,7 +20,7 @@ class SuperHeroBuff extends Buff {
 
 	private createSuperHero(): Ship {
 		let world = this.ship.world;
-		let ship = new Ship("GreenHeroShip_png", 0.4);
+		let ship = new Ship("BlueHeroShip_png", 0.4);
 		world.addShip(ship);
 		ship.hero = true;
 		ship.x = world.width * 0.5;
@@ -32,36 +32,36 @@ class SuperHeroBuff extends Buff {
 		let gun = Gun.createGun(RowGun, Bullet);
 		gun.bulletSpeed.baseValue = 200;
 		gun.fireCooldown.baseValue = 150;
-		gun.bulletPowerLossPer = 1;
 		gun.bulletPower.baseValue = 3;
-		gun.bulletPowerLossInterval.baseValue = 1000;
+		gun.bulletMaxHitTimes = 1;
+		gun.bulletHitInterval.baseValue = 1000;
 		gun.bulletNum = 4;
 		ship.addGun(gun, true);
 
 		let gun1 = Gun.createGun(SatelliteGun, ExplosionBullet);
 		gun1.fireCooldown.baseValue = 50;
 		gun1.bulletNum = 6;
-		gun1.bulletPowerLossPer = 0.001;
-		gun1.bulletPower.baseValue = 100/gun1.bulletPowerLossPer;
-		gun1.bulletPowerLossInterval.baseValue = 200;
+		gun1.bulletPower.baseValue = 100;
+		gun1.bulletMaxHitTimes = 1000;
+		gun1.bulletHitInterval.baseValue = 200;
 		gun1.period = 800;
 		ship.addGun(gun1);
 
 		let gun2 = Gun.createGun(EaseGun, ShakeWaveBullet);
 		gun2.bulletSpeed.baseValue = 150;
 		gun2.fireCooldown.baseValue = 1400;
-		gun2.bulletPowerLossPer = 0.001;
-		gun2.bulletPower.baseValue = 30/gun2.bulletPowerLossPer;
-		gun2.bulletPowerLossInterval.baseValue = 100;
+		gun2.bulletPower.baseValue = 30;
+		gun2.bulletMaxHitTimes = 1000;
+		gun2.bulletHitInterval.baseValue = 100;
 		gun2.bulletNum = 1;
 		ship.addGun(gun2);
 
 		let gun3 = Gun.createGun(MissileGun, MissileBullet);
 		gun3.bulletSpeed.baseValue = 200;
 		gun3.fireCooldown.baseValue = 1000;
-		gun3.bulletPowerLossPer = 1;
 		gun3.bulletPower.baseValue = 20;
-		gun3.bulletPowerLossInterval.baseValue = 500;
+		gun3.bulletMaxHitTimes = 1;
+		gun3.bulletHitInterval.baseValue = 500;
 		gun3.bulletNum = 3;
 		gun3.explosionRadius = 150;
 		gun3.explosionPowerEveryPer = 0.5;

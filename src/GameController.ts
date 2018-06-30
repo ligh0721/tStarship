@@ -7,6 +7,7 @@ class GameController {
 	private readonly allGunsData: GunsData;
 	private readonly allSkillsData: SkillsData;
 	private readonly allPartsData: PartsData;
+	private readonly allShipExpsData: ShipExpsData;
 	readonly expTable: number[];
 	readonly gunExpTable: number[];
 	readonly skillExpTable: number[];
@@ -14,13 +15,17 @@ class GameController {
 	readonly allGuns: string[];
 	readonly allSkills: string[];
 	readonly allParts: string[];
+	readonly allShipExps: string[];
 
 	readonly allChestDrop: DropTable<any>[];
+	readonly dropTableForNormalEnemy: DropTable<any>;
+    readonly dropTableForSeniorEnemy: DropTable<any>;
+    readonly dropTableForEliteEnemy: DropTable<any>;
+    readonly dropTableForBossEnemy: DropTable<any>;
+	readonly dropTableForMeteoroidEnemy: DropTable<any>;
 
 	playerData: PlayerData = null;
 	private static KeyData: string = "PlayPrefsData";
-
-	// battleShips: string[];
 
 	actMgr: tutils.ActionManager = new tutils.ActionManager();
 	hud: BattleHUD;
@@ -28,6 +33,7 @@ class GameController {
 	public constructor() {
 		this.allGunsData = this.fixGunsData(GlobalGunsData);
 		this.allSkillsData = this.fixSkillsData(GlobalSkillsData);
+		this.allShipExpsData = this.fixShipExpsData(GlobalShipExpData);
 		this.allPartsData = this.fixPartsData(GlobalPartsData);
 		this.expTable = GlobalExpTable;
 		this.gunExpTable = GlobalGunExpTable;
@@ -35,8 +41,14 @@ class GameController {
 
 		this.allGuns = this.loadAndCheckAllGuns(GlobalAllGuns);
 		this.allSkills = this.loadAndCheckAllSkills(GlobalAllSkills);
+		this.allShipExps = this.loadAndCheckAllShipExps(GlobalAllShipExps);
 		this.allParts = this.loadAndCheckAllParts(GlobalAllParts);
 		this.allChestDrop = this.loadAllChestDropTable();
+		this.dropTableForNormalEnemy = this.loadDropTable(GlobalNormalEnemyDrop);
+		this.dropTableForSeniorEnemy = this.loadDropTable(GlobalSeniorEnemyDrop);
+		this.dropTableForEliteEnemy = this.loadDropTable(GlobalEliteEnemyDrop);
+		this.dropTableForBossEnemy = this.loadDropTable(GlobalBossEnemyDrop);
+		this.dropTableForMeteoroidEnemy = this.loadDropTable(GlobalMeteoroidEnemyDrop);
 		
 		console.log("load guns data", this.allGunsData);
 		console.log("load skills data", this.allSkillsData);
@@ -209,6 +221,22 @@ class GameController {
 		return skills;
 	}
 
+	private fixShipExpsData(data: ShipExpsData): ShipExpsData {
+		for (let key in data) {
+			let shipExpInfo = data[key];
+			shipExpInfo.key = key;
+		}
+		return data;
+	}
+
+	private loadAndCheckAllShipExps(shipExps: string[]): string[] {
+		for (let i in shipExps) {
+			let shipExpKey = shipExps[i];
+			console.assert(this.getShipExpDataByKey(shipExpKey)!==null);
+		}
+		return shipExps;
+	}
+
 	private fixPartsData(data: PartsData): PartsData {
 		for (let key in data) {
 			let partInfo = data[key];
@@ -225,59 +253,73 @@ class GameController {
 		return parts;
 	}
 
-	private loadAllChestDropTable(): DropTable<any>[] {
-		let ret: DropTable<any>[] = [];
-		let chest1 = this.$loadDropTable(GlobalChest1Drop);
-		ret.push(chest1);
-		return ret;
-	}
-
-	private $loadDropTable(rawTable: any[]): DropTable<any> {
+	private loadDropTable(rawTable: any[]): DropTable<any> {
 		let ret: DropTable<any> = new DropTable<any>();
 		for (let i in rawTable) {
 			let drop = rawTable[i];
 			let item = drop[0];
 			let weight = drop[1];
-			if (typeof(drop) === "string") {
+			if (typeof(item) === "string") {
 				ret.push(item, weight);
 			} else {
-				ret.push(this.$loadDropTable(item), weight);
+				ret.push(this.loadDropTable(item), weight);
 			}
 		}
 		return ret;
 	}
 
+	private loadAllChestDropTable(): DropTable<any>[] {
+		let ret: DropTable<any>[] = [];
+		let chest1 = this.loadDropTable(GlobalChest1Drop);
+		ret.push(chest1);
+		return ret;
+	}
+
+	public calcHeroMaxHp(level: number): number {
+		return Math.floor(GlobalConfig.baseMaxHp+level*0.5);
+	}
+
+	public calcHeroSpeed(level: number): number {
+		return Math.floor(GlobalConfig.baseSpeed+level*10);
+	}
+
+	public calcHeroPowerIncPer(level: number): number {
+		return GlobalConfig.basePowerIncPer+level*0.01;
+	}
+
 	public createHeroShip(world: World): HeroShip {
 		let hero = new HeroShip(GlobalHeroModel, GlobalHeroModelScale);
 		world.addShip(hero);
-		hero.resetHp(this.playerData.maxHp);
+		let level = this.getHeroLevel();
+		hero.resetHp(this.calcHeroMaxHp(level));
 		hero.force.force = tutils.Player1Force;
 		hero.force.ally(tutils.AllyForce);
-		hero.speed.baseValue = this.playerData.speed;
+		hero.speed.baseValue = this.calcHeroSpeed(level);
+		let gunPowerIncPer = this.calcHeroPowerIncPer(level);
 
 		let gunKey = this.playerData.gun;
 		let gunData = this.getGunDataByKey(gunKey);
 		let gun = Gun.createGun(gunData.gun, gunData.bullet);
 		gun.bulletSpeed.baseValue = gunData.bulletSpeed;
 		gun.fireCooldown.baseValue = gunData.fireCD;
-		gun.bulletPowerLossPer = 1 / gunData.bulletHitTimes;
-		gun.bulletPower.baseValue = gunData.bulletPower * gunData.bulletHitTimes;
-		gun.bulletPowerLossInterval.baseValue = gunData.bulletHitInterval;
+		// gun.bulletPower.baseValue = gunData.bulletPower * gunData.bulletHitTimes;
+		gun.bulletPower.baseValue = gunData.bulletPower * (1 + gunPowerIncPer);
+		// gun.bulletPowerLossPer = 1 / gunData.bulletHitTimes;
+		gun.bulletMaxHitTimes = gunData.bulletHitTimes;
+		gun.bulletHitInterval.baseValue = gunData.bulletHitInterval;
 		gun.bulletNum = gunData.bulletNum;
 		hero.addGun(gun, true);
 
-		let playerGunData = this.getPlayerGunData();
-		let level = this.expToGunLevel(playerGunData.exp);
-		gun.levelUp(level-1, false);
+		let gunLevel = this.getGunLevel(gunKey);
+		gun.levelUp(gunLevel-1, false);
 
 		let skillKey = this.playerData.skill;
 		let skillData = this.getSkillDataByKey(skillKey);
 		let skill = this.createSkill(this.playerData.skill);
 		hero.setSkill(skill);
 
-		let playerSkillData = this.getPlayerSkillData();
-		level = this.expToSkillLevel(playerSkillData.exp);
-		skill.levelUp(level-1, false);
+		let skillLevel = this.getSkillLevel(skillKey);
+		skill.levelUp(skillLevel-1, false);
 		return hero;
 	}
 
@@ -305,6 +347,14 @@ class GameController {
 		return item;
 	}
 
+	public getShipExpDataByKey(key: string): ShipExpDataItem {
+		let item = this.allShipExpsData[key];
+		if (item === undefined) {
+			return null;
+		}
+		return item;
+	}
+
 	public expToLevel(exp: number): number {
 		for (let i=1; i<=this.expTable.length; i++) {
 			if (this.expTable[i-1] > exp) {
@@ -312,6 +362,10 @@ class GameController {
 			}
 		}
 		return this.expTable.length;
+	}
+
+	public getHeroLevel(): number {
+		return this.expToLevel(this.playerData.exp);
 	}
 
 	public expToGunLevel(exp: number): number {
@@ -323,6 +377,14 @@ class GameController {
 		return this.gunExpTable.length+1;
 	}
 
+	public getGunLevel(key: string): number {
+		let playerGunData = this.getPlayerGunDataByKey(key);
+		if (!playerGunData) {
+			return -1;
+		}
+		return this.expToGunLevel(playerGunData.exp);
+	}
+
 	public expToSkillLevel(exp: number): number {
 		for (let i=1; i<=this.skillExpTable.length; i++) {
 			if (this.skillExpTable[i-1] > exp) {
@@ -330,6 +392,14 @@ class GameController {
 			}
 		}
 		return this.skillExpTable.length;
+	}
+
+	public getSkillLevel(key: string): number {
+		let playerSkillData = this.getPlayerSkillDataByKey(key);
+		if (!playerSkillData) {
+			return -1;
+		}
+		return this.expToSkillLevel(playerSkillData.exp);
 	}
 
 	public getPlayerGunData(): PlayerGunData {
@@ -389,8 +459,8 @@ class GameController {
             gun.fireCooldown.baseValue = 1000;
             gun.bulletPower.baseValue = 50;
             gun.bulletNum = 5;
-            gun.bulletPowerLossPer = 1.0;
-            gun.bulletPowerLossInterval.baseValue = 1000;
+            gun.bulletMaxHitTimes = 1;
+            gun.bulletHitInterval.baseValue = 1000;
 			gun.period = 1000;
             buff = new AddGunBuff(10000, [gun]);
 			buff.model = "SatelliteGun_png";
@@ -471,21 +541,21 @@ class GameController {
 			gun2.amplitudeDelta = 150;
 			gun2.bulletNum = 2;
 			gun2.bulletSpeed.baseValue = 100;
-			gun2.bulletPowerLossInterval.baseValue = 10000;
-			gun2.bulletPowerLossPer = 0.001;
-			gun2.bulletPower.baseValue = 5/gun2.bulletPowerLossPer;
+			gun2.bulletPower.baseValue = 5;
+			gun2.bulletMaxHitTimes = 1000;
+			gun2.bulletHitInterval.baseValue = 10000;
 			let buff2 = new AddTargetBuffBuff(Buff.Infinite, 0.2, ["elec_induced"]);
 			buff2.key = "part_elec_induced_buff";
 			buff = new AddGunAndBuffBuff(Buff.Infinite, gun2, [buff2]);
 			buff.key = key;
 			break;
-		case "part_test1":
+		case "part_cdr_up_1":
 			buff = new GunBuff(Buff.Infinite, -0.10, 0, +0.10);
 			buff.key = key;
 			// buff.name = "Test Part1";
 			// buff.model = "GunCDR_png";
 			break;
-		case "part_test2":
+		case "part_power_up_1":
 			buff = new GunBuff(Buff.Infinite, 0.00, +0.10, 0.00);
 			buff.key = key;
 			// buff.name = "Test Part2";
@@ -584,8 +654,6 @@ type PlayerData = {
     },
     maxStage: number,
     coins: number,
-	maxHp: number,
-	speed: number,
 	exp: number,
 	enemies: number,
 	gunsNum: number,
@@ -634,6 +702,17 @@ type SkillsData = {
 	[key: string]: SkillDataItem
 }
 
+type ShipExpDataItem = {
+	key?: string,
+	
+	name: string,
+	model: string,
+	exp: number
+}
+
+type ShipExpsData = {
+	[key: string]: ShipExpDataItem
+}
 
 type PartDataItem = {
 	key?: string,

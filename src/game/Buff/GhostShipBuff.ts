@@ -30,11 +30,14 @@ class GhostShipBuff extends Buff {
 			ghost.force = this.ship.force;
 
 			if (this.ship instanceof HeroShip) {
+				let level = GameController.instance.getHeroLevel();
+				let powerIncPer = GameController.instance.calcHeroPowerIncPer(level);
 				let gun = Gun.createGun(gunData.gun, gunData.bullet);
 				gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 				gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
-				gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
-				gun.bulletPower.baseValue = Math.max(1, this.ship.mainGun.bulletPower.baseValue * this.powerPer);
+				gun.bulletPower.baseValue = Math.max(1, this.ship.mainGun.bulletPower.baseValue*(1+powerIncPer)*this.powerPer);
+				gun.bulletMaxHitTimes = this.ship.mainGun.bulletMaxHitTimes;
+				
 				gun.bulletNum = this.ship.mainGun.bulletNum;
 				ghost.addGun(gun, true).autoFire = true;
 			}

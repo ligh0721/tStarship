@@ -25,9 +25,8 @@ class ExplosionBullet extends Bullet {
 		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
 		bullet.radius = this.radius;
 		bullet.explosionRadius = this.explosionRadius;
-		bullet.powerLossPer = 0.0001;
-		bullet.resetHp(this.explosionPowerEveryPer*this.maxHp*this.powerLossPer/bullet.powerLossPer);
-		bullet.powerLossInterval = this.explosionPowerLossInterval;
+		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
+		bullet.hitInterval = this.explosionPowerLossInterval;
 		bullet.staticBounds = false;
 		this.world.addBullet(bullet);
 		bullet.gameObject.x = this.gameObject.x;
@@ -51,7 +50,6 @@ class ExplosionBullet extends Bullet {
 }
 
 class MissileBullet extends Bullet {
-	// radius: number = 30;
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.5;
 	explosionPowerLossInterval: number = 10000;
@@ -63,11 +61,10 @@ class MissileBullet extends Bullet {
 	protected onDying(src: HpUnit) {
 		super.onDying(src);
 		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
-		bullet.radius = 30;//(this.gameObject.width+this.gameObject.height)/2;
+		bullet.radius = 30;
 		bullet.explosionRadius = this.explosionRadius;
-		bullet.powerLossPer = 0.0001;
-		bullet.resetHp(this.explosionPowerEveryPer*this.maxHp*this.powerLossPer/bullet.powerLossPer);
-		bullet.powerLossInterval = this.explosionPowerLossInterval;
+		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
+		bullet.hitInterval = this.explosionPowerLossInterval;
 		bullet.staticBounds = false;
 		this.world.addBullet(bullet);
 		bullet.gameObject.x = this.gameObject.x;
@@ -85,6 +82,7 @@ class MissileBullet extends Bullet {
 }
 
 class ExplosionEffectBullet extends Bullet {
+	readonly maxHitTimes: number = 1000;
 	radius: number = 30;
 	explosionRadius: number = 100;
 	private $factor: number = 0;

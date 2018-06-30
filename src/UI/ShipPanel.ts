@@ -6,6 +6,7 @@ class ShipPanel extends tutils.Component {
     private preOpenChest: egret.tween.TweenGroup;
     private endOpenChest: egret.tween.TweenGroup;
     private openChest1: egret.tween.TweenGroup;
+    // private chestItemShine: egret.tween.TweenGroup;
     private vsMain: eui.ViewStack;
     private btnTab: eui.RadioButton;
     private grpShop: eui.Group;
@@ -60,13 +61,18 @@ class ShipPanel extends tutils.Component {
     private lblChestNum: eui.BitmapLabel;
     private btnOpenChest1: eui.Button;
     private btnOpenChest5: eui.Button;
+    private btnOpenChestByCoins: eui.Button;
     private grpPopOpenChests: eui.Group;
     private rctPopOpenChestsMask: eui.Rect;
+    private grpChestItem0: eui.Group;
     private grpChestItemLevel0: eui.Group;
     private lblChestItemLevel0: eui.BitmapLabel;
     private progChestItemExp0: eui.Rect;
+    private progChestItemExpBg0: eui.Rect;
+    private lblChestItemTip0: eui.BitmapLabel;
     private imgChestIcon0: eui.Image;
-    
+    private lblChestItemName0: eui.Label;
+    private imgChestItemShine0: eui.Image;
     
     private btnCheat: eui.Button;
     private btnClearArchives: eui.Button;
@@ -77,7 +83,7 @@ class ShipPanel extends tutils.Component {
     private skill: string = null;
     private curEquipKey: string = null;
     private freeChestUpdate: tutils.ITimer = null;
-    private numChestOpened: 1|5 = 1;
+    private chestDropKey: string = null;
 
     
     // override
@@ -96,16 +102,18 @@ class ShipPanel extends tutils.Component {
         this.evtMgr.regEvent(this.preOpenChest, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.endOpenChest, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.openChest1, "complete", this.onTweenGroupComplete);
+        // this.evtMgr.regEvent(this.chestItemShine, "complete", this.onTweenGroupComplete);
         this.evtMgr.regEvent(this.btnStart, egret.TouchEvent.TOUCH_TAP, this.onBtnStart);
         this.evtMgr.regEvent(this.btnChangeGun, egret.TouchEvent.TOUCH_TAP, this.onBtnChangeGun);
         this.evtMgr.regEvent(this.btnChangeSkill, egret.TouchEvent.TOUCH_TAP, this.onBtnChangeSkill);
         this.evtMgr.regEvent(this.btnEquip, egret.TouchEvent.TOUCH_TAP, this.onBtnEquip);
         this.evtMgr.regEvent(this.lstEquips, eui.ItemTapEvent.ITEM_TAP, this.onTapListItem);
-        this.evtMgr.regEvent(this.rctPopEquipMask, egret.TouchEvent.TOUCH_TAP, this.onTapShipPopMask);
+        this.evtMgr.regEvent(this.rctPopEquipMask, egret.TouchEvent.TOUCH_TAP, this.onTapPopEquipMask);
         // this.evtMgr.regEvent(this.vsMain, eui.PropertyEvent.PROPERTY_CHANGE, this.onMainStackViewChange);
         this.evtMgr.regEvent(this.btnFreeChest, egret.TouchEvent.TOUCH_TAP, this.onBtnFreeChest);
         this.evtMgr.regEvent(this.btnOpenChest1, egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest1);
-        this.evtMgr.regEvent(this.btnOpenChest5, egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest5);
+        // this.evtMgr.regEvent(this.btnOpenChest5, egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChest5);
+        this.evtMgr.regEvent(this.btnOpenChestByCoins, egret.TouchEvent.TOUCH_TAP, this.onBtnOpenChestByCoins);
 
         this.grpPopEquip.visible = false;
         this.grpPopOpenChests.visible = false;
@@ -115,11 +123,12 @@ class ShipPanel extends tutils.Component {
         this.btnEquip.touchEnabled = false;
 
         this.playerData = GameController.instance.playerData;
-        this.lblCoins.text = this.playerData.coins.toString();
+        this.setCoins(this.playerData.coins);
 
         this.btnTab.selected = true;
 
         this.tabBottom.dataProvider = this.vsMain;
+        this.vsMain.selectedIndex = 1;
 
         this.initBattleView();
     }
@@ -207,8 +216,12 @@ class ShipPanel extends tutils.Component {
             break;
 
         case this.openChest1:
-            this.runShowChestDrop(1);
+            this.runShowChestDropAni();
             break;
+
+        // case this.chestItemShine:
+        //     this.chestItemShine.play(500);
+        //     break;
         }
     }
 
@@ -263,8 +276,27 @@ class ShipPanel extends tutils.Component {
             this.btnFreeChest.visible = true;
         }
 
-        this.lblChestNum.text = "x " + this.playerData.allChests[0].toString();
+        this.setChestNum(this.playerData.allChests[0]);
         this.openShop.play(0);
+    }
+
+    private setCoins(num: number): void {
+        this.playerData.coins = num;
+        this.lblCoins.text = num.toString();
+    }
+
+    private setChestNum(num: number): void {
+        if (num === 0) {
+            this.btnOpenChest1.visible = false;
+            this.btnOpenChestByCoins.visible = true;
+            this.btnOpenChestByCoins.label = GlobalConfig.chestPrice.toString();
+            this.btnOpenChestByCoins.enabled = (this.playerData.coins>=GlobalConfig.chestPrice);
+        } else {
+            this.btnOpenChest1.visible = true;
+            this.btnOpenChestByCoins.visible = false;
+        }
+        this.playerData.allChests[0] = num;
+        this.lblChestNum.text = "x " + num.toString();
     }
 
     private onBtnCheat(evt: egret.TouchEvent): void {
@@ -305,7 +337,7 @@ class ShipPanel extends tutils.Component {
         console.log('after clear'+this.hashCode+', '+this.playerData.sharechestTs);
         this.gun = null;
         this.skill = null;
-        this.lblCoins.text = this.playerData.coins.toString();
+        this.setCoins(this.playerData.coins);
         this.commitProperties();
     }
 
@@ -342,24 +374,29 @@ class ShipPanel extends tutils.Component {
         this.closePopEquip.play(0);
     }
 
-    private onTapShipPopMask(evt: egret.TouchEvent): void {
+    private onTapPopEquipMask(evt: egret.TouchEvent): void {
         if (evt.target === this.rctPopEquipMask) {
             this.closePopEquip.play(0);
         }
     }
 
-    private onTapOpenChestsMask(evt: egret.TouchEvent): void {
+    private onTapPopOpenChestsMask(evt: egret.TouchEvent): void {
         if (evt.target === this.rctPopOpenChestsMask) {
+            this.evtMgr.unregEvent(this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapPopOpenChestsMask);
             this.grpPopOpenChests.visible = false;
             this.grpPopOpenChests.alpha = 0;
+            egret.Tween.removeTweens(this.imgChestItemShine0);
             this.endOpenChest.play(0);
         }
     }
 
     private updateShipDetal(): void {
-        this.lblHpV.text = this.playerData.maxHp.toString();
-        this.lblSpeedV.text = this.playerData.speed.toString();
-        let level = GameController.instance.expToLevel(this.playerData.exp);
+        let level = GameController.instance.getHeroLevel();
+        let maxHp = GameController.instance.calcHeroMaxHp(level);
+        let speed = GameController.instance.calcHeroSpeed(level);
+
+        this.lblHpV.text = maxHp.toString();
+        this.lblSpeedV.text = speed.toString();
         let expText = "MAX";
         let expPerWidth = 100;
         if (level < GameController.instance.expTable.length+1) {
@@ -374,11 +411,11 @@ class ShipPanel extends tutils.Component {
 
         egret.Tween.removeTweens(this.progHp);
         egret.Tween.removeTweens(this.progSpeed);
-        egret.Tween.removeTweens(this.progPower);
+        egret.Tween.removeTweens(this.progExp);
         let tw = egret.Tween.get(this.progHp)
-        tw.to({percentWidth: Math.min(100, this.playerData.maxHp * 100 / GlobalMaxHp)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, maxHp*100/GlobalUIMaxHp)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progSpeed)
-        tw.to({percentWidth: Math.min(100, this.playerData.speed * 100 / GlobalMaxSpeed)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, speed*100/GlobalUIMaxSpeed)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progExp)
         tw.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
     }
@@ -388,21 +425,24 @@ class ShipPanel extends tutils.Component {
         if (!gunData) {
             return;
         }
+
+        let level = GameController.instance.getHeroLevel();
+        let powerIncPer = GameController.instance.calcHeroPowerIncPer(level);
         let playerGunData = GameController.instance.getPlayerGunDataByKey(key);
         this.gun = key;
         this.imgGun.source = gunData.model;
         this.lblGunName.text = gunData.name;
         this.lblGunDesc.text = gunData.desc;
         this.lblGunLevel.text = GameController.instance.expToGunLevel(playerGunData.exp).toString();
-        this.lblPowerV.text = gunData.bulletPower.toString() + (gunData.bulletNum===1 ? "" : " x " + gunData.bulletNum.toString());
+        this.lblPowerV.text = (gunData.bulletPower * (1 + powerIncPer)).toFixed(0) + (gunData.bulletNum===1 ? "" : " x " + gunData.bulletNum.toString());
         this.lblFireRateV.text = (1000 / Math.max(1000/60, gunData.fireCD)).toFixed(1) + "/s";
         
+        egret.Tween.removeTweens(this.progPower);
         egret.Tween.removeTweens(this.progFireRate);
-        egret.Tween.removeTweens(this.progExp);
         let tw = egret.Tween.get(this.progPower)
-        tw.to({percentWidth: Math.min(100, gunData.bulletPower * gunData.bulletNum * 100 / GlobalMaxPower)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, gunData.bulletPower*(1+powerIncPer)*gunData.bulletNum*100/GlobalUIMaxPower)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progFireRate)
-        tw.to({percentWidth: Math.min(100, 100000 / gunData.fireCD / GlobalMaxFireRate)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, 100000/gunData.fireCD/GlobalUIMaxFireRate)}, 100, egret.Ease.getPowOut(2));
     }
 
     private setSkill(key: string): void {
@@ -527,9 +567,9 @@ class ShipPanel extends tutils.Component {
         egret.Tween.removeTweens(this.progEquipGunFireRate);
         egret.Tween.removeTweens(this.progEquipGunExp);
         let tw = egret.Tween.get(this.progEquipGunPower);
-        tw.to({percentWidth: Math.min(100, gunData.bulletPower * gunData.bulletNum * 100 / GlobalMaxPower)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, gunData.bulletPower*gunData.bulletNum*100/GlobalUIMaxPower)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progEquipGunFireRate)
-        tw.to({percentWidth: Math.min(100, 100000/gunData.fireCD/GlobalMaxFireRate)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, 100000/gunData.fireCD/GlobalUIMaxFireRate)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progEquipGunExp)
         tw.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
     }
@@ -644,6 +684,9 @@ class ShipPanel extends tutils.Component {
             item.selected = this.lstEquips.selectedIndex===i ? 1 : 0;
             if (item.selected === 1) {
                 let ir: any = this.lstEquips.getElementAt(i);
+                if (!ir) {
+                    break;
+                }
                 egret.Tween.removeTweens(ir.imgSelected);
                 let tw = egret.Tween.get(ir.imgSelected);
                 tw.set({scaleX: 0.8, scaleY: 0.8});
@@ -674,7 +717,7 @@ class ShipPanel extends tutils.Component {
         if (left > 0) {
             return;
         }
-        this.playerData.allChests[0]++;
+        this.setChestNum(this.playerData.allChests[0]+5);
         this.playerData.freeChestTs = now.getTime();
         this.lblFreeChestTitle.visible = true;
         this.lblFreeChestLeft.visible = true;
@@ -683,69 +726,169 @@ class ShipPanel extends tutils.Component {
         let str = new Date(GlobalConfig.freeChestCD).toISOString().substr(11, 8);
         this.lblFreeChestLeft.text = str;
         this.freeChestUpdate.start(0);
-
-        this.lblChestNum.text = "x " + this.playerData.allChests[0].toString();
     }
 
     private onBtnOpenChest1(evt: egret.TouchEvent): void {
-        this.openChest(1);
-    }
-
-    private onBtnOpenChest5(evt: egret.TouchEvent): void {
-        this.openChest(5);
-    }
-
-    private openChest(num: 1|5): void {
-        let left = this.playerData.allChests[0] - num;
+        let left = this.playerData.allChests[0] - 1;
         if (left < 0) {
             // 箱子不足
             return;
         }
-
-        this.playerData.allChests[0] = left;
-        this.lblChestNum.text = "x " + left;
-        this.numChestOpened = num;
-        this.preOpenChest.play(0);
-        this.grpPopOpenChests.visible = true;
-        this.evtMgr.regEvent(this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapOpenChestsMask);
+        this.setChestNum(left);
+        this.openChest();
     }
 
-    private runShowChestDrop(num: 1|5): void {
-        let playerGunData = GameController.instance.getPlayerGunDataByKey("gun_single");
-        let level = GameController.instance.expToGunLevel(playerGunData.exp);
-        this.lblChestItemLevel0.text = level.toString();
-        let expPerWidth = 100;
-        if (level !== GameController.instance.gunExpTable.length+1) {
-            // 没满级
-            let expBase = level===1 ? 0 : GameController.instance.gunExpTable[level-2];
-            let expNext = GameController.instance.gunExpTable[level-1];
-            expPerWidth = (playerGunData.exp - expBase) * 100 / (expNext - expBase);
+    private onBtnOpenChestByCoins(evt: egret.TouchEvent): void {
+        let left = this.playerData.coins - GlobalConfig.chestPrice;
+        if (left < 0) {
+            return;
         }
-        this.progChestItemExp0.percentWidth = expPerWidth;
+        this.setCoins(left);
+        this.btnOpenChestByCoins.enabled = (this.playerData.coins>=GlobalConfig.chestPrice);
+        this.openChest();
+    }
+
+    private openChest(): void {
+        this.grpPopOpenChests.alpha = 0;
+        this.grpChestItem0.alpha = 0;
+        this.grpChestItemLevel0.alpha = 0;
+        this.imgChestIcon0.source = "shipitemunknown_png";
+        this.imgChestItemShine0.alpha = 0;
+        this.imgChestItemShine0.scaleX = 0;
+        this.imgChestItemShine0.scaleY = 0;
+        this.lblChestItemName0.text = "";
+        this.preOpenChest.play(0);
+        this.grpPopOpenChests.visible = true;
+    }
+
+    private runShowChestDropAni(): void {
+        this.chestDropKey = GameController.instance.allChestDrop[0].randomR();
+        let chestItemName: string;
+        let chestItemModel: string;
+        let chestItemWithExp: any;
+        let chestItemExpToLevelFunc: Function;
+        let chestItemExpTable: number[];
+        let chestItemExpDelta: number;
+        let chestItemNewTip: string;
+        let newDrop = false;
+        if (this.chestDropKey.indexOf("gun_") === 0) {
+            let gunData = GameController.instance.getGunDataByKey(this.chestDropKey);
+            chestItemName = gunData.name;
+            chestItemModel = gunData.model;
+            let playerGunData = GameController.instance.getPlayerGunDataByKey(this.chestDropKey);
+            if (!playerGunData) {
+                newDrop = true;
+                GameController.instance.addNewGun(this.chestDropKey);
+                playerGunData = GameController.instance.getPlayerGunDataByKey(this.chestDropKey);
+                chestItemNewTip = "NEW CANNON!"
+            }
+            chestItemWithExp = playerGunData;
+            chestItemExpToLevelFunc = GameController.instance.expToGunLevel;
+            chestItemExpTable = GameController.instance.gunExpTable;
+            chestItemExpDelta = 1;
+		} else if (this.chestDropKey.indexOf("skill_") === 0) {
+            let skillData = GameController.instance.getSkillDataByKey(this.chestDropKey);
+            chestItemName = skillData.name;
+            chestItemModel = skillData.model;
+            let playerSkillData = GameController.instance.getPlayerSkillDataByKey(this.chestDropKey);
+            if (!playerSkillData) {
+                newDrop = true;
+                GameController.instance.addNewSkill(this.chestDropKey);
+                playerSkillData = GameController.instance.getPlayerSkillDataByKey(this.chestDropKey);
+                chestItemNewTip = "NEW SKILL!"
+            }
+            chestItemWithExp = playerSkillData;
+            chestItemExpToLevelFunc = GameController.instance.expToSkillLevel;
+            chestItemExpTable = GameController.instance.skillExpTable;
+            chestItemExpDelta = 1;
+		} else if (this.chestDropKey.indexOf("shipexp_") === 0) {
+            let shipExpData = GameController.instance.getShipExpDataByKey(this.chestDropKey);
+            chestItemName = shipExpData.name;
+            chestItemModel = shipExpData.model;
+            chestItemWithExp = this.playerData;
+            chestItemExpToLevelFunc = GameController.instance.expToLevel;
+            chestItemExpTable = GameController.instance.expTable;
+            chestItemExpDelta = shipExpData.exp;
+		} else {
+            console.assert(false, "invalied drop key("+this.chestDropKey+")");
+            return;
+        }
+
+        let level = chestItemExpToLevelFunc.call(GameController.instance, chestItemWithExp.exp);
+        this.lblChestItemLevel0.text = level.toString();
         let tw = egret.Tween.get(this.grpChestItemLevel0);
+        tw.wait(200);
         tw.call(():void=>{
-            this.imgChestIcon0.source = "RedHeroShip_png";
+            this.imgChestIcon0.source = chestItemModel;
+            this.lblChestItemName0.text = chestItemName;
+            this.runChestItemShineAni();
         }, this);
-        tw.set({alpha: 1}, 500);
-        tw.wait(100);
-        tw.call(():void=>{
-            playerGunData.exp++;
-            let level2 = GameController.instance.expToGunLevel(playerGunData.exp);
+        tw.to({alpha: 1}, 200);
+        if (newDrop) {
+            this.lblChestItemTip0.text = chestItemNewTip;
+            this.progChestItemExpBg0.alpha = 0;
+            this.progChestItemExp0.alpha = 0;
+            this.evtMgr.regEvent(this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapPopOpenChestsMask);
+        } else {
+            this.progChestItemExpBg0.alpha = 1;
+            this.progChestItemExp0.alpha = 1;
             let expPerWidth = 100;
-            if (level2 !== GameController.instance.gunExpTable.length+1) {
+            if (level !== chestItemExpTable.length+1) {
                 // 没满级
-                let expBase = level2===1 ? 0 : GameController.instance.gunExpTable[level2-2];
-                let expNext = GameController.instance.gunExpTable[level2-1];
-                expPerWidth = (playerGunData.exp - expBase) * 100 / (expNext - expBase);
+                let expBase = level===1 ? 0 : chestItemExpTable[level-2];
+                let expNext = chestItemExpTable[level-1];
+                expPerWidth = (chestItemWithExp.exp - expBase) * 100 / (expNext - expBase);
             }
-            let tw2 = egret.Tween.get(this.progChestItemExp0);
-            tw2.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
-            if (level2 !== level) {
-                tw2.call(():void=>{
-                    this.lblChestItemLevel0.text = level2.toString();
-                }, this);
+            this.progChestItemExp0.percentWidth = expPerWidth;
+            this.lblChestItemTip0.text = expPerWidth.toFixed(0) + "%";
+            tw.call(():void=>{
+                chestItemWithExp.exp += chestItemExpDelta;
+                let level2 = chestItemExpToLevelFunc.call(GameController.instance, chestItemWithExp.exp);
+                let expPerWidth = 100;
+                if (level2 !== chestItemExpTable.length+1) {
+                    // 没满级
+                    let expBase = level2===1 ? 0 : chestItemExpTable[level2-2];
+                    let expNext = chestItemExpTable[level2-1];
+                    expPerWidth = (chestItemWithExp.exp - expBase) * 100 / (expNext - expBase);
+                }
+                let tw2 = this.runProgAni(this.progChestItemExp0, 5, expPerWidth);
+                if (level2 !== level) {
+                    tw2.call(():void=>{
+                        this.lblChestItemLevel0.text = level2.toString();
+                    }, this);
+                }
+                tw2.call(this.evtMgr.regEvent, this.evtMgr, [this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapPopOpenChestsMask]);
+            }, this);
+        }
+    }
+
+    private runProgAni(target: any, speed: number, toPerWidth: number): egret.Tween {
+        let tw = egret.Tween.get(target, {onChange: ():void=>{
+            if (this.lblChestItemTip0.text !== "LEVEL UP!") {
+                this.lblChestItemTip0.text = target.percentWidth.toFixed(0) + "%";
             }
-        }, this);
+        }, onChangeObj: this});
+        if (toPerWidth < target.percentWidth) {
+            let dur1 = (100 - target.percentWidth) * tutils.SpeedFactor / speed;
+            let dur2 = toPerWidth / speed;
+            tw.to({percentWidth: 100}, dur1, egret.Ease.getPowOut(2));
+            tw.set({percentWidth: 0});
+            tw.to({percentWidth: toPerWidth}, dur2, egret.Ease.getPowOut(2));
+            tw.call(():void=>{
+                this.lblChestItemTip0.text = "LEVEL UP!";
+            }, this);
+        } else {
+            let dur = (toPerWidth - target.percentWidth) * tutils.SpeedFactor / speed;
+            tw.to({percentWidth: toPerWidth}, dur, egret.Ease.getPowOut(2));
+        }
+        return tw;
+    }
+
+    private runChestItemShineAni(): void {
+        let tw = egret.Tween.get(this.imgChestItemShine0);
+        tw.to({alpha: 1, scaleX: 0.75, scaleY: 0.75}, 500, egret.Ease.sineOut);
+        tw.to({alpha: 0.75, scaleX: 0.5, scaleY: 0.5}, 500, egret.Ease.sineIn);
+        tw.call(this.runChestItemShineAni, this);
     }
 }
 

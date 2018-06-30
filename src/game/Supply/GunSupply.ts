@@ -16,7 +16,7 @@ class GunSupply extends Supply {
 				ship.mainGun.bulletNum++;
 				tutils.playSound("GunPowerup_mp3");
 			} else if ((ship.mainGun instanceof EaseGun) && (this.gun instanceof EaseGun)) {
-				ship.mainGun.bulletPower.baseValue += 2/ship.mainGun.bulletPowerLossPer;
+				ship.mainGun.bulletPower.baseValue += 2;
 				tutils.playSound("GunPowerup_mp3");
 			} else if ((ship.mainGun instanceof SoundWaveGun) && (this.gun instanceof SoundWaveGun)) {
 				ship.mainGun.bulletNum += 1;

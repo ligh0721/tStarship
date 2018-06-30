@@ -25,6 +25,8 @@ class Ship extends HpUnit {
 	hitTestFlags: ShipHitTestFlags = 0;  // Bullet only
 	canHit: boolean = true;
 
+	dropTable: DropTable<any>;
+
 	// from unit
 	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onAddBuffThisObject: any = null;

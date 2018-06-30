@@ -20,7 +20,7 @@ class EaseGun extends Gun {
 
 	// override
 	protected onLevelUp(): void {
-		this.bulletPower.baseValue += 4 / this.bulletPowerLossPer;
+		this.bulletPower.baseValue += 4;
 	}
 }
 

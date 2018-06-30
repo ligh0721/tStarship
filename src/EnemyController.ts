@@ -120,7 +120,7 @@ class EnemyController {
 		ship.adjustAngle(dt, angleSpeed, pos.x, pos.y);
 	}
 
-	public createBoss1(): MotherShip {
+	public createBoss1(hp: number, speedFactor: number=1): MotherShip {
 		let boss = new MotherShip("TwoGunBOSSBody_png", 0.5);
         this.world.addShip(boss);
         boss.rotation = 180;
@@ -142,9 +142,9 @@ class EnemyController {
         gunR.fireCooldown.baseValue = 1000;
         gunShipR.addGun(gunR);
 
-		boss.resetHp(2000);
-        gunShipL.resetHp(500);
-		gunShipR.resetHp(100);
+		boss.resetHp(hp);
+        gunShipL.resetHp(hp*0.25);
+		gunShipR.resetHp(hp*0.10);
 
 		let moveMotherShip = (ship: MotherShip)=>{
 			let act = new tutils.RepeatForever(new tutils.Sequence(
@@ -178,7 +178,7 @@ class EnemyController {
 		return boss;
 	}
 
-	public createBoss2(): MotherShip {
+	public createBoss2(hp: number, speedFactor: number=1): MotherShip {
 		let w = this.world.width;
         let h = this.world.height;
 
@@ -199,8 +199,8 @@ class EnemyController {
 		gun.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(4000);
-		gunShip.resetHp(2000);
+		boss.resetHp(hp);
+		gunShip.resetHp(hp*0.50);
 		gun.fireCooldown.baseValue = 100;
 		gun.bulletSpeed.baseValue = 40;
 		let angleSpeed = 20/1000;
@@ -249,7 +249,7 @@ class EnemyController {
 		return boss;
 	}
 
-	public createBoss3(): MotherShip {
+	public createBoss3(hp: number, speedFactor: number=1): MotherShip {
 		let w = this.world.width;
         let h = this.world.height;
 
@@ -285,10 +285,10 @@ class EnemyController {
 		gunR.autoFire = true;
 		
 		boss.speed.baseValue = 10;
-		boss.resetHp(6000);
-		gunShip.resetHp(2000);
-		gunShipL.resetHp(1800);
-		gunShipR.resetHp(1600);
+		boss.resetHp(hp);
+		gunShip.resetHp(hp*0.50);
+		gunShipL.resetHp(hp*0.30);
+		gunShipR.resetHp(hp*0.30);
 		gun.bulletSpeed.baseValue = 150;
 		gunL.bulletSpeed.baseValue = 100;
 		gunR.bulletSpeed.baseValue = 100;
@@ -391,11 +391,12 @@ class EnemyController {
 		return boss;
 	}
 
-	public createEnemyShips(num: number, hp: number, model: string, modelScale: number=0.4): EnemyShip[] {
+	public createEnemyShips(num: number, hp: number, model: string, modelScale: number=0.4, dropTable: DropTable<any>=GameController.instance.dropTableForNormalEnemy): EnemyShip[] {
 		let ships: EnemyShip[] = [];
 		for (let i=0; i<num; i++) {
 			let ship = this.createEnemyShip(model, modelScale);
 			ship.resetHp(hp);
+			ship.dropTable = dropTable;
 			ships.push(ship);
 		}
 		return ships;
@@ -414,11 +415,39 @@ class EnemyController {
 		return group;
 	}
 
+	public addRushBoss1(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
+		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
+            let boss = this.createBoss1(hp, speedFactor);
+			for (let id in boss.gunShips) {
+				let gunShipInfo = boss.gunShips[id];
+				gunShipInfo.gunShip.dropTable = GameController.instance.dropTableForSeniorEnemy;
+			}
+			boss.dropTable = GameController.instance.dropTableForEliteEnemy;
+            callback.call(thisObj, boss);
+        }, this));
+	}
+
+	public addRushBoss2(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
+		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
+            let boss = this.createBoss2(hp, speedFactor);
+			boss.dropTable = GameController.instance.dropTableForEliteEnemy;
+            callback.call(thisObj, boss);
+        }, this));
+	}
+
+	public addRushBoss3(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
+		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
+            let boss = this.createBoss3(hp, speedFactor);
+			boss.dropTable = GameController.instance.dropTableForEliteEnemy;
+            callback.call(thisObj, boss);
+        }, this));
+	}
+
 	public addRushMeteoroid(delay: number, hp: number, x: number, speedFactor: number=1): StraightRush {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
-		ships = this.createEnemyShips(1, hp, "Meteoroid_png", 0.25);
+		ships = this.createEnemyShips(1, hp, "Meteoroid_png", 0.25, GameController.instance.dropTableForMeteoroidEnemy);
 		rush = new StraightRush(delay/speedFactor, ships, 300/speedFactor, 4000/speedFactor, {x: x, y: 0}, {x: x, y: 100});
 		this.addRush(rush);
 		return rush as StraightRush;
@@ -533,7 +562,7 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 		
-		ships = this.createEnemyShips(num, hp, "PurpleEnemyShip_png");
+		ships = this.createEnemyShips(num, hp, "PurpleEnemyShip_png", 0.4, GameController.instance.dropTableForSeniorEnemy);
 		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
@@ -567,7 +596,7 @@ class EnemyController {
 		let ships: EnemyShip[];
 		let rush: Rush;
 		
-		ships = this.createEnemyShips(num, hp, "PurpleEnemyShip2_png");
+		ships = this.createEnemyShips(num, hp, "PurpleEnemyShip2_png", 0.4, GameController.instance.dropTableForSeniorEnemy);
 		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
@@ -603,7 +632,7 @@ class EnemyController {
 	public addRushes10(delay: number, hp: number, speedFactor: number=1): void {
 		// 跟随的敌兵
 		let num = 1;
-		let ships = this.createEnemyShips(1, hp, "GreenEnemyShip_png", 0.8);
+		let ships = this.createEnemyShips(1, hp, "GreenEnemyShip_png", 0.8, GameController.instance.dropTableForSeniorEnemy);
 		let rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;

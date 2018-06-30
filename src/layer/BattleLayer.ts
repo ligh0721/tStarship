@@ -29,7 +29,8 @@ class BattleLayer extends tutils.Layer {
     private lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
     private touchBeginCount: number = 0;
 
-    private partsDropTableRare: DropTable<DropTable<string>>;
+    // private partsDropTableRare: DropTable<DropTable<string>>;
+    
 
     // 统计项
     private score: number = 0;
@@ -39,6 +40,7 @@ class BattleLayer extends tutils.Layer {
     private reachStage: number = 1;
     private lastSaveTick: number = 0;
     private unsaveScore: number = 0;
+    private starNum: number = 0;
 	
     // override
     protected onCfgStage(): void {
@@ -106,29 +108,6 @@ class BattleLayer extends tutils.Layer {
         GameController.instance.setBattleHUD(this.hud);
 
         // 初始化世界掉落表
-        // green
-        this.partsDropTableRare = new DropTable<DropTable<string>>();
-        let table = new DropTable<string>();
-        table.push("part_test1", 100);
-        table.push("part_test2", 100);
-        table.push("part_critical_2", 50);
-        this.partsDropTableRare.push(table, 1000);
-
-        // blue
-        // table = new DropTable<string>();
-        // this.partsDropTableRare.push(table, 600);
-
-        // purple
-        table = new DropTable<string>();
-        table.push("part_power_speed_up_2", 100);
-        table.push("part_power_battery_2", 100);
-        table.push("part_elec_induced_gun", 100);
-        this.partsDropTableRare.push(table, 600);
-
-        // orange
-        table = new DropTable<string>();
-        table.push("part_meteoroid", 100);
-        this.partsDropTableRare.push(table, 300);
         
 	}
 
@@ -300,7 +279,7 @@ class BattleLayer extends tutils.Layer {
             this.gameOver();
             return;
         } else if (this.hero.force.isMyEnemy(ship.force) && killer && (killer.force.isMyAlly(this.hero.force))) {
-            // 击败敌军
+            // 玩家击败敌军
             if (!this.hero || !this.hero.alive) {
                 return;
             }
@@ -316,13 +295,10 @@ class BattleLayer extends tutils.Layer {
             if (ship instanceof MotherShip) {
                 power *= 80;
                 // score *= 10;
+                // 掉落雨
                 for (let i=0; i<20; i++) {
-                    let supply = this.world.pools.newObject(ScoreSupply, score);
-                    supply.speed = 100;
-                    this.world.addSupply(supply);
-                    supply.jump(ship.gameObject.x, ship.gameObject.y, 500, 300, i*50, ():void=>{
-                        supply.drop(supply.x, supply.y, egret.Ease.getPowIn(2));
-                    }, this);
+                    let dropKey = GameController.instance.dropTableForBossEnemy.randomR();
+                    this.spawnSupply(dropKey, ship.gameObject.x, ship.gameObject.y, true, i*50);
                 }
             } else if (ship instanceof MotherGunShip) {
                 power *= 40;
@@ -330,18 +306,10 @@ class BattleLayer extends tutils.Layer {
             }
 
             this.hero.addPower(power);
-            if (Math.random() < 0.01) {
-                let partKey = this.partsDropTableRare.random().random();
-                let part = GameController.instance.createPart(partKey);
-                let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-                supply.speed = 20;
-                this.world.addSupply(supply);
-                supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
-            } else {
-                let supply = this.world.pools.newObject(ScoreSupply, score);
-                supply.speed = 100;
-                this.world.addSupply(supply);
-                supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
+            
+            if (ship.dropTable) {
+                let dropKey = ship.dropTable.randomR();
+                this.spawnSupply(dropKey, ship.gameObject.x, ship.gameObject.y);
             }
             
 
@@ -370,6 +338,36 @@ class BattleLayer extends tutils.Layer {
                 GameController.instance.savePlayerData();
             }
         }
+    }
+
+    private spawnSupply(dropKey: string, x: number, y: number, jump: boolean=false, delay: number=0): void {
+        let supply: Supply;
+        if (dropKey.indexOf("coin_") === 0) {
+            supply = this.world.pools.newObject(ScoreSupply, 1);
+            supply.speed = 100;
+        } else if (dropKey.indexOf("part_") === 0) {
+            let part = GameController.instance.createPart(dropKey);
+            supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+            supply.speed = 20;
+        }
+        if (!supply) {
+            return;
+        }
+
+        let act = new tutils.Sequence(
+            new tutils.DelayTime(delay),
+            new tutils.CallFunc(():void=>{
+                this.world.addSupply(supply);
+                if (jump) {
+                    supply.jump(x, y, 500, 300, ():void=>{
+                        supply.drop(supply.x, supply.y, egret.Ease.getPowIn(2));
+                    }, this);
+                } else {
+                    supply.drop(x, y, egret.Ease.getPowIn(2));
+                }
+            }, this)
+        );
+        supply.runAction(act);
     }
 
     private addScore(score: number): void {
@@ -578,14 +576,12 @@ class BattleLayer extends tutils.Layer {
         let gunEnemyCD = 0;
         const FOLLOW_ENMEY_CD = 20000;
         let followEnemyCD = 0;
+        let bossCallback = (boss: Ship):void=>{
+            this.enemyCtrl.stopRush();
+            this.showBossUI(boss);
+        }
         // this.enemyCtrl.addRushes10(1000, 500, 1.0);
-        // let rush = new CallbackRush(5000, ():void=>{
-        //     this.enemyCtrl.stopRush();
-        //     let boss = this.enemyCtrl.createBoss1();
-        //     boss.resetHp(100000);
-        //     this.showBossUI(boss);
-        // }, this);
-        // this.enemyCtrl.addRush(rush);
+        this.enemyCtrl.addRushBoss1(1000, 1000, bossCallback, this, 1);
         for (let i=1; i<=WAVE_NUM*10; i++) {
             let level = Math.floor((i-1)/WAVE_NUM) + 1;
             let speed = Math.floor(Math.min(level*0.2+0.8, 2.0));
@@ -594,7 +590,6 @@ class BattleLayer extends tutils.Layer {
             if (i%WAVE_NUM === 0) {
                 gunEnemyCD = GUN_ENMEY_CD;
                 followEnemyCD = FOLLOW_ENMEY_CD;
-                let rush: Rush;
                 this.enemyCtrl.addRushes1(4000, hp, speed2);
                 this.enemyCtrl.addRushes2(4000, hp, speed2);
                 this.enemyCtrl.addRushes3(4000, hp, speed2);
@@ -604,34 +599,17 @@ class BattleLayer extends tutils.Layer {
                 this.enemyCtrl.addRushes7(4000, hp*5, 3, speed2);
                 switch (level) {
                 case 1:
-                    rush = new CallbackRush(5000, ():void=>{
-                        this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss1();
-                        this.showBossUI(boss);
-                    }, this);
+                    this.enemyCtrl.addRushBoss1(5000, 2000, bossCallback, this, speed);
                     break;
                 case 2:
-                    rush = new CallbackRush(5000, ():void=>{
-                        this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss2();
-                        this.showBossUI(boss);
-                    }, this);
+                    this.enemyCtrl.addRushBoss2(5000, 4000, bossCallback, this, speed);
                     break;
                 case 3:
-                    rush = new CallbackRush(5000, ():void=>{
-                        this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss3();
-                        this.showBossUI(boss);
-                    }, this);
+                    this.enemyCtrl.addRushBoss3(5000, 6000, bossCallback, this, speed);
                     break;
                 default:
-                    rush = new CallbackRush(5000, ():void=>{
-                        this.enemyCtrl.stopRush();
-                        let boss = this.enemyCtrl.createBoss3();
-                        this.showBossUI(boss);
-                    }, this);
+                    this.enemyCtrl.addRushBoss3(5000, 6000, bossCallback, this, speed);
                 }
-                this.enemyCtrl.addRush(rush);
             } else {
                 if (Math.random() < 0.3) {
                     // 陨石
@@ -688,12 +666,13 @@ class BattleLayer extends tutils.Layer {
             // 飞船使用次数少于3时第一个buff必定是主炮升级
             buff = GameController.instance.createBuff("gun_level_up");
             supply = new BuffSupply(buff.model, [buff]);
+            this.starNum++;
             i = -1;
         }
         switch (i) {
             case 0:
             // 40%
-            if (Math.random() > 0.40) {
+            if (Math.random()>0.40 && this.starNum<GlobalConfig.maxStar) {
                 return;
             }
             buff = GameController.instance.createBuff("gun_level_up");

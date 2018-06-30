@@ -4,8 +4,8 @@ class Gun extends egret.HashObject {
 	readonly fireCooldown: Value;
 	readonly bulletPower: Value;
 	bulletNum: number = 1;
-	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
-	readonly bulletPowerLossInterval: Value;  // 子弹能量下降时间间隔
+	bulletMaxHitTimes: number = 1;  // 子弹可碰撞次数
+	readonly bulletHitInterval: Value;  // 子弹碰撞时间间隔
 	readonly bulletSpeed: Value;
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 	bulletColor: number = 0xffffff;
@@ -22,7 +22,7 @@ class Gun extends egret.HashObject {
 		super();
 		this.fireCooldown===undefined ? this.fireCooldown=new Value(500, 0, 10000) : this.fireCooldown.constructor(500, 50, 1000);
 		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
-		this.bulletPowerLossInterval===undefined ? this.bulletPowerLossInterval=new Value(500, 100) : this.bulletPowerLossInterval.constructor(500, 100);
+		this.bulletHitInterval===undefined ? this.bulletHitInterval=new Value(500, 100) : this.bulletHitInterval.constructor(500, 100);
 		this.bulletSpeed===undefined ? this.bulletSpeed=new Value(50, 0, 200) : this.bulletSpeed.constructor(50, 0, 200);
 		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.TimerByAction(GameController.instance.actMgr) : this.autoFireTimer.constructor(GameController.instance.actMgr);
 	}
