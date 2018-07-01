@@ -86,12 +86,12 @@ const GlobalAllParts: string[] = [
 ];
 
 const GlobalBuffSupplyDrop = [
-	["gun_level_up", 500],
-	["gun_power_up", 1000],
-	["gun_cdr_up", 1000],
-	["ship_shield", 1000],
-	["satellite_ball", 1000],
-	["add_energy", 1000]
+	["buff_gun_level_up", 200],
+	["buff_gun_power_up", 1000],
+	["buff_gun_cdr_up", 1000],
+	["buff_ship_shield", 1000],
+	["buff_satellite_ball", 1000],
+	["buff_add_energy", 1000]
 ];
 
 const GlobalChest1Drop = [
@@ -159,6 +159,7 @@ const GlobalSeniorEnemyDrop = [
 ];
 
 const GlobalEliteEnemyDrop = [
+	["buff_gun_level_up", 500],
 	[GlobalPurplePartsDrop, 1000],
 	[GlobalOrangePartsDrop, 100]
 ];
@@ -168,8 +169,8 @@ const GlobalBossEnemyDrop = [
 	[
 		[
 			[GlobalBluePartsDrop, 1000],
-			[GlobalPurplePartsDrop, 500],
-			[GlobalOrangePartsDrop, 200],
+			[GlobalPurplePartsDrop, 200],
+			[GlobalOrangePartsDrop, 100],
 		],
 		100
 	],

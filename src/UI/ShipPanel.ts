@@ -828,7 +828,7 @@ class ShipPanel extends tutils.Component {
             this.lblChestItemTip0.text = chestItemNewTip;
             this.progChestItemExpBg0.alpha = 0;
             this.progChestItemExp0.alpha = 0;
-            this.evtMgr.regEvent(this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapPopOpenChestsMask);
+            tw.call(this.evtMgr.regEvent, this.evtMgr, [this.rctPopOpenChestsMask, egret.TouchEvent.TOUCH_TAP, this.onTapPopOpenChestsMask]);
         } else {
             this.progChestItemExpBg0.alpha = 1;
             this.progChestItemExp0.alpha = 1;

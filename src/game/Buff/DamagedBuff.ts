@@ -28,7 +28,7 @@ class ShieldBuff extends Buff {
 			this.gameObject.scaleX = 0;
 			this.gameObject.scaleY = 0;
 			this.gameObject.alpha = 0;
-			let act = new tutils.To(1000, {scaleX: 1, scaleY: 1, alpha: 1}, egret.Ease.backIn);
+			let act = new tutils.To(500, {scaleX: 1, scaleY: 1, alpha: 1}, egret.Ease.backOut);
 			GameController.instance.runAction(this.gameObject, act);
 		}
 		if (this.ship instanceof HeroShip) {
@@ -45,7 +45,7 @@ class ShieldBuff extends Buff {
 		if (this.gameObject && this.ship.gameObject instanceof egret.DisplayObjectContainer) {
 			let parent = this.ship.gameObject;
 			let act = new tutils.Sequence(
-				new tutils.To(1000, {scaleX: 0, scaleY: 0, alpha: 0}, egret.Ease.backOut),
+				new tutils.To(500, {scaleX: 0, scaleY: 0, alpha: 0}, egret.Ease.backIn),
 				new tutils.CallFunc(():void=>{
 					parent.removeChild(this.gameObject);
 					this.gameObject = null;
@@ -65,6 +65,14 @@ class ShieldBuff extends Buff {
 		} else {
 			this.shield = -dt;
 			value = 0;
+		}
+		if (this.gameObject) {
+			let act = new tutils.Sequence(
+				new tutils.To(50, {scaleX: 0.80, scaleY: 0.80}, egret.Ease.quadOut),
+				new tutils.To(50, {scaleX: 1, scaleY: 1}, egret.Ease.quadIn)
+			);
+			GameController.instance.stopAllActions(this.gameObject);
+			GameController.instance.runAction(this.gameObject, act);
 		}
 		if (this.heroHUD) {
 			this.heroHUD.updateShieldBar(this.shield, this.maxShield);

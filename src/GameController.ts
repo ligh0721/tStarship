@@ -289,7 +289,7 @@ class GameController {
 		return GlobalConfig.basePowerIncPer+level*0.01;
 	}
 
-	public createHeroShip(world: World): HeroShip {
+	public spawnHeroShip(world: World): HeroShip {
 		let hero = new HeroShip(GlobalHeroModel, GlobalHeroModelScale);
 		world.addShip(hero);
 		let level = this.getHeroLevel();
@@ -439,24 +439,24 @@ class GameController {
 	public createBuff(key: string): Buff {
 		let buff: Buff;
 		switch (key) {
-		case "gun_level_up":
+		case "buff_gun_level_up":
 			buff = new GunLevelUpBuff(1);
 			buff.model = "BuffGunLevelUp_png";
             buff.name = "Power Level Up!";
 			break;
-		case "gun_power_up":
+		case "buff_gun_power_up":
 			buff = new GunBuff(8000, 0, +0.20, 0);
 			buff.model = "BuffGunPower_png";
 			buff.name = "Fire Power Up!";
 			buff.key = key;
 			break;
-		case "gun_cdr_up":
+		case "buff_gun_cdr_up":
 			buff = new GunBuff(8000, -0.20, 0, 0);
 			buff.model = "BuffGunCDR_png";
 			buff.name = "Fire Rate Up!";
 			buff.key = key;
 			break;
-		case "satellite_ball":
+		case "buff_satellite_ball":
 			let gun = Gun.createGun(SatelliteGun, ExplosionBullet);
             gun.fireCooldown.baseValue = 1000;
             gun.bulletPower.baseValue = 50;
@@ -469,13 +469,13 @@ class GameController {
             buff.name = "Satellite Ball!";
 			buff.key = key;
 			break;
-		case "ship_shield":
+		case "buff_ship_shield":
 			buff = new ShieldBuff(10000, 1000);
 			buff.model = "BuffShield_png";
             buff.name = "Get Shield!";
 			buff.key = key;
 			break;
-		case "add_energy":
+		case "buff_add_energy":
 			buff = new AddEnergyBuff(150);
 			buff.model = "BuffAddEnergy_png";
             buff.name = "Energy Inc!";
@@ -647,14 +647,21 @@ class GameController {
 
 	public spawnSupply(world: World, dropKey: string, x: number, y: number, jump: boolean=false, delay: number=0): void {
         let supply: Supply;
+		let ease: Function;
         if (dropKey.indexOf("coin_") === 0) {
             supply = world.pools.newObject(ScoreSupply, 1);
             supply.speed = 100;
+			ease = egret.Ease.quadIn;
         } else if (dropKey.indexOf("part_") === 0) {
             let part = GameController.instance.createPart(dropKey);
             supply = world.pools.newObject(PartSupply, part.model, [part]);
             supply.speed = 20;
-        }
+			supply.pickDist = 0;
+        } else if (dropKey.indexOf("buff_") === 0) {
+			let buff = this.createBuff(dropKey);
+			supply = world.pools.newObject(BuffSupply, buff.model, [buff]);
+			supply.speed = 20;
+		}
         if (!supply) {
             return;
         }
@@ -665,10 +672,10 @@ class GameController {
                 world.addSupply(supply);
                 if (jump) {
                     supply.jump(x, y, 500, 300, ():void=>{
-                        supply.drop(supply.x, supply.y, egret.Ease.getPowIn(2));
+                        supply.drop(supply.x, supply.y, ease);
                     }, this);
                 } else {
-                    supply.drop(x, y, egret.Ease.getPowIn(2));
+                    supply.drop(x, y, ease);
                 }
             }, this)
         );

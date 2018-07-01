@@ -632,20 +632,14 @@ class BattleLayer extends tutils.Layer {
     }
 
     private onBuffSupplySpawn(dt: number): void {
-        let buff: Buff;
+        let dropKey: string;
         if (GameController.instance.getPlayerGunData().use<=3 && this.hero.mainGun.level===1) {
             // 飞船使用次数少于3时第一个buff必定是主炮升级
-            buff = GameController.instance.createBuff("gun_level_up");
+            dropKey = "buff_gun_level_up";
             this.starNum++;
         } else {
-            let dropKey = GameController.instance.dropTableForBuffSupply.randomR();
-            buff = GameController.instance.createBuff(dropKey);
+            dropKey = GameController.instance.dropTableForBuffSupply.randomR();
         }
-        if (!buff) {
-            return;
-        }
-        let supply = new BuffSupply(buff.model, [buff]);
-        this.world.addSupply(supply);
-        supply.drop(Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
+        GameController.instance.spawnSupply(this.world, dropKey, Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
     }
 }

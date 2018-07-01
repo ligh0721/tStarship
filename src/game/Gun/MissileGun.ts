@@ -44,11 +44,14 @@ class MissileGun extends Gun {
 				timer.stop();
 				return;
 			}
-			if ((target==null || !target.alive || target.id!=targetId) && this.ship.alive) {
+			if (target==null || !target.alive || target.id!=targetId) {
 				targetId = "";
-				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force, 600);
-				if (target != null) {
-					targetId = target.id;
+				target = null;
+				if (this.ship.alive) {
+					target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force, 600);
+					if (target != null) {
+						targetId = target.id;
+					}
 				}
 			}
 			if (target!=null && bulletSpeed>100) {
