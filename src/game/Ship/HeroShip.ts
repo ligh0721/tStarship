@@ -1,8 +1,8 @@
 class HeroShip extends Ship {
     hitRadius: number = 5;
     private hitRect: egret.Rectangle;
-    power: number = 0;
-    maxPower: number = 1000;
+    energy: number = 0;
+    maxEnergy: number = 1000;
     heroHUD: IHeroHUD = null;
     skill: Skill = null;
 
@@ -10,8 +10,8 @@ class HeroShip extends Ship {
 	partsNum: number = 0;
 	partsMax: number = 4;
 
-    readonly onPowerChangeTriggers: { [id: string]: Buff } = {};
-    readonly onPowerEmptyTriggers: { [id: string]: Buff } = {};
+    readonly onEnergyChangeTriggers: { [id: string]: Buff } = {};
+    readonly onEnergyEmptyTriggers: { [id: string]: Buff } = {};
     readonly onDamageTargetTriggers: { [id: string]: Buff } = {};
 
 	// from unit
@@ -32,7 +32,7 @@ class HeroShip extends Ship {
     public damaged(value: number, src: HpUnit, unit: HpUnit): void {
 		super.damaged(value, src, unit);
         if (this.heroHUD) {
-            this.heroHUD.updateHpBar(this.hp*100/this.maxHp);
+            this.heroHUD.updateHpBar(this.hp, this.maxHp);
         }
 	}
 
@@ -41,30 +41,30 @@ class HeroShip extends Ship {
         return value;
     }
 
-    public addPower(value: number): void {
-        value = this.$triggerOnPowerChange(value);
-        this.power += value;
-        if (this.power > this.maxPower) {
-            this.power = this.maxPower;
-        } else if (this.power <= 0) {
-            this.power = 0;
-            this.$triggerOnPowerEmpty();
+    public addEnergy(value: number): void {
+        value = this.$triggerOnEnergyChange(value);
+        this.energy += value;
+        if (this.energy > this.maxEnergy) {
+            this.energy = this.maxEnergy;
+        } else if (this.energy <= 0) {
+            this.energy = 0;
+            this.$triggerOnEnergyEmpty();
         }
         if (this.heroHUD) {
-            this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
+            this.heroHUD.updateEnergyBar(this.energy, this.maxEnergy);
         }
     }
 
-    public clearPower(): void {
-        this.power = 0;
-        this.$triggerOnPowerEmpty();
+    public clearEnergy(): void {
+        this.energy = 0;
+        this.$triggerOnEnergyEmpty();
         if (this.heroHUD) {
-            this.heroHUD.updatePowerBar(this.power*100/this.maxPower);
+            this.heroHUD.updateEnergyBar(this.energy, this.maxEnergy);
         }
     }
 
-    public isPowerFull(): boolean {
-        return this.power >= this.maxPower;
+    public isEnergyFull(): boolean {
+        return this.energy >= this.maxEnergy;
     }
 
     public setSkill(skill: Skill): Skill {
@@ -141,11 +141,11 @@ class HeroShip extends Ship {
     // override
     protected addTrigger(buff: Buff): void {
         super.addTrigger(buff);
-		if (buff.triggerFlags & HeroShipTrigger.OnPowerChange) {
-			this.onPowerChangeTriggers[buff.id] = buff;
+		if (buff.triggerFlags & HeroShipTrigger.OnEnergyChange) {
+			this.onEnergyChangeTriggers[buff.id] = buff;
 		}
-		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
-			this.onPowerEmptyTriggers[buff.id] = buff;
+		if (buff.triggerFlags & HeroShipTrigger.OnEnergyEmpty) {
+			this.onEnergyEmptyTriggers[buff.id] = buff;
 		}
         if (buff.triggerFlags & HeroShipTrigger.OnDamageTarget) {
 			this.onDamageTargetTriggers[buff.id] = buff;
@@ -155,29 +155,29 @@ class HeroShip extends Ship {
     // override
 	protected removeTrigger(buff: Buff): void {
 		super.removeTrigger(buff);
-        if (buff.triggerFlags & HeroShipTrigger.OnPowerChange) {
-			delete this.onPowerChangeTriggers[buff.id];
+        if (buff.triggerFlags & HeroShipTrigger.OnEnergyChange) {
+			delete this.onEnergyChangeTriggers[buff.id];
 		}
-		if (buff.triggerFlags & HeroShipTrigger.OnPowerEmpty) {
-			delete this.onPowerEmptyTriggers[buff.id];
+		if (buff.triggerFlags & HeroShipTrigger.OnEnergyEmpty) {
+			delete this.onEnergyEmptyTriggers[buff.id];
 		}
         if (buff.triggerFlags & HeroShipTrigger.OnDamageTarget) {
 			delete this.onDamageTargetTriggers[buff.id];
 		}
 	}
 
-    public $triggerOnPowerChange(change: number): number {
-		for (let id in this.onPowerChangeTriggers) {
-            let buff = this.onPowerChangeTriggers[id];
-            change = buff.onPowerChange(change);
+    public $triggerOnEnergyChange(change: number): number {
+		for (let id in this.onEnergyChangeTriggers) {
+            let buff = this.onEnergyChangeTriggers[id];
+            change = buff.onEnergyChange(change);
         }
         return change;
 	}
 
-    public $triggerOnPowerEmpty(): void {
-		for (let id in this.onPowerEmptyTriggers) {
-            let buff = this.onPowerEmptyTriggers[id];
-            buff.onPowerEmpty();
+    public $triggerOnEnergyEmpty(): void {
+		for (let id in this.onEnergyEmptyTriggers) {
+            let buff = this.onEnergyEmptyTriggers[id];
+            buff.onEnergyEmpty();
         }
 	}
 
@@ -252,7 +252,7 @@ class HeroShip extends Ship {
 
 enum HeroShipTrigger {
 	// ext
-	OnPowerChange = 1 << 20,
-	OnPowerEmpty = 1 << 21,
+	OnEnergyChange = 1 << 20,
+	OnEnergyEmpty = 1 << 21,
     OnDamageTarget = 1 << 22
 }

@@ -1,14 +1,19 @@
 class ShieldBuff extends Buff {
+	maxShield: number;
 	shield: number;
 	gameObject: egret.Bitmap = null;
+	heroHUD: IHeroHUD = null;
+
 	
-	public constructor(duration: number, shield: number) {
+	public constructor(duration: number, maxShield: number) {
 		super(duration, ShipTrigger.OnDamaged);
-		this.shield = shield;
+		this.maxShield = maxShield;
+		this.shield = maxShield;
 	}
 
 	// override
 	public onAddBuff(): void {
+		this.shield = this.maxShield;
 		if (this.ship.gameObject instanceof egret.DisplayObjectContainer) {
 			let parent = this.ship.gameObject as egret.DisplayObjectContainer;
 			this.gameObject = tutils.createBitmapByName("Shield_png");
@@ -26,10 +31,17 @@ class ShieldBuff extends Buff {
 			let act = new tutils.To(1000, {scaleX: 1, scaleY: 1, alpha: 1}, egret.Ease.backIn);
 			GameController.instance.runAction(this.gameObject, act);
 		}
+		if (this.ship instanceof HeroShip) {
+			this.heroHUD = this.ship.heroHUD;
+			this.heroHUD.updateShieldBar(this.shield, this.maxShield);
+		}
 	}
 
 	// override
 	public onRemoveBuff(): void {
+		if (this.heroHUD){
+			this.heroHUD.updateShieldBar(this.shield, 0);
+		}
 		if (this.gameObject && this.ship.gameObject instanceof egret.DisplayObjectContainer) {
 			let parent = this.ship.gameObject;
 			let act = new tutils.Sequence(
@@ -53,6 +65,12 @@ class ShieldBuff extends Buff {
 		} else {
 			this.shield = -dt;
 			value = 0;
+		}
+		if (this.heroHUD) {
+			this.heroHUD.updateShieldBar(this.shield, this.maxShield);
+		}
+		if (this.shield<=0) {
+			this.ship.removeBuff(this.id);
 		}
 		return value;
 	}

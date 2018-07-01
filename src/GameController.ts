@@ -442,12 +442,12 @@ class GameController {
 		case "gun_level_up":
 			buff = new GunLevelUpBuff(1);
 			buff.model = "BuffGunLevelUp_png";
-            buff.name = "Level Up!";
+            buff.name = "Power Level Up!";
 			break;
 		case "gun_power_up":
 			buff = new GunBuff(8000, 0, +0.20, 0);
 			buff.model = "BuffGunPower_png";
-			buff.name = "Power Up!";
+			buff.name = "Fire Power Up!";
 			buff.key = key;
 			break;
 		case "gun_cdr_up":
@@ -472,7 +472,13 @@ class GameController {
 		case "ship_shield":
 			buff = new ShieldBuff(10000, 1000);
 			buff.model = "BuffShield_png";
-            buff.name = "Shield!";
+            buff.name = "Get Shield!";
+			buff.key = key;
+			break;
+		case "add_energy":
+			buff = new AddEnergyBuff(150);
+			buff.model = "BuffAddEnergy_png";
+            buff.name = "Energy Inc!";
 			buff.key = key;
 			break;
 		
@@ -527,14 +533,14 @@ class GameController {
 			buff.key = key;
 			// buff.model = "PartMeteoroid_png";
 			break;
-		case "part_power_speed_up_2":
-			buff = new PowerSpeedUpBuff(Buff.Infinite, 1.25);
+		case "part_energy_speed_up_2":
+			buff = new EnergySpeedUpBuff(Buff.Infinite, 1.25);
 			buff.key = key;
 			// buff.name = "";
 			// buff.model = "_png";
 			break;
-		case "part_power_battery_2":
-			buff = new PowerNeverEmptyBuff(Buff.Infinite, 0.30);
+		case "part_energy_battery_2":
+			buff = new EnergyNeverEmptyBuff(Buff.Infinite, 0.30);
 			buff.key = key;
 			// buff.name = "";
 			// buff.model = "_png";

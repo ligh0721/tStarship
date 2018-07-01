@@ -181,9 +181,9 @@ class BattleLayer extends tutils.Layer {
         hero.setOnRemovePartListener(this.onShipRemovePart, this);
 
         hero.heroHUD = this.hud;
-        this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
+        this.hud.setOnUseEnergyListener(this.onHeroUseEnergy, this);
 
-        hero.power = hero.maxPower;
+        hero.energy = hero.maxEnergy;
 
         // hero.addBuff(new ShieldBuff(-1, 10));
 
@@ -235,8 +235,8 @@ class BattleLayer extends tutils.Layer {
         });
     }
 
-    private onHeroUsePower(): void {
-        // if (!this.hero.isPowerFull()) {
+    private onHeroUseEnergy(): void {
+        // if (!this.hero.isEneryFull()) {
         //     return;
         // }
         if (this.hero.alive && this.hero.castSkill()) {
@@ -247,7 +247,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     public turbo(bgCtrl: tutils.BackgroundController, speed: number, orgSpeed: number, dur: number): void {
-        this.hud.setOnUsePowerListener(null, null);
+        this.hud.setOnUseEnergyListener(null, null);
         if (dur < 1500) {
             dur = 1500;
         }
@@ -256,7 +256,7 @@ class BattleLayer extends tutils.Layer {
         tw.wait(dur-1500);
         tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
         tw.call(() => {
-            this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
+            this.hud.setOnUseEnergyListener(this.onHeroUseEnergy, this);
         });
     }
 
@@ -303,7 +303,7 @@ class BattleLayer extends tutils.Layer {
                 score *= 5;
             }
 
-            this.hero.addPower(power);
+            this.hero.addEnergy(power);
             
             if (ship.dropTable) {
                 let dropKey = ship.dropTable.randomR();
@@ -392,6 +392,9 @@ class BattleLayer extends tutils.Layer {
                 // 主炮升级
                 this.hud.showTip(buff.model, "+"+buff.levelChange, buff.name);
                 this.hud.setGunLevel(ship.mainGun.level);
+            } else if (buff instanceof AddEnergyBuff) {
+                // 增加能量
+                this.hud.showTip(buff.model, "+"+(buff.energy*100/this.hero.maxEnergy).toFixed(0)+"%", buff.name);
             } else {
                 // 其他有图标的BUFF
                 let dur = Math.floor(buff.duration/1000);
@@ -454,7 +457,7 @@ class BattleLayer extends tutils.Layer {
             } else {
                 this.touchBeginCount++;
                 if (this.touchBeginCount === 2) {
-                    this.onHeroUsePower();
+                    this.onHeroUseEnergy();
                     this.touchBeginCount = 0;
                 }
             }

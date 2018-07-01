@@ -43,8 +43,8 @@ const PART_CDR_UP_1 = "part_power_up_1";
 const PART_METEOROID = "part_meteoroid";
 const PART_CRITICAL_2 = "part_critical_2";
 const PART_ELEC_INDUCED_GUN = "part_elec_induced_gun";
-const PART_POWER_SPEED_UP_2 = "part_power_speed_up_2";
-const PART_POWER_BATTERY_2 = "part_power_battery_2";
+const part_energy_speed_up_2 = "part_energy_speed_up_2";
+const part_energy_battery_2 = "part_energy_battery_2";
 
 const GlobalAllGuns: string[] = [
 	//"gun_test",
@@ -81,8 +81,8 @@ const GlobalAllParts: string[] = [
 	"part_meteoroid",
 	"part_critical_2",
 	"part_elec_induced_gun",
-	"part_power_speed_up_2",
-	"part_power_battery_2"
+	"part_energy_speed_up_2",
+	"part_energy_battery_2"
 ];
 
 const GlobalBuffSupplyDrop = [
@@ -90,7 +90,8 @@ const GlobalBuffSupplyDrop = [
 	["gun_power_up", 1000],
 	["gun_cdr_up", 1000],
 	["ship_shield", 1000],
-	["satellite_ball", 1000]
+	["satellite_ball", 1000],
+	["add_energy", 1000]
 ];
 
 const GlobalChest1Drop = [
@@ -137,8 +138,8 @@ const GlobalBluePartsDrop = [
 
 const GlobalPurplePartsDrop = [
 	["part_critical_2", 1000],
-	["part_power_speed_up_2", 1000],
-	["part_power_battery_2", 1000]
+	["part_energy_speed_up_2", 1000],
+	["part_energy_battery_2", 1000]
 ];
 
 const GlobalOrangePartsDrop = [
@@ -401,17 +402,17 @@ const GlobalPartsData: PartsData = {
 		desc: "击败敌方单位有20%几率召唤一颗流星，流星撞击敌方单位将造成200点伤害",
 		buffs: ["part_meteoroid"],
 	},
-	part_power_speed_up_2: {
+	part_energy_speed_up_2: {
 		name: "聚能回路",
-		model: "PartPowerSpeedUp_png",
+		model: "PartEnergySpeedUp_png",
 		desc: "收集能量的速度提升30%",
-		buffs: ["part_power_speed_up_2"],
+		buffs: ["part_energy_speed_up_2"],
 	},
-	part_power_battery_2: {
+	part_energy_battery_2: {
 		name: "蓄能器",
 		model: "PartBattery_png",
 		desc: "当能量耗尽时立即补充25%能量",
-		buffs: ["part_power_battery_2"],
+		buffs: ["part_energy_battery_2"],
 	},
 	part_critical_2: {
 		name: "暴击零件",

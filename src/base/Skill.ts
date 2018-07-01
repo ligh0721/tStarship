@@ -9,13 +9,13 @@ class Skill {
 	}
 
 	public cast(): boolean {
-		if (!this.ship.isPowerFull()) {
+		if (!this.ship.isEnergyFull()) {
             return false;
         }
-		if (this.ship.power < this.power) {
+		if (this.ship.energy < this.power) {
 			return false;
 		}
-		this.ship.addPower(-this.power);
+		this.ship.addEnergy(-this.power);
 		this.onCast();
 		return true;
 	}

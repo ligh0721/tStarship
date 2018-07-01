@@ -48,8 +48,8 @@
         "./Main/Ships/BGMeteoroid1.png",
         "./Main/RedPixel.png",
         "./Main/Parts/PartPowerUp1.png",
-        "./Main/Parts/PartPowerSpeedUp.png",
         "./Main/Parts/PartMeteoroid.png",
+        "./Main/Parts/PartEnergySpeedUp.png",
         "./Main/Parts/PartElecInducedGun.png",
         "./Main/Parts/PartCritical2.png",
         "./Main/Parts/PartCDRUp1.png",
@@ -92,7 +92,8 @@
         "./Main/Buffs/BuffSatelliteGun.png",
         "./Main/Buffs/BuffGunPower.png",
         "./Main/Buffs/BuffGunLevelUp.png",
-        "./Main/Buffs/BuffGunCDR.png"
+        "./Main/Buffs/BuffGunCDR.png",
+        "./Main/Buffs/BuffAddEnergy.png"
     ],
     "version": 5
 }

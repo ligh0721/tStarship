@@ -53,12 +53,12 @@ class Buff {
 	}
 
 	// override
-	public onPowerChange(change: number): number {
+	public onEnergyChange(change: number): number {
 		return change;
 	}
 
 	// override
-	public onPowerEmpty(): void {
+	public onEnergyEmpty(): void {
 	}
 
 	public step(dt: number): boolean {

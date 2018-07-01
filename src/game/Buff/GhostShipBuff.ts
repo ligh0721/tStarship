@@ -7,7 +7,7 @@ class GhostShipBuff extends Buff {
 	private timer: tutils.Timer;
 
 	public constructor(duration: number, num: number=3, powerPer: number=0.3) {
-		super(duration, ShipTrigger.OnInterval | HeroShipTrigger.OnPowerEmpty);
+		super(duration, ShipTrigger.OnInterval | HeroShipTrigger.OnEnergyEmpty);
 		this.setInterval(0);
 		this.shipsNum = num;
 		this.powerPer = powerPer;
@@ -105,12 +105,12 @@ class GhostShipBuff extends Buff {
 	// override
 	public onInterval(dt: number): void {
 		if (this.ship instanceof HeroShip) {
-			this.ship.addPower(-10);
+			this.ship.addEnergy(-10);
 		}
 	}
 
 	// override
-	public onPowerEmpty(): void {
+	public onEnergyEmpty(): void {
 		this.ship.removeBuff(this.id);
 	}
 }
