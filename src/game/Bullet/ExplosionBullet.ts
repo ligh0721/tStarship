@@ -2,7 +2,6 @@ class ExplosionBullet extends Bullet {
 	radius: number = 30;
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.3;
-	explosionPowerLossInterval: number = 10000;
 
 	public constructor(gun: Gun) {
 		super(gun, "BlueBallBullet_png");
@@ -26,33 +25,17 @@ class ExplosionBullet extends Bullet {
 		bullet.radius = this.radius;
 		bullet.explosionRadius = this.explosionRadius;
 		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
-		bullet.hitInterval = this.explosionPowerLossInterval;
 		bullet.staticBounds = false;
 		this.world.addBullet(bullet);
 		bullet.gameObject.x = this.gameObject.x;
 		bullet.gameObject.y = this.gameObject.y;
-		bullet.factor = 0;
-
-		// let tw = egret.Tween.get(bullet);
-		// tw.to({factor: 1}, 400, egret.Ease.getPowOut(3));
-		// tw.call(()=>{
-		// 	bullet.damaged(bullet.hp, src, src);
-		// }, this);
-
-		let act = new tutils.Sequence(
-			new tutils.To(400, {factor: 1}, egret.Ease.getPowOut(3)),
-			new tutils.CallFunc(():void=>{
-				bullet.damaged(bullet.hp, src, src);
-			}, this)
-		);
-		bullet.runAction(act);
+		bullet.explosion(src);
 	}
 }
 
 class MissileBullet extends Bullet {
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.5;
-	explosionPowerLossInterval: number = 10000;
 
 	public constructor(gun: Gun) {
 		super(gun, "MissileBullet_png", 1.5);
@@ -64,25 +47,17 @@ class MissileBullet extends Bullet {
 		bullet.radius = 30;
 		bullet.explosionRadius = this.explosionRadius;
 		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
-		bullet.hitInterval = this.explosionPowerLossInterval;
 		bullet.staticBounds = false;
 		this.world.addBullet(bullet);
 		bullet.gameObject.x = this.gameObject.x;
 		bullet.gameObject.y = this.gameObject.y;
-		bullet.factor = 0;
-
-		let act = new tutils.Sequence(
-			new tutils.To(400, {factor: 1}, egret.Ease.getPowOut(3)),
-			new tutils.CallFunc(():void=>{
-				bullet.damaged(bullet.hp, src, src);
-			}, this)
-		);
-		bullet.runAction(act);
+		bullet.explosion(src);
 	}
 }
 
 class ExplosionEffectBullet extends Bullet {
-	readonly maxHitTimes: number = 1000;
+	maxHitTimes: number = 1000;
+	hitInterval: number = 10000;
 	radius: number = 30;
 	explosionRadius: number = 100;
 	private $factor: number = 0;
@@ -118,7 +93,41 @@ class ExplosionEffectBullet extends Bullet {
 		this.gameObject.height = this.orgHeight * scaleY;
 		this.gameObject.anchorOffsetX = this.gameObject.width * 0.5;
 		this.gameObject.anchorOffsetY = this.gameObject.height * 0.5;
-		this.gameObject.alpha = (1-value);
+		// this.gameObject.alpha = 1-value;
 		//console.log(this.gameObject.scaleX);
+	}
+
+	public explosion(src: HpUnit): void {
+		this.factor = 0;
+		this.gameObject.alpha = 1;
+		let act = new tutils.Sequence(
+			new tutils.Spawn(
+				new tutils.To(400, {factor: 1}, egret.Ease.quadOut),
+				new tutils.To(400, {alpha: 0}, egret.Ease.quadOut)
+			),
+			new tutils.CallFunc(():void=>{
+				this.damaged(this.hp, src, src);
+			}, this)
+		);
+		this.runAction(act);
+	}
+
+	public explosionClearly(src: HpUnit): void {
+		this.factor = 0;
+		this.gameObject.alpha = 1;
+		let act = new tutils.Sequence(
+			new tutils.Spawn(
+				new tutils.To(400, {factor: 1}, egret.Ease.quadOut),
+				new tutils.Sequence(
+					new tutils.DelayTime(200),
+					new tutils.To(200, {alpha: 0}, egret.Ease.quadIn)
+				)
+				
+			),
+			new tutils.CallFunc(():void=>{
+				this.damaged(this.hp, src, src);
+			}, this)
+		);
+		this.runAction(act);
 	}
 }

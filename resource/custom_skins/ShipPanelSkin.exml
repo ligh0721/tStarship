@@ -275,7 +275,7 @@
 			</tween:TweenGroup>
     </w:Declarations>
     <e:Group height="100%" width="100%" x="0" y="0">
-        <e:ViewStack height="100%" id="vsMain" selectedIndex="0" width="100%" x="-71" y="611">
+        <e:ViewStack height="100%" id="vsMain" selectedIndex="1" width="100%" x="-71" y="611">
             <e:Group height="100%" id="grpShop" name="Shop" width="100%">
                 <e:Rect enabled="false" fillColor="0x171B34" height="100%" width="100%" x="0" y="0"/>
                 <e:Group height="100%" horizontalCenter="0" top="0" width="100%">
@@ -596,14 +596,14 @@
             <e:Button height="66" id="btnCheat" label="Cheat" right="50" skinName="GreenButtonSkinV3" top="28" width="180"/>
         </e:Group>
     </e:Group>
-	<e:Group id="grpPopOpenChests" width="100%" height="100%" top="0" horizontalCenter="0" alpha="1" alpha.ShopFinal="0" visible="false">
+	<e:Group id="grpPopOpenChests" width="100%" height="100%" top="0" horizontalCenter="0" alpha="1" alpha.ShopFinal="0">
 		<e:Rect id="rctPopOpenChestsMask" height="100%" width="100%" x="0" y="0" fillColor="0x000000" fillAlpha="0.8"/>
 		<e:Group id="grpChestItem0" width="100" height="100" y="610" alpha="1" alpha.ShopFinal="0" alpha.ShopInit="0" horizontalCenter="0">
 			<e:Group width="200" height="200" scaleX="0.5" scaleY="0.5" verticalCenter="0" horizontalCenter="0">
 				<e:Image id="imgChestItemShine0" horizontalCenter="0" verticalCenter="0" source="yellowshinebg_png" anchorOffsetX="300" anchorOffsetY="294" scaleX="0" scaleY="0" alpha="0"/>
 				<e:Image scale9Grid="18,21,23,19" width="100%" height="100%" source="shipitembg2_png" horizontalCenter="0" verticalCenter="0" x="0" y="0"/>
 				<e:Image id="imgChestIcon0" width="88%" height="88%" verticalCenter="0" horizontalCenter="0" source="shipitemunknown_png" x="6" y="6"/>
-				<e:Group id="grpChestItemLevel0" x="0" y="0" alpha="1" alpha.ShopInit="0">
+				<e:Group id="grpChestItemLevel0" x="0" y="0" alpha="1" alpha.ShopInit="0" width="200">
 					<e:Image x="0" y="0" source="levelbg_png"/>
 					<e:BitmapLabel id="lblChestItemLevel0" font="FranklinGothicHeavy60_fnt" scaleX="0.6" scaleY="0.6" width="100" height="66" anchorOffsetX="50" textAlign="center" y="9" x="30" text="10"/>
 					<e:Group height="30" width="200" x="0" y="220">
@@ -611,6 +611,8 @@
 						<e:Rect fillColor="0xfed44c" height="100%" id="progChestItemExp0" width="70%"/>
 						<e:BitmapLabel id="lblChestItemTip0" horizontalCenter="0" verticalCenter="40" font="FranklinGothicHeavyOrange30_fnt" text="Exp: 40%" textAlign="center" width="300"/>
 					</e:Group>
+					<e:Image scale9Grid="26,0,6,60" source="levelbg_png" width="120" bottom="50" right="0" y="140"/>
+					<e:BitmapLabel id="lblChestItemType0" scaleX="0.5" scaleY="0.6" text="Cannon" textAlign="center" bottom="64" font="FranklinGothicHeavy60_fnt" y="144" width="300" anchorOffsetX="150" horizontalCenter="41"/>
 				</e:Group>
 				<e:Label id="lblChestItemName0" text="聚焦粒子炮(穿透)" horizontalCenter="0" verticalCenter="224" textColor="0x2a9aae" bold="true" size="80" fontFamily="SimHei" textAlign="center" width="1200" scaleX="0.5" scaleY="0.5"/>
 			</e:Group>

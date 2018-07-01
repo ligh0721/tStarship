@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
-    private mode: "web"|"fb"|"wc" = "web";
+    mode: "web"|"fb"|"wc" = "web";
 
     protected createChildren(): void {
         super.createChildren();

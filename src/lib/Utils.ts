@@ -7,6 +7,7 @@ module tutils {
 	export const Player2Force = 2;
 	export const AllyForce = 10;
 	export const EnemyForce = 11;
+	export const NeutralForce = 12;
 	export const LargeNumber = 1000000;
 	// export const ShipTimerInterval = 100;
 	export const Epsilon = 2.2204460492503130808472633361816E-16;

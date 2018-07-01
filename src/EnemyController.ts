@@ -418,6 +418,7 @@ class EnemyController {
 	public addRushBoss1(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
 		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
             let boss = this.createBoss1(hp, speedFactor);
+			boss.addBuff(new BombBuff(Buff.Infinite, 1.00, 1000, 300, tutils.NeutralForce));
 			for (let id in boss.gunShips) {
 				let gunShipInfo = boss.gunShips[id];
 				gunShipInfo.gunShip.dropTable = GameController.instance.dropTableForSeniorEnemy;

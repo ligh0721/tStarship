@@ -450,7 +450,7 @@ const GlobalPlayerInitData: PlayerData = {
 		skillKey: "",
     },
     maxStage: 0,
-    coins: 10000,
+    coins: 0,
 	exp: 0,
 	enemies: 0,
 	gunsNum: 1,

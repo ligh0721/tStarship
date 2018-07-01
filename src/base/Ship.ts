@@ -19,6 +19,7 @@ class Ship extends HpUnit {
 
 	readonly onDamagedTriggers: { [id: string]: Buff } = {};
 	readonly onDestroyTargetTriggers: { [id: string]: Buff } = {};
+	readonly onDyingTriggers: { [id: string]: Buff } = {};
 
 	ai: tutils.StateManager;
 
@@ -105,6 +106,10 @@ class Ship extends HpUnit {
 			this.status = UnitStatus.Dead;
 		}, this);
 		this.gameObject.visible = false;
+
+		if (src instanceof Ship) {
+			this.$triggerOnDying(src);
+		}
 	}
 
 	// override
@@ -119,6 +124,9 @@ class Ship extends HpUnit {
 		if (buff.triggerFlags & ShipTrigger.OnDestroyTarget) {
 			this.onDestroyTargetTriggers[buff.id] = buff;
 		}
+		if (buff.triggerFlags & ShipTrigger.OnDying) {
+			this.onDyingTriggers[buff.id] = buff;
+		}
 	}
 
 	protected removeTrigger(buff: Buff): void {
@@ -127,6 +135,9 @@ class Ship extends HpUnit {
 		}
 		if (buff.triggerFlags & ShipTrigger.OnDestroyTarget) {
 			delete this.onDestroyTargetTriggers[buff.id];
+		}
+		if (buff.triggerFlags & ShipTrigger.OnDying) {
+			delete this.onDyingTriggers[buff.id];
 		}
 	}
 
@@ -142,6 +153,13 @@ class Ship extends HpUnit {
 		for (let id in this.onDestroyTargetTriggers) {
 			let buff = this.onDestroyTargetTriggers[id];
 			buff.onDestroyTarget(target);
+		}
+	}
+
+	public $triggerOnDying(src: Ship): void {
+		for (let id in this.onDyingTriggers) {
+			let buff = this.onDyingTriggers[id];
+			buff.onDying(src);
 		}
 	}
 
@@ -294,6 +312,7 @@ enum ShipTrigger {
 	OnInterval = 1 << 0,
 	OnDamaged = 1 << 1,
 	OnDestroyTarget = 1 << 2,
+	OnDying = 1 << 3,
 }
 type ShipTriggerFlags = number;
 

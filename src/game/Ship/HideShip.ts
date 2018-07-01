@@ -1,6 +1,6 @@
 class HideShip extends Ship {
 	protected onCreate(): egret.DisplayObject {
-		let gameObject = new egret.Shape();
+		let gameObject = new egret.DisplayObject();
 		gameObject.width = this.width;
 		gameObject.height = this.height;
         gameObject.anchorOffsetX = this.width * 0.5;

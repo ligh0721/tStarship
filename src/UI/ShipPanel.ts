@@ -73,6 +73,9 @@ class ShipPanel extends tutils.Component {
     private imgChestIcon0: eui.Image;
     private lblChestItemName0: eui.Label;
     private imgChestItemShine0: eui.Image;
+    private lblChestItemType0: eui.BitmapLabel;
+    private lblPlayerName: eui.BitmapLabel;
+    private imgPlayerPortrait: eui.Image;
     
     private btnCheat: eui.Button;
     private btnClearArchives: eui.Button;
@@ -122,6 +125,8 @@ class ShipPanel extends tutils.Component {
         this.btnStart.touchEnabled = false;
         this.btnEquip.touchEnabled = false;
 
+        this.initTop();
+
         this.playerData = GameController.instance.playerData;
         this.setCoins(this.playerData.coins);
 
@@ -131,6 +136,20 @@ class ShipPanel extends tutils.Component {
         this.vsMain.selectedIndex = 1;
 
         this.initBattleView();
+    }
+
+    private initTop(): void {
+        if (!GameController.instance.fbPlayerData) {
+            // RES.getResByUrl("https://tools.tutils.com/t5w0rd.png", (data: egret.Texture, url: string):void=>{
+            //     this.imgPlayerPortrait.texture = data;
+            // }, this, RES.ResourceItem.TYPE_IMAGE);
+            return;
+        }
+        this.lblPlayerName.text = GameController.instance.fbPlayerData.name;
+        egret.ImageLoader.crossOrigin = "anonymous";
+        RES.getResByUrl(GameController.instance.fbPlayerData.portrait, (data: egret.Texture, url: string):void=>{
+            this.imgPlayerPortrait.texture = data;
+        }, this, RES.ResourceItem.TYPE_IMAGE);
     }
 
     private onMainTabChange(e: eui.UIEvent):void {
@@ -786,6 +805,8 @@ class ShipPanel extends tutils.Component {
             chestItemExpToLevelFunc = GameController.instance.expToGunLevel;
             chestItemExpTable = GameController.instance.gunExpTable;
             chestItemExpDelta = 1;
+            this.lblChestItemType0.text = "Cannon";
+            this.lblChestItemType0.scaleX = this.lblChestItemType0.scaleY - 0.1;
 		} else if (this.chestDropKey.indexOf("skill_") === 0) {
             let skillData = GameController.instance.getSkillDataByKey(this.chestDropKey);
             chestItemName = skillData.name;
@@ -801,6 +822,8 @@ class ShipPanel extends tutils.Component {
             chestItemExpToLevelFunc = GameController.instance.expToSkillLevel;
             chestItemExpTable = GameController.instance.skillExpTable;
             chestItemExpDelta = 1;
+            this.lblChestItemType0.text = "Skill";
+            this.lblChestItemType0.scaleX = this.lblChestItemType0.scaleY;
 		} else if (this.chestDropKey.indexOf("shipexp_") === 0) {
             let shipExpData = GameController.instance.getShipExpDataByKey(this.chestDropKey);
             chestItemName = shipExpData.name;
@@ -809,6 +832,8 @@ class ShipPanel extends tutils.Component {
             chestItemExpToLevelFunc = GameController.instance.expToLevel;
             chestItemExpTable = GameController.instance.expTable;
             chestItemExpDelta = shipExpData.exp;
+            this.lblChestItemType0.text = "Ship";
+            this.lblChestItemType0.scaleX = this.lblChestItemType0.scaleY;
 		} else {
             console.assert(false, "invalied drop key("+this.chestDropKey+")");
             return;
@@ -886,8 +911,8 @@ class ShipPanel extends tutils.Component {
 
     private runChestItemShineAni(): void {
         let tw = egret.Tween.get(this.imgChestItemShine0);
-        tw.to({alpha: 1, scaleX: 0.75, scaleY: 0.75}, 500, egret.Ease.sineOut);
-        tw.to({alpha: 0.75, scaleX: 0.5, scaleY: 0.5}, 500, egret.Ease.sineIn);
+        tw.to({alpha: 1, scaleX: 1.5, scaleY: 1.5}, 500, egret.Ease.sineOut);
+        tw.to({alpha: 0.75, scaleX: 1, scaleY: 1}, 500, egret.Ease.sineIn);
         tw.call(this.runChestItemShineAni, this);
     }
 }

@@ -49,6 +49,10 @@ class Buff {
 	}
 
 	// override
+	public onDying(src: Ship): void {
+	}
+
+	// override
 	public onInterval(dt: number): void {
 	}
 

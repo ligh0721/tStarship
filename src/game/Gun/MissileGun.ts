@@ -5,7 +5,6 @@ class MissileGun extends Gun {
 
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.5;
-	explosionPowerLossInterval: number = 10000;
 
 	public constructor() {
 		super();
@@ -21,7 +20,6 @@ class MissileGun extends Gun {
 			if (bullet instanceof MissileBullet) {
 				bullet.explosionRadius = this.explosionRadius;
 				bullet.explosionPowerEveryPer = this.explosionPowerEveryPer;
-				bullet.explosionPowerLossInterval = this.explosionPowerLossInterval;
 			}
 			let angle = (i - (this.bulletNum - 1) / 2) * this.bulletAngleDelta + this.ship.rotation;
 			let firePos = Unit.getDirectionPoint(this.ship.x, this.ship.y+60, angle, this.ship.height*0.5);

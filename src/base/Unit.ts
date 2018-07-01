@@ -50,6 +50,14 @@ class Unit extends egret.HashObject implements tutils.INode {
 		this.gameObject.scaleX = this.gameObject.scaleY = value;
 	}
 
+	public get alpha(): number {
+		return this.gameObject.alpha;
+	}
+
+	public set alpha(value: number) {
+		this.gameObject.alpha = value;
+	}
+
 	public getBounds(): egret.Rectangle {
 		if (!this.staticBounds || this.boundsDirty) {
 			this.boundsRect = this.gameObject.getBounds();

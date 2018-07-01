@@ -27,6 +27,7 @@ class GameController {
 
 	playerData: PlayerData = null;
 	private static KeyData: string = "PlayPrefsData";
+	fbPlayerData: FBPlayerData;
 
 	actMgr: tutils.ActionManager = new tutils.ActionManager();
 	hud: BattleHUD;
@@ -63,6 +64,9 @@ class GameController {
 
 	public init(root: Main): void {
 		this.root = root;
+		if (root.mode === "fb") {
+			this.loadFBPlayerData();
+		}
 		this.actMgr.start(60);
 	}
 
@@ -86,6 +90,14 @@ class GameController {
 
 	public setBattleHUD(hud: BattleHUD): void {
 		this.hud = hud;
+	}
+
+	public loadFBPlayerData(): FBPlayerData {
+		this.fbPlayerData = {
+			name: FBInstant.player.getName(),
+			portrait: FBInstant.player.getPhoto()
+		};
+		return this.fbPlayerData;
 	}
 
 	public deletePlayerData(): void {
@@ -688,6 +700,11 @@ class GameController {
 // 	use: number,
 // 	enemy: number
 // }
+
+type FBPlayerData = {
+	name: string,
+	portrait: string
+}
 
 type PlayerGunData = {
 	exp: number,

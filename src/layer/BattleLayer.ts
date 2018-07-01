@@ -168,7 +168,7 @@ class BattleLayer extends tutils.Layer {
         tutils.playBgMusic("Bgmusic_mp3");
 
         // 创建玩家飞船
-        let hero = GameController.instance.createHeroShip(this.world);
+        let hero = GameController.instance.spawnHeroShip(this.world);
         this.hero = hero;
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
