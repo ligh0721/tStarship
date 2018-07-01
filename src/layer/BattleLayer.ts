@@ -22,7 +22,7 @@ class BattleLayer extends tutils.Layer {
     private txtHeroScale: egret.TextField;
 
     private tickerEffect = new Effect(1, 10);
-    private supplySpawner: tutils.ITimer;
+    private buffSupplySpawner: tutils.ITimer;
 
     // 双击释放技能
     private lastTouchBeginTick: number = 0;
@@ -188,16 +188,14 @@ class BattleLayer extends tutils.Layer {
         // hero.addBuff(new ShieldBuff(-1, 10));
 
 
-        // 创建玩家飞船血条、能量条
+        // 创建玩家飞船血条、能量条、主炮等级等信息
         this.hud.setHero(this.hero);
         // this.hud.setEnemyController(this.enemyCtrl);
         
         // 创建测试补给箱
-        this.supplySpawner = new tutils.TimerByAction(GameController.instance.actMgr);
-        this.supplySpawner.setOnTimerListener((dt: number): void=>{
-            this.createTestSupply();
-        });
-        this.supplySpawner.start(8000, true, 0);
+        this.buffSupplySpawner = new tutils.TimerByAction(GameController.instance.actMgr);
+        this.buffSupplySpawner.setOnTimerListener(this.onBuffSupplySpawn, this);
+        this.buffSupplySpawner.start(8000, true, 0);
 
         // let test_parts = ["part_elec_induced_gun", "part_critical_2"];
         // for (let i in test_parts) {
@@ -298,7 +296,7 @@ class BattleLayer extends tutils.Layer {
                 // 掉落雨
                 for (let i=0; i<20; i++) {
                     let dropKey = GameController.instance.dropTableForBossEnemy.randomR();
-                    this.spawnSupply(dropKey, ship.gameObject.x, ship.gameObject.y, true, i*50);
+                    GameController.instance.spawnSupply(this.world, dropKey, ship.gameObject.x, ship.gameObject.y, true, i*50);
                 }
             } else if (ship instanceof MotherGunShip) {
                 power *= 40;
@@ -309,7 +307,7 @@ class BattleLayer extends tutils.Layer {
             
             if (ship.dropTable) {
                 let dropKey = ship.dropTable.randomR();
-                this.spawnSupply(dropKey, ship.gameObject.x, ship.gameObject.y);
+                GameController.instance.spawnSupply(this.world, dropKey, ship.gameObject.x, ship.gameObject.y);
             }
             
 
@@ -340,36 +338,6 @@ class BattleLayer extends tutils.Layer {
         }
     }
 
-    private spawnSupply(dropKey: string, x: number, y: number, jump: boolean=false, delay: number=0): void {
-        let supply: Supply;
-        if (dropKey.indexOf("coin_") === 0) {
-            supply = this.world.pools.newObject(ScoreSupply, 1);
-            supply.speed = 100;
-        } else if (dropKey.indexOf("part_") === 0) {
-            let part = GameController.instance.createPart(dropKey);
-            supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-            supply.speed = 20;
-        }
-        if (!supply) {
-            return;
-        }
-
-        let act = new tutils.Sequence(
-            new tutils.DelayTime(delay),
-            new tutils.CallFunc(():void=>{
-                this.world.addSupply(supply);
-                if (jump) {
-                    supply.jump(x, y, 500, 300, ():void=>{
-                        supply.drop(supply.x, supply.y, egret.Ease.getPowIn(2));
-                    }, this);
-                } else {
-                    supply.drop(x, y, egret.Ease.getPowIn(2));
-                }
-            }, this)
-        );
-        supply.runAction(act);
-    }
-
     private addScore(score: number): void {
         if (!this.hero || !this.hero.alive) {
             return;
@@ -390,7 +358,7 @@ class BattleLayer extends tutils.Layer {
         this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
         this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
         this.enemyCtrl.stopRush();
-        this.supplySpawner.stop();
+        this.buffSupplySpawner.stop();
 
         // 玩家数据
         let playerData = GameController.instance.playerData;
@@ -421,8 +389,11 @@ class BattleLayer extends tutils.Layer {
     private onShipAddBuff(ship: Ship, buff: Buff): void {
         if (buff.model && buff.name) {
             if (buff instanceof GunLevelUpBuff) {
+                // 主炮升级
                 this.hud.showTip(buff.model, "+"+buff.levelChange, buff.name);
+                this.hud.setGunLevel(ship.mainGun.level);
             } else {
+                // 其他有图标的BUFF
                 let dur = Math.floor(buff.duration/1000);
                 if (dur > 0) {
                     this.hud.showTip(buff.model, dur.toString()+"s", buff.name);
@@ -562,7 +533,7 @@ class BattleLayer extends tutils.Layer {
 			this.world.addShip(ship);
 			ship.force.force = tutils.EnemyForce;
             ship.resetHp(20);
-            if (i == 5) {
+            if (i === 5) {
                 ship.resetHp(2000);
             }
             ship.x = 60 * i;
@@ -657,45 +628,20 @@ class BattleLayer extends tutils.Layer {
         this.hud.hideBossHpBar();
     }
 
-    private createTestSupply() {
+    private onBuffSupplySpawn(dt: number): void {
         let buff: Buff;
-        let supply: Supply;
-        let gun: Gun;
-        let i = Math.floor(Math.random()*4);
         if (GameController.instance.getPlayerGunData().use<=3 && this.hero.mainGun.level===1) {
             // 飞船使用次数少于3时第一个buff必定是主炮升级
             buff = GameController.instance.createBuff("gun_level_up");
-            supply = new BuffSupply(buff.model, [buff]);
             this.starNum++;
-            i = -1;
+        } else {
+            let dropKey = GameController.instance.dropTableForBuffSupply.randomR();
+            buff = GameController.instance.createBuff(dropKey);
         }
-        switch (i) {
-            case 0:
-            // 40%
-            if (Math.random()>0.40 && this.starNum<GlobalConfig.maxStar) {
-                return;
-            }
-            buff = GameController.instance.createBuff("gun_level_up");
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-
-            case 1:
-            buff = GameController.instance.createBuff("gun_power_up");
-            buff.name = "GunPower";
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-
-            case 2:
-            buff = GameController.instance.createBuff("gun_cdr_up");
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-
-            case 3:
-            buff = GameController.instance.createBuff("satellite_ball");
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
+        if (!buff) {
+            return;
         }
-
+        let supply = new BuffSupply(buff.model, [buff]);
         this.world.addSupply(supply);
         supply.drop(Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
     }

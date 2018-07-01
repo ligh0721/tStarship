@@ -1,9 +1,47 @@
 class ShieldBuff extends Buff {
 	shield: number;
+	gameObject: egret.Bitmap = null;
 	
 	public constructor(duration: number, shield: number) {
 		super(duration, ShipTrigger.OnDamaged);
 		this.shield = shield;
+	}
+
+	// override
+	public onAddBuff(): void {
+		if (this.ship.gameObject instanceof egret.DisplayObjectContainer) {
+			let parent = this.ship.gameObject as egret.DisplayObjectContainer;
+			this.gameObject = tutils.createBitmapByName("Shield_png");
+			let d = Math.sqrt(this.ship.width*this.ship.width+this.ship.height+this.ship.height)*1.5;
+			this.gameObject.width = d;
+			this.gameObject.height = d;
+			this.gameObject.anchorOffsetX = d * 0.5;
+			this.gameObject.anchorOffsetY = d * 0.5;
+			this.ship.gameObject.addChild(this.gameObject);
+			this.gameObject.x = this.ship.width * 0.5;
+			this.gameObject.y = this.ship.height * 0.5;
+			this.gameObject.scaleX = 0;
+			this.gameObject.scaleY = 0;
+			this.gameObject.alpha = 0;
+			let act = new tutils.To(1000, {scaleX: 1, scaleY: 1, alpha: 1}, egret.Ease.backIn);
+			GameController.instance.runAction(this.gameObject, act);
+		}
+	}
+
+	// override
+	public onRemoveBuff(): void {
+		if (this.gameObject && this.ship.gameObject instanceof egret.DisplayObjectContainer) {
+			let parent = this.ship.gameObject;
+			let act = new tutils.Sequence(
+				new tutils.To(1000, {scaleX: 0, scaleY: 0, alpha: 0}, egret.Ease.backOut),
+				new tutils.CallFunc(():void=>{
+					parent.removeChild(this.gameObject);
+					this.gameObject = null;
+				}, this)
+			);
+			GameController.instance.stopAllActions(this.gameObject);
+			GameController.instance.runAction(this.gameObject, act);
+		}
 	}
 
 	// override
@@ -51,6 +89,29 @@ class FactorDamageBuff extends Buff {
 	// override
 	public onDamaged(value: number, src: Ship, unit: HpUnit): number {
 		value *= this.factor;
+		return value;
+	}
+}
+
+class CoinsDropBuff extends Buff {
+	rate: number;
+	dropTable: DropTable<any>;
+
+	public constructor(duration:number, rate: number, dropTable: DropTable<any>) {
+		super(duration, ShipTrigger.OnDamaged);
+		this.rate = rate;
+		this.dropTable = dropTable;
+	}
+
+	// override
+	public onDamaged(value: number, src: Ship, unit: HpUnit): number {
+		if (Math.random() < this.rate) {
+			let dropTable = this.dropTable || this.ship.dropTable;
+			if (dropTable) {
+				let dropKey = this.ship.dropTable.randomR();
+				GameController.instance.spawnSupply(this.ship.world, dropKey, this.ship.x, this.ship.y, true);
+			}
+		}
 		return value;
 	}
 }

@@ -85,6 +85,14 @@ const GlobalAllParts: string[] = [
 	"part_power_battery_2"
 ];
 
+const GlobalBuffSupplyDrop = [
+	["gun_level_up", 500],
+	["gun_power_up", 1000],
+	["gun_cdr_up", 1000],
+	["ship_shield", 1000],
+	["satellite_ball", 1000]
+];
+
 const GlobalChest1Drop = [
 	[
 		[

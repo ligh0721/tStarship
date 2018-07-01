@@ -23,6 +23,7 @@ class GameController {
     readonly dropTableForEliteEnemy: DropTable<any>;
     readonly dropTableForBossEnemy: DropTable<any>;
 	readonly dropTableForMeteoroidEnemy: DropTable<any>;
+	readonly dropTableForBuffSupply: DropTable<any>;
 
 	playerData: PlayerData = null;
 	private static KeyData: string = "PlayPrefsData";
@@ -49,6 +50,7 @@ class GameController {
 		this.dropTableForEliteEnemy = this.loadDropTable(GlobalEliteEnemyDrop);
 		this.dropTableForBossEnemy = this.loadDropTable(GlobalBossEnemyDrop);
 		this.dropTableForMeteoroidEnemy = this.loadDropTable(GlobalMeteoroidEnemyDrop);
+		this.dropTableForBuffSupply = this.loadDropTable(GlobalBuffSupplyDrop);
 		
 		console.log("load guns data", this.allGunsData);
 		console.log("load skills data", this.allSkillsData);
@@ -437,22 +439,22 @@ class GameController {
 	public createBuff(key: string): Buff {
 		let buff: Buff;
 		switch (key) {
+		case "gun_level_up":
+			buff = new GunLevelUpBuff(1);
+			buff.model = "BuffGunLevelUp_png";
+            buff.name = "Level Up!";
+			break;
 		case "gun_power_up":
 			buff = new GunBuff(8000, 0, +0.20, 0);
-			buff.model = "GunPower_png";
+			buff.model = "BuffGunPower_png";
 			buff.name = "Power Up!";
 			buff.key = key;
 			break;
 		case "gun_cdr_up":
 			buff = new GunBuff(8000, -0.20, 0, 0);
-			buff.model = "GunCDR_png";
+			buff.model = "BuffGunCDR_png";
 			buff.name = "Fire Rate Up!";
 			buff.key = key;
-			break;
-		case "gun_level_up":
-			buff = new GunLevelUpBuff(1);
-			buff.model = "GunLevelUp_png";
-            buff.name = "Level Up!";
 			break;
 		case "satellite_ball":
 			let gun = Gun.createGun(SatelliteGun, ExplosionBullet);
@@ -463,8 +465,14 @@ class GameController {
             gun.bulletHitInterval.baseValue = 1000;
 			gun.period = 1000;
             buff = new AddGunBuff(10000, [gun]);
-			buff.model = "SatelliteGun_png";
+			buff.model = "BuffSatelliteGun_png";
             buff.name = "Satellite Ball!";
+			buff.key = key;
+			break;
+		case "ship_shield":
+			buff = new ShieldBuff(10000, 1000);
+			buff.model = "BuffShield_png";
+            buff.name = "Shield!";
 			buff.key = key;
 			break;
 		
@@ -553,13 +561,13 @@ class GameController {
 			buff = new GunBuff(Buff.Infinite, -0.10, 0, +0.10);
 			buff.key = key;
 			// buff.name = "Test Part1";
-			// buff.model = "GunCDR_png";
+			// buff.model = "BuffGunCDR_png";
 			break;
 		case "part_power_up_1":
 			buff = new GunBuff(Buff.Infinite, 0.00, +0.10, 0.00);
 			buff.key = key;
 			// buff.name = "Test Part2";
-			// buff.model = "GunPower_png";
+			// buff.model = "BuffGunPower_png";
 			break;
 		default:
 			console.assert(false, "invalid buff key("+key+")");
@@ -618,14 +626,48 @@ class GameController {
 		return part;
 	}
 
-	public addAction(target: egret.IHashObject, action: tutils.Action): tutils.Action {
+	public runAction(target: egret.IHashObject, action: tutils.Action): tutils.Action {
 		this.actMgr.addAction(target, action);
 		return action;
+	}
+
+	public stopAllActions(target: egret.IHashObject): void {
+		this.actMgr.removeAllActions(target);
 	}
 
 	public setActionSpeed(speed: number): void {
 		this.actMgr.speed = speed;
 	}
+
+	public spawnSupply(world: World, dropKey: string, x: number, y: number, jump: boolean=false, delay: number=0): void {
+        let supply: Supply;
+        if (dropKey.indexOf("coin_") === 0) {
+            supply = world.pools.newObject(ScoreSupply, 1);
+            supply.speed = 100;
+        } else if (dropKey.indexOf("part_") === 0) {
+            let part = GameController.instance.createPart(dropKey);
+            supply = world.pools.newObject(PartSupply, part.model, [part]);
+            supply.speed = 20;
+        }
+        if (!supply) {
+            return;
+        }
+
+        let act = new tutils.Sequence(
+            new tutils.DelayTime(delay),
+            new tutils.CallFunc(():void=>{
+                world.addSupply(supply);
+                if (jump) {
+                    supply.jump(x, y, 500, 300, ():void=>{
+                        supply.drop(supply.x, supply.y, egret.Ease.getPowIn(2));
+                    }, this);
+                } else {
+                    supply.drop(x, y, egret.Ease.getPowIn(2));
+                }
+            }, this)
+        );
+        supply.runAction(act);
+    }
 }
 
 // type PlayerShipData = {

@@ -41,7 +41,7 @@ class TestLayer extends tutils.Layer {
         // bmp.x = 100;
         // bmp.y = 100;
 
-        // bmp = tutils.createBitmapByName("GunCDR_png");
+        // bmp = tutils.createBitmapByName("BuffGunCDR_png");
         // this.addChild(bmp);
         // bmp.x = 200;
         // bmp.y = 200;

@@ -85,4 +85,8 @@
 		<e:VerticalLayout horizontalAlign="right" verticalAlign="top" gap="10"/>
 		</e:layout>
 	</e:Group>
+	<e:Group bottom="117" left="10" width="60">
+		<e:Image source="BuffGunLevelUp_png" left="0" bottom="0"/>
+		<e:BitmapLabel id="lblGunLevel" font="Arial40_fnt" text="x10" scaleX="0.5" scaleY="0.5" bottom="2" left="36"/>
+	</e:Group>
 </e:Skin>

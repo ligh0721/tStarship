@@ -430,6 +430,10 @@ class EnemyController {
 	public addRushBoss2(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
 		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
             let boss = this.createBoss2(hp, speedFactor);
+			for (let id in boss.gunShips) {
+				let gunShipInfo = boss.gunShips[id];
+				gunShipInfo.gunShip.dropTable = GameController.instance.dropTableForSeniorEnemy;
+			}
 			boss.dropTable = GameController.instance.dropTableForEliteEnemy;
             callback.call(thisObj, boss);
         }, this));
@@ -438,6 +442,10 @@ class EnemyController {
 	public addRushBoss3(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
 		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
             let boss = this.createBoss3(hp, speedFactor);
+			for (let id in boss.gunShips) {
+				let gunShipInfo = boss.gunShips[id];
+				gunShipInfo.gunShip.dropTable = GameController.instance.dropTableForSeniorEnemy;
+			}
 			boss.dropTable = GameController.instance.dropTableForEliteEnemy;
             callback.call(thisObj, boss);
         }, this));

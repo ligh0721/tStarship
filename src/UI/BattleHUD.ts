@@ -16,6 +16,7 @@ class BattleHUD extends tutils.Component implements IHeroHUD {
     private btnPower: eui.Button;
     private grpBuffs: eui.Group;
     private grpParts: eui.Group;
+    private lblGunLevel: eui.BitmapLabel;
 
     private onUsePowerListener: Function = null;
     private onUsePowerThisObj: any = null;
@@ -53,6 +54,7 @@ class BattleHUD extends tutils.Component implements IHeroHUD {
         this.hero = hero;
         this.updateHpBar(hero.hp*100/hero.maxHp);
         this.updatePowerBar(hero.power*100/hero.maxPower);
+        this.setGunLevel(hero.mainGun.level);
     }
 
     public updateScore(score: number): void {
@@ -258,6 +260,10 @@ class BattleHUD extends tutils.Component implements IHeroHUD {
         panel.setOnRemovePartListener((part: Part):void=>{
             this.hero.removePart(part.id);
         }, this);
+    }
+
+    public setGunLevel(level: number): void {
+        this.lblGunLevel.text = "x" + level;
     }
 }
 
