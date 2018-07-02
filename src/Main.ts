@@ -112,6 +112,7 @@ class Main extends eui.UILayer {
         console.log("start game");
         this.fbContextInfo();
         this.fbPlayerInfo();
+        GameController.instance.loadFBPlayerData();
 
         this.createGameScene();
     }

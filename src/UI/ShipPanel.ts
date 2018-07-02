@@ -153,7 +153,6 @@ class ShipPanel extends tutils.Component {
     }
 
     private onMainTabChange(e: eui.UIEvent):void {
-        console.log('tab'+this.hashCode+', '+this.playerData.sharechestTs);
         let radioGroup: eui.RadioButtonGroup = e.target;
         let lastSelectedIndex = this.vsMain.selectedIndex;
         
@@ -351,9 +350,7 @@ class ShipPanel extends tutils.Component {
     }
 
     private onBtnClearArchives(evt: egret.TouchEvent): void {
-        console.log('before clear'+this.hashCode+', '+this.playerData.sharechestTs);
         this.playerData = GameController.instance.resetPlayerData();
-        console.log('after clear'+this.hashCode+', '+this.playerData.sharechestTs);
         this.gun = null;
         this.skill = null;
         this.setCoins(this.playerData.coins);

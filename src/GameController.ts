@@ -64,9 +64,6 @@ class GameController {
 
 	public init(root: Main): void {
 		this.root = root;
-		if (root.mode === "fb") {
-			this.loadFBPlayerData();
-		}
 		this.actMgr.start(60);
 	}
 
