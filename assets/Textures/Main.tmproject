@@ -1,11 +1,4 @@
 {
-    "options": {
-        "layoutMath": "3",
-        "sizeMode": "2n",
-        "useExtension": 1,
-        "layoutGap": 1,
-        "extend": 0
-    },
     "projectName": "Main",
     "files": [
         "./Main/WhitePixel.png",
@@ -38,6 +31,7 @@
         "./Main/Ships/Energy.png",
         "./Main/Ships/DeepOrangeFatHeroShip.png",
         "./Main/Ships/BossShip1.png",
+        "./Main/Ships/Bomb.png",
         "./Main/Ships/BlueHeroShip.png",
         "./Main/Ships/BlueFatHeroShip.png",
         "./Main/Ships/BlueEnemyShip.png",
@@ -95,5 +89,12 @@
         "./Main/Buffs/BuffGunCDR.png",
         "./Main/Buffs/BuffAddEnergy.png"
     ],
+    "options": {
+        "layoutMath": "3",
+        "sizeMode": "2n",
+        "useExtension": 1,
+        "layoutGap": 1,
+        "extend": 0
+    },
     "version": 5
 }

@@ -35,6 +35,10 @@ class Buff {
 	}
 
 	// override
+	public onUpdateBuff(buff: Buff): void {
+	}
+
+	// override
 	public onDamaged(value: number, src: Ship, unit: HpUnit): number {
 		return value;
 	}

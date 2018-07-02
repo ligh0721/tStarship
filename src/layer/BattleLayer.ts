@@ -555,6 +555,7 @@ class BattleLayer extends tutils.Layer {
             this.showBossUI(boss);
         }
         // this.enemyCtrl.addRushes10(1000, 500, 1.0);
+        this.enemyCtrl.addRushBomb(1000, 500, 1);
         this.enemyCtrl.addRushBoss1(1000, 1000, bossCallback, this, 1);
         for (let i=1; i<=WAVE_NUM*10; i++) {
             let level = Math.floor((i-1)/WAVE_NUM) + 1;
@@ -564,35 +565,39 @@ class BattleLayer extends tutils.Layer {
             if (i%WAVE_NUM === 0) {
                 gunEnemyCD = GUN_ENMEY_CD;
                 followEnemyCD = FOLLOW_ENMEY_CD;
-                this.enemyCtrl.addRushes1(4000, hp, speed2);
-                this.enemyCtrl.addRushes2(4000, hp, speed2);
-                this.enemyCtrl.addRushes3(4000, hp, speed2);
-                this.enemyCtrl.addRushes4(4000, hp, speed2);
-                this.enemyCtrl.addRushes5(4000, hp, speed2);
-                this.enemyCtrl.addRushes6(4000, hp, speed2);
+                this.enemyCtrl.addRushes1(4000, hp, speed);
+                this.enemyCtrl.addRushes2(4000, hp, speed);
+                this.enemyCtrl.addRushes3(4000, hp, speed);
+                this.enemyCtrl.addRushes4(4000, hp, speed);
+                this.enemyCtrl.addRushes5(4000, hp, speed);
+                this.enemyCtrl.addRushes6(4000, hp, speed);
                 this.enemyCtrl.addRushes7(4000, hp*5, 3, speed2);
                 switch (level) {
                 case 1:
-                    this.enemyCtrl.addRushBoss1(5000, 2000, bossCallback, this, speed);
+                    this.enemyCtrl.addRushBoss1(5000, 3000, bossCallback, this, speed);
                     break;
                 case 2:
-                    this.enemyCtrl.addRushBoss2(5000, 4000, bossCallback, this, speed);
+                    this.enemyCtrl.addRushBoss2(5000, 5000, bossCallback, this, speed);
                     break;
                 case 3:
-                    this.enemyCtrl.addRushBoss3(5000, 6000, bossCallback, this, speed);
+                    this.enemyCtrl.addRushBoss3(5000, 8000, bossCallback, this, speed);
                     break;
                 default:
-                    this.enemyCtrl.addRushBoss3(5000, 6000, bossCallback, this, speed);
+                    this.enemyCtrl.addRushBoss3(5000, 8000+(level-3)*2000, bossCallback, this, speed);
                 }
             } else {
                 if (Math.random() < 0.3) {
                     // 陨石
-                    let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, 0, speed2);
+                    let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, speed);
                     rush.setCallback(():void=>{
                         tutils.playSound("Meteoroid_mp3");
                         rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
                         rush.to.x = rush.from.x;
                     }, this);
+                }
+
+                if (Math.random()<0.1 && level>=3) {
+                    this.enemyCtrl.addRushBomb(1000, hp*5, speed);
                 }
 
                 let delay = Math.random() * 5000 + 2000;
@@ -602,13 +607,13 @@ class BattleLayer extends tutils.Layer {
                     gunEnemyCD = 0;
                     let num = Math.floor(Math.min(4, Math.random()*((level-1)/3+1)+1));
                     if (Math.random() < 0.5) {
-                        this.enemyCtrl.addRushes7(delay, hp*5, num, speed2);
+                        this.enemyCtrl.addRushes7(delay, hp*6, num, speed);
                     } else {
-                        this.enemyCtrl.addRushes8(delay, hp*5, num, speed2);
+                        this.enemyCtrl.addRushes8(delay, hp*6, num, speed);
                     }
                 } else if (rnd>=0.3 && rnd<0.6 && followEnemyCD>=FOLLOW_ENMEY_CD) {
                     followEnemyCD = 0;
-                    this.enemyCtrl.addRushes10(delay, hp*20, speed2);
+                    this.enemyCtrl.addRushes10(delay, hp*25, speed2);
                 } else {
                     let num = Math.floor(Math.random()*8+5);
                     this.enemyCtrl.addRushes11(delay, hp, num, speed);

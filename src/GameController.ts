@@ -479,7 +479,7 @@ class GameController {
 			buff.key = key;
 			break;
 		case "buff_ship_shield":
-			buff = new ShieldBuff(10000, 1000);
+			buff = new ShieldBuff(20000, 1000);
 			buff.model = "BuffShield_png";
             buff.name = "Get Shield!";
 			buff.key = key;
@@ -494,6 +494,10 @@ class GameController {
 		// runtime buff
 		case "elec_induced":
 			buff = new ElecBuff(5000, 10);
+			buff.key = key;
+			break;
+		case "dying_bomb_neutral":
+			buff = new BombBuff(Buff.Infinite, 1.00, 1000, 300, tutils.NeutralForce);
 			buff.key = key;
 			break;
 

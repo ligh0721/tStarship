@@ -232,6 +232,7 @@ class Ship extends HpUnit {
 					if (b.left < buff.duration) {
 						b.left = Math.min(b.duration, buff.duration);
 					}
+					b.onUpdateBuff(buff);
 					this.onUpdateBuff(b);
 					return;
 				}

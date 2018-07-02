@@ -57,6 +57,16 @@ class ShieldBuff extends Buff {
 	}
 
 	// override
+	public onUpdateBuff(buff: Buff): void {
+		if (buff instanceof ShieldBuff) {
+			this.shield = buff.shield;
+			if (this.heroHUD) {
+				this.heroHUD.updateShieldBar(this.shield, this.maxShield);
+			}
+		}
+	}
+
+	// override
 	public onDamaged(value: number, src: HpUnit, unit: HpUnit): number {
 		let dt = value - this.shield;
 		if (dt > 0) {

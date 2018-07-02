@@ -418,7 +418,6 @@ class EnemyController {
 	public addRushBoss1(delay: number, hp: number, callback: (boss: Ship)=>void, thisObj: any, speedFactor: number=1): void {
 		this.addRush(new CallbackRush(delay/speedFactor, ():void=>{
             let boss = this.createBoss1(hp, speedFactor);
-			boss.addBuff(new BombBuff(Buff.Infinite, 1.00, 1000, 300, tutils.NeutralForce));
 			for (let id in boss.gunShips) {
 				let gunShipInfo = boss.gunShips[id];
 				gunShipInfo.gunShip.dropTable = GameController.instance.dropTableForSeniorEnemy;
@@ -452,14 +451,34 @@ class EnemyController {
         }, this));
 	}
 
-	public addRushMeteoroid(delay: number, hp: number, x: number, speedFactor: number=1): StraightRush {
+	public addRushMeteoroid(delay: number, hp: number, speedFactor: number=1): StraightRush {
 		let ships: EnemyShip[];
 		let rush: Rush;
 
 		ships = this.createEnemyShips(1, hp, "Meteoroid_png", 0.25, GameController.instance.dropTableForMeteoroidEnemy);
-		rush = new StraightRush(delay/speedFactor, ships, 300/speedFactor, 4000/speedFactor, {x: x, y: 0}, {x: x, y: 100});
+		rush = new StraightRush(delay/speedFactor, ships, 0, 4000/speedFactor, {x: 0, y: 0}, {x: 0, y: 100});
 		this.addRush(rush);
 		return rush as StraightRush;
+	}
+
+	public addRushBomb(delay: number, hp: number, speedFactor: number=1): void {
+		let ships: EnemyShip[];
+		let rush: Rush;
+
+		ships = this.createEnemyShips(1, hp, "Bomb_png", 1.5, GameController.instance.dropTableForMeteoroidEnemy);
+		let x = Math.random() * (this.world.width - ships[0].width * 2) + ships[0].width;
+		rush = new StraightRush(delay/speedFactor, ships, 0, 10000/speedFactor, {x: x, y: 0}, {x: x, y: 100});
+		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
+			let x = Math.random() * (this.world.width - ships[0].width * 2) + ships[0].width;
+			ship.x = x;
+			ship.y = -ship.height*0.5;
+			let buff = GameController.instance.createBuff("dying_bomb_neutral");
+			ship.addBuff(buff);
+			ship.moveTo(x, this.world.height+ship.height*0.5, 10*speedFactor, false, null, false, ():void=>{
+				ship.status = UnitStatus.Dead;
+			}, this);
+		}, this);
+		this.addRush(rush);
 	}
 
 	public addRushes1(delay: number, hp: number, speedFactor: number=1): void {
