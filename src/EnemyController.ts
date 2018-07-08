@@ -534,7 +534,7 @@ class EnemyController {
 				}
 				lastHp = ship.hp;
 				dodgeTimes++;
-				if (dodgeTimes === 10) {
+				if (dodgeTimes === 8) {
 					// 攻击
 					ai.change(waitToFire);
 					dodgeTimes = 0; 
