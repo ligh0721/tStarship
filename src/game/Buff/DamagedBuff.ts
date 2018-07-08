@@ -3,12 +3,14 @@ class ShieldBuff extends Buff {
 	shield: number;
 	gameObject: egret.Bitmap = null;
 	heroHUD: IHeroHUD = null;
-
+	static ActionDamaged = 1;
+	static ActionWarning = 2;
 	
 	public constructor(duration: number, maxShield: number) {
-		super(duration, ShipTrigger.OnDamaged);
+		super(duration, ShipTrigger.OnDamaged | ShipTrigger.OnInterval);
 		this.maxShield = maxShield;
 		this.shield = maxShield;
+		// this.setInterval(500);
 	}
 
 	// override
@@ -63,6 +65,10 @@ class ShieldBuff extends Buff {
 			if (this.heroHUD) {
 				this.heroHUD.updateShieldBar(this.shield, this.maxShield);
 			}
+			if (this.gameObject) {
+				GameController.instance.stopActionByTag(this.gameObject, ShieldBuff.ActionWarning);
+				this.gameObject.alpha = 1;
+			}
 		}
 	}
 
@@ -81,7 +87,8 @@ class ShieldBuff extends Buff {
 				new tutils.To(50, {scaleX: 0.80, scaleY: 0.80}, egret.Ease.quadOut),
 				new tutils.To(50, {scaleX: 1, scaleY: 1}, egret.Ease.quadIn)
 			);
-			GameController.instance.stopAllActions(this.gameObject);
+			act.tag = ShieldBuff.ActionDamaged;
+			GameController.instance.stopActionByTag(this.gameObject, ShieldBuff.ActionDamaged);
 			GameController.instance.runAction(this.gameObject, act);
 		}
 		if (this.heroHUD) {
@@ -91,6 +98,19 @@ class ShieldBuff extends Buff {
 			this.ship.removeBuff(this.id);
 		}
 		return value;
+	}
+
+	// override
+	public onInterval(dt: number): void {
+		if (!this.gameObject || this.left>=5000 || GameController.instance.actMgr.getActionByTag(this.gameObject, ShieldBuff.ActionWarning)) {
+			return;
+		}
+		let act = new tutils.Sequence(
+			new tutils.To(500, {alpha: 0.1}, egret.Ease.sineIn),
+			new tutils.To(500, {alpha: 1}, egret.Ease.sineOut)
+		);
+		act.tag = ShieldBuff.ActionWarning;
+		GameController.instance.runAction(this.gameObject, act);
 	}
 }
 
@@ -134,20 +154,36 @@ class CoinsDropBuff extends Buff {
 	dropTable: DropTable<any>;
 
 	public constructor(duration:number, rate: number, dropTable: DropTable<any>) {
-		super(duration, ShipTrigger.OnDamaged);
+		super(duration, ShipTrigger.OnDamaged | ShipTrigger.OnDying);
 		this.rate = rate;
 		this.dropTable = dropTable;
 	}
 
 	// override
+	public onAddBuff(): void {
+		this.dropTable = this.dropTable || this.ship.dropTable;
+	}
+
+	// override
 	public onDamaged(value: number, src: Ship, unit: HpUnit): number {
 		if (Math.random() < this.rate) {
-			let dropTable = this.dropTable || this.ship.dropTable;
-			if (dropTable) {
-				let dropKey = this.ship.dropTable.randomR();
+			if (this.dropTable) {
+				let dropKey = this.dropTable.randomR();
 				GameController.instance.spawnSupply(this.ship.world, dropKey, this.ship.x, this.ship.y, true);
 			}
 		}
 		return value;
+	}
+
+	// override
+	public onDying(src: Ship): void {
+		if (!this.dropTable) {
+			return;
+		}
+		// 掉落雨
+		for (let i=0; i<40; i++) {
+			let dropKey = this.dropTable.randomR();
+			GameController.instance.spawnSupply(this.ship.world, dropKey, this.ship.gameObject.x, this.ship.gameObject.y, true, i*50);
+		}
 	}
 }

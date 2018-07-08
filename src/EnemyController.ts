@@ -263,7 +263,7 @@ class EnemyController {
 		let gunShip = new MotherGunShip("TwoGunBOSSGun_png", 0.5);
         boss.addGunShip(gunShip, 0, 100);
         gunShip.rotation = 180;
-        let gun = Gun.createGun(Gun, ShakeWave2Bullet);
+        let gun = Gun.createGun(Gun, EnergyWave2Bullet);
 		gunShip.addGun(gun, true);
 		gun.bulletLeft = 0;
 		gun.autoFire = true;
@@ -481,6 +481,83 @@ class EnemyController {
 		this.addRush(rush);
 	}
 
+	public addRushGoldShip(delay: number, hp: number, speedFactor: number=1): void {
+		// 稀有黄金敌人
+		const num = 1;
+		let ships: EnemyShip[];
+		let rush: Rush;
+		ships = this.createEnemyShips(num, hp, "YellowHeroShip_png", 0.4, GameController.instance.dropTableForEliteEnemy);
+		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
+			ship.x = (index + 1) * ship.world.width / (num + 1);
+			ship.y = -ship.height;
+			ship.speed.baseValue = 80;
+			ship.rotation = 180;
+
+			let gun = Gun.createGun(SineGun, RedWaveBullet);
+			// gun.bulletXDelta = 50;
+			gun.bulletNum = 2;
+			gun.bulletPower.baseValue = 1;
+			gun.bulletSpeed.baseValue = 80;
+			gun.fireCooldown.baseValue = 100;
+			gun.amplitudeDelta = 250;
+			gun.waveLen = 500;
+
+			ship.addGun(gun, true);
+			let buff = GameController.instance.createBuff("drop_coins_buff");
+			ship.addBuff(buff);
+
+			let ai = new tutils.StateManager();
+			ship.ai = ai;
+			let arrive = new MoveState(ai, ship, ship.x, 250, ship.speed.value, false, egret.Ease.getPowOut(2));
+			let beginFire = new FireState(ai, ship, true);
+			let waitToFire = new WaitState(ai, ship, 1000);
+			let firing = new WaitState(ai, ship, 2000);
+			let waitToDodge = new WaitState(ai, ship, 1000);
+			let endFire = new FireState(ai, ship, false);
+			let leave = new MoveState(ai, ship, ship.x, -ship.height, ship.speed.value, true, egret.Ease.getPowIn(2));
+			let dead = new DeadState(ai, ship);
+			let dodge = new tutils.CustomState();
+			let move = new MoveState(ai, ship, 0, 250, ship.speed.value, true, egret.Ease.getPowOut(2));
+			let lastHp = ship.hp;
+			let dodgeTimes = 0;
+			let totalDur = 0;
+			dodge.setListener(null, (dt: number):void=>{
+				totalDur += dt;
+				if (totalDur >= 10000) {
+					// 撤退
+					ai.change(leave);
+					return;
+				}
+				if (ship.hp === lastHp) {
+					// 没有掉血
+					return;
+				}
+				lastHp = ship.hp;
+				dodgeTimes++;
+				if (dodgeTimes === 10) {
+					// 攻击
+					ai.change(waitToFire);
+					dodgeTimes = 0; 
+					return;
+				}
+				if (ship.x > this.world.width*0.5) {
+					// move left
+					move.x = tutils.random(ship.width, Math.min(this.world.width*0.5, ship.x-ship.width*2));
+				} else {
+					// move right
+					move.x = tutils.random(Math.max(this.world.width*0.5, ship.x+ship.width*2), this.world.width-ship.width);
+				}
+				ai.change(move);
+			}, this, 100);
+			arrive.setNext(dodge);
+			waitToFire.setNext(beginFire).setNext(firing).setNext(endFire).setNext(waitToDodge).setNext(dodge);
+			move.setNext(dodge);
+			leave.setNext(dead);
+			ai.change(arrive);
+		}, this);
+		this.addRush(rush);
+	}
+
 	public addRushes1(delay: number, hp: number, speedFactor: number=1): void {
 		let ships: EnemyShip[];
 		let rush: Rush;
@@ -594,7 +671,7 @@ class EnemyController {
 		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
-			ship.speed.baseValue = 20;
+			ship.speed.baseValue = 20 * speedFactor;
 			ship.rotation = 180;
 
 			let gun = Gun.createGun(ShotGun, RedEllipseBullet);
@@ -607,11 +684,11 @@ class EnemyController {
 
 			let ai = new tutils.StateManager();
 			ship.ai = ai;
-			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value*speedFactor, true, egret.Ease.getPowOut(2));
+			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value, true, egret.Ease.getPowOut(2));
 			let beginFire = new FireState(ai, ship, true);
 			let wait = new WaitState(ai, ship, 10000/speedFactor);
 			let endFire = new FireState(ai, ship, false);
-			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value*speedFactor), true, egret.Ease.getPowIn(2));
+			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value), true, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
 			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead);
 			ai.change(arrive);
@@ -628,7 +705,7 @@ class EnemyController {
 		rush = new CustomRush(delay/speedFactor, ships, 0, null, (index: number, ship: Ship):void=>{
 			ship.x = (index + 1) * ship.world.width / (num + 1);
 			ship.y = -ship.height;
-			ship.speed.baseValue = 20;
+			ship.speed.baseValue = 20 * speedFactor;
 			ship.rotation = 180;
 
 			let gun = Gun.createGun(RowGun, RedEllipseBullet);
@@ -641,11 +718,11 @@ class EnemyController {
 
 			let ai = new tutils.StateManager();
 			ship.ai = ai;
-			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value*speedFactor, false, egret.Ease.getPowOut(2));
+			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value, false, egret.Ease.getPowOut(2));
 			let beginFire = new FireState(ai, ship, true);
 			let wait = new WaitState(ai, ship, 10000/speedFactor);
 			let endFire = new FireState(ai, ship, false);
-			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value*speedFactor), false, egret.Ease.getPowIn(2));
+			let leave = new MoveState(ai, ship, ship.x, ship.world.height+ship.height, Math.min(100, ship.speed.value), false, egret.Ease.getPowIn(2));
 			let dead = new DeadState(ai, ship);
 			arrive.setNext(beginFire).setNext(wait).setNext(endFire).setNext(leave).setNext(dead);
 			ai.change(arrive);
@@ -669,13 +746,13 @@ class EnemyController {
 
 			let ai = new tutils.StateManager();
 			ship.ai = ai;
-			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value*5*speedFactor, false, egret.Ease.getPowOut(2));
+			let arrive = new MoveState(ai, ship, ship.x, 100, ship.speed.value*2, false, egret.Ease.getPowOut(2));
 			let follow = new tutils.CustomState();
 
 			let shipId = ship.id;
 			let targetId = "";
 			let target: Ship = null;
-			let xspeedDelta = 30/1000 * speedFactor;
+			let xspeedDelta = ship.speed.value / tutils.SpeedFactor;
 			let xspeed = 0;
 			follow.setListener(():void=>{
 				ship.moveTo(ship.x, ship.world.height+ship.height, ship.speed.value, true, null, true, ():void=>{

@@ -1,9 +1,9 @@
 class MoveState extends ShipAIChainState {
-	protected x: number;
-	protected y: number;
+	x: number;
+	y: number;
 	protected speed: number;
 	protected fixedRotation: boolean;
-	protected ease: Function;
+	ease: Function;
 
 
 	public constructor(mgr: tutils.StateManager, ship: Ship, x: number, y: number, speed: number, fixedRotation: boolean, ease: Function) {
@@ -22,7 +22,7 @@ class MoveState extends ShipAIChainState {
 }
 
 class WaitState extends ShipAIChainState {
-	protected duration: number;
+	duration: number;
 
 	public constructor(mgr: tutils.StateManager, ship: Ship, duration: number) {
 		super(mgr, ship);

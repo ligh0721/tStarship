@@ -8,8 +8,8 @@ class Buff {
 	model: string = null;
 	key: string = null;
 	left: number;
-	$elapsed: number = 0;  // for interval
-	$interval: number = 0;
+	private $elapsed: number = 0;  // for interval
+	private $interval: number = Ship.TimerInterval;
 
 	public constructor(duration: number, triggerFlags?: ShipTriggerFlags) {
 		this.duration = duration;

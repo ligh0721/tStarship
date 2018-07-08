@@ -546,30 +546,33 @@ class BattleLayer extends tutils.Layer {
 
     private createAllRushes(): void {
         const WAVE_NUM = 15;
-        const GUN_ENMEY_CD = 20000;
+        const GUN_ENEMY_CD = 20000;
         let gunEnemyCD = 0;
-        const FOLLOW_ENMEY_CD = 20000;
+        const FOLLOW_ENEMY_CD = 20000;
         let followEnemyCD = 0;
+        const GOLD_ENEMY_CD = 1000000;
+        let goldEnemyCD = GOLD_ENEMY_CD - 20000;
         let bossCallback = (boss: Ship):void=>{
             this.enemyCtrl.stopRush();
             this.showBossUI(boss);
         }
+        let enmeyType = new DropTable<number>();
+        enmeyType.push(0, 1000);
+        enmeyType.push(1, 200);
+        enmeyType.push(2, 200);
+        enmeyType.push(3, 50);
         // this.enemyCtrl.addRushes10(1000, 500, 1.0);
-        this.enemyCtrl.addRushBomb(1000, 500, 1);
-        this.enemyCtrl.addRushBoss1(1000, 1000, bossCallback, this, 1);
+        // this.enemyCtrl.addRushBomb(1000, 500, 1);
+        // this.enemyCtrl.addRushGoldShip(1000, 1000, 1);
+        // this.enemyCtrl.addRushBoss1(1000, 1000, bossCallback, this, 1);
         for (let i=1; i<=WAVE_NUM*10; i++) {
             let level = Math.floor((i-1)/WAVE_NUM) + 1;
             let speed = Math.floor(Math.min(level*0.2+0.8, 2.0));
             let speed2 = Math.floor(Math.min(level*0.5+0.5, 3.0));
             let hp = Math.floor(20+i/1);
             if (i%WAVE_NUM === 0) {
-                gunEnemyCD = GUN_ENMEY_CD;
-                followEnemyCD = FOLLOW_ENMEY_CD;
-                this.enemyCtrl.addRushes1(4000, hp, speed);
-                this.enemyCtrl.addRushes2(4000, hp, speed);
-                this.enemyCtrl.addRushes3(4000, hp, speed);
-                this.enemyCtrl.addRushes4(4000, hp, speed);
-                this.enemyCtrl.addRushes5(4000, hp, speed);
+                gunEnemyCD = GUN_ENEMY_CD;
+                followEnemyCD = FOLLOW_ENEMY_CD;
                 this.enemyCtrl.addRushes6(4000, hp, speed);
                 this.enemyCtrl.addRushes7(4000, hp*5, 3, speed2);
                 switch (level) {
@@ -597,28 +600,63 @@ class BattleLayer extends tutils.Layer {
                 }
 
                 if (Math.random()<0.1 && level>=3) {
+                    // 炸弹
                     this.enemyCtrl.addRushBomb(1000, hp*5, speed);
                 }
 
-                let delay = Math.random() * 5000 + 2000;
-                let rnd = Math.random();
-                if (rnd<0.3 && gunEnemyCD>=GUN_ENMEY_CD) {
-                    // 开炮Enemy
-                    gunEnemyCD = 0;
-                    let num = Math.floor(Math.min(4, Math.random()*((level-1)/3+1)+1));
-                    if (Math.random() < 0.5) {
-                        this.enemyCtrl.addRushes7(delay, hp*6, num, speed);
-                    } else {
-                        this.enemyCtrl.addRushes8(delay, hp*6, num, speed);
+                let delay = Math.random() * 5000 + 3000;
+                let typ = enmeyType.random();
+                let isSpecial = false;
+                if (typ === 1) {
+                    if (gunEnemyCD >= GUN_ENEMY_CD) {
+                        gunEnemyCD = 0;
+                        let num = Math.floor(Math.min(4, Math.random()*((level-1)/3+1)+1));
+                        if (Math.random() < 0.5) {
+                            this.enemyCtrl.addRushes7(delay, hp*6, num, speed);
+                        } else {
+                            this.enemyCtrl.addRushes8(delay, hp*6, num, speed);
+                        }
+                        isSpecial = true;
                     }
-                } else if (rnd>=0.3 && rnd<0.6 && followEnemyCD>=FOLLOW_ENMEY_CD) {
-                    followEnemyCD = 0;
-                    this.enemyCtrl.addRushes10(delay, hp*25, speed2);
-                } else {
-                    let num = Math.floor(Math.random()*8+5);
-                    this.enemyCtrl.addRushes11(delay, hp, num, speed);
+                } else if (typ === 2) {
+                    if (followEnemyCD >= FOLLOW_ENEMY_CD) {
+                        followEnemyCD = 0;
+                        this.enemyCtrl.addRushes10(delay, hp*25, speed2);
+                        isSpecial = true;
+                    }
+                } else if (typ === 3) {
+                    if (goldEnemyCD >= GOLD_ENEMY_CD) {
+                        goldEnemyCD = 0;
+                        this.enemyCtrl.addRushGoldShip(delay, hp*150, speed);
+                        isSpecial = true;
+                    }
+                }
+                
+                if (!isSpecial) {
+                    let i = Math.floor(Math.random()*6);
+                    switch (i) {
+                    case 1:
+                        this.enemyCtrl.addRushes1(delay, hp, speed);
+                        break;
+                    case 2:
+                        this.enemyCtrl.addRushes2(delay, hp, speed);
+                        break;
+                    case 3:
+                        this.enemyCtrl.addRushes3(delay, hp, speed);
+                        break;
+                    case 4:
+                        this.enemyCtrl.addRushes4(delay, hp, speed);
+                        break;
+                    case 5:
+                        this.enemyCtrl.addRushes5(delay, hp, speed);
+                        break;
+                    default:
+                        let num = Math.floor(Math.random()*5+5);
+                        this.enemyCtrl.addRushes11(delay, hp, num, speed);
+                    }
                     gunEnemyCD += delay;
                     followEnemyCD += delay;
+                    goldEnemyCD += delay;
                 }
             }
         }

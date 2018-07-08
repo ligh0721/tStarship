@@ -59,6 +59,10 @@ module tutils {
 		return Math.floor(Math.random()*2) * 2 - 1;
 	}
 
+	export function random(from: number, to: number): number {
+		return Math.random() * (to - from) + from;
+	}
+
 	export function createBitmapByName(name: string) {
         let gameObject = new egret.Bitmap();
 		if (name) {

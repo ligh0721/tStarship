@@ -1,5 +1,5 @@
 class EaseGun extends Gun {
-	ease: Function = egret.Ease.getPowIn(2);
+	ease: Function = egret.Ease.quadIn;
 
 	public fire(): void {
 		this.playFireSound();
@@ -24,3 +24,5 @@ class EaseGun extends Gun {
 	}
 }
 
+class EnergyWaveGun extends EaseGun {
+}

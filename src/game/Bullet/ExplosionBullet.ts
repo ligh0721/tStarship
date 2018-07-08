@@ -1,12 +1,30 @@
 class ExplosionBullet extends Bullet {
-	radius: number = 30;
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.3;
+
+	// override
+	protected onDying(src: HpUnit) {
+		super.onDying(src);
+		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
+		bullet.radius = (this.gameObject.width + this.gameObject.height) / 4.0;
+		bullet.explosionRadius = this.explosionRadius;
+		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
+		bullet.staticBounds = false;
+		this.world.addBullet(bullet);
+		bullet.gameObject.x = this.gameObject.x;
+		bullet.gameObject.y = this.gameObject.y;
+		bullet.explosion(src);
+	}
+}
+
+class ExplosionBallBullet extends ExplosionBullet {
+	radius: number = 30;
 
 	public constructor(gun: Gun) {
 		super(gun, "BlueBallBullet_png");
 	}
 
+	// override
 	protected onCreate(): egret.DisplayObject {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
@@ -18,40 +36,11 @@ class ExplosionBullet extends Bullet {
 		gameObject.anchorOffsetY = gameObject.height * 0.5;
 		return gameObject;
 	}
-
-	protected onDying(src: HpUnit) {
-		super.onDying(src);
-		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
-		bullet.radius = this.radius;
-		bullet.explosionRadius = this.explosionRadius;
-		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
-		bullet.staticBounds = false;
-		this.world.addBullet(bullet);
-		bullet.gameObject.x = this.gameObject.x;
-		bullet.gameObject.y = this.gameObject.y;
-		bullet.explosion(src);
-	}
 }
 
-class MissileBullet extends Bullet {
-	explosionRadius: number = 100;
-	explosionPowerEveryPer: number = 0.5;
-
+class MissileBullet extends ExplosionBullet {
 	public constructor(gun: Gun) {
 		super(gun, "MissileBullet_png", 1.5);
-	}
-
-	protected onDying(src: HpUnit) {
-		super.onDying(src);
-		let bullet = this.pools.newObject(ExplosionEffectBullet, this.gun);
-		bullet.radius = 30;
-		bullet.explosionRadius = this.explosionRadius;
-		bullet.resetHp(this.maxHp/this.maxHitTimes*bullet.maxHitTimes*this.explosionPowerEveryPer);
-		bullet.staticBounds = false;
-		this.world.addBullet(bullet);
-		bullet.gameObject.x = this.gameObject.x;
-		bullet.gameObject.y = this.gameObject.y;
-		bullet.explosion(src);
 	}
 }
 

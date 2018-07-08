@@ -154,7 +154,7 @@ class Unit extends egret.HashObject implements tutils.INode {
 		// }
 	}
 
-	public moveSine(angle: number, speed: number, wavelen, amplitude, fixedRotation: boolean=false, ease?: Function) {
+	public moveSine(angle: number, speed: number, wavelen: number, amplitude: number, fixedRotation: boolean=false, ease?: Function) {
 		if (fixedRotation !== true) {
 			this.rotation = angle;
 		}

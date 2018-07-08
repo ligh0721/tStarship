@@ -1,4 +1,5 @@
-class ExplosionGun extends Gun {
+class ExplosionGun extends EaseGun {
+	ease: Function = egret.Ease.getPowOut(60);
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.3;
 
@@ -9,14 +10,14 @@ class ExplosionGun extends Gun {
 		this.playFireSound();
 		let firePos = this.getFirePosition();
 		let bullet = this.createBullet();
-		if (bullet instanceof ExplosionBullet) {
+		if (bullet instanceof ExplosionBallBullet) {
 			bullet.explosionRadius = this.explosionRadius;
 			bullet.explosionPowerEveryPer = this.explosionPowerEveryPer;
 		}
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		this.fireBulletStraight(bullet);
+		this.fireBulletStraight(bullet, this.ship.rotation, false, this.ease);
 	}
 	
 	// override

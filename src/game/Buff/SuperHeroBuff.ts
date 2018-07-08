@@ -35,10 +35,12 @@ class SuperHeroBuff extends Buff {
 		gun.bulletPower.baseValue = 3;
 		gun.bulletMaxHitTimes = 1;
 		gun.bulletHitInterval.baseValue = 1000;
-		gun.bulletNum = 4;
+		gun.bulletNum = 3;
+		gun.bulletXDelta = 60;
+		gun.bulletYDelta = 65;
 		ship.addGun(gun, true);
 
-		let gun1 = Gun.createGun(SatelliteGun, ExplosionBullet);
+		let gun1 = Gun.createGun(SatelliteGun, ExplosionBallBullet);
 		gun1.fireCooldown.baseValue = 50;
 		gun1.bulletNum = 6;
 		gun1.bulletPower.baseValue = 100;
@@ -47,7 +49,7 @@ class SuperHeroBuff extends Buff {
 		gun1.period = 800;
 		ship.addGun(gun1);
 
-		let gun2 = Gun.createGun(EaseGun, ShakeWaveBullet);
+		let gun2 = Gun.createGun(EnergyWaveGun, EnergyWaveBullet);
 		gun2.bulletSpeed.baseValue = 150;
 		gun2.fireCooldown.baseValue = 1400;
 		gun2.bulletPower.baseValue = 30;

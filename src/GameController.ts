@@ -466,7 +466,7 @@ class GameController {
 			buff.key = key;
 			break;
 		case "buff_satellite_ball":
-			let gun = Gun.createGun(SatelliteGun, ExplosionBullet);
+			let gun = Gun.createGun(SatelliteGun, ExplosionBallBullet);
             gun.fireCooldown.baseValue = 1000;
             gun.bulletPower.baseValue = 50;
             gun.bulletNum = 5;
@@ -499,6 +499,9 @@ class GameController {
 		case "dying_bomb_neutral":
 			buff = new BombBuff(Buff.Infinite, 1.00, 1000, 300, tutils.NeutralForce);
 			buff.key = key;
+			break;
+		case "drop_coins_buff":
+			buff = new CoinsDropBuff(Buff.Infinite, 0.20, this.dropTableForBossEnemy);
 			break;
 
 		// skill's buffs
@@ -559,7 +562,7 @@ class GameController {
 			// buff.model = "_png";
 			break;
 		case "part_critical_2":
-			buff = new CriticalBuff(Buff.Infinite, 0.20, 2.0);
+			buff = new CriticalBuff(Buff.Infinite, 0.25, 2.0);
 			buff.key = key;
 			break;
 		case "part_elec_induced_gun":
@@ -652,6 +655,10 @@ class GameController {
 
 	public stopAllActions(target: egret.IHashObject): void {
 		this.actMgr.removeAllActions(target);
+	}
+
+	public stopActionByTag(target: egret.IHashObject, tag: number): void {
+		this.actMgr.removeActionByTag(target, tag);
 	}
 
 	public setActionSpeed(speed: number): void {
