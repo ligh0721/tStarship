@@ -567,13 +567,13 @@ class GameController {
 			break;
 		case "part_elec_induced_gun":
 			let gun2 = Gun.createGun(SineGun, BlueDiamondBullet);
-			gun2.fireCooldown.baseValue = 5000;
+			gun2.fireCooldown.baseValue = 2000;
 			gun2.amplitudeDelta = 150;
 			gun2.bulletNum = 2;
 			gun2.bulletSpeed.baseValue = 100;
 			gun2.bulletPower.baseValue = 5;
 			gun2.bulletMaxHitTimes = 1000;
-			gun2.bulletHitInterval.baseValue = 5000;
+			gun2.bulletHitInterval.baseValue = 10000;
 			let buff2 = new AddTargetBuffBuff(Buff.Infinite, 0.2, ["elec_induced"]);
 			buff2.key = "part_elec_induced_buff";
 			buff = new AddGunAndBuffBuff(Buff.Infinite, gun2, [buff2]);

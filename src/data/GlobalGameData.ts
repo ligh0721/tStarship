@@ -449,7 +449,7 @@ const GlobalPartsData: PartsData = {
 	part_elec_induced_gun: {
 		name: "电磁发射器",
 		model: "PartElecInducedGun_png",
-		desc: "每5秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加10点感电伤害！",
+		desc: "每2秒向前发射2枚电磁波弹，被每一枚子弹击中的目标有20%概率进入感电状态。攻击感电状态下的单位会额外附加10点感电伤害！",
 		buffs: ["part_elec_induced_gun"],
 	},
 	part_cdr_up_1: {
