@@ -562,7 +562,7 @@ class BattleLayer extends tutils.Layer {
         enmeyType.push(2, 200);
         enmeyType.push(3, 50);
         // this.enemyCtrl.addRushes10(1000, 500, 1.0);
-        // this.enemyCtrl.addRushBomb(1000, 500, 1);
+        this.enemyCtrl.addRushBomb(1000, 500, 1);
         // this.enemyCtrl.addRushGoldShip(1000, 1000, 1);
         // this.enemyCtrl.addRushBoss1(1000, 1000, bossCallback, this, 1);
         for (let i=1; i<=WAVE_NUM*10; i++) {

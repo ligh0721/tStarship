@@ -661,6 +661,10 @@ class GameController {
 		this.actMgr.removeActionByTag(target, tag);
 	}
 
+	public getActionByTag(target: egret.IHashObject, tag: number): tutils.Action {
+		return this.actMgr.getActionByTag(target, tag);
+	}
+
 	public setActionSpeed(speed: number): void {
 		this.actMgr.speed = speed;
 	}

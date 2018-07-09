@@ -237,7 +237,7 @@ const GlobalGunsData: GunsData = {
 		bulletPower: 25,
 		bulletNum: 1,
 		bulletHitTimes: 20,
-		bulletHitInterval: 200,
+		bulletHitInterval: 400,
 		coins: 2000
     },
     gun_guide: {

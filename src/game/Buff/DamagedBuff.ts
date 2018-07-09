@@ -102,7 +102,7 @@ class ShieldBuff extends Buff {
 
 	// override
 	public onInterval(dt: number): void {
-		if (!this.gameObject || this.left>=5000 || GameController.instance.actMgr.getActionByTag(this.gameObject, ShieldBuff.ActionWarning)) {
+		if (!this.gameObject || this.left>=5000 || GameController.instance.getActionByTag(this.gameObject, ShieldBuff.ActionWarning)) {
 			return;
 		}
 		let act = new tutils.Sequence(
