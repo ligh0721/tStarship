@@ -25,6 +25,7 @@ class Bullet extends HpUnit {
 		return gameObject;
 	}
 
+	// override
 	protected onCreate(): egret.DisplayObject {
 		if (this.gameObject !== undefined) {
 			return this.gameObject;
@@ -35,6 +36,7 @@ class Bullet extends HpUnit {
 		return gameObject;
 	}
 
+	// override
 	public onHitEnemyShipTest(ship: Ship): boolean {
 		if (this.maxHitTimes === 1) {
 			return ship.hitTest(this);
@@ -62,14 +64,15 @@ class Bullet extends HpUnit {
 		return false;
 	}
 
+	// override
 	public onHitEnemyBulletTest(ship: Ship): boolean {
 		return false;
 	}
 
+	// override
 	protected onDying(src: HpUnit) {
-		// egret.Tween.removeTweens(this);
-		// egret.Tween.removeTweens(this.gameObject);
 		this.stopAllActions();
+		GameController.instance.actMgr.removeAllActions(this.gameObject);
 		this.status = UnitStatus.Dead;
 	}
 }

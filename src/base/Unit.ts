@@ -38,6 +38,9 @@ class Unit extends egret.HashObject implements tutils.INode {
 	}
 
 	public set rotation(value: number) {
+		if (this.gameObject.rotation === value) {
+			return;
+		}
 		this.gameObject.rotation = value;
 		this.boundsDirty = true;
 	}
@@ -61,9 +64,10 @@ class Unit extends egret.HashObject implements tutils.INode {
 	public getBounds(): egret.Rectangle {
 		if (!this.staticBounds || this.boundsDirty) {
 			this.boundsRect = this.gameObject.getBounds();
+			this.boundsDirty = false;
 		}
-		this.boundsRect.x = this.gameObject.x - this.gameObject.width * 0.5;
-		this.boundsRect.y = this.gameObject.y - this.gameObject.height * 0.5;
+		this.boundsRect.x = this.gameObject.x - this.gameObject.anchorOffsetX;
+		this.boundsRect.y = this.gameObject.y - this.gameObject.anchorOffsetY;
 		return this.boundsRect;
 	}
 
@@ -85,6 +89,7 @@ class Unit extends egret.HashObject implements tutils.INode {
 	// override
 	protected onCleanup(): void {
 		GameController.instance.actMgr.removeAllActions(this);
+		GameController.instance.actMgr.removeAllActions(this.gameObject);
 	}
 
 	// override

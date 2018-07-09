@@ -62,7 +62,7 @@ class Gun extends egret.HashObject {
 	}
 
 	public fire(): void {
-		if (this.ship == null || !this.ship.alive) {
+		if (this.ship==null || !this.ship.alive) {
 			return;
 		}
 		this.playFireSound();

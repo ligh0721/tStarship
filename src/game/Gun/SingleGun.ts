@@ -9,7 +9,7 @@ class SingleGun extends Gun {
 
 	// override
 	protected onLevelUp(): void {
-		this.bulletPower.baseValue++;
+		this.bulletPower.baseValue += 2;
 	}
 }
 

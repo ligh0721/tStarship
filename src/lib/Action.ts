@@ -95,6 +95,9 @@ module tutils {
         }
 
         public removeAllActions(target: egret.IHashObject): void {
+            if (!target) {
+                return;
+            }
             let hashCode = target.hashCode;
             let data = this.targets[hashCode];
             if (data===undefined || data.$removed) {

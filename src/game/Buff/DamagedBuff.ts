@@ -105,10 +105,10 @@ class ShieldBuff extends Buff {
 		if (!this.gameObject || this.left>=5000 || GameController.instance.getActionByTag(this.gameObject, ShieldBuff.ActionWarning)) {
 			return;
 		}
-		let act = new tutils.Sequence(
+		let act = new tutils.RepeatForever(new tutils.Sequence(
 			new tutils.To(500, {alpha: 0.1}, egret.Ease.sineIn),
 			new tutils.To(500, {alpha: 1}, egret.Ease.sineOut)
-		);
+		));
 		act.tag = ShieldBuff.ActionWarning;
 		GameController.instance.runAction(this.gameObject, act);
 	}

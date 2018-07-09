@@ -1,7 +1,7 @@
 class SineGun extends Gun {
 	bulletNum: number = 5;
 	amplitudeDelta: number = 100;
-	waveLen: number = 600;
+	waveLen: number = 900;
 
 	public fire(): void {
 		this.playFireSound();
@@ -26,6 +26,6 @@ class SineGun extends Gun {
 
 	// override
 	protected onLevelUp(): void {
-		this.bulletNum++;
+		this.bulletNum += 2;
 	}
 }

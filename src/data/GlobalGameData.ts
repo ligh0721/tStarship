@@ -6,7 +6,7 @@ const GlobalConfig = {
 	basePowerIncPer: 0.0,
 	maxStar: 5,
 	freeChestCD: 3600e3,
-	chestPrice: 200,
+	chestPrice: 500,
 }
 
 const GlobalUIMaxHp = 50;  // for UI
@@ -14,9 +14,9 @@ const GlobalUIMaxSpeed = 500;  // for UI
 const GlobalUIMaxPower = 100;  // for UI
 const GlobalUIMaxFireRate = 10;  // for UI
 
-const GlobalExpTable = [10, 20, 30, 50, 70, 100, 130, 170, 210, 260, 310, 370, 430, 500, 570, 650, 730, 820, 910, 1010];
-const GlobalGunExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
-const GlobalSkillExpTable = [2, 5, 10, 15, 20, 25, 30, 35, 40];
+const GlobalExpTable = [10, 20, 30, 45, 60, 80, 100, 125, 150, 180, 210, 245, 280, 320, 360, 405, 450, 500, 550];
+const GlobalGunExpTable = [2, 4, 6, 9, 12, 15, 19, 23, 27];
+const GlobalSkillExpTable = [2, 4, 6, 9, 12, 15, 19, 23, 27];
 
 const GlobalHeroModel = "RedHeroShip_png";
 const GlobalHeroModelScale = 0.4;
@@ -58,6 +58,7 @@ const GlobalAllGuns: string[] = [
 	"gun_focus",
 	"gun_missile",
 	"gun_sine",
+	"gun_laser",
 ];
 
 const GlobalAllSkills: string[] = [
@@ -102,20 +103,31 @@ const GlobalChest1Drop = [
 			["shipexp_5", 100],
 			["shipexp_10", 10]
 		],
-		2000
+		1000
 	],
 	[
 		[
-			["gun_single", 100],
-			["gun_row", 100],
-			["gun_shot", 100],
-			["gun_guide", 100],
-			["gun_soundwave", 100],
-			["gun_energywave", 100],
-			["gun_explosion", 100],
-			["gun_focus", 100],
-			["gun_missile", 100],
-			["gun_sine", 100]
+			[
+				[
+					["gun_single", 100],
+					["gun_row", 100],
+					["gun_shot", 100],
+					["gun_guide", 100],
+				],
+				2000
+			],
+			[
+				[
+					["gun_soundwave", 100],
+					["gun_energywave", 100],
+					["gun_explosion", 100],
+					["gun_focus", 100],
+					["gun_missile", 100],
+					["gun_sine", 100],
+					["gun_laser", 100]
+				],
+				1000
+			],
 		],
 		1000
 	],
@@ -159,7 +171,6 @@ const GlobalSeniorEnemyDrop = [
 ];
 
 const GlobalEliteEnemyDrop = [
-	["buff_gun_level_up", 500],
 	[GlobalPurplePartsDrop, 1000],
 	[GlobalOrangePartsDrop, 100]
 ];
@@ -278,7 +289,7 @@ const GlobalGunsData: GunsData = {
         fireCD: 200,
 		bulletPower: 5,
 		bulletNum: 2,
-		bulletHitTimes: 2,
+		bulletHitTimes: 3,
 		bulletHitInterval: 1000,
 		coins: 2800
     },
@@ -338,6 +349,20 @@ const GlobalGunsData: GunsData = {
 		bulletHitInterval: 1000,
 		coins: 2800
     },
+	gun_laser: {
+		name: "离子火焰炮",
+		desc: "发射高温离子火焰灼烧敌人",
+		model: "Energy2_png",
+		gun: LaserGun,
+		bullet: LaserBullet,
+		bulletSpeed: 100,
+        fireCD: 100,
+		bulletPower: 10,
+		bulletNum: 1,
+		bulletHitTimes: 1000,
+		bulletHitInterval: 100,
+		coins: 5000
+	},
 };
 
 const GlobalSkillsData: SkillsData = { 
