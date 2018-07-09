@@ -1,4 +1,4 @@
-class ExplosionGun extends EaseGun {
+class ExplosionGun extends Gun {
 	ease: Function = egret.Ease.getPowOut(60);
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.3;

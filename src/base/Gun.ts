@@ -14,7 +14,7 @@ class Gun extends egret.HashObject {
 	private $autoFire: boolean = false;
 	private autoFireTimer: tutils.ITimer;
 
-	// private seqAct: tutils.Sequence;
+	ease: Function = null;
 
 	level: number = 1;
 
@@ -71,7 +71,7 @@ class Gun extends egret.HashObject {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		this.fireBulletStraight(bullet);
+		this.fireBulletStraight(bullet, this.ship.rotation, false, this.ease);
 	}
 
 	public get autoFire(): boolean {
