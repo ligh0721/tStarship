@@ -142,7 +142,7 @@ class GameController {
 
 	public addNewGun(key: string): void {
 		console.assert(this.playerData != null);
-		console.assert(GameController.instance.getGunDataByKey(key) != null);
+		console.assert(GameController.instance.getGunData(key) != null);
 		let playerGunData = this.playerData.guns[key];
 		console.assert(playerGunData===undefined, "gun("+key+") is already exists");
 		this.playerData.gunsNum++;
@@ -154,7 +154,7 @@ class GameController {
 
 	public addNewSkill(key: string): void {
 		console.assert(this.playerData != null);
-		console.assert(GameController.instance.getSkillDataByKey(key) != null);
+		console.assert(GameController.instance.getSkillData(key) != null);
 		let playerSkillData = this.playerData.skills[key];
 		console.assert(playerSkillData===undefined, "skill("+key+") is already exists");
 		this.playerData.skillsNum++;
@@ -211,7 +211,7 @@ class GameController {
 	private loadAndCheckAllGuns(guns: string[]): string[] {
 		for (let i in guns) {
 			let gunKey = guns[i];
-			console.assert(this.getGunDataByKey(gunKey)!==null);
+			console.assert(this.getGunData(gunKey)!==null);
 		}
 		return guns;
 	}
@@ -227,7 +227,7 @@ class GameController {
 	private loadAndCheckAllSkills(skills: string[]): string[] {
 		for (let i in skills) {
 			let skillKey = skills[i];
-			console.assert(this.getSkillDataByKey(skillKey)!==null);
+			console.assert(this.getSkillData(skillKey)!==null);
 		}
 		return skills;
 	}
@@ -243,7 +243,7 @@ class GameController {
 	private loadAndCheckAllShipExps(shipExps: string[]): string[] {
 		for (let i in shipExps) {
 			let shipExpKey = shipExps[i];
-			console.assert(this.getShipExpDataByKey(shipExpKey)!==null);
+			console.assert(this.getShipExpData(shipExpKey)!==null);
 		}
 		return shipExps;
 	}
@@ -259,7 +259,7 @@ class GameController {
 	private loadAndCheckAllParts(parts: string[]): string[] {
 		for (let i in parts) {
 			let partKey = parts[i];
-			console.assert(this.getPartDataByKey(partKey)!==null);
+			console.assert(this.getPartData(partKey)!==null);
 		}
 		return parts;
 	}
@@ -309,23 +309,20 @@ class GameController {
 		let gunPowerIncPer = this.calcHeroPowerIncPer(level);
 
 		let gunKey = this.playerData.gun;
-		let gunData = this.getGunDataByKey(gunKey);
-		let gun = Gun.createGun(gunData.gun, gunData.bullet);
-		gun.bulletSpeed.baseValue = gunData.bulletSpeed;
-		gun.fireCooldown.baseValue = gunData.fireCD;
-		// gun.bulletPower.baseValue = gunData.bulletPower * gunData.bulletHitTimes;
-		gun.bulletPower.baseValue = gunData.bulletPower * (1 + gunPowerIncPer);
-		// gun.bulletPowerLossPer = 1 / gunData.bulletHitTimes;
-		gun.bulletMaxHitTimes = gunData.bulletHitTimes;
-		gun.bulletHitInterval.baseValue = gunData.bulletHitInterval;
-		gun.bulletNum = gunData.bulletNum;
-		hero.addGun(gun, true);
-
+		let gunData = this.getGunData(gunKey);
 		let gunLevel = this.getGunLevel(gunKey);
-		gun.levelUp(gunLevel-1, false);
+		let gun = Gun.createGun(gunData.gun, tutils.levelValue(gunData.bullet, gunLevel));
+		gun.bulletSpeed.baseValue = tutils.levelValue(gunData.bulletSpeed, gunLevel);
+		gun.fireCooldown.baseValue = tutils.levelValue(gunData.fireCD, gunLevel);
+		gun.bulletPower.baseValue = tutils.levelValue(gunData.bulletPower, gunLevel) * (1 + gunPowerIncPer);
+		gun.bulletMaxHitTimes = tutils.levelValue(gunData.bulletHitTimes, gunLevel);
+		gun.bulletHitInterval.baseValue = tutils.levelValue(gunData.bulletHitInterval, gunLevel);
+		gun.bulletNum = tutils.levelValue(gunData.bulletNum, gunLevel);
+		hero.addGun(gun, true);
+		// gun.levelUp(gunLevel-1, false);
 
 		let skillKey = this.playerData.skill;
-		let skillData = this.getSkillDataByKey(skillKey);
+		let skillData = this.getSkillData(skillKey);
 		let skill = this.createSkill(this.playerData.skill);
 		hero.setSkill(skill);
 
@@ -334,23 +331,23 @@ class GameController {
 		return hero;
 	}
 
-	public getGunDataByKey(key: string): GunDataItem {
-		let item = this.allGunsData[key];
+	public getGunData(key?: string): GunDataItem {
+		let item = this.allGunsData[key===undefined ? this.playerData.gun : key];
 		if (item === undefined) {
 			return null;
 		}
 		return item;
 	}
 
-	public getSkillDataByKey(key: string): SkillDataItem {
-		let item = this.allSkillsData[key];
+	public getSkillData(key?: string): SkillDataItem {
+		let item = this.allSkillsData[key===undefined ? this.playerData.skill : key];
 		if (item === undefined) {
 			return null;
 		}
 		return item;
 	}
 
-	public getPartDataByKey(key: string): PartDataItem {
+	public getPartData(key: string): PartDataItem {
 		let item = this.allPartsData[key];
 		if (item === undefined) {
 			return null;
@@ -358,7 +355,7 @@ class GameController {
 		return item;
 	}
 
-	public getShipExpDataByKey(key: string): ShipExpDataItem {
+	public getShipExpData(key: string): ShipExpDataItem {
 		let item = this.allShipExpsData[key];
 		if (item === undefined) {
 			return null;
@@ -388,8 +385,8 @@ class GameController {
 		return this.gunExpTable.length+1;
 	}
 
-	public getGunLevel(key: string): number {
-		let playerGunData = this.getPlayerGunDataByKey(key);
+	public getGunLevel(key?: string): number {
+		let playerGunData = this.getPlayerGunData(key);
 		if (!playerGunData) {
 			return -1;
 		}
@@ -405,40 +402,24 @@ class GameController {
 		return this.skillExpTable.length;
 	}
 
-	public getSkillLevel(key: string): number {
-		let playerSkillData = this.getPlayerSkillDataByKey(key);
+	public getSkillLevel(key?: string): number {
+		let playerSkillData = this.getPlayerSkillData(key);
 		if (!playerSkillData) {
 			return -1;
 		}
 		return this.expToSkillLevel(playerSkillData.exp);
 	}
 
-	public getPlayerGunData(): PlayerGunData {
-		let item = this.playerData.guns[this.playerData.gun];
+	public getPlayerGunData(key?: string): PlayerGunData {
+		let item = this.playerData.guns[key===undefined ? this.playerData.gun : key];
 		if (item === undefined) {
 			return null;
 		}
 		return item;
 	}
 
-	public getPlayerGunDataByKey(key: string): PlayerGunData {
-		let item = this.playerData.guns[key];
-		if (item === undefined) {
-			return null;
-		}
-		return item;
-	}
-
-	public getPlayerSkillData(): PlayerSkillData {
-		let item = this.playerData.skills[this.playerData.skill];
-		if (item === undefined) {
-			return null;
-		}
-		return item;
-	}
-
-	public getPlayerSkillDataByKey(key: string): PlayerSkillData {
-		let item = this.playerData.skills[key];
+	public getPlayerSkillData(key?: string): PlayerSkillData {
+		let item = this.playerData.skills[key===undefined ? this.playerData.skill : key];
 		if (item === undefined) {
 			return null;
 		}
@@ -627,7 +608,7 @@ class GameController {
 			return null;
 		}
 
-		let partInfo = this.getPartDataByKey(key);
+		let partInfo = this.getPartData(key);
 		if (!partInfo) {
 			return null;
 		}
@@ -759,14 +740,14 @@ type GunDataItem = {
 	desc: string,
 	model: string,
 	gun: tutils.Constructor<Gun>,
-	bullet: tutils.Constructor<Bullet>,
-	bulletSpeed: number,
-	fireCD: number,
-	bulletPower: number,
-	bulletNum: number,
-	bulletHitTimes: number,
-	bulletHitInterval: number,
-	coins: number
+	bullet: tutils.Constructor<Bullet>|tutils.Constructor<Bullet>[],
+	bulletSpeed: number|number[],
+	fireCD: number|number[],
+	bulletPower: number|number[],
+	bulletNum: number|number[],
+	bulletHitTimes: number|number[],
+	bulletHitInterval: number|number[],
+	coins?: number
 }
 
 type GunsData = {

@@ -216,11 +216,11 @@ const GlobalGunsData: GunsData = {
 		gun: SingleGun,
 		bullet: BlueWaveBullet,
 		bulletSpeed: 200,
-        fireCD: 100,
-		bulletPower: 10,
+		fireCD: 100,
+		bulletPower: [10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
 		bulletNum: 1,
 		bulletHitTimes: 1,
-		bulletHitInterval: 1000,
+		bulletHitInterval: [1000],
 		coins: 0
 	},
     gun_soundwave: {
@@ -232,7 +232,7 @@ const GlobalGunsData: GunsData = {
 		bulletSpeed: 100,
         fireCD: 300,
 		bulletPower: 4,
-		bulletNum: 5,
+		bulletNum: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 		bulletHitTimes: 2,
 		bulletHitInterval: 500,
 		coins: 2500

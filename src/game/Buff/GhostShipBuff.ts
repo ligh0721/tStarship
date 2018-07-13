@@ -21,7 +21,7 @@ class GhostShipBuff extends Buff {
 			return;
 		}
 
-		let gunData = GameController.instance.getGunDataByKey(GameController.instance.playerData.gun);
+		let gunData = GameController.instance.getGunData(GameController.instance.playerData.gun);
 		for (let i=0; i<this.shipsNum; i++) {
 			let ghost = new IntervalHitShip(this.ship.model, this.ship.modelScale, this.ship);
 			this.ship.world.addShip(ghost);
@@ -31,8 +31,9 @@ class GhostShipBuff extends Buff {
 
 			if (this.ship instanceof HeroShip) {
 				let level = GameController.instance.getHeroLevel();
+				let gunLevel = GameController.instance.getGunLevel()
 				let powerIncPer = GameController.instance.calcHeroPowerIncPer(level);
-				let gun = Gun.createGun(gunData.gun, gunData.bullet);
+				let gun = Gun.createGun(gunData.gun, tutils.levelValue(gunData.bullet, gunLevel));
 				gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 				gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
 				gun.bulletPower.baseValue = Math.max(1, this.ship.mainGun.bulletPower.baseValue*(1+powerIncPer)*this.powerPer);

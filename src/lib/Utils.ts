@@ -123,4 +123,14 @@ module tutils {
 		let filter = new egret.ColorMatrixFilter(colorMatrix);
 		return filter;
 	}
+
+	export function levelValue(v: any, level?: number): any {
+		if (v instanceof Array) {
+			if (level===undefined) {
+				level = 1;
+			}
+			return v[level-1];
+		}
+		return v;
+	}
 }

@@ -320,7 +320,7 @@ class ShipPanel extends tutils.Component {
     private onBtnCheat(evt: egret.TouchEvent): void {
         let curEquipKey = this.curEquipKey;
         if (this.editingGun) {
-            let gunPlayerData = GameController.instance.getPlayerGunDataByKey(this.curEquipKey);
+            let gunPlayerData = GameController.instance.getPlayerGunData(this.curEquipKey);
             if (gunPlayerData) {
                 // add exp
                 gunPlayerData.exp++;
@@ -333,7 +333,7 @@ class ShipPanel extends tutils.Component {
             this.updateEquipGunDetail(curEquipKey)
             this.updateEquipGunList();
         } else {
-            let skillPlayerData = GameController.instance.getPlayerSkillDataByKey(this.curEquipKey);
+            let skillPlayerData = GameController.instance.getPlayerSkillData(this.curEquipKey);
             if (skillPlayerData) {
                 // add exp
                 skillPlayerData.exp++;
@@ -437,36 +437,37 @@ class ShipPanel extends tutils.Component {
     }
 
     private setGun(key: string): void {
-        let gunData = GameController.instance.getGunDataByKey(key);
+        let gunData = GameController.instance.getGunData(key);
         if (!gunData) {
             return;
         }
 
         let level = GameController.instance.getHeroLevel();
+        let gunLevel = GameController.instance.getGunLevel(key);
         let powerIncPer = GameController.instance.calcHeroPowerIncPer(level);
-        let playerGunData = GameController.instance.getPlayerGunDataByKey(key);
+        let playerGunData = GameController.instance.getPlayerGunData(key);
         this.gun = key;
         this.imgGun.source = gunData.model;
         this.lblGunName.text = gunData.name;
         this.lblGunDesc.text = gunData.desc;
         this.lblGunLevel.text = GameController.instance.expToGunLevel(playerGunData.exp).toString();
-        this.lblPowerV.text = (gunData.bulletPower * (1 + powerIncPer)).toFixed(0) + (gunData.bulletNum===1 ? "" : " x " + gunData.bulletNum.toString());
-        this.lblFireRateV.text = (1000 / Math.max(1000/60, gunData.fireCD)).toFixed(1) + "/s";
+        this.lblPowerV.text = (tutils.levelValue(gunData.bulletPower, gunLevel) * (1 + powerIncPer)).toFixed(0) + (gunData.bulletNum===1 ? "" : " x " + tutils.levelValue(gunData.bulletNum, gunLevel).toString());
+        this.lblFireRateV.text = (1000 / Math.max(1000/60, tutils.levelValue(gunData.fireCD, gunLevel))).toFixed(1) + "/s";
         
         egret.Tween.removeTweens(this.progPower);
         egret.Tween.removeTweens(this.progFireRate);
         let tw = egret.Tween.get(this.progPower)
-        tw.to({percentWidth: Math.min(100, gunData.bulletPower*(1+powerIncPer)*gunData.bulletNum*100/GlobalUIMaxPower)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, tutils.levelValue(gunData.bulletPower, level)*(1+powerIncPer)*tutils.levelValue(gunData.bulletNum, gunLevel)*100/GlobalUIMaxPower)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progFireRate)
-        tw.to({percentWidth: Math.min(100, 100000/gunData.fireCD/GlobalUIMaxFireRate)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, 100000/tutils.levelValue(gunData.fireCD, gunLevel)/GlobalUIMaxFireRate)}, 100, egret.Ease.getPowOut(2));
     }
 
     private setSkill(key: string): void {
-        let skillData = GameController.instance.getSkillDataByKey(key);
+        let skillData = GameController.instance.getSkillData(key);
         if (!skillData) {
             return;
         }
-        let playerSkillData = GameController.instance.getPlayerSkillDataByKey(key);
+        let playerSkillData = GameController.instance.getPlayerSkillData(key);
         this.skill = key;
         this.imgSkill.source = skillData.model;
         this.lblSkillName.text = skillData.name;
@@ -490,10 +491,10 @@ class ShipPanel extends tutils.Component {
         let lockedItems: EquipsListItem[] = [];
         for (let i in GameController.instance.allGuns) {
             let gunKey = GameController.instance.allGuns[i];
-            let gunData = GameController.instance.getGunDataByKey(gunKey);
+            let gunData = GameController.instance.getGunData(gunKey);
             let item: EquipsListItem = {key: gunKey, icon: gunData.model, level: "LK", selected: 0};
 
-            let playerGunData = GameController.instance.getPlayerGunDataByKey(gunKey);
+            let playerGunData = GameController.instance.getPlayerGunData(gunKey);
             if (playerGunData) {
                 // player guns
                 let exp = playerGunData.exp;
@@ -541,8 +542,8 @@ class ShipPanel extends tutils.Component {
             return;
         }
         this.curEquipKey = gunKey;
-        let gunData = GameController.instance.getGunDataByKey(gunKey);
-        let playerGunData = GameController.instance.getPlayerGunDataByKey(gunKey);
+        let gunData = GameController.instance.getGunData(gunKey);
+        let playerGunData = GameController.instance.getPlayerGunData(gunKey);
         if (!playerGunData) {
             this.lblEquipName.text = gunData.name;
             this.lblEquipDesc.text = gunData.desc;
@@ -561,12 +562,12 @@ class ShipPanel extends tutils.Component {
             return;
         }
         
+        let level = GameController.instance.expToGunLevel(playerGunData.exp);
         this.btnEquip.enabled = true;
         this.lblEquipName.text = gunData.name;
         this.lblEquipDesc.text = gunData.desc;
-        this.lblEquipGunPowerV.text = gunData.bulletPower.toString() + (gunData.bulletNum===1 ? "" : " x " + gunData.bulletNum.toString());
-        this.lblEquipGunFireRateV.text = (1000 / Math.max(1000/60, gunData.fireCD)).toFixed(1) + "/s";
-        let level = GameController.instance.expToGunLevel(playerGunData.exp);
+        this.lblEquipGunPowerV.text = tutils.levelValue(gunData.bulletPower, level).toString() + (tutils.levelValue(gunData.bulletNum, level)===1 ? "" : " x " + tutils.levelValue(gunData.bulletNum, level).toString());
+        this.lblEquipGunFireRateV.text = (1000 / Math.max(1000/60, tutils.levelValue(gunData.fireCD, level))).toFixed(1) + "/s";
         let expText = "MAX";
         let expPerWidth = 100;
         if (level !== GameController.instance.gunExpTable.length+1) {
@@ -583,9 +584,9 @@ class ShipPanel extends tutils.Component {
         egret.Tween.removeTweens(this.progEquipGunFireRate);
         egret.Tween.removeTweens(this.progEquipGunExp);
         let tw = egret.Tween.get(this.progEquipGunPower);
-        tw.to({percentWidth: Math.min(100, gunData.bulletPower*gunData.bulletNum*100/GlobalUIMaxPower)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, tutils.levelValue(gunData.bulletPower, level)*tutils.levelValue(gunData.bulletNum, level)*100/GlobalUIMaxPower)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progEquipGunFireRate)
-        tw.to({percentWidth: Math.min(100, 100000/gunData.fireCD/GlobalUIMaxFireRate)}, 100, egret.Ease.getPowOut(2));
+        tw.to({percentWidth: Math.min(100, 100000/tutils.levelValue(gunData.fireCD, level)/GlobalUIMaxFireRate)}, 100, egret.Ease.getPowOut(2));
         tw = egret.Tween.get(this.progEquipGunExp)
         tw.to({percentWidth: expPerWidth}, 100, egret.Ease.getPowOut(2));
     }
@@ -606,10 +607,10 @@ class ShipPanel extends tutils.Component {
         let lockedItems: EquipsListItem[] = [];
         for (let i in GameController.instance.allSkills) {
             let skillKey = GameController.instance.allSkills[i];
-            let skillData = GameController.instance.getSkillDataByKey(skillKey);
+            let skillData = GameController.instance.getSkillData(skillKey);
             let item: EquipsListItem = {key: skillKey, icon: skillData.model, level: "LK", selected: 0};
 
-            let playerSkillData = GameController.instance.getPlayerSkillDataByKey(skillKey);
+            let playerSkillData = GameController.instance.getPlayerSkillData(skillKey);
             if (playerSkillData) {
                 // player skills
                 let exp = playerSkillData.exp;
@@ -657,8 +658,8 @@ class ShipPanel extends tutils.Component {
             return;
         }
         this.curEquipKey = skillKey;
-        let skillData = GameController.instance.getSkillDataByKey(skillKey);
-        let playerSkillData = GameController.instance.getPlayerSkillDataByKey(skillKey);
+        let skillData = GameController.instance.getSkillData(skillKey);
+        let playerSkillData = GameController.instance.getPlayerSkillData(skillKey);
         if (!playerSkillData) {
             this.lblEquipName.text = skillData.name;
             this.lblEquipDesc.text = skillData.desc;
@@ -788,14 +789,14 @@ class ShipPanel extends tutils.Component {
         let chestItemNewTip: string;
         let newDrop = false;
         if (this.chestDropKey.indexOf("gun_") === 0) {
-            let gunData = GameController.instance.getGunDataByKey(this.chestDropKey);
+            let gunData = GameController.instance.getGunData(this.chestDropKey);
             chestItemName = gunData.name;
             chestItemModel = gunData.model;
-            let playerGunData = GameController.instance.getPlayerGunDataByKey(this.chestDropKey);
+            let playerGunData = GameController.instance.getPlayerGunData(this.chestDropKey);
             if (!playerGunData) {
                 newDrop = true;
                 GameController.instance.addNewGun(this.chestDropKey);
-                playerGunData = GameController.instance.getPlayerGunDataByKey(this.chestDropKey);
+                playerGunData = GameController.instance.getPlayerGunData(this.chestDropKey);
                 chestItemNewTip = "NEW CANNON!"
             }
             chestItemWithExp = playerGunData;
@@ -805,14 +806,14 @@ class ShipPanel extends tutils.Component {
             this.lblChestItemType0.text = "Cannon";
             this.lblChestItemType0.scaleX = this.lblChestItemType0.scaleY - 0.1;
 		} else if (this.chestDropKey.indexOf("skill_") === 0) {
-            let skillData = GameController.instance.getSkillDataByKey(this.chestDropKey);
+            let skillData = GameController.instance.getSkillData(this.chestDropKey);
             chestItemName = skillData.name;
             chestItemModel = skillData.model;
-            let playerSkillData = GameController.instance.getPlayerSkillDataByKey(this.chestDropKey);
+            let playerSkillData = GameController.instance.getPlayerSkillData(this.chestDropKey);
             if (!playerSkillData) {
                 newDrop = true;
                 GameController.instance.addNewSkill(this.chestDropKey);
-                playerSkillData = GameController.instance.getPlayerSkillDataByKey(this.chestDropKey);
+                playerSkillData = GameController.instance.getPlayerSkillData(this.chestDropKey);
                 chestItemNewTip = "NEW SKILL!"
             }
             chestItemWithExp = playerSkillData;
@@ -822,7 +823,7 @@ class ShipPanel extends tutils.Component {
             this.lblChestItemType0.text = "Skill";
             this.lblChestItemType0.scaleX = this.lblChestItemType0.scaleY;
 		} else if (this.chestDropKey.indexOf("shipexp_") === 0) {
-            let shipExpData = GameController.instance.getShipExpDataByKey(this.chestDropKey);
+            let shipExpData = GameController.instance.getShipExpData(this.chestDropKey);
             chestItemName = shipExpData.name;
             chestItemModel = shipExpData.model;
             chestItemWithExp = this.playerData;

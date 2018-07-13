@@ -20,7 +20,7 @@ class NewShipPanel extends eui.Component {
         this.skinName = "resource/custom_skins/NewShipPanelSkin.exml";
         this.currentState = "init";
         this.height = egret.MainContext.instance.stage.stageHeight;
-        let gunData = GameController.instance.getGunDataByKey(this.data.shipId);
+        let gunData = GameController.instance.getGunData(this.data.shipId);
         this.imgShip.source = gunData.model;
         this.lblShipName.text = gunData.name;
         this.btnReturn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnReturn, this);
