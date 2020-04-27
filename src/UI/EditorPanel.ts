@@ -1,4 +1,4 @@
-class EditorPanel extends eui.Component {
+class EditorPanel extends tutils.Component {
     private world: World = null;
     private enemyCtrl: EnemyController = null;
     pressLayer: boolean = false;
@@ -12,7 +12,7 @@ class EditorPanel extends eui.Component {
     private grpGridV: eui.Group;
     private grpGridH: eui.Group;
     private grpSinA: eui.Group;
-    private grpSinT: eui.Group;
+    private grpSinWL: eui.Group;
     private btnTabPath: eui.RadioButton;
     private vsEditors: eui.ViewStack;
     private btnRun: eui.Button;
@@ -27,15 +27,13 @@ class EditorPanel extends eui.Component {
     private txtItv: eui.Label;
     private sldSinA: eui.HSlider;
     private txtSinA: eui.Label;
-    private sldSinT: eui.HSlider;
-    private txtSinT: eui.Label;
+    private sldSinWL: eui.HSlider;
+    private txtSinWL: eui.Label;
     private iptCode: eui.EditableText;
     private txtPos: eui.Label;
 
     // override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
         this.skinName = "resource/custom_skins/EditorPanelSkin.exml";
         this.width = egret.MainContext.instance.stage.stageWidth;
 
@@ -44,34 +42,34 @@ class EditorPanel extends eui.Component {
         let vLayout = this.grpGridH.layout as eui.VerticalLayout;
         vLayout.gap = (this.height-30) / 10;
 
-        this.btnTabPath.group.addEventListener(eui.UIEvent.CHANGE, this.onEditorTabChange, this);
+        this.evtMgr.regEvent(this.btnTabPath.group, eui.UIEvent.CHANGE, this.onEditorTabChange);
         
-        this.btnRun.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnRun, this);
-        this.btnClear.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBtnClear, this);
+        this.evtMgr.regEvent(this.btnRun, egret.TouchEvent.TOUCH_TAP, this.onBtnRun);
+        this.evtMgr.regEvent(this.btnClear, egret.TouchEvent.TOUCH_TAP, this.onBtnClear);
 
-        this.sldType.addEventListener(eui.UIEvent.CHANGE, this.onTypeChanged, this);
-        this.sldNum.addEventListener(eui.UIEvent.CHANGE, this.onNumChanged, this);
-        this.sldItv.addEventListener(eui.UIEvent.CHANGE, this.onItvChanged, this);
-        this.sldDur.addEventListener(eui.UIEvent.CHANGE, this.onDurChanged, this);
-        this.sldSinA.addEventListener(eui.UIEvent.CHANGE, this.onSinAChanged, this);
-        this.sldSinT.addEventListener(eui.UIEvent.CHANGE, this.onSinTChanged, this);
-        this.iptCode.addEventListener(eui.UIEvent.FOCUS_IN, this.onCodeFocus, this);
+        this.evtMgr.regEvent(this.sldType, eui.UIEvent.CHANGE, this.onTypeChanged);
+        this.evtMgr.regEvent(this.sldNum, eui.UIEvent.CHANGE, this.onNumChanged);
+        this.evtMgr.regEvent(this.sldItv, eui.UIEvent.CHANGE, this.onItvChanged);
+        this.evtMgr.regEvent(this.sldDur, eui.UIEvent.CHANGE, this.onDurChanged);
+        this.evtMgr.regEvent(this.sldSinA, eui.UIEvent.CHANGE, this.onSinAChanged);
+        this.evtMgr.regEvent(this.sldSinWL, eui.UIEvent.CHANGE, this.onSinWLChanged);
+        this.evtMgr.regEvent(this.iptCode, eui.UIEvent.FOCUS_IN, this.onCodeFocus);
 
         this.grpSinA.visible = false;
-        this.grpSinT.visible = false;
+        this.grpSinWL.visible = false;
 
         this.txtType.text = "Type: " + EditorPanel.typeTxts[this.sldType.value];
         this.txtNum.text = "Num: " + this.sldNum.value;
         this.txtItv.text = "Itv: " + this.sldItv.value;
         this.txtDur.text = "Dur: " + this.sldDur.value;
         this.txtSinA.text = "SinA: " + this.sldSinA.value;
-        this.txtSinT.text = "SinT: " + this.sldSinT.value;
+        this.txtSinWL.text = "SinWL: " + this.sldSinWL.value;
         this.txtPos.text = "(x, y): (0%, 0%)";
 
         this.grpWorld.touchEnabled = true;
-        this.grpWorld.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        this.grpWorld.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.grpWorld.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        this.evtMgr.regEvent(this.grpWorld, egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin);
+        this.evtMgr.regEvent(this.grpWorld, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
+        this.evtMgr.regEvent(this.grpWorld, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
 
         this.world = new World(this.grpWorld, this.width, this.height);
         this.world.start(30);
@@ -102,35 +100,35 @@ class EditorPanel extends eui.Component {
                 pts.push({x: 0, y: 0});
             }
             rush = new StraightRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1]);
-            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new StraightRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new StraightRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});this.addRush(rush);this.putEnemyShipSinWLoGroup(ships);";
             break;
         case "bezier":
             for (let i=pts.length; i<3; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new BezierRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], pts[2]);
-            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new BezierRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, {x: "+pts[2].x+", y: "+pts[2].y+"});this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new BezierRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, {x: "+pts[2].x+", y: "+pts[2].y+"});this.addRush(rush);this.putEnemyShipSinWLoGroup(ships);";
             break;
         case "sine":
             for (let i=pts.length; i<2; i++) {
                 pts.push({x: 0, y: 0});
             }
-            rush = new SineRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], this.sldSinT.value, this.sldSinA.value);
-            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new SineRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, "+this.sldSinT.value+"/speedFactor, "+this.sldSinA.value+");this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
+            rush = new SineRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1], this.sldSinWL.value, this.sldSinA.value);
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new SineRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"}, "+this.sldSinWL.value+", "+this.sldSinA.value+");this.addRush(rush);this.putEnemyShipSinWLoGroup(ships);";
             break;
         case "gradient":
             for (let i=pts.length; i<2; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new GradientRush(0, ships, this.sldItv.value, this.sldDur.value, pts[0], pts[1]);
-            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new GradientRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new GradientRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, {x: "+pts[0].x+", y: "+pts[0].y+"}, {x: "+pts[1].x+", y: "+pts[1].y+"});this.addRush(rush);this.putEnemyShipSinWLoGroup(ships);";
             break;
         case "path":
             for (let i=pts.length; i<1; i++) {
                 pts.push({x: 0, y: 0});
             }
             rush = new PathRush(0, ships, this.sldItv.value, this.sldDur.value, pts);
-            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new PathRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, pts);this.addRush(rush);this.putEnemyShipsIntoGroup(ships);";
+            this.iptCode.text = "ships = this.createEnemyShips(\"RedEnemyShip_png\", "+this.sldNum.value+", hp);rush = new PathRush(delay/speedFactor, ships, "+this.sldItv.value+"/speedFactor, "+this.sldDur.value+"/speedFactor, pts);this.addRush(rush);this.putEnemyShipSinWLoGroup(ships);";
             break;
         }
         this.enemyCtrl.addRush(rush);
@@ -160,7 +158,7 @@ class EditorPanel extends eui.Component {
         evt.target.value = value;
         let txt = EditorPanel.typeTxts[this.sldType.value];
         this.grpSinA.visible = txt=="sine";
-        this.grpSinT.visible = txt=="sine";
+        this.grpSinWL.visible = txt=="sine";
         this.txtType.text = "Type: " + txt;
     }
 
@@ -216,8 +214,8 @@ class EditorPanel extends eui.Component {
         this.txtSinA.text = "SinA: " + this.sldSinA.value;
     }
 
-    protected onSinTChanged(evt: eui.UIEvent): void {
-        const align = 500;
+    protected onSinWLChanged(evt: eui.UIEvent): void {
+        const align = 5;
         let value = evt.target.value;
         let dt = (value/align) - Math.floor(value/align);
         if (dt < 0.5) {
@@ -226,7 +224,7 @@ class EditorPanel extends eui.Component {
             value = Math.floor(value/align) * align + align;
         }
         evt.target.value = value;
-        this.txtSinT.text = "SinT: " + this.sldSinT.value;
+        this.txtSinWL.text = "SinWL: " + this.sldSinWL.value;
     }
 
     protected onCreatePoint(): egret.DisplayObject {

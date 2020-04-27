@@ -2,8 +2,8 @@ class Ship extends HpUnit {
 	width: number;
 	height: number;
 	readonly model: string;
-	readonly scale: number;
-	readonly key: string = null;
+	readonly modelScale: number;
+	// readonly key: string = null;
 	
 	force: Force;
 	mainGun: Gun = null;
@@ -11,20 +11,22 @@ class Ship extends HpUnit {
 	readonly speed: Value;
 	hero: boolean = false;  // can use supply
 
-	private readonly timer: tutils.Timer;
+	public static readonly TimerInterval = 100;
+	private readonly timer: tutils.ITimer;
+	// private readonly buffTimerAct: tuitls.
 	readonly buffs: { [id: string]: Buff } = {};
 	buffsNum: number = 0;
 
-	readonly parts: { [id: string]: Part } = {};
-	partsNum: number = 0;
-	partsMax: number = 4;
-
 	readonly onDamagedTriggers: { [id: string]: Buff } = {};
+	readonly onDestroyTargetTriggers: { [id: string]: Buff } = {};
+	readonly onDyingTriggers: { [id: string]: Buff } = {};
 
 	ai: tutils.StateManager;
 
 	hitTestFlags: ShipHitTestFlags = 0;  // Bullet only
 	canHit: boolean = true;
+
+	dropTable: DropTable<any>;
 
 	// from unit
 	private onAddBuffListener: (ship: Ship, buff: Buff)=>void = null;
@@ -38,30 +40,22 @@ class Ship extends HpUnit {
 	private onUpdateBuffListener: (ship: Ship, buff: Buff)=>void = null;
 	private onUpdateBuffThisObject: any = null;
 
-	// from unit
-	private onAddPartListener: (ship: Ship, part: Part)=>void = null;
-	private onAddPartThisObject: any = null;
-
-	// from unit
-	private onRemovePartListener: (ship: Ship, part: Part)=>void = null;
-	private onRemovePartThisObject: any = null;
-
-	public constructor(model: string, scale?: number, key?: string) {
+	public constructor(model: string, modelScale?: number) {
 		super();
 		this.model = model;
-		this.scale = scale===undefined ? 1.0 : scale;
-		this.key = key;
+		this.modelScale = modelScale===undefined ? 1.0 : modelScale;
+		// this.key = key;
 		this.force===undefined ? this.force=new Force() : this.force.constructor();
 		this.speed===undefined ? this.speed=new Value(100) : this.speed.constructor(100);
-		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actMgr) : this.timer.constructor(GameController.instance.actMgr);
 		this.ai===undefined ? this.ai=new tutils.StateManager() : this.ai.constructor();
 	}
 
 	// override
 	protected onCreate(): egret.DisplayObject {
 		let gameObject = tutils.createBitmapByName(this.model);
-		gameObject.width *= this.scale;
-		gameObject.height *= this.scale;
+		gameObject.width *= this.modelScale;
+		gameObject.height *= this.modelScale;
         this.width = gameObject.width;
 		this.height = gameObject.height;
 		gameObject.anchorOffsetX = gameObject.width * 0.5;
@@ -71,13 +65,12 @@ class Ship extends HpUnit {
 
 	// override
 	protected onCleanup(): void {
-		for (let i in this.guns) {
-			let gun = this.guns[i];
+		for (let id in this.guns) {
+			let gun = this.guns[id];
 			gun.cleanup();
 		}
-		for (let i in this.buffs) {
-			let buff = this.buffs[i];
-			buff.cleanup();
+		for (let id in this.buffs) {
+			this.removeBuff(id);
 		}
 		if (this.timer.running) {
 			this.timer.stop();
@@ -88,71 +81,33 @@ class Ship extends HpUnit {
 
 	// override
 	protected onDying(src: HpUnit): void {
-		egret.Tween.removeTweens(this);
-		egret.Tween.removeTweens(this.gameObject);
+		if (src instanceof Ship) {
+			src.$triggerOnDestroyTarget(this);
+		}
+		
+		this.stopAllActions();
+		GameController.instance.actMgr.removeAllActions(this.gameObject);
+		
 		this.ai.stop();
-		this.world.onShipDying(this, src as Ship);
-		let tw: egret.Tween;
+		let world = this.world;
+		world.onShipDying(this, src as Ship);
 		let g: egret.Graphics = null;
 		let from = 20;
 		let to = (this.width + this.height) / 2;
-		if (this.gameObject instanceof egret.Shape) {
-			g = this.gameObject.graphics;
-		} else if (this.gameObject instanceof egret.Sprite) {
-			g = this.gameObject.graphics;
-		} else if (this.gameObject instanceof egret.Bitmap) {
-			let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
-			//let effect = new ExplosionEffect(20, to, "Explosion_png", this.gameObject);
-			this.world.addEffect(effect);
-			tw = egret.Tween.get(effect);
-			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
-			tw.call(()=>{
-				this.world.removeEffect(effect);
-				this.pools.delObject(effect);
-			}, this);
-			this.gameObject.visible = false;
-		}
-
-		if (g != null) {
-			g.clear();
-			g.lineStyle(5, 0xff2916);
-			g.beginFill(0xfef23b, 1);
-			g.drawCircle(this.gameObject.anchorOffsetX, this.gameObject.anchorOffsetY, to);
-			g.endFill();
-			this.gameObject.scaleX = from / to;
-			this.gameObject.scaleY = this.gameObject.scaleX;
-			let effect = this.pools.newObject(Effect, 20, to);
-			effect.setOnChanged((effect: Effect):void=>{
-				this.gameObject.scaleX = effect.value / effect.maximum;
-				this.gameObject.scaleY = this.gameObject.scaleX;
-				this.gameObject.alpha = 1 - (effect.value - effect.minimum) / (effect.maximum - effect.minimum);
-			}, this);
-			tw = egret.Tween.get(effect);
-			tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
-			tw.call(()=>{
-				this.pools.delObject(effect);
-			}, this);
-		} else if (!tw) {
-			tw = egret.Tween.get(this.gameObject);
-		}
+		let effect = this.pools.newObject(ExplosionEffect, 20, to, "Explosion_png", this.gameObject);
+		//let effect = new ExplosionEffect(20, to, "Explosion_png", this.gameObject);
+		world.addEffect(effect);
+		let tw = egret.Tween.get(effect);
+		tw.to({value: effect.maximum}, 400, egret.Ease.getPowOut(3));
 		tw.call(()=>{
+			world.removeEffect(effect);
+			this.pools.delObject(effect);
 			this.status = UnitStatus.Dead;
 		}, this);
-	}
+		this.gameObject.visible = false;
 
-	// override
-	public onTimer(dt: number): void {
-		//console.log('onTimer: '+egret.getTimer());
-		let toDelBuffs: Buff[] = [];
-		for (let i in this.buffs) {
-			let buff = this.buffs[i];
-			if (buff.step(dt) == false) {
-				toDelBuffs.push(buff);
-			}
-		}
-		for (let i in toDelBuffs) {
-			let buff = toDelBuffs[i];
-			this.removeBuff(buff.id);
+		if (src instanceof Ship) {
+			this.$triggerOnDying(src);
 		}
 	}
 
@@ -165,20 +120,58 @@ class Ship extends HpUnit {
 		if (buff.triggerFlags & ShipTrigger.OnDamaged) {
 			this.onDamagedTriggers[buff.id] = buff;
 		}
+		if (buff.triggerFlags & ShipTrigger.OnDestroyTarget) {
+			this.onDestroyTargetTriggers[buff.id] = buff;
+		}
+		if (buff.triggerFlags & ShipTrigger.OnDying) {
+			this.onDyingTriggers[buff.id] = buff;
+		}
 	}
 
 	protected removeTrigger(buff: Buff): void {
 		if (buff.triggerFlags & ShipTrigger.OnDamaged) {
 			delete this.onDamagedTriggers[buff.id];
 		}
+		if (buff.triggerFlags & ShipTrigger.OnDestroyTarget) {
+			delete this.onDestroyTargetTriggers[buff.id];
+		}
+		if (buff.triggerFlags & ShipTrigger.OnDying) {
+			delete this.onDyingTriggers[buff.id];
+		}
 	}
 
-	public damaged(value: number, src: HpUnit): void {
+	public $triggerOnDamaged(value: number, src: Ship, unit: HpUnit): number {
 		for (let id in this.onDamagedTriggers) {
 			let buff = this.onDamagedTriggers[id];
-			value = buff.onDamaged(value, src);
+			value = buff.onDamaged(value, src, unit);
 		}
-		super.damaged(value, src);
+		return value;
+	}
+
+	public $triggerOnDestroyTarget(target: Ship): void {
+		for (let id in this.onDestroyTargetTriggers) {
+			let buff = this.onDestroyTargetTriggers[id];
+			buff.onDestroyTarget(target);
+		}
+	}
+
+	public $triggerOnDying(src: Ship): void {
+		for (let id in this.onDyingTriggers) {
+			let buff = this.onDyingTriggers[id];
+			buff.onDying(src);
+		}
+	}
+
+	public damaged(value: number, src: HpUnit, unit: HpUnit): void {
+		if (src instanceof Ship) {
+			value = src.damageTarget(value, this, unit);
+			value = this.$triggerOnDamaged(value, src, unit);
+		}
+		this.damagedLow(value, src);
+	}
+
+	public damageTarget(value: number, target: Ship, unit: HpUnit): number {
+		return value;
 	}
 
 	// main=false
@@ -210,7 +203,26 @@ class Ship extends HpUnit {
 		}
 	}
 
+	// override
+	public onTimer(dt: number): void {
+		//console.log('onTimer: '+egret.getTimer());
+		let toDelBuffs: Buff[] = [];
+		for (let i in this.buffs) {
+			let buff = this.buffs[i];
+			if (buff.step(dt) == false) {
+				toDelBuffs.push(buff);
+			}
+		}
+		for (let i in toDelBuffs) {
+			let buff = toDelBuffs[i];
+			this.removeBuff(buff.id);
+		}
+	}
+
 	public addBuff(buff: Buff): Buff {
+		if (!this.alive) {
+			return;
+		}
 		if (buff.key) {
 			// 如果buff存在名称，则处理覆盖逻辑
 			for (let buffId in this.buffs) {
@@ -219,6 +231,7 @@ class Ship extends HpUnit {
 					if (b.left < buff.duration) {
 						b.left = Math.min(b.duration, buff.duration);
 					}
+					b.onUpdateBuff(buff);
 					this.onUpdateBuff(b);
 					return;
 				}
@@ -236,7 +249,7 @@ class Ship extends HpUnit {
 				this.timer.setOnTimerListener(this.onTimer, this);
 			}
 			if (!this.timer.running) {
-				this.timer.start(tutils.ShipTimerInterval, false, 0);
+				this.timer.start(Ship.TimerInterval, false, 0);
 			}
 		}
 		this.onAddBuff(buff);
@@ -293,71 +306,13 @@ class Ship extends HpUnit {
 		this.onUpdateBuffListener = listener;
 		this.onUpdateBuffThisObject = thisObject;
 	}
-
-	public addPart(part: Part): boolean {
-		if (part.key) {
-			// 如果buff存在名称，则处理覆盖逻辑
-			for (let partId in this.parts) {
-				let p = this.parts[partId];
-				if (p.key == part.key) {
-					this.removePart(p.id);
-					break;
-				}
-			}
-		}
-		if (this.partsNum == this.partsMax) {
-			return false;
-		}
-		
-		part.id = this.world.nextId();
-		part.ship = this;
-		part.onAddPart();
-		this.parts[part.id] = part;
-		this.partsNum++;
-		this.onAddPart(part);
-		return true;
-	}
-
-	public removePart(id: string): void {
-		let part = this.parts[id];
-		if (part === undefined) {
-			console.log('part('+id+') not found');
-			return;
-		}
-		
-		part.onRemovePart();
-		part.ship = null;
-		delete this.parts[id];
-		this.partsNum--;
-		this.onRemovePart(part);
-	}
-
-	public onAddPart(part: Part) {
-		if (this.onAddPartListener != null) {
-			this.onAddPartListener.call(this.onAddPartThisObject, this, part);
-		}
-	}
-
-	public setOnAddPartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
-		this.onAddPartListener = listener;
-		this.onAddPartThisObject = thisObject;
-	}
-
-	public onRemovePart(part: Part) {
-		if (this.onRemovePartListener != null) {
-			this.onRemovePartListener.call(this.onRemovePartThisObject, this, part);
-		}
-	}
-
-	public setOnRemovePartListener(listener: (ship: Ship, part: Part)=>void, thisObject?: any) {
-		this.onRemovePartListener = listener;
-		this.onRemovePartThisObject = thisObject;
-	}
 }
 
 enum ShipTrigger {
 	OnInterval = 1 << 0,
-	OnDamaged = 1 << 1
+	OnDamaged = 1 << 1,
+	OnDestroyTarget = 1 << 2,
+	OnDying = 1 << 3,
 }
 type ShipTriggerFlags = number;
 

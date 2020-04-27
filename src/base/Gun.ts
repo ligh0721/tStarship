@@ -1,27 +1,30 @@
-class Gun {
+class Gun extends egret.HashObject {
 	id: string;
 	ship: Ship;
 	readonly fireCooldown: Value;
 	readonly bulletPower: Value;
 	bulletNum: number = 1;
-	bulletPowerLossPer: number = 1.0;  // 子弹能量下降系数
-	readonly bulletPowerLossInterval: Value;  // 子弹能量下降时间间隔
+	bulletMaxHitTimes: number = 1;  // 子弹可碰撞次数
+	readonly bulletHitInterval: Value;  // 子弹碰撞时间间隔
 	readonly bulletSpeed: Value;
 	bulletType: new(gun: Gun)=>Bullet = Bullet;
 	bulletColor: number = 0xffffff;
 	private $bulletLeft: number = -1;  // 可发射的剩余子弹数，-1为无限
 
 	private $autoFire: boolean = false;
-	private autoFireTimer: tutils.Timer;
+	private autoFireTimer: tutils.ITimer;
+
+	ease: Function = null;
 
 	level: number = 1;
 
 	public constructor() {
+		super();
 		this.fireCooldown===undefined ? this.fireCooldown=new Value(500, 0, 10000) : this.fireCooldown.constructor(500, 50, 1000);
 		this.bulletPower===undefined ? this.bulletPower=new Value(1, 1, tutils.LargeNumber) : this.bulletPower.constructor(1, 1, tutils.LargeNumber);
-		this.bulletPowerLossInterval===undefined ? this.bulletPowerLossInterval=new Value(500, 100) : this.bulletPowerLossInterval.constructor(500, 100);
+		this.bulletHitInterval===undefined ? this.bulletHitInterval=new Value(500, 100) : this.bulletHitInterval.constructor(500, 100);
 		this.bulletSpeed===undefined ? this.bulletSpeed=new Value(50, 0, 200) : this.bulletSpeed.constructor(50, 0, 200);
-		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.Timer() : this.autoFireTimer.constructor();
+		this.autoFireTimer===undefined ? this.autoFireTimer=new tutils.TimerByAction(GameController.instance.actMgr) : this.autoFireTimer.constructor(GameController.instance.actMgr);
 	}
 
 	public setBulletType<BulletType extends Bullet>(bulletType: new(gun: Gun)=>BulletType) {
@@ -55,11 +58,11 @@ class Gun {
 	}
 
 	protected fireBulletStraight(bullet: Bullet, angle?: number, fixedRotation?: boolean, ease?: Function) {
-		bullet.moveStraight(angle===undefined?this.ship.angle:angle, this.bulletSpeed.value, fixedRotation, ease)
+		bullet.moveStraight(angle===undefined?this.ship.rotation:angle, this.bulletSpeed.value, fixedRotation, ease)
 	}
 
 	public fire(): void {
-		if (this.ship == null || !this.ship.alive) {
+		if (this.ship==null || !this.ship.alive) {
 			return;
 		}
 		this.playFireSound();
@@ -68,7 +71,7 @@ class Gun {
 		this.addBulletToWorld(bullet)
 		bullet.x = firePos.x;
 		bullet.y = firePos.y;
-		this.fireBulletStraight(bullet);
+		this.fireBulletStraight(bullet, this.ship.rotation, false, this.ease);
 	}
 
 	public get autoFire(): boolean {
@@ -114,6 +117,46 @@ class Gun {
 		}
 	}
 
+	// public set autoFire(value: boolean) {
+	// 	if (this.$autoFire == value) {
+	// 		return;
+	// 	}
+	// 	this.$autoFire = value;
+	// 	if (value) {
+	// 		this.startFireAction();
+	// 	} else {
+	// 		GameController.instance.actionManager.removeAllActions(this);
+	// 	}
+	// }
+
+	// private startFireAction(): void {
+	// 	this.seqAct = new tutils.Sequence(
+	// 		new tutils.CallFunc(():void=>{
+	// 			if (this.ship == null || !this.ship.alive) {
+	// 				GameController.instance.actionManager.removeAllActions(this);
+	// 				return;
+	// 			}
+	// 			if (this.$bulletLeft != 0) {
+	// 				this.fire();
+	// 				if (this.$bulletLeft > 0) {
+	// 					this.$bulletLeft--;
+	// 					if (this.$bulletLeft == 0) {
+	// 						// this.autoFireTimer.stop();
+	// 						GameController.instance.actionManager.removeAllActions(this);
+	// 					}
+	// 				}
+	// 			}
+	// 			if (this.seqAct.two.duration !== this.fireCooldown.value) {
+	// 				this.seqAct.two.duration = this.fireCooldown.value;
+	// 				this.seqAct.recalcDuration();
+	// 			}
+	// 		}, this),
+	// 		new tutils.DelayTime(this.fireCooldown.value)
+	// 	);
+	// 	let act = new tutils.RepeatForever(this.seqAct);
+	// 	GameController.instance.actionManager.addAction(this, act);
+	// }
+
 	public get bulletLeft(): number {
 		return this.$bulletLeft;
 	}
@@ -125,10 +168,18 @@ class Gun {
 		}
 	}
 
+	// public set bulletLeft(value: number) {
+	// 	if (value!=0 && this.$autoFire && this.$bulletLeft==0) {
+	// 		this.startFireAction();
+	// 	}
+	// 	this.$bulletLeft = value;
+	// }
+
 	public cleanup(): void {
 		this.autoFireTimer.stop();
-		egret.Tween.removeTweens(this);
+		// egret.Tween.removeTweens(this);
 		this.onCleanup();
+		GameController.instance.actMgr.removeAllActions(this);
 	}
 
 	// override
@@ -142,14 +193,21 @@ class Gun {
 	protected onCleanup(): void {
 	}
 
-	public getFirePosition(): {x: number, y: number} {
-		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.angle, this.ship.height*0.5);
+	protected getFirePosition(): {x: number, y: number} {
+		return Unit.getDirectionPoint(this.ship.x, this.ship.y, this.ship.rotation, this.ship.height*0.5);
 	}
 
-	public levelUp(): void {
-		this.level++;
-		this.onLevelUp();
-		tutils.playSound("GunPowerup_mp3");
+	public levelUp(num: number=1, sound: boolean=true): void {
+		if (num === 0) {
+			return;
+		}
+		for (let i=0; i<num; i++) {
+			this.level++;
+			this.onLevelUp();
+		}
+		if (sound) {
+			tutils.playSound("GunPowerup_mp3");
+		}
 	}
 
 	// override

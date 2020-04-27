@@ -20,9 +20,11 @@ class PartSupply extends Supply {
 
 	// override
 	public onHitShip(ship: Ship): void {
-		for (let i in this.parts) {
-			let part = this.parts[i];
-			ship.addPart(part);
+		if (ship instanceof HeroShip) {
+			for (let i in this.parts) {
+				let part = this.parts[i];
+				ship.addPart(part);
+			}
 		}
 	}
 }

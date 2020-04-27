@@ -1,9 +1,9 @@
 class MoveState extends ShipAIChainState {
-	protected x: number;
-	protected y: number;
+	x: number;
+	y: number;
 	protected speed: number;
 	protected fixedRotation: boolean;
-	protected ease: Function;
+	ease: Function;
 
 
 	public constructor(mgr: tutils.StateManager, ship: Ship, x: number, y: number, speed: number, fixedRotation: boolean, ease: Function) {
@@ -15,14 +15,14 @@ class MoveState extends ShipAIChainState {
 		this.ease = ease;
 	}
 	public onEnter(): void {
-		this.ship.moveTo(this.x, this.y, this.speed, this.fixedRotation, this.ease, ():void=>{
+		this.ship.moveTo(this.x, this.y, this.speed, this.fixedRotation, this.ease, false, ():void=>{
 			this.next();
 		}, this);
 	}
 }
 
 class WaitState extends ShipAIChainState {
-	protected duration: number;
+	duration: number;
 
 	public constructor(mgr: tutils.StateManager, ship: Ship, duration: number) {
 		super(mgr, ship);
@@ -48,7 +48,7 @@ class FireState extends ShipAIChainState {
 
 	public onEnter(): void {
 		if (this.ship.mainGun) {
-			this.ship.mainGun.autoFire = true;
+			this.ship.mainGun.autoFire = this.autoFire;
 		}
 		this.next();
 	}

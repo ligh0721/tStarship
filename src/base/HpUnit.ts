@@ -16,7 +16,11 @@ class HpUnit extends Unit {
 		return this.$hp.hp;
 	}
 
-	public damaged(value: number, src: HpUnit): void {
+	public damaged(value: number, src: HpUnit, unit: HpUnit): void {
+		this.damagedLow(value, src);
+	}
+
+	public damagedLow(value: number, src: HpUnit): void {
 		this.$hp.hp -= value;
 		this.onHpChanged(-value);
 		if (this.$hp.hp <= 0) {
@@ -36,8 +40,12 @@ class HpUnit extends Unit {
 		this.$hp.maxHp = value;
 	}
 
-	public resetHp(maxHp: number) {
-		this.$hp.reset(maxHp);
+	public resetHp(maxHp?: number) {
+		if (maxHp != null) {
+			this.$hp.reset(maxHp);
+		} else {
+			this.$hp.hp = this.$hp.maxHp;
+		}
 	}
 
 	public get alive(): boolean {
@@ -46,8 +54,8 @@ class HpUnit extends Unit {
 
 	// override
 	protected onDying(src: HpUnit) {
-		egret.Tween.removeTweens(this);
-		egret.Tween.removeTweens(this.gameObject);
+		this.stopAllActions();
+		GameController.instance.actMgr.removeAllActions(this.gameObject);
 		this.status = UnitStatus.Dead;
 	}
 

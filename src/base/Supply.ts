@@ -3,8 +3,8 @@ class Supply extends Unit {
 	text: string = "";
 	color: number = 0xffffff;
 	status: UnitStatus = UnitStatus.Alive;
-	speed: number = 10;
-	pickDist: number = 300;
+	speed: number = 20;
+	pickDist: number = 150;
 	pickSpeed: number = 150;
 
 	public constructor(model?: string) {
@@ -62,17 +62,18 @@ class Supply extends Unit {
 		this.y = y;
 		this.moveStraight(180, this.speed, true, ease);
 		if (this.pickDist > 0) {
-			this.moveToShip(null);
+			this.moveToShip();
 		}
 	}
 
-	public moveToShip(target: Ship) {
+	protected moveToShip() {
+		let target: Ship = null;
 		let targetId = target==null ? 0 : target.id;
 		let angleRaw = target==null ? 0 : Math.atan2(target.gameObject.y-this.gameObject.y, target.gameObject.x-this.gameObject.x);
 		let thisId = this.id;
 		let timer = new tutils.Timer();
-		timer.setOnTimerListener((dt: number)=> {
-			if (!this.alive || this.id != thisId || (target != null && (!target.alive || target.id != targetId))) {
+		timer.setOnTimerListener((dt: number): void=> {
+			if (!this.world.running || !this.alive || this.id!=thisId || (target!=null && (!target.alive || target.id!=targetId))) {
 				timer.stop();
 				return;
 			}
@@ -83,7 +84,8 @@ class Supply extends Unit {
 				} else {
 					timer.interval = 0;
 					targetId = target.id;
-					egret.Tween.removeTweens(this.gameObject);
+					// egret.Tween.removeTweens(this.gameObject);
+					this.stopAllActions();
 				}
 			}
 			
@@ -93,5 +95,19 @@ class Supply extends Unit {
 			this.gameObject.y = to.y;
 		}, this);
 		timer.start(1000/100, true, 0);
+	}
+
+	public jump(x: number, y: number, width: number, height: number, onEnd:()=>void, thisObj: any): void {
+		this.x = x;
+		this.y = y;
+		let dtx = (Math.random() - 0.5) * width;
+		let h = Math.sqrt((1 - (dtx * dtx) / (width * width)) * height * height);
+		let dty = -Math.random() * h;
+		let dis = Math.sqrt(dtx*dtx+dty*dty);
+		let act = new tutils.Sequence(
+			new tutils.MoveBy(300, dtx, dty, egret.Ease.getPowOut(2)),
+			new tutils.CallFunc(onEnd, thisObj)
+		);
+		this.runAction(act);
 	}
 }

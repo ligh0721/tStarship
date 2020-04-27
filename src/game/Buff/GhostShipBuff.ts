@@ -7,7 +7,8 @@ class GhostShipBuff extends Buff {
 	private timer: tutils.Timer;
 
 	public constructor(duration: number, num: number=3, powerPer: number=0.3) {
-		super(duration);
+		super(duration, ShipTrigger.OnInterval | HeroShipTrigger.OnEnergyEmpty);
+		this.setInterval(0);
 		this.shipsNum = num;
 		this.powerPer = powerPer;
 		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
@@ -20,20 +21,24 @@ class GhostShipBuff extends Buff {
 			return;
 		}
 
-		let shipData = GameController.instance.getShipDataByKey(this.ship.key);
+		let gunData = GameController.instance.getGunData(GameController.instance.playerData.gun);
 		for (let i=0; i<this.shipsNum; i++) {
-			let ghost = new IntervalHitShip(this.ship.model, this.ship.scale, this.ship);
+			let ghost = new IntervalHitShip(this.ship.model, this.ship.modelScale, this.ship);
 			this.ship.world.addShip(ghost);
 			ghost.resetHp(this.ship.maxHp);
+			ghost.speed.baseValue = this.ship.speed.baseValue;
 			ghost.force = this.ship.force;
 
-			if (shipData) {
-				ghost.speed.baseValue = shipData.speed;
-				let gun = Gun.createGun(shipData.gun, shipData.bullet);
+			if (this.ship instanceof HeroShip) {
+				let level = GameController.instance.getHeroLevel();
+				let gunLevel = GameController.instance.getGunLevel()
+				let powerIncPer = GameController.instance.calcHeroPowerIncPer(level);
+				let gun = Gun.createGun(gunData.gun, tutils.levelValue(gunData.bullet, gunLevel));
 				gun.bulletSpeed.baseValue = this.ship.mainGun.bulletSpeed.baseValue;
 				gun.fireCooldown.baseValue = this.ship.mainGun.fireCooldown.baseValue;
-				gun.bulletPowerLossPer = this.ship.mainGun.bulletPowerLossPer;
-				gun.bulletPower.baseValue = Math.max(1, Math.floor(this.ship.mainGun.bulletPower.baseValue * this.powerPer));
+				gun.bulletPower.baseValue = Math.max(1, this.ship.mainGun.bulletPower.baseValue*(1+powerIncPer)*this.powerPer);
+				gun.bulletMaxHitTimes = this.ship.mainGun.bulletMaxHitTimes;
+				
 				gun.bulletNum = this.ship.mainGun.bulletNum;
 				ghost.addGun(gun, true).autoFire = true;
 			}
@@ -96,5 +101,17 @@ class GhostShipBuff extends Buff {
 		}
 		this.ships.length = 0;
 		this.buffIds.length = 0;
+	}
+
+	// override
+	public onInterval(dt: number): void {
+		if (this.ship instanceof HeroShip) {
+			this.ship.addEnergy(-10);
+		}
+	}
+
+	// override
+	public onEnergyEmpty(): void {
+		this.ship.removeBuff(this.id);
 	}
 }

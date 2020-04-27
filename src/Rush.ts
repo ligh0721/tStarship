@@ -1,4 +1,4 @@
-class Rush {
+class Rush extends egret.HashObject {
 	delay: number;
 	protected ships: Ship[];
 	protected interval: number;
@@ -7,6 +7,7 @@ class Rush {
 	protected callbackThisObj: any;
 
 	public constructor(delay: number, ships: Ship[], interval: number, fixedRotaion?: boolean, callback?: Function, callbackThisObj?: any) {
+		super();
 		this.delay = delay;
 		this.ships = ships;
 		this.interval = interval;
@@ -27,15 +28,28 @@ class Rush {
 					this.onRushOne(i, ship);
 				}, this);
 			} else {
-				let t = new tutils.Timer();
+				// let i = 0;
+				// let act = new tutils.Repeat(new tutils.Sequence(
+				// 	new tutils.CallFunc(():void=>{
+				// 		let ship = this.ships[i];
+				// 		world.addShip(ship);
+				// 		this.onRushOne(i, ship);
+				// 		i++;
+				// 	}, this),
+				// 	new tutils.DelayTime(this.interval)
+				// ), this.ships.length);
+				// GameController.instance.actionManager.addAction(this, act);
+				
+				let act = new tutils.TimerAction(this.interval, true, this.ships.length);
 				let i = 0;
-				t.setOnTimerListener((dt: number):void=>{
+				act.setOnTimerListener((dt: number):void=>{
 					let ship = this.ships[i];
 					world.addShip(ship);
 					this.onRushOne(i, ship);
 					i++;
 				}, this);
-				t.start(this.interval, true, this.ships.length);
+				// t.start(this.interval, true, this.ships.length);
+				GameController.instance.actMgr.addAction(this, act);
 			}
 		}
 	}
@@ -88,7 +102,7 @@ class StraightRush extends Rush {
 		ship.y = this.from.y;
 		let dis = ship.getDistance(this.to.x, this.to.y);
 		let speed = dis / this.duration * tutils.SpeedFactor;
-		ship.moveTo(this.to.x, this.to.y, speed, this.fixedRotation, null, ():void=>{
+		ship.moveTo(this.to.x, this.to.y, speed, this.fixedRotation, null, false, ():void=>{
 			ship.status = UnitStatus.Dead;
 		}, this);
 	}
@@ -117,10 +131,16 @@ class BezierRush extends Rush {
 
 	// override
 	protected onRushOne(index: number, ship: Ship): void {
-		let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
-		bezier.startMove(this.duration, ()=>{
+		// let bezier = new BezierCurve(ship, this.from, this.k, this.to, this.fixedRotation);
+		// bezier.start(this.duration, ()=>{
+		// 	ship.status = UnitStatus.Dead;
+		// });
+		ship.gameObject.x = this.from.x;
+		ship.gameObject.y = this.from.y;
+		let act = new tutils.Sequence(new tutils.Bezier(this.duration, this.from.x, this.from.y, this.k.x, this.k.y, this.to.x, this.to.y, false), new tutils.CallFunc(():void=>{
 			ship.status = UnitStatus.Dead;
-		});
+		}, this));
+		ship.runAction(act);
 	}
 }
 
@@ -128,15 +148,15 @@ class SineRush extends Rush {
 	protected duration: number;
 	protected from: {x: number, y: number};
 	protected to: {x: number, y: number};
-	protected period: number;
+	protected wavelen: number;
 	protected amplitude: number;
 
-	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, period: number, amplitude: number) {
+	public constructor(delay: number, ships: Ship[], interval: number, duration: number, from: {x: number, y: number}, to: {x: number, y: number}, wavelen: number, amplitude: number) {
 		super(delay, ships, interval, true);
 		this.duration = duration;
 		this.from = from;
 		this.to = to;
-		this.period = period;
+		this.wavelen = wavelen;
 		this.amplitude = amplitude;
 	}
 
@@ -145,14 +165,21 @@ class SineRush extends Rush {
 		this.convertPointToWorldPer(world, this.from);
 		this.convertPointToWorldPer(world, this.to);
 		this.amplitude *= world.width/100;
+		this.wavelen *= world.height/100;
 	}
 
 	// override
 	protected onRushOne(index: number, ship: Ship): void {
-		let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
-		sin.startMove(this.duration, ()=>{
+		// let sin = new SineCurve(ship, this.from, this.to, this.period, this.amplitude);
+		// sin.start(this.duration, ()=>{
+		// 	ship.status = UnitStatus.Dead;
+		// });
+		ship.gameObject.x = this.from.x;
+		ship.gameObject.y = this.from.y;
+		let act = new tutils.Sequence(new tutils.Sine(this.duration, this.from.x, this.from.y, this.to.x, this.to.y, this.wavelen, this.amplitude), new tutils.CallFunc(():void=>{
 			ship.status = UnitStatus.Dead;
-		});
+		}, this));
+		ship.runAction(act);
 	}
 }
 
@@ -229,7 +256,7 @@ class GradientRush extends Rush {
 		let toY = ship.world.height+ship.height;
 		let dis = toY - ship.y;
 		let speed = dis / this.duration * tutils.SpeedFactor;
-		ship.moveTo(ship.x, toY, speed, this.fixedRotation, null, ():void=>{
+		ship.moveTo(ship.x, toY, speed, this.fixedRotation, null, false, ():void=>{
 			ship.status = UnitStatus.Dead;
 		}, this);
 	}

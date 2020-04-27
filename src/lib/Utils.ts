@@ -7,8 +7,11 @@ module tutils {
 	export const Player2Force = 2;
 	export const AllyForce = 10;
 	export const EnemyForce = 11;
+	export const NeutralForce = 12;
 	export const LargeNumber = 1000000;
-	export const ShipTimerInterval = 100;
+	// export const ShipTimerInterval = 100;
+	export const Epsilon = 2.2204460492503130808472633361816E-16;
+	export const Precision = 1e-12;
 	let bgMusic: egret.SoundChannel;
 	let bgMusicPosition: number = null;
 	let bgMusicName: string = null;
@@ -37,10 +40,27 @@ module tutils {
 		return getDirectionPoint(x0, y0, a, dis);
 	}
 
-	export function getDistance(x0: number, y0: number, x1: number, y1: number) {
+	export function getDistance(x0: number, y0: number, x1: number, y1: number): number {
 		let dtx = x0 - x1;
 		let dty = y0 - y1;
 		return Math.sqrt(dtx*dtx+dty*dty);
+	}
+
+	export function getRotateAngle(angle0: number, delta: number): number {
+		if (angle0 > 180) {
+			return angle0 + delta - 360;
+		} else if (angle0 < -180) {
+			return angle0 + delta + 360;
+		}
+		return angle0 + delta;
+	}
+
+	export function randomSign(): number {
+		return Math.floor(Math.random()*2) * 2 - 1;
+	}
+
+	export function random(from: number, to: number): number {
+		return Math.random() * (to - from) + from;
 	}
 
 	export function createBitmapByName(name: string) {
@@ -88,6 +108,7 @@ module tutils {
 		if (!bgMusic && bgMusicPosition) {
 			let sound: egret.Sound = RES.getRes(bgMusicName);
 			bgMusic = sound.play(bgMusicPosition, 0);
+			// bgMusic.position = bgMusicPosition;
 			bgMusicPosition = null;
 		}
 	}
@@ -101,5 +122,15 @@ module tutils {
 		];
 		let filter = new egret.ColorMatrixFilter(colorMatrix);
 		return filter;
+	}
+
+	export function levelValue(v: any, level?: number): any {
+		if (v instanceof Array) {
+			if (level===undefined) {
+				level = 1;
+			}
+			return v[level-1];
+		}
+		return v;
 	}
 }

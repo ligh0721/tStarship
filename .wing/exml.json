@@ -1,6 +1,8 @@
 {
   "global": {
-    "globalAutoLayerMarkEnable": true
+    "globalAutoLayerMarkEnable": true,
+    "globalRulerEnable": false,
+    "globalAdsorbEnable": true
   },
   "163577e15d0": {
     "guideLinesEnabled": false,
@@ -11,5 +13,13 @@
     "useBgImage": true,
     "useBgColor": true,
     "backgroundAlpha": 100
+  },
+  "16437832afe": {
+    "guideLines": [
+      {
+        "type": "h",
+        "pos": -10
+      }
+    ]
   }
 }

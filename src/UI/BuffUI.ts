@@ -1,4 +1,4 @@
-class BuffUI extends eui.Component {
+class BuffUI extends tutils.Component {
 	private imgBuffBg: eui.Image;
 	private imgBuff: eui.Image;
 	buff: Buff;
@@ -10,9 +10,7 @@ class BuffUI extends eui.Component {
 	}
 
 	// override
-    protected createChildren(): void {
-        super.createChildren();
-
+    protected onInit(): void {
 		this.width = 50;
 		this.height = 50;
 
@@ -30,8 +28,6 @@ class BuffUI extends eui.Component {
 		this.imgBuff.source = this.buff.model;
 		this.imgBuff.mask = new egret.Rectangle(0, 0, this.imgBuff.width, this.imgBuff.height);
 
-		this.addEventListener(eui.UIEvent.REMOVED, this.onRemoved, this);
-
 		this.updateProgress();
 		if (this.buff.left > 0) {
 			this.timer.setOnTimerListener(this.onTimer, this);
@@ -39,7 +35,8 @@ class BuffUI extends eui.Component {
 		}
 	}
 
-	protected onRemoved(evt: eui.UIEvent): void {
+	// override
+	protected onRemoved(): void {
 		this.timer.stop();
 		this.buff = null;
 	}

@@ -1,8 +1,8 @@
 class AddBuffSkill extends Skill {
 	private readonly buffs: Buff[];
 
-	public constructor(buffs: Buff[]) {
-		super();
+	public constructor(power: number, buffs: Buff[]) {
+		super(power);
 		this.buffs = buffs;
 	}
 

@@ -12,6 +12,8 @@ class World {
 	readonly supplies: { [id: string]: Supply } = {};
 	suppliesNum: number = 0;
 
+	timer: tutils.ITimer;
+
 	// private readonly obShip: Ship;
 
 	// 部分监听器可以从world广播优化成ship单播 
@@ -45,15 +47,23 @@ class World {
 	}
 
 	public start(frameRate: number): void {
-		let t = new tutils.Timer();
-		t.setOnTimerListener((dt: number): void=> {
-			this.step(dt);
-		}, this);
-		t.start(1000/frameRate, true, 0);
+		if (!this.timer) {
+			this.timer = new tutils.TimerByAction(GameController.instance.actMgr);
+			this.timer.setOnTimerListener((dt: number): void=> {
+				this.step(dt);
+			}, this);
+		}
+		this.timer.start(1000/frameRate, true, 0);
+	}
+
+	public get running(): boolean {
+		return this.timer.running;
 	}
 
 	public cleanup(): void {
-		
+		if (this.timer) {
+			this.timer.stop();
+		}
 	}
 
 	public getShip(id: string): Ship {
@@ -70,19 +80,16 @@ class World {
 		return this.bullets[id];
 	}
 
-	public findNearestFrontAliveEnemyShip(x: number, y: number, force: Force, maxDist?: number): Ship {
+	public findNearestAliveEnemyShip(x: number, y: number, force: Force, maxDist: number=tutils.LongDistance, check: (ship: Ship)=>boolean=null): Ship {
 		let min = -1;
 		let target: Ship = null;
-		if (maxDist == undefined) {
-			maxDist = tutils.LongDistance;
-		}
 		for (let i in this.ships) {
 			let ship = this.ships[i];
-			if (!ship.alive || !ship.force.isMyEnemy(force) || ship.gameObject.y>y/* || ship==this.obShip*/) {
+			if (!ship.alive || !ship.force.isMyEnemy(force)/* || ship==this.obShip*/) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
-			if (dis <= maxDist && (target==null || min>dis)) {
+			if (dis<=maxDist && (target==null || min>dis) && (!check || check(ship))) {
 				min = dis;
 				target = ship;
 			}
@@ -90,19 +97,33 @@ class World {
 		return target;
 	}
 
-	public findNearestHeroShip(x: number, y: number, maxDist?: number): Ship {
+	public findNearestFrontAliveEnemyShip(x: number, y: number, force: Force, maxDist: number=tutils.LongDistance): Ship {
 		let min = -1;
 		let target: Ship = null;
-		if (maxDist === undefined) {
-			maxDist = tutils.LongDistance;
+		for (let i in this.ships) {
+			let ship = this.ships[i];
+			if (!ship.alive || !ship.force.isMyEnemy(force) || ship.gameObject.y>y/* || ship==this.obShip*/) {
+				continue;
+			}
+			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
+			if (dis<=maxDist && (target==null || min>dis)) {
+				min = dis;
+				target = ship;
+			}
 		}
+		return target;
+	}
+
+	public findNearestHeroShip(x: number, y: number, maxDist: number=tutils.LongDistance, check: (ship: Ship)=>boolean=null): Ship {
+		let min = -1;
+		let target: Ship = null;
 		for (let i in this.ships) {
 			let ship = this.ships[i];
 			if (/*ship==this.obShip || */!ship.hero || !ship.alive) {
 				continue;
 			}
 			let dis = tutils.getDistance(ship.gameObject.x, ship.gameObject.y, x, y);
-			if (dis <= maxDist && (target==null || min>dis)) {
+			if (dis<=maxDist && (target==null || min>dis) && (!check || check(ship))) {
 				min = dis;
 				target = ship;
 			}
@@ -269,10 +290,10 @@ class World {
 				}
 				if (bullet.gun.ship.force.isMyEnemy(ship.force) && ship.canHit && bullet.onHitEnemyShipTest(ship)) {
 					//console.log("bullet hit!");
-					let dt = Math.min(bullet.hp, Math.floor(bullet.maxHp*bullet.powerLossPer));
+					let dt = Math.min(bullet.hp, bullet.maxHp/bullet.maxHitTimes);
 					//console.log('ship('+shipId+') hp('+ship.hp.hp+'-'+dt+')');
-					ship.damaged(dt, bullet.gun.ship);
-					bullet.damaged(dt, ship);
+					ship.damaged(dt, bullet.gun.ship, bullet);
+					bullet.damaged(dt, ship, ship);
 					//tutils.playSound("Hit_mp3");
 					if (!ship.alive) {
 						//console.log("dead!");
@@ -296,8 +317,8 @@ class World {
 					}
 					if (ship.force.isMyEnemy(ship2.force) && ship.canHit && ship2.canHit && ship.onHitEnemyShipTest(ship2)) {
 						//console.log("ship hit!");
-						ship.damaged(ship2.maxHp, ship2);
-						ship2.damaged(ship.maxHp, ship);
+						ship.damaged(ship2.maxHp, ship2, ship2);
+						ship2.damaged(ship.maxHp, ship, ship);
 						if (!ship.alive) {
 							//console.log("dead!");
 							break;

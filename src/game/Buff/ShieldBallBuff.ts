@@ -30,9 +30,9 @@ class ShieldBallBuff extends Buff {
 
 		ship.x = this.ship.x;
 		ship.y = this.ship.y;
-		ship.moveTo(ship.x, -ship.height, ship.speed.value, true, null, ()=>{
+		ship.moveTo(ship.x, -ship.height, ship.speed.value, true, null, false, ()=>{
 			ship.removeBuff(buff.id);
-			ship.damaged(ship.hp, null);
+			ship.damaged(ship.hp, null, null);
 		}, this);
 		let tw = egret.Tween.get(ship.gameObject, {loop: true});
 		tw.to({rotation: 360}, 400);

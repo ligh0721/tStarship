@@ -3,12 +3,12 @@ class SatelliteGun extends Gun {
 	period: number = 1000;
 	antiClockWise: boolean = false;
 	private bullets: string[] = null;
-	private readonly timer: tutils.Timer;
+	private readonly timer: tutils.ITimer;
 	private radius: number;
 
 	public constructor() {
 		super();
-		this.timer===undefined ? this.timer=new tutils.Timer() : this.timer.constructor();
+		this.timer===undefined ? this.timer=new tutils.TimerByAction(GameController.instance.actMgr) : this.timer.constructor(GameController.instance.actMgr);
 	}
 
 	public fire(): void {
@@ -57,7 +57,7 @@ class SatelliteGun extends Gun {
 		let pos = Unit.getDirectionPoint(this.ship.x, this.ship.y, angle, this.radius);
 		bullet.x = pos.x;
 		bullet.y = pos.y;
-		bullet.angle = angle;
+		bullet.rotation = angle;
 	}
 
 	protected onCleanup(): void {
@@ -72,7 +72,7 @@ class SatelliteGun extends Gun {
 				if (bullet == null || !bullet.alive) {
 					continue;
 				}
-				bullet.damaged(bullet.hp, null);
+				bullet.damaged(bullet.hp, null, null);
 			}
 		}
 	}

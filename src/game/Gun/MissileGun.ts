@@ -5,11 +5,10 @@ class MissileGun extends Gun {
 
 	explosionRadius: number = 100;
 	explosionPowerEveryPer: number = 0.5;
-	explosionPowerLossInterval: number = 10000;
 
 	public constructor() {
 		super();
-		this.fireCooldown.setRange({minValue: 100});
+		this.fireCooldown.setRange({minValue: 150});
 	}
 
 	public fire() {
@@ -21,13 +20,12 @@ class MissileGun extends Gun {
 			if (bullet instanceof MissileBullet) {
 				bullet.explosionRadius = this.explosionRadius;
 				bullet.explosionPowerEveryPer = this.explosionPowerEveryPer;
-				bullet.explosionPowerLossInterval = this.explosionPowerLossInterval;
 			}
-			let angle = (i - (this.bulletNum - 1) / 2) * this.bulletAngleDelta + this.ship.angle;
-			let firePos = Unit.getDirectionPoint(this.ship.x, this.ship.y+50, angle, this.ship.height*0.5);
+			let angle = (i - (this.bulletNum - 1) / 2) * this.bulletAngleDelta + this.ship.rotation;
+			let firePos = Unit.getDirectionPoint(this.ship.x, this.ship.y+60, angle, this.ship.height*0.5);
 			bullet.x = firePos.x;
 			bullet.y = firePos.y;
-			bullet.angle = angle;
+			bullet.rotation = angle;
 			this.fireBulletGuild(bullet, null);
 		}
 	}
@@ -35,7 +33,7 @@ class MissileGun extends Gun {
 	protected fireBulletGuild(bullet: Bullet, target: Ship): void {
 		let bulletId = bullet.id;
 		let targetId = "";
-		let timer = new tutils.Timer();
+		let timer = new tutils.TimerByAction(GameController.instance.actMgr);
 		let yDropSpeed = 40;
 		let bulletSpeed = 0;
 		let angleSpeed = 0;
@@ -44,15 +42,17 @@ class MissileGun extends Gun {
 				timer.stop();
 				return;
 			}
-			if ((target==null || !target.alive || target.id!=targetId) && this.ship.alive) {
+			if (target==null || !target.alive || target.id!=targetId) {
 				targetId = "";
-				target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force);
-				if (target != null) {
-					targetId = target.id;
+				target = null;
+				if (this.ship.alive) {
+					target = this.ship.world.findNearestFrontAliveEnemyShip(bullet.gameObject.x, bullet.gameObject.y, this.ship.force, 600);
+					if (target != null) {
+						targetId = target.id;
+					}
 				}
 			}
 			if (target!=null && bulletSpeed>100) {
-				let dis = bullet.getDistance(target.gameObject.x, target.gameObject.y);
 				angleSpeed += this.bulletAngleSpeed;
 				bullet.adjustAngle(dt, angleSpeed, target.gameObject.x, target.gameObject.y);
 			}

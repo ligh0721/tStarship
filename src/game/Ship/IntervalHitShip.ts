@@ -3,10 +3,18 @@ class IntervalHitShip extends Ship {
 	hitShipInterval: number = 1000;
 	private readonly effectedShips: { [id: string]: number } = {};
 
-	public constructor(model: string, scale?: number, owner?: Ship) {
-		super(model, scale);
+	public constructor(model: string, modelScale?: number, owner?: Ship) {
+		super(model, modelScale);
 		this.ship = owner;
 		this.hitTestFlags = ShipHitTestType.Ship;
+	}
+
+	// override
+	public $triggerOnDestroyTarget(target: Ship): void {
+		super.$triggerOnDestroyTarget(target);
+		if (this.ship && this.ship.alive) {
+			this.ship.$triggerOnDestroyTarget(target);
+		}
 	}
 
 	// override

@@ -1,0 +1,33 @@
+{
+    "options": {
+        "layoutMath": "3",
+        "sizeMode": "2n",
+        "useExtension": 1,
+        "layoutGap": 1,
+        "extend": 0
+    },
+    "projectName": "UI",
+    "files": [
+        "./UI/yellowshinebg.png",
+        "./UI/whiteshinebg.png",
+        "./UI/shipitemunknown.png",
+        "./UI/shipitemsel.png",
+        "./UI/shipitembg2.png",
+        "./UI/shipitembg.png",
+        "./UI/purplebar.png",
+        "./UI/progbarfill.png",
+        "./UI/progbarbg.png",
+        "./UI/PlayerPortrait.png",
+        "./UI/PlayerDefault.png",
+        "./UI/panelbg2.png",
+        "./UI/panelbg.png",
+        "./UI/levelbg.png",
+        "./UI/greenbtnnor.png",
+        "./UI/greenbtndown.png",
+        "./UI/greenbtndis.png",
+        "./UI/coinbarfill.png",
+        "./UI/coinbarbg.png",
+        "./UI/bluebar.png"
+    ],
+    "version": 5
+}

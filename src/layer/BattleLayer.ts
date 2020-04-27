@@ -8,10 +8,9 @@ class BattleLayer extends tutils.Layer {
 
 	private world: World;
     private hero: HeroShip;
-    private heroShipData: PlayerShipData;
+    // private heroGunData: PlayerGunData;
 
     private enemyCtrl: EnemyController;
-    private readonly buffuis: BuffProgress[] = [];
     private readonly beginDelta: {x: number, y: number} = {x: 0, y: 0};
     private bgCtrl: tutils.BackgroundController;
     // private bgCtrl2: BackgroundController;
@@ -23,12 +22,15 @@ class BattleLayer extends tutils.Layer {
     private txtHeroScale: egret.TextField;
 
     private tickerEffect = new Effect(1, 10);
+    private buffSupplySpawner: tutils.ITimer;
 
-    $pathPercent: number = 0;
+    // 双击释放技能
+    private lastTouchBeginTick: number = 0;
+    private lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
+    private touchBeginCount: number = 0;
 
-    lastTouchBeginTick: number = 0;
-    lastTouchBeginPos: {x: number, y: number} = {x: -1, y: -1};
-    touchBeginCount: number = 0;
+    // private partsDropTableRare: DropTable<DropTable<string>>;
+    
 
     // 统计项
     private score: number = 0;
@@ -38,6 +40,7 @@ class BattleLayer extends tutils.Layer {
     private reachStage: number = 1;
     private lastSaveTick: number = 0;
     private unsaveScore: number = 0;
+    private starNum: number = 0;
 	
     // override
     protected onCfgStage(): void {
@@ -65,16 +68,16 @@ class BattleLayer extends tutils.Layer {
         // this.layer.addChildAt(this.bgCtrl2.gameObject, 1);
         
         this.worldLayer = new egret.Sprite();
-        this.layer.addChild(this.worldLayer);
+        this.addChild(this.worldLayer);
 
         this.hudLayer = new egret.Sprite();
-        this.layer.addChild(this.hudLayer);
+        this.addChild(this.hudLayer);
 
         this.gameOverLayer = new egret.Sprite();
-        this.layer.addChild(this.gameOverLayer);
+        this.addChild(this.gameOverLayer);
 
         this.msgLayer = new egret.Sprite();
-        this.layer.addChild(this.msgLayer);
+        this.addChild(this.msgLayer);
 		
         // 创建世界
         this.world = new World(this.worldLayer, stageW, stageH);
@@ -102,16 +105,17 @@ class BattleLayer extends tutils.Layer {
         this.highScore = playerData.highscore.score;
         this.hud.updateScore(this.score);
         this.hud.updateHighScore(this.highScore);
+        GameController.instance.setBattleHUD(this.hud);
+
+        // 初始化世界掉落表
+        
 	}
 
     // override
-    protected onCleanUp(): void {
-        for (let i in this.buffuis) {
-            let buffui = this.buffuis[i];
-            egret.Tween.removeTweens(buffui);
-        }
+    protected onRemoved(): void {
         this.enemyCtrl.stopRush();
         tutils.stopBgMusic();
+        this.bgCtrl.stop();
         this.world.cleanup();
     }
 
@@ -125,11 +129,11 @@ class BattleLayer extends tutils.Layer {
         this.txtPushStart.y = (this.stage.stageHeight - this.txtPushStart.textHeight) * 0.7;
 
         this.txtPushStartDesc = new egret.TextField();
-        this.txtPushStartDesc.text = "1. 右下角能量满了之后，双击屏幕释放必杀\n2. 点击左侧零件栏可以丢弃不需要的零件";
+        this.txtPushStartDesc.text = "1. 右下角能量满了之后，双击屏幕释放必杀\n2. 击毁整波敌军小队会有额外金币奖励\n3. 金币可以解锁新的飞机\n4. 玩家飞船只有中心红点被击中时才会受到伤害\n5. 点击左侧零件栏可以丢弃不需要的零件";
 
         this.msgLayer.addChild(this.txtPushStartDesc);
         this.txtPushStartDesc.x = 0;
-        this.txtPushStartDesc.y = this.stage.stageHeight - this.txtPushStartDesc.height;
+        this.txtPushStartDesc.y = 0;
 
 
         let change = (txt: egret.TextField) => {
@@ -140,11 +144,11 @@ class BattleLayer extends tutils.Layer {
             tw.call(change, this, [txt]);
         }
         change(this.txtPushStart);
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart, this);
+        this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart);
     }
 
     protected onTouchTapPushStart(evt: egret.TouchEvent): void {
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart, this);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_TAP, this.onTouchTapPushStart);
         egret.Tween.removeTweens(this.txtPushStart);
         this.msgLayer.removeChild(this.txtPushStart);
         this.txtPushStart = null;
@@ -155,20 +159,17 @@ class BattleLayer extends tutils.Layer {
     }
 
     protected startGame(): void {
-        for (let i in GameController.instance.battleShips) {
-            let shipId = GameController.instance.battleShips[i];
-            let playerShipData = GameController.instance.getPlayerShipDataByKey(shipId);
-            playerShipData.use++;
-        }
+        let playerGunData = GameController.instance.getPlayerGunData();
+        playerGunData.use++;
+        let playerSkillData = GameController.instance.getPlayerSkillData();
+        playerSkillData.use++;
         GameController.instance.savePlayerData();
         
         tutils.playBgMusic("Bgmusic_mp3");
 
         // 创建玩家飞船
-        let heroShipId = GameController.instance.battleShips[0];
-        let hero = GameController.instance.createHeroShip(heroShipId, this.world);
+        let hero = GameController.instance.spawnHeroShip(this.world);
         this.hero = hero;
-        this.heroShipData = GameController.instance.getPlayerShipDataByKey(heroShipId);
         hero.x = this.stage.stageWidth * 0.5;
         hero.y = this.stage.stageHeight + 200;
 
@@ -180,31 +181,40 @@ class BattleLayer extends tutils.Layer {
         hero.setOnRemovePartListener(this.onShipRemovePart, this);
 
         hero.heroHUD = this.hud;
-        this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
+        this.hud.setOnUseEnergyListener(this.onHeroUseEnergy, this);
 
-        hero.power = hero.maxPower;
+        hero.energy = hero.maxEnergy;
 
         // hero.addBuff(new ShieldBuff(-1, 10));
 
 
-        // 创建玩家飞船血条、能量条
+        // 创建玩家飞船血条、能量条、主炮等级等信息
         this.hud.setHero(this.hero);
+        // this.hud.setEnemyController(this.enemyCtrl);
         
         // 创建测试补给箱
-        let testSupplyTimer = new tutils.Timer();
-        testSupplyTimer.setOnTimerListener((dt: number): void=>{
-            this.createTestSupply();
-        });
-        testSupplyTimer.start(8000, true, 0);
+        this.buffSupplySpawner = new tutils.TimerByAction(GameController.instance.actMgr);
+        this.buffSupplySpawner.setOnTimerListener(this.onBuffSupplySpawn, this);
+        this.buffSupplySpawner.start(8000, true, 0);
+
+        // let test_parts = ["part_elec_induced_gun", "part_critical_2"];
+        // for (let i in test_parts) {
+        //     let partName = test_parts[i];
+        //     let part = GameController.instance.createPart(partName);
+        //     let supply = this.world.pools.newObject(PartSupply, part.model, [part]);
+        //     supply.speed = 20;
+        //     this.world.addSupply(supply);
+        //     supply.drop((parseInt(i)+1)*this.stage.stageWidth/(test_parts.length+1), 0, egret.Ease.getPowIn(2));
+        // }
 
         // 创建调试面板
         // this.createDebugPanel();
 
-        // 创建测试敌军
-        // this.createTestEnemyShip(1);
+        // 创建敌军小队
+        this.createAllRushes();
 
         // 最后添加事件监听器
-        this.layer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin);
         let tw = egret.Tween.get(this.hero);
         tw.to({y: this.stage.stageHeight - 200}, 1000);  
         tw.wait(1000);
@@ -214,11 +224,8 @@ class BattleLayer extends tutils.Layer {
 
             this.hero.mainGun.autoFire = true;
 
-            this.layer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            this.layer.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-            // 创建敌军小队
-            this.createTestEnemyRushes();
-            // this.createTestEnemyShip(50);
+            this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
+            this.evtMgr.regEvent(this.layer, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
             
             // let boss = this.enemyCtrl.createBoss2();
             // this.createBossUI(boss);
@@ -228,10 +235,10 @@ class BattleLayer extends tutils.Layer {
         });
     }
 
-    private onHeroUsePower(): void {
-        if (!this.hero.isPowerFull()) {
-            return;
-        }
+    private onHeroUseEnergy(): void {
+        // if (!this.hero.isEneryFull()) {
+        //     return;
+        // }
         if (this.hero.alive && this.hero.castSkill()) {
             tutils.playSound("Powerup_mp3");
             this.turbo(this.bgCtrl, 100, 20, 5000);
@@ -240,7 +247,7 @@ class BattleLayer extends tutils.Layer {
     }
 
     public turbo(bgCtrl: tutils.BackgroundController, speed: number, orgSpeed: number, dur: number): void {
-        this.hud.setOnUsePowerListener(null, null);
+        this.hud.setOnUseEnergyListener(null, null);
         if (dur < 1500) {
             dur = 1500;
         }
@@ -249,28 +256,8 @@ class BattleLayer extends tutils.Layer {
         tw.wait(dur-1500);
         tw.to({speed: orgSpeed}, 2000, egret.Ease.getPowOut(2));
         tw.call(() => {
-            this.hud.setOnUsePowerListener(this.onHeroUsePower, this);
+            this.hud.setOnUseEnergyListener(this.onHeroUseEnergy, this);
         });
-    }
-
-    public get pathPercent(): number {
-        return this.$pathPercent;
-    }
-
-    public set pathPercent(value: number) {
-        let a = 400;
-        let b = 400;
-        let y = value*1000;
-        let x = Math.sqrt(Math.pow(Math.sqrt(a*a+b*b)*2*Math.sin((Math.atan(b/a)-Math.asin((b-y)/Math.sqrt(a*a+b*b)))/2), 2)-y*y);
-        let g = this.layer.graphics;
-        g.drawCircle(x, y, 1);
-    }
-
-    public drawTestPath(): void {
-        let tw = egret.Tween.get(this);
-        this.pathPercent = 0;
-        tw.to({pathPercent: 1}, 10000)
-        this.layer.graphics.lineStyle(1, 0xffffff);
     }
 
     private onShipDying(ship: Ship, killer: Ship): void {
@@ -290,13 +277,13 @@ class BattleLayer extends tutils.Layer {
             this.gameOver();
             return;
         } else if (this.hero.force.isMyEnemy(ship.force) && killer && (killer.force.isMyAlly(this.hero.force))) {
-            // 击败敌军
+            // 玩家击败敌军
             if (!this.hero || !this.hero.alive) {
                 return;
             }
 
             if (ship instanceof EnemyShip && ship.isLastGroupMember()) {
-                let score = Math.max(1, Math.floor(ship.group.max/4*(1+this.reachStage/2)));
+                let score = Math.max(1, Math.floor(ship.group.max/5*(1+this.reachStage/3)));
                 this.hud.showTip("coin2_png", "+"+score, "Wave Clear!");
                 this.addScore(score);
             }
@@ -305,37 +292,28 @@ class BattleLayer extends tutils.Layer {
             let score = Math.max(1, Math.floor(1*this.reachStage/5));
             if (ship instanceof MotherShip) {
                 power *= 80;
-                score *= 10;
+                // score *= 10;
+                // 掉落雨
+                for (let i=0; i<20; i++) {
+                    let dropKey = GameController.instance.dropTableForBossEnemy.randomR();
+                    GameController.instance.spawnSupply(this.world, dropKey, ship.gameObject.x, ship.gameObject.y, true, i*50);
+                }
             } else if (ship instanceof MotherGunShip) {
                 power *= 40;
                 score *= 5;
             }
 
-            this.hero.addPower(power);
-            if (Math.random() < 0.005) {
-                let supply: PartSupply;
-                if (Math.random() < 0.5) {
-                    let part = GameController.instance.createPart("part_test1");
-                    supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-                } else {
-                    let part = GameController.instance.createPart("part_test2");
-                    supply = this.world.pools.newObject(PartSupply, part.model, [part]);
-                }
-                
-                supply.speed = 20;
-                this.world.addSupply(supply);
-                supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
-            } else {
-                let supply = this.world.pools.newObject(ScoreSupply, score);
-                supply.speed = 100;
-                this.world.addSupply(supply);
-                supply.drop(ship.gameObject.x, ship.gameObject.y, egret.Ease.getPowIn(2));
+            this.hero.addEnergy(power);
+            
+            if (ship.dropTable) {
+                let dropKey = ship.dropTable.randomR();
+                GameController.instance.spawnSupply(this.world, dropKey, ship.gameObject.x, ship.gameObject.y);
             }
             
 
             // 更新统计
-            this.heroShipData.exp += score*2;
-            this.heroShipData.enemy++;
+            // this.heroGunData.exp += score*2;
+            // this.heroGunData.enemy++;
             this.destroyEnemies++;
 
             let now = egret.getTimer();
@@ -349,7 +327,8 @@ class BattleLayer extends tutils.Layer {
                     // new high score!
                     playerData.highscore.score = this.score;
                     playerData.highscore.stage = this.reachStage;
-                    playerData.highscore.shipKey = GameController.instance.battleShips[0];
+                    playerData.highscore.gunKey = playerData.gun;
+                    playerData.highscore.skillKey = playerData.skill;
                 }
                 if (this.reachStage > playerData.maxStage) {
                     playerData.maxStage = this.reachStage;
@@ -375,10 +354,11 @@ class BattleLayer extends tutils.Layer {
 
     private gameOver(): void {
         // GAME OVER
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.layer.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_MOVE, this.onTouchMove);
+        this.evtMgr.unregEvent(this.layer, egret.TouchEvent.TOUCH_END, this.onTouchEnd);
         this.enemyCtrl.stopRush();
+        this.buffSupplySpawner.stop();
 
         // 玩家数据
         let playerData = GameController.instance.playerData;
@@ -388,7 +368,8 @@ class BattleLayer extends tutils.Layer {
             // new high score!
             playerData.highscore.score = this.score;
             playerData.highscore.stage = this.reachStage;
-            playerData.highscore.shipKey = GameController.instance.battleShips[0];
+            playerData.highscore.gunKey = playerData.gun;
+            playerData.highscore.skillKey = playerData.skill;
         }
         if (this.reachStage > playerData.maxStage) {
             playerData.maxStage = this.reachStage;
@@ -408,8 +389,14 @@ class BattleLayer extends tutils.Layer {
     private onShipAddBuff(ship: Ship, buff: Buff): void {
         if (buff.model && buff.name) {
             if (buff instanceof GunLevelUpBuff) {
+                // 主炮升级
                 this.hud.showTip(buff.model, "+"+buff.levelChange, buff.name);
+                this.hud.setGunLevel(ship.mainGun.level);
+            } else if (buff instanceof AddEnergyBuff) {
+                // 增加能量
+                this.hud.showTip(buff.model, "+"+(buff.energy*100/this.hero.maxEnergy).toFixed(0)+"%", buff.name);
             } else {
+                // 其他有图标的BUFF
                 let dur = Math.floor(buff.duration/1000);
                 if (dur > 0) {
                     this.hud.showTip(buff.model, dur.toString()+"s", buff.name);
@@ -470,7 +457,7 @@ class BattleLayer extends tutils.Layer {
             } else {
                 this.touchBeginCount++;
                 if (this.touchBeginCount === 2) {
-                    this.onHeroUsePower();
+                    this.onHeroUseEnergy();
                     this.touchBeginCount = 0;
                 }
             }
@@ -519,7 +506,7 @@ class BattleLayer extends tutils.Layer {
         this.sldHeroScale.value = 100;
         this.hero.gameObject.scaleX = this.sldHeroScale.value / 100;
         this.hero.gameObject.scaleY = this.sldHeroScale.value / 100;
-        this.sldHeroScale.addEventListener(eui.UIEvent.CHANGE, this.onHeroScaleChanged, this)
+        this.evtMgr.regEvent(this.sldHeroScale, eui.UIEvent.CHANGE, this.onHeroScaleChanged);
         this.txtHeroScale = new egret.TextField();
         this.hudLayer.addChild(this.txtHeroScale);
         this.txtHeroScale.x = 0;
@@ -549,7 +536,7 @@ class BattleLayer extends tutils.Layer {
 			this.world.addShip(ship);
 			ship.force.force = tutils.EnemyForce;
             ship.resetHp(20);
-            if (i == 5) {
+            if (i === 5) {
                 ship.resetHp(2000);
             }
             ship.x = 60 * i;
@@ -557,134 +544,126 @@ class BattleLayer extends tutils.Layer {
 		}
 	}
 
-    private createTestEnemyRushes() {
-        let rush: Rush;
-
-        // this.enemyCtrl.addRushes1(2000, 40);
-        // this.enemyCtrl.addRushes2(4000, 40);
-        // this.enemyCtrl.addRushes3(4000, 40);
-        // this.enemyCtrl.addRushes4(4000, 40);
-        // this.enemyCtrl.addRushes5(4000, 40);
-        // this.enemyCtrl.addRushes6(2000, 40);
-        this.enemyCtrl.addRushes7(2000, 500, 3);
-        //this.enemyCtrl.addRushes8(5000, 500, 2);
-
-        rush = new CallbackRush(5000, ():void=>{
+    private createAllRushes(): void {
+        const WAVE_NUM = 15;
+        const GUN_ENEMY_CD = 20000;
+        let gunEnemyCD = 0;
+        const FOLLOW_ENEMY_CD = 20000;
+        let followEnemyCD = 0;
+        const GOLD_ENEMY_CD = 1000000;
+        let goldEnemyCD = GOLD_ENEMY_CD - 20000;
+        let bossCallback = (boss: Ship):void=>{
             this.enemyCtrl.stopRush();
-            let boss = this.enemyCtrl.createBoss1();
             this.showBossUI(boss);
-        }, this);
-        this.enemyCtrl.addRush(rush);
-
-        const WAVE_NUM = 10;
+        }
+        let enmeyType = new DropTable<number>();
+        enmeyType.push(0, 1000);
+        enmeyType.push(1, 200);
+        enmeyType.push(2, 200);
+        enmeyType.push(3, 50);
+        // this.enemyCtrl.addRushes10(1000, 500, 1.0);
+        this.enemyCtrl.addRushBomb(1000, 500, 1);
+        // this.enemyCtrl.addRushGoldShip(1000, 1000, 1);
+        // this.enemyCtrl.addRushBoss1(1000, 1000, bossCallback, this, 1);
         for (let i=1; i<=WAVE_NUM*10; i++) {
-            let hp = 40+Math.floor(i/4 * 2);
-            if (i == WAVE_NUM) {
-                this.enemyCtrl.addRushes1(2000, hp, 1.5);
-                this.enemyCtrl.addRushes2(4000, hp, 1.5);
-                this.enemyCtrl.addRushes3(4000, hp, 1.5);
-                this.enemyCtrl.addRushes4(4000, hp, 1.5);
-                this.enemyCtrl.addRushes5(4000, hp, 1.5);
-                this.enemyCtrl.addRushes6(2000, hp, 1.5);
-                let rush = new CallbackRush(5000, ():void=>{
-                    this.enemyCtrl.stopRush();
-                    let boss = this.enemyCtrl.createBoss2();
-                    this.showBossUI(boss);
-                }, this);
-                this.enemyCtrl.addRush(rush);
-                continue;
-            } else if (i == WAVE_NUM*2) {
-                this.enemyCtrl.addRushes1(2000, hp, 2.0);
-                this.enemyCtrl.addRushes2(4000, hp, 2.0);
-                this.enemyCtrl.addRushes3(4000, hp, 2.0);
-                this.enemyCtrl.addRushes4(4000, hp, 2.0);
-                this.enemyCtrl.addRushes5(4000, hp, 2.0);
-                this.enemyCtrl.addRushes6(2000, hp, 2.0);
-                let rush = new CallbackRush(5000, ():void=>{
-                    this.enemyCtrl.stopRush();
-                    let boss = this.enemyCtrl.createBoss3();
-                    this.showBossUI(boss);
-                }, this);
-                this.enemyCtrl.addRush(rush);
-                continue;
-            } else if (i == WAVE_NUM*3) {
-                this.enemyCtrl.addRushes1(2000, hp, 2.5);
-                this.enemyCtrl.addRushes2(4000, hp, 2.5);
-                this.enemyCtrl.addRushes3(4000, hp, 2.5);
-                this.enemyCtrl.addRushes4(4000, hp, 2.5);
-                this.enemyCtrl.addRushes5(4000, hp, 2.5);
-                this.enemyCtrl.addRushes6(2000, hp, 2.5);
-                let rush = new CallbackRush(5000, ():void=>{
-                    this.enemyCtrl.stopRush();
-                    let boss = this.enemyCtrl.createBoss3();
-                    this.showBossUI(boss);
-                }, this);
-                this.enemyCtrl.addRush(rush);
-                continue;
-            } else if (i == WAVE_NUM*4) {
-                this.enemyCtrl.addRushes1(2000, hp, 3.0);
-                this.enemyCtrl.addRushes2(4000, hp, 3.0);
-                this.enemyCtrl.addRushes3(4000, hp, 3.0);
-                this.enemyCtrl.addRushes4(4000, hp, 3.0);
-                this.enemyCtrl.addRushes5(4000, hp, 3.0);
-                this.enemyCtrl.addRushes6(2000, hp, 3.0);
-                let rush = new CallbackRush(5000, ():void=>{
-                    this.enemyCtrl.stopRush();
-                    let boss = this.enemyCtrl.createBoss3();
-                    this.showBossUI(boss);
-                }, this);
-                this.enemyCtrl.addRush(rush);
-                continue;
-            } else if (i == WAVE_NUM*5) {
-                this.enemyCtrl.addRushes1(2000, hp, 3.5);
-                this.enemyCtrl.addRushes2(4000, hp, 3.5);
-                this.enemyCtrl.addRushes3(4000, hp, 3.5);
-                this.enemyCtrl.addRushes4(4000, hp, 3.5);
-                this.enemyCtrl.addRushes5(4000, hp, 3.5);
-                this.enemyCtrl.addRushes6(2000, hp, 3.5);
-                let rush = new CallbackRush(5000, ():void=>{
-                    this.enemyCtrl.stopRush();
-                    let boss = this.enemyCtrl.createBoss3();
-                    this.showBossUI(boss);
-                }, this);
-                this.enemyCtrl.addRush(rush);
-                continue;
-            }
-            if (Math.random() < 0.3) {
-                let rush = this.enemyCtrl.addRushMeteorite(0, hp*5, 0, Math.min(3, 1+i/WAVE_NUM));
-                rush.setCallback(():void=>{
-                    tutils.playSound("Meteorolite_mp3");
-                    rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
-                    rush.to.x = rush.from.x;
-                }, this);
-            }
+            let level = Math.floor((i-1)/WAVE_NUM) + 1;
+            let speed = Math.floor(Math.min(level*0.2+0.8, 2.0));
+            let speed2 = Math.floor(Math.min(level*0.5+0.5, 3.0));
+            let hp = Math.floor(20+i/1);
+            if (i%WAVE_NUM === 0) {
+                gunEnemyCD = GUN_ENEMY_CD;
+                followEnemyCD = FOLLOW_ENEMY_CD;
+                this.enemyCtrl.addRushes6(4000, hp, speed);
+                this.enemyCtrl.addRushes7(4000, hp*5, 3, speed2);
+                switch (level) {
+                case 1:
+                    this.enemyCtrl.addRushBoss1(5000, 3000, bossCallback, this, speed);
+                    break;
+                case 2:
+                    this.enemyCtrl.addRushBoss2(5000, 5000, bossCallback, this, speed);
+                    break;
+                case 3:
+                    this.enemyCtrl.addRushBoss3(5000, 8000, bossCallback, this, speed);
+                    break;
+                default:
+                    this.enemyCtrl.addRushBoss3(5000, 8000+(level-3)*2000, bossCallback, this, speed);
+                }
+            } else {
+                if (Math.random() < 0.3) {
+                    // 陨石
+                    let rush = this.enemyCtrl.addRushMeteoroid(0, hp*5, speed);
+                    rush.setCallback(():void=>{
+                        tutils.playSound("Meteoroid_mp3");
+                        rush.from.x = (0.1 + Math.random() * 0.8) * this.stage.stageWidth;
+                        rush.to.x = rush.from.x;
+                    }, this);
+                }
 
-            if (Math.random() < 0.3) {
-                let num = Math.floor((Math.random()*(i/WAVE_NUM+1))/2) + 1;
-                if (Math.random() < 0.5) {
-                    this.enemyCtrl.addRushes7(2000, hp*10, num, (i/WAVE_NUM+2)*0.5);
-                } else {
-                    this.enemyCtrl.addRushes8(2000, hp*10, num, (i/WAVE_NUM+2)*0.5);
+                if (Math.random()<0.1 && level>=3) {
+                    // 炸弹
+                    this.enemyCtrl.addRushBomb(1000, hp*5, speed);
+                }
+
+                let delay = Math.random() * 5000 + 3000;
+                let typ = enmeyType.random();
+                let isSpecial = false;
+                if (typ === 1) {
+                    if (gunEnemyCD >= GUN_ENEMY_CD) {
+                        gunEnemyCD = 0;
+                        let num = Math.floor(Math.min(4, Math.random()*((level-1)/3+1)+1));
+                        if (Math.random() < 0.5) {
+                            this.enemyCtrl.addRushes7(delay, hp*6, num, speed);
+                        } else {
+                            this.enemyCtrl.addRushes8(delay, hp*6, num, speed);
+                        }
+                        isSpecial = true;
+                    }
+                } else if (typ === 2) {
+                    if (followEnemyCD >= FOLLOW_ENEMY_CD) {
+                        followEnemyCD = 0;
+                        this.enemyCtrl.addRushes10(delay, hp*25, speed2);
+                        isSpecial = true;
+                    }
+                } else if (typ === 3) {
+                    if (goldEnemyCD >= GOLD_ENEMY_CD) {
+                        goldEnemyCD = 0;
+                        this.enemyCtrl.addRushGoldShip(delay, hp*150, speed);
+                        isSpecial = true;
+                    }
+                }
+                
+                if (!isSpecial) {
+                    let i = Math.floor(Math.random()*6);
+                    switch (i) {
+                    case 1:
+                        this.enemyCtrl.addRushes1(delay, hp, speed);
+                        break;
+                    case 2:
+                        this.enemyCtrl.addRushes2(delay, hp, speed);
+                        break;
+                    case 3:
+                        this.enemyCtrl.addRushes3(delay, hp, speed);
+                        break;
+                    case 4:
+                        this.enemyCtrl.addRushes4(delay, hp, speed);
+                        break;
+                    case 5:
+                        this.enemyCtrl.addRushes5(delay, hp, speed);
+                        break;
+                    default:
+                        let num = Math.floor(Math.random()*5+5);
+                        this.enemyCtrl.addRushes11(delay, hp, num, speed);
+                    }
+                    gunEnemyCD += delay;
+                    followEnemyCD += delay;
+                    goldEnemyCD += delay;
                 }
             }
-            let n = Math.floor(Math.random()*8+5);
-            let es = this.enemyCtrl.createEnemyShips(n, hp, "RedEnemyShip_png");
-            this.enemyCtrl.putEnemyShipsIntoGroup(es);
-            
-            let delay = Math.random() * 5000 + 2000;
-            let dur = Math.random() * 3000 + 3000;
-            let interval = Math.random() * 200 + 100;
-            let a = Math.random() * 200 + 80
-            let x = (Math.random() * (this.stage.stageWidth - a * 2) + a) * 100 / this.stage.stageWidth;
-            a *= 100/this.stage.stageWidth;
-            let t = Math.random() * 1000 + 2000;
-            let rush = new SineRush(delay, es, interval, dur, {x: x, y: 0}, {x: x, y: 100}, t, a);
-            this.enemyCtrl.addRush(rush);
         }
         this.enemyCtrl.startRush();
     }
 
-    private showBossUI(boss: Ship) {
+    private showBossUI(boss: Ship): void {
         this.hud.showBossHpBar(()=>{
             this.hud.updateBossHpBar(boss.hp*100/boss.maxHp);
         }, this);
@@ -695,45 +674,15 @@ class BattleLayer extends tutils.Layer {
         this.hud.hideBossHpBar();
     }
 
-    private createTestSupply() {
-        let buff: Buff;
-        let supply: Supply;
-        let gun: Gun;
-        let i = Math.floor(Math.random()*4);
-        if (this.heroShipData.use<=3 && this.hero.mainGun.level===1) {
+    private onBuffSupplySpawn(dt: number): void {
+        let dropKey: string;
+        if (GameController.instance.getPlayerGunData().use<=3 && this.hero.mainGun.level===1) {
             // 飞船使用次数少于3时第一个buff必定是主炮升级
-            buff = GameController.instance.createBuff("gun_level_up");
-            supply = new BuffSupply(buff.model, [buff]);
-            i = -1;
+            dropKey = "buff_gun_level_up";
+            this.starNum++;
+        } else {
+            dropKey = GameController.instance.dropTableForBuffSupply.randomR();
         }
-        switch (i) {
-            case 0:
-            // 40%
-            if (Math.random() > 0.40) {
-                return;
-            }
-            buff = GameController.instance.createBuff("gun_level_up");
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-
-            case 1:
-            buff = GameController.instance.createBuff("gun_power_up");
-            buff.name = "GunPower";
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-
-            case 2:
-            buff = GameController.instance.createBuff("gun_cdr_up");
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-
-            case 3:
-            buff = GameController.instance.createBuff("satellite_ball");
-            supply = new BuffSupply(buff.model, [buff]);
-            break;
-        }
-
-        this.world.addSupply(supply);
-        supply.drop(Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
+        GameController.instance.spawnSupply(this.world, dropKey, Math.floor((0.2+Math.random()*0.6)*this.stage.stageWidth), 10);
     }
 }

@@ -1,4 +1,4 @@
-class Unit {
+class Unit extends egret.HashObject implements tutils.INode {
 	gameObject: egret.DisplayObject;
 	id: string;
 	world: World;
@@ -9,6 +9,7 @@ class Unit {
 	private waitToRemove: boolean = false;
 
 	public constructor() {
+		super();
 		this.boundsRect===undefined ? this.boundsRect=new egret.Rectangle() : this.boundsRect.constructor();
 	}
 
@@ -32,21 +33,41 @@ class Unit {
 		this.gameObject.y = value;
 	}
 
-	public get angle(): number {
+	public get rotation(): number {
 		return this.gameObject.rotation;
 	}
 
-	public set angle(value: number) {
+	public set rotation(value: number) {
+		if (this.gameObject.rotation === value) {
+			return;
+		}
 		this.gameObject.rotation = value;
 		this.boundsDirty = true;
+	}
+
+	public get scale(): number {
+		return this.gameObject.scaleX;
+	}
+
+	public set scale(value: number) {
+		this.gameObject.scaleX = this.gameObject.scaleY = value;
+	}
+
+	public get alpha(): number {
+		return this.gameObject.alpha;
+	}
+
+	public set alpha(value: number) {
+		this.gameObject.alpha = value;
 	}
 
 	public getBounds(): egret.Rectangle {
 		if (!this.staticBounds || this.boundsDirty) {
 			this.boundsRect = this.gameObject.getBounds();
+			this.boundsDirty = false;
 		}
-		this.boundsRect.x = this.gameObject.x - this.gameObject.width * 0.5;
-		this.boundsRect.y = this.gameObject.y - this.gameObject.height * 0.5;
+		this.boundsRect.x = this.gameObject.x - this.gameObject.anchorOffsetX;
+		this.boundsRect.y = this.gameObject.y - this.gameObject.anchorOffsetY;
 		return this.boundsRect;
 	}
 
@@ -67,8 +88,8 @@ class Unit {
 
 	// override
 	protected onCleanup(): void {
-		egret.Tween.removeTweens(this);
-		egret.Tween.removeTweens(this.gameObject);
+		GameController.instance.actMgr.removeAllActions(this);
+		GameController.instance.actMgr.removeAllActions(this.gameObject);
 	}
 
 	// override
@@ -86,7 +107,7 @@ class Unit {
 	}
 
 	public getDirectionPoint(dis: number, angle?: number): {x: number, y: number} {
-		return tutils.getDirectionPoint(this.gameObject.x, this.gameObject.y, ((angle===undefined ? this.angle : angle)-90)/tutils.DegPerRad, dis);
+		return tutils.getDirectionPoint(this.gameObject.x, this.gameObject.y, ((angle===undefined ? this.rotation : angle)-90)/tutils.DegPerRad, dis);
 	}
 
 	public getForwardPoint(x: number, y: number, dis: number): {x: number, y: number} {
@@ -102,7 +123,7 @@ class Unit {
 
 	public getAngle(x: number, y: number) {
 		let angle = Math.atan2(y-this.gameObject.y, x-this.gameObject.x) * tutils.DegPerRad + 90;
-		let dt = angle - this.angle;
+		let dt = angle - this.rotation;
 		if (dt > 180) {
 			angle -= 360;
 		} else if (dt < -180) {
@@ -111,52 +132,76 @@ class Unit {
 		return angle;
 	}
 
-	public moveStraight(angle: number, speed: number, fixedRotation?: boolean, ease?: Function) {
-		if (fixedRotation != true) {
-			this.angle = angle;
+	public runAction(action: tutils.Action): void {
+		GameController.instance.actMgr.addAction(this, action);
+	}
+
+	public stopAllActions(): void {
+		GameController.instance.actMgr.removeAllActions(this);
+	}
+
+	public stopActionByTag(target: egret.IHashObject, tag: number): void {
+		GameController.instance.actMgr.removeActionByTag(target, tag);
+	}
+
+	public getActionByTag(target: egret.IHashObject, tag: number): tutils.Action {
+		return GameController.instance.actMgr.getActionByTag(target, tag);
+	}
+
+	public moveStraight(angle: number, speed: number, fixedRotation: boolean=false, ease?: Function, stackable: boolean=false) {
+		if (fixedRotation !== true) {
+			this.rotation = angle;
 		}
-		let tw = egret.Tween.get(this.gameObject);
 		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
-		if (this.x === toPos.x) {
-			tw.to({y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
-		} else {
-			tw.to({x: toPos.x, y: toPos.y}, tutils.LongDistance*tutils.SpeedFactor/speed, ease);
+		let dur = tutils.LongDistance*tutils.SpeedFactor/speed;
+		let act = stackable===true ? new tutils.MoveTo2(dur, toPos.x, toPos.y, ease) : new tutils.MoveTo(dur, toPos.x, toPos.y, ease);
+		this.runAction(act);
+	}
+
+	public moveSine(angle: number, speed: number, wavelen: number, amplitude: number, fixedRotation: boolean=false, ease?: Function) {
+		if (fixedRotation !== true) {
+			this.rotation = angle;
 		}
+		let toPos = Unit.getDirectionPoint(this.gameObject.x, this.gameObject.y, angle, tutils.LongDistance);
+		let dur = tutils.LongDistance*tutils.SpeedFactor/speed;
+		let act = new tutils.Sine(dur, this.x, this.y, toPos.x, toPos.y, wavelen, amplitude, fixedRotation, ease);
+		this.runAction(act);
 	}
 
 	// fixedRotation=false
-	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, onMoveEnd?: ()=>void, thisObject?: any): void {
+	public moveTo(x: number, y: number, speed: number, fixedRotation: boolean=false, ease?: Function, stackable: boolean=false, onMoveEnd?: ()=>void, thisObject?: any): void {
 		let xx = x-this.gameObject.x;
 		let yy = y-this.gameObject.y;
-		if (fixedRotation != true) {
+		if (fixedRotation !== true) {
 			let angle = Math.atan2(yy, xx);
-			this.angle = angle * tutils.DegPerRad + 90;
+			this.rotation = angle * tutils.DegPerRad + 90;
 		}
 		let dis = Math.sqrt(xx*xx+yy*yy);
         let dur = dis * tutils.SpeedFactor / speed;
-        egret.Tween.removeTweens(this);
-        let tw = egret.Tween.get(this);
-        tw.to({x: x, y: y}, dur, ease);
-		if (onMoveEnd) {
-			tw.call(onMoveEnd, thisObject, [this]);
-		}
+
+		this.stopAllActions();
+		let act = new tutils.Sequence(
+			stackable===true ? new tutils.MoveTo2(dur, x, y, ease) : new tutils.MoveTo(dur, x, y, ease),
+			new tutils.CallFunc(onMoveEnd, thisObject)
+		);
+		this.runAction(act);
 	}
 
 	public adjustAngle(dt: number, angleSpeed: number, x: number, y: number): void {
-		let orgAngle = this.angle;
+		let orgAngle = this.rotation;
 		let angle = this.getAngle(x, y);
 		let dtAngle = dt * angleSpeed;
 		if (angle > orgAngle) {
 			if (orgAngle+dtAngle > angle) {
-				this.angle = angle;
+				this.rotation = angle;
 			} else {
-				this.angle += dtAngle;
+				this.rotation += dtAngle;
 			}
 		} else if (angle < orgAngle) {
 			if (orgAngle-dtAngle < angle) {
-				this.angle = angle;
+				this.rotation = angle;
 			} else {
-				this.angle -= dtAngle;
+				this.rotation -= dtAngle;
 			}
 		}
 	}

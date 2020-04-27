@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends eui.UILayer {
-    private mode: "web"|"fb"|"wc" = "web";
+    mode: "web"|"fb"|"wc" = "web";
 
     protected createChildren(): void {
         super.createChildren();
@@ -112,6 +112,7 @@ class Main extends eui.UILayer {
         console.log("start game");
         this.fbContextInfo();
         this.fbPlayerInfo();
+        GameController.instance.loadFBPlayerData();
 
         this.createGameScene();
     }
@@ -150,7 +151,7 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        GameController.instance.createRootLayer(HeroShipsLayer);
+        GameController.instance.createRootLayer(ShipLayer);
         // GameController.instance.createRootLayer(TestLayer);
         // GameController.instance.createRootLayer(EditorLayer);
     }

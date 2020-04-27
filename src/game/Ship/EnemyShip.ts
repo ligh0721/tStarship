@@ -3,12 +3,12 @@ class EnemyShip extends Ship {
 
 	group: EnemyGroup = null;
 
-	public constructor(model: string, scale?: number) {
-		super(model, scale);
+	public constructor(model: string, modelScale?: number) {
+		super(model, modelScale);
 	}
 
-	public damaged(value: number, src: HpUnit): void {
-		super.damaged(value, src);
+	public damaged(value: number, src: HpUnit, unit: HpUnit): void {
+		super.damaged(value, src, unit);
 		if (this.alive) {
 			if (this.hpBar == null) {
 				this.hpBar = this.pools.newObject(ShipHpBar, this).create();
@@ -51,7 +51,7 @@ class EnemyShip extends Ship {
 	// override
 	public onAddToWorld(): void {
 		super.onAddToWorld();
-		this.angle = 180;
+		this.rotation = 180;
 	}
 
 	protected onCleanup(): void {

@@ -6,8 +6,8 @@ class StormBullet extends Bullet {
 	fireCD: number = 0;
 	bulletSpeed: number = 50;
 	bulletPower: number = 3;
-	bulletPowerLossPer: number = 1;
-	bulletPowerLossInterval: number = 1000;
+	bulletMaxHitTimes: number = 1;
+	bulletHitInterval: number = 1000;
 	
 	public constructor(gun: Gun) {
 		super(gun, "BlueBallBullet_png");
@@ -42,8 +42,8 @@ class StormBullet extends Bullet {
 		bullet.x = pos.x;
 		bullet.y = pos.y;
 		bullet.resetHp(this.bulletPower);
-		bullet.powerLossPer = this.bulletPowerLossPer;
-		bullet.powerLossInterval = this.bulletPowerLossInterval;
+		bullet.maxHitTimes = this.bulletMaxHitTimes;
+		bullet.hitInterval = this.bulletHitInterval;
 		bullet.moveStraight(angle, this.bulletSpeed);
 	}
 
